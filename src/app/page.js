@@ -6,40 +6,92 @@ import PlaceApi from "@/api/placeApi";
 const placeApi = new PlaceApi();
 import QueryApi from "@/api/queryApi";
 const queryApi = new QueryApi();
-
+import { TextareaAutosize } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import { Select, MenuItem } from "@mui/material";
+import {
+  Select,
+  MenuItem,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  IconButton,
+  Button,
+} from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
-function MultiSelectionField(props) {
+function QueryCard({ query }) {
+  const [expanded, setExpanded] = useState(false);
   return (
-    <FormControl fullWidth className=" input-field" variant="outlined">
-      <InputLabel htmlFor="outlined-adornment" className="input-label">
-        {props.label}
-      </InputLabel>
-      <Select
-        required
-        multiple
-        id="outlined-adornment"
-        className="outlined-input"
-        value={props.value}
-        onChange={props.onChange(props.id)}
-        input={<OutlinedInput label={props.label} />}
-        MenuProps={MenuProps}
-      >
-        {props.list.map((value) => (
-          <MenuItem
-            key={value}
-            value={value}
-            // sx={{ height: "2rem" }}
-            // style={getStyles(name, personName, theme)}
-          >
-            {value}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <div>
+      {expanded ? (
+        <div className="flex flex-col gap-1 p-1 border-2 border-black rounded-md">
+          <div className="flex flex-row items-end justify-between">
+            <h1 className="text-xl font-bold">Question</h1>
+            <div>
+              <IconButton
+                sx={{ height: "3rem", width: "3rem" }}
+                onClick={() => setExpanded(false)}
+              >
+                <div className="text-sm md:text-2xl">
+                  <FontAwesomeIcon
+                    icon={expanded ? faChevronUp : faChevronDown}
+                    color="black"
+                  />
+                </div>
+              </IconButton>
+            </div>
+          </div>
+          <h1 className="text-lg">{query.question}</h1>
+          <h1 className="text-lg font-bold">Context</h1>
+          <h1 className="text-lg">{query.context}</h1>
+          <h1 className="text-lg font-bold">Answer</h1>
+          {query.answer.type === "mcq" ? (
+            <div className="flex flex-col gap-1">
+              {query.answer.options.map((option, index) => (
+                <div key={index} className="flex flex-row gap-2">
+                  <input
+                    type="radio"
+                    checked={query.answer.correct === index}
+                  />
+                  <h1 className="text-lg">{option}</h1>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <h1 className="text-lg">{query.answer.correct}</h1>
+          )}
+          <div className="flex flex-row gap-2 mx-auto">
+            <Button variant="contained" color="primary">
+              Ask Gemini
+            </Button>
+            <Button variant="contained" color="primary">
+              Ask GPT
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-row gap-1 border-2 border-black items-center p-1 rounded-md">
+          <h1 className="text-lg w-[95%]">{query.question}</h1>
+          <div>
+            <IconButton
+              sx={{ height: "3rem", width: "3rem" }}
+              onClick={() => setExpanded(true)}
+            >
+              <div className="text-sm md:text-2xl">
+                <FontAwesomeIcon
+                  icon={expanded ? faChevronUp : faChevronDown}
+                  color="black"
+                />
+              </div>
+            </IconButton>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 export default function Home() {
@@ -48,10 +100,19 @@ export default function Home() {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [selectedPlaces, setSelectedPlaces] = useState([]);
   const [savedPlaces, setSavedPlaces] = useState([]);
-  const [query, setQuery] = useState({ question: "", answer: "", context: "" });
+  const [query, setQuery] = useState({
+    question: "",
+    answer: {
+      type: "mcq",
+      options: [],
+      correct: -1,
+    },
+    context: "",
+  });
   const [addPlace, setAddPlace] = useState(null);
   const [context, setContext] = useState([]);
-
+  const [newOption, setNewOption] = useState("");
+  const [queries, setQueries] = useState([]);
   const placeToContext = (e) => {
     let place = e.place;
     let attributes = e.selectedAttributes;
@@ -81,6 +142,18 @@ export default function Home() {
     }
     return text;
   };
+  const fetchQueries = async () => {
+    try {
+      const res = await queryApi.getQueries();
+      if (res.success) {
+        console.log("Data: ", res.data);
+        setQueries(res.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
   const fetchPlaces = async () => {
     try {
       const res = await placeApi.getPlaces();
@@ -97,6 +170,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchPlaces();
+    fetchQueries();
   }, []);
 
   const handleSearch = async (event) => {
@@ -162,8 +236,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-row gap-1 bg-black">
       <div className="w-1/2 flex flex-col items-center p-5 bg-white">
         <h1 className="text-3xl">Map Dataset Creator</h1>
-        <h1 className="bg-black h-1 w-full my-2"></h1>
-        {/* Add text field */}
+
         <h1 className="bg-black h-1 w-full my-2"></h1>
         <label className="text-lg w-full text-left font-bold">Question</label>
         <textarea
@@ -173,14 +246,106 @@ export default function Home() {
             setQuery((prev) => ({ ...prev, question: e.target.value }))
           }
         />
-        <label className="text-lg w-full text-left font-bold">Answer</label>
-        <textarea
-          className="border border-black w-full"
-          value={query.answer}
-          onChange={(e) =>
-            setQuery((prev) => ({ ...prev, answer: e.target.value }))
-          }
-        />
+
+        <FormControl fullWidth>
+          <FormLabel id="demo-radio-buttons-group-label">
+            <label className="text-lg w-full text-left font-bold text-black focus:text-black">
+              Type
+            </label>
+          </FormLabel>
+          <RadioGroup
+            aria-labelledby="demo-radio-buttons-group-label"
+            defaultValue="mcq"
+            name="radio-buttons-group"
+            value={query.answer.type}
+            onChange={(e) =>
+              setQuery((prev) => ({
+                ...prev,
+                answer: {
+                  ...prev.answer,
+                  type: e.target.value,
+                  correct: e.target.value === "mcq" ? -1 : "",
+                  options: e.target.value === "mcq" ? [] : undefined,
+                },
+              }))
+            }
+            row
+          >
+            <FormControlLabel value="mcq" control={<Radio />} label="MCQ" />
+            <FormControlLabel value="short" control={<Radio />} label="Short" />
+            {/* <FormControlLabel value="other" control={<Radio />} label="Other" /> */}
+          </RadioGroup>
+        </FormControl>
+
+        {query.answer.type === "mcq" ? (
+          <div className="w-full">
+            <FormLabel id="demo-radio-buttons-group-label">
+              <label className="text-lg w-full text-left font-bold text-black focus:text-black">
+                Answer
+              </label>
+            </FormLabel>
+
+            <div className="flex flex-row justify-start items-center gap-2">
+              <input
+                type="text"
+                placeholder="Option"
+                className="border border-black rounded p-2"
+                value={newOption}
+                onChange={(e) => setNewOption(e.target.value)}
+              />
+              <button
+                className="bg-blue-500 rounded-lg p-3"
+                onClick={() => {
+                  if (newOption === "") return;
+                  setQuery((prev) => ({
+                    ...prev,
+                    answer: {
+                      ...prev.answer,
+                      options: [...prev.answer.options, newOption],
+                    },
+                  }));
+                  setNewOption("");
+                }}
+              >
+                + Add option
+              </button>
+            </div>
+            <div className="flex flex-col gap-2">
+              {query.answer.options.map((option, index) => (
+                <div
+                  key={index}
+                  className="flex flex-row justify-start items-center gap-2"
+                >
+                  <input
+                    type="radio"
+                    checked={query.answer.correct === index}
+                    onChange={() =>
+                      setQuery((prev) => ({
+                        ...prev,
+                        answer: { ...prev.answer, correct: index },
+                      }))
+                    }
+                  />
+                  <h1 className="text-lg">{option}</h1>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <>
+            <label className="text-lg w-full text-left font-bold">Answer</label>
+            <textarea
+              className="border border-black w-full"
+              value={query.answer.correct}
+              onChange={(e) =>
+                setQuery((prev) => ({
+                  ...prev,
+                  answer: { ...prev.answer, correct: e.target.value },
+                }))
+              }
+            />
+          </>
+        )}
 
         <label className="text-lg w-full text-left font-bold">Context</label>
         <textarea
@@ -201,6 +366,13 @@ export default function Home() {
         >
           Save
         </button>
+        <h1 className="bg-black h-1 w-full my-2"></h1>
+        <h1 className="text-2xl w-full">Previous Queries</h1>
+        <div className="flex flex-col gap-2 mt-1">
+          {queries.map((query, index) => (
+            <QueryCard key={index} query={query} />
+          ))}
+        </div>
       </div>
       <div className="flex flex-col w-1/2 bg-white gap-4  min-h-screen p-5">
         <div className="bg-white flex flex-col items-center">
