@@ -175,7 +175,10 @@ export default function ContextGenerator({
     const newNearbyPlacesMap = { ...nearbyPlacesMap };
     const selectedPlaces = nearbyPlacesResults.filter((e) => e.selected);
 
-    if (newNearbyPlacesMap[newNearbyPlaces.location][newNearbyPlaces.type]) {
+    if (
+      newNearbyPlacesMap[newNearbyPlaces.location] &&
+      newNearbyPlacesMap[newNearbyPlaces.location][newNearbyPlaces.type]
+    ) {
       newNearbyPlacesMap[newNearbyPlaces.location][newNearbyPlaces.type] = [];
     }
     for (const e of selectedPlaces) {
@@ -1077,6 +1080,8 @@ export default function ContextGenerator({
                             `${index + 1}. ${
                               selectedPlacesMap[near_place_id].alias ||
                               savedPlacesMap[near_place_id].name
+                            } | ${
+                              savedPlacesMap[near_place_id].formatted_address
                             }`
                           );
                         }
