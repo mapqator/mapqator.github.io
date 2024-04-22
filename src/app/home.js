@@ -3,8 +3,8 @@ import ContextGenerator from "./ContextGenerator";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col gap-1 bg-black">
-      <div className="flex flex-row">
+    <main className="flex min-h-screen flex-col bg-black">
+      <div className="flex flex-row gap-1">
         <DatasetCreator />
         <ContextGenerator />
       </div>
