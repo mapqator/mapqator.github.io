@@ -48,7 +48,16 @@ export default function QueryCard({ query }) {
           <h1 className="text-lg font-bold">Context</h1>
           <h1 className="text-lg">{query.context}</h1>
           <div className="flex flex-row gap-2 mx-auto">
-            <Button variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                // Copy the question + context to the clipboard
+                navigator.clipboard.writeText(
+                  `${query.question}\nContext:${query.context}`
+                );
+              }}
+            >
               Ask Gemini
             </Button>
             <Button variant="contained" color="primary">
