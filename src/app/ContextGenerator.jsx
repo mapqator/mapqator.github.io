@@ -8,7 +8,14 @@ import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { Select, MenuItem, Button } from "@mui/material";
 
-export default function ContextGenerator() {
+export default function ContextGenerator({
+  setContextJSON,
+  context,
+  setContext,
+}) {
+  // {
+  //    distance_matrix, places, nearby_places
+  // }
   const [search, setSearch] = useState("");
   const [results, setResults] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
@@ -26,7 +33,6 @@ export default function ContextGenerator() {
   });
 
   const [addPlace, setAddPlace] = useState("");
-  const [context, setContext] = useState([]);
 
   const [nearbyPlacesMap, setNearbyPlacesMap] = useState({}); // place_id -> place
   const [newNearbyPlaces, setNewNearbyPlaces] = useState({
@@ -138,81 +144,91 @@ export default function ContextGenerator() {
     }
   };
 
-  const addNearbyPlaces = () => {
+  const getDetails = (request) => {
+    return new Promise((resolve, reject) => {
+      const service = new google.maps.places.PlacesService(
+        document.getElementById("map")
+      );
+      service.getDetails(request, async (place, status) => {
+        if (
+          status === google.maps.places.PlacesServiceStatus.OK &&
+          place &&
+          place.geometry &&
+          place.geometry.location
+        ) {
+          const res = await placeApi.createPlace(place); //save
+          if (res.success) {
+            resolve(res.data[0]);
+          } else {
+            reject(new Error("API call failed"));
+          }
+        } else {
+          reject(new Error("Place details not found"));
+        }
+      });
+    });
+  };
+
+  const addNearbyPlaces = async () => {
     const newSavedPlacesMap = { ...savedPlacesMap };
     const newSelectedPlacesMap = { ...selectedPlacesMap };
     const newNearbyPlacesMap = { ...nearbyPlacesMap };
-    nearbyPlacesResults
-      .filter((e) => e.selected)
-      .forEach(async (e) => {
-        if (newSavedPlacesMap[e.place.place_id] === undefined) {
-          // not saved
-          const service = new google.maps.places.PlacesService(
-            document.getElementById("map")
-          );
-          const request = {
-            placeId: e.place.place_id,
-          };
-          service.getDetails(request, async (place, status) => {
-            if (
-              status === google.maps.places.PlacesServiceStatus.OK &&
-              place &&
-              place.geometry &&
-              place.geometry.location
-            ) {
-              const res = await placeApi.createPlace(place); //save
-              if (res.success) {
-                newSavedPlacesMap[res.data[0].place_id] = res.data[0];
-                newSelectedPlacesMap[res.data[0].place_id] = {
-                  alias: "",
-                  selectedAttributes: ["formatted_address", "geometry"],
-                  attributes: Object.keys(res.data[0]).filter(
-                    (e) => res.data[0][e] !== null
-                  ),
-                };
-                if (newNearbyPlacesMap[newNearbyPlaces.location]) {
-                  newNearbyPlacesMap[newNearbyPlaces.location].list.push(
-                    res.data[0].place_id
-                  );
-                } else {
-                  newNearbyPlacesMap[newNearbyPlaces.location] = {
-                    type: newNearbyPlaces.type,
-                    list: [res.data[0].place_id],
-                  };
-                }
-              }
-            }
-          });
-        } else {
-          if (newSelectedPlacesMap[e.place.place_id] === undefined) {
-            newSelectedPlacesMap[e.place.place_id] = {
-              alias: "",
-              selectedAttributes: ["formatted_address", "geometry"],
-              attributes: Object.keys(
-                newSavedPlacesMap[e.place.place_id]
-              ).filter(
-                (key) => newSavedPlacesMap[e.place.place_id][key] !== null
-              ),
-            };
-          }
-          if (newNearbyPlacesMap[newNearbyPlaces.location]) {
-            newNearbyPlacesMap[newNearbyPlaces.location].list.push(
-              e.place.place_id
-            );
-          } else {
-            newNearbyPlacesMap[newNearbyPlaces.location] = {
-              type: newNearbyPlaces.type,
-              list: [e.place.place_id],
-            };
-          }
-        }
-      });
+    const selectedPlaces = nearbyPlacesResults.filter((e) => e.selected);
 
-    setNewNearbyPlaces({ location: null, type: "", list: [] });
-    setSavedPlacesMap(newSavedPlacesMap);
-    setSelectedPlacesMap(newSelectedPlacesMap);
+    if (newNearbyPlacesMap[newNearbyPlaces.location][newNearbyPlaces.type]) {
+      newNearbyPlacesMap[newNearbyPlaces.location][newNearbyPlaces.type] = [];
+    }
+    for (const e of selectedPlaces) {
+      if (newNearbyPlacesMap[newNearbyPlaces.location]) {
+        if (
+          newNearbyPlacesMap[newNearbyPlaces.location][newNearbyPlaces.type]
+        ) {
+          newNearbyPlacesMap[newNearbyPlaces.location][
+            newNearbyPlaces.type
+          ].push(e.place.place_id);
+        } else {
+          newNearbyPlacesMap[newNearbyPlaces.location][newNearbyPlaces.type] = [
+            e.place.place_id,
+          ];
+        }
+      } else {
+        newNearbyPlacesMap[newNearbyPlaces.location] = {
+          [newNearbyPlaces.type]: [e.place.place_id],
+        };
+      }
+    }
     setNearbyPlacesMap(newNearbyPlacesMap);
     setNearbyPlacesResults([]);
+
+    console.log("Need to save in database");
+    for (const e of selectedPlaces) {
+      if (newSavedPlacesMap[e.place.place_id] === undefined) {
+        const request = {
+          placeId: e.place.place_id,
+        };
+        try {
+          const details = await getDetails(request);
+          newSavedPlacesMap[e.place.place_id] = details;
+          console.log("saved: ", details.place_id);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      if (newSelectedPlacesMap[e.place.place_id] === undefined) {
+        newSelectedPlacesMap[e.place.place_id] = {
+          alias: "",
+          selectedAttributes: ["formatted_address", "geometry"],
+          attributes: Object.keys(newSavedPlacesMap[e.place.place_id]).filter(
+            (key) => newSavedPlacesMap[e.place.place_id][key] !== null
+          ),
+        };
+      }
+    }
+
+    setSelectedPlacesMap(newSelectedPlacesMap);
+    setSavedPlacesMap(newSavedPlacesMap);
+    // setNewNearbyPlaces({ location: null, type: "", list: [] });
   };
 
   const searchNearbyPlaces = async () => {
@@ -467,7 +483,7 @@ export default function ContextGenerator() {
         </div>
 
         {Object.keys(selectedPlacesMap).length > 0 && (
-          <div className="border-4 w-full border-black rounded-lg">
+          <div className="border-4 w-full border-black rounded-lg h-[30rem] overflow-y-auto">
             <div className="flex flex-col items-center bg-black">
               <h1 className="text-3xl text-white">Places Information</h1>
               <p className="text-lg text-white">Assign alias to the places</p>
@@ -738,12 +754,28 @@ export default function ContextGenerator() {
                       {selectedPlacesMap[place_id].alias ||
                         savedPlacesMap[place_id].name}
                     </h1>
-                    <h1 className={`text-center w-1/3`}>
-                      {nearbyPlacesMap[place_id].type}
-                    </h1>
-                    <h1 className={`text-center w-1/3`}>
-                      {nearbyPlacesMap[place_id].list.length}
-                    </h1>
+                    <div className={`flex flex-col gap-2 w-2/3`}>
+                      {Object.keys(nearbyPlacesMap[place_id]).map(
+                        (type, index) => (
+                          <>
+                            <div
+                              key={index}
+                              className="flex flex-row gap-1 items-center w-full"
+                            >
+                              <h1 className={`text-center w-1/2`}>{type}</h1>
+                              <h1 className={`text-center w-1/2`}>
+                                {nearbyPlacesMap[place_id][type].length}
+                              </h1>
+                            </div>
+                            {index <
+                              Object.keys(nearbyPlacesMap[place_id]).length -
+                                1 && (
+                              <div className="h-[1px] bg-black w-full"></div>
+                            )}
+                          </>
+                        )
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -986,7 +1018,7 @@ export default function ContextGenerator() {
               ))}
             </div>
             <div className="flex flex-row w-full gap-2 p-2">
-              <Button
+              {/* <Button
                 className="bg-blue-500 rounded-lg p-2 my-2 w-full"
                 onClick={() => {
                   navigator.clipboard.writeText(
@@ -996,7 +1028,7 @@ export default function ContextGenerator() {
                 variant="contained"
               >
                 Copy
-              </Button>
+              </Button> */}
               <Button
                 className="bg-blue-500 rounded-lg p-2 my-2 w-full"
                 onClick={() => {
@@ -1032,24 +1064,32 @@ export default function ContextGenerator() {
                   });
 
                   Object.keys(nearbyPlacesMap).forEach((place_id, index) => {
-                    newContext.push(
-                      `Nearby places of ${
-                        selectedPlacesMap[place_id].alias ||
-                        savedPlacesMap[place_id].name
-                      } of type ${nearbyPlacesMap[place_id].type} are:`
-                    );
-                    nearbyPlacesMap[place_id].list.forEach(
-                      (near_place_id, index) => {
-                        newContext.push(
-                          `${index + 1}. ${
-                            selectedPlacesMap[near_place_id].alias ||
-                            savedPlacesMap[near_place_id].name
-                          }`
-                        );
-                      }
-                    );
+                    Object.keys(nearbyPlacesMap[place_id]).forEach((type) => {
+                      newContext.push(
+                        `Nearby places of ${
+                          selectedPlacesMap[place_id].alias ||
+                          savedPlacesMap[place_id].name
+                        } of type ${type} are (ranked by distance):`
+                      );
+                      nearbyPlacesMap[place_id][type].forEach(
+                        (near_place_id, index) => {
+                          newContext.push(
+                            `${index + 1}. ${
+                              selectedPlacesMap[near_place_id].alias ||
+                              savedPlacesMap[near_place_id].name
+                            }`
+                          );
+                        }
+                      );
+                    });
                   });
                   setContext(newContext);
+
+                  setContextJSON({
+                    distance_matrix: distanceMatrix,
+                    places: selectedPlacesMap,
+                    nearby_places: nearbyPlacesMap,
+                  });
                 }}
                 variant="contained"
               >

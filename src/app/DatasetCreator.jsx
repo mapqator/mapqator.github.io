@@ -10,12 +10,14 @@ import {
   FormControlLabel,
   Radio,
   IconButton,
+  Button,
+  TextField,
 } from "@mui/material";
 import QueryCard from "./QueryCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
-export default function DatasetCreator() {
+export default function DatasetCreator({ contextJSON, context }) {
   const [query, setQuery] = useState({
     question: "",
     answer: {
@@ -24,9 +26,11 @@ export default function DatasetCreator() {
       correct: -1,
     },
     context: "",
+    contextJSON: {},
+    class: "",
   });
   const [newOption, setNewOption] = useState("");
-
+  const [contextCopied, setContextCopied] = useState(false);
   const [queries, setQueries] = useState([]);
   const fetchQueries = async () => {
     try {
@@ -43,7 +47,7 @@ export default function DatasetCreator() {
     fetchQueries();
   }, []);
   return (
-    <div className="w-1/2 flex flex-col items-center p-5 bg-white">
+    <div className="w-1/2 flex flex-col items-center p-5 bg-white gap-2">
       <h1 className="text-3xl">Map Dataset Creator</h1>
 
       <h1 className="bg-black h-1 w-full my-2"></h1>
@@ -188,14 +192,51 @@ export default function DatasetCreator() {
         </>
       )}
 
-      <label className="text-lg w-full text-left font-bold">Context</label>
-      <textarea
-        className="border border-black w-full"
-        value={query.context}
-        onChange={(e) =>
-          setQuery((prev) => ({ ...prev, context: e.target.value }))
-        }
-      />
+      <div className="flex flex-row gap-2 w-full justify-start items-center">
+        <label className="text-lg text-left font-bold">Context</label>
+        <Button
+          className="bg-green-500 rounded-lg p-2"
+          onClick={() => {
+            setContextCopied(true);
+            setQuery((prev) => ({
+              ...prev,
+              context: context.reduce((acc, e) => acc + e + "\n", ""),
+              contextJSON: contextJSON,
+            }));
+          }}
+          variant="contained"
+          color="success"
+          disabled={Object.keys(contextJSON).length === 0}
+        >
+          {Object.keys(contextJSON).length === 0
+            ? "Generate context first"
+            : "Use generated context"}
+        </Button>
+      </div>
+
+      {contextCopied && (
+        <textarea
+          className="border border-black w-full"
+          value={query.context}
+          onChange={(e) =>
+            setQuery((prev) => ({ ...prev, context: e.target.value }))
+          }
+        />
+      )}
+
+      <div className="flex flex-col gap-2 mr-auto">
+        <label className="text-lg text-left font-bold">Category</label>
+        <TextField
+          type="text"
+          className="border border-black mr-auto"
+          value={query.class}
+          onChange={(e) =>
+            setQuery((prev) => ({ ...prev, class: e.target.value }))
+          }
+          size="small"
+          // label="Category"
+        />
+      </div>
 
       <button
         className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
@@ -203,6 +244,18 @@ export default function DatasetCreator() {
           const res = await queryApi.createQuery(query);
           if (res.success) {
             console.log("Query saved successfully");
+            fetchQueries();
+            setQuery({
+              question: "",
+              answer: {
+                type: "mcq",
+                options: [],
+                correct: -1,
+              },
+              context: "",
+              contextJSON: {},
+              class: "",
+            });
           }
         }}
       >
