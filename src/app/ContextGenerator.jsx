@@ -12,31 +12,33 @@ export default function ContextGenerator() {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
-  const [selectedPlaces, setSelectedPlaces] = useState([]);
-  const [savedPlaces, setSavedPlaces] = useState([]);
-  const [distances, setDistances] = useState([
-    {
-      from: null,
-      to: null,
-      attributes: ["duration", "distance"],
-      value: { duration: "", distance: "" },
-    },
-  ]);
 
-  const [addPlace, setAddPlace] = useState(null);
+  // place_id -> place
+  const [savedPlacesMap, setSavedPlacesMap] = useState({});
+
+  // place: place_id, alias: string, selectedAttributes: [string], attributes: [string]
+  const [selectedPlacesMap, setSelectedPlacesMap] = useState({});
+
+  const [distanceMatrix, setDistanceMatrix] = useState({});
+  const [newDistance, setNewDistance] = useState({
+    from: null,
+    to: null,
+  });
+
+  const [addPlace, setAddPlace] = useState("");
   const [context, setContext] = useState([]);
-  const [nearbyPlaces, setNearbyPlaces] = useState([
-    {
-      location: null,
-      type: "",
-      list: [], // list of indices of selectedPlaces
-    },
-  ]);
+
+  const [nearbyPlacesMap, setNearbyPlacesMap] = useState({}); // place_id -> place
+  const [newNearbyPlaces, setNewNearbyPlaces] = useState({
+    location: "",
+    type: "",
+    list: [],
+  });
   const [nearbyPlacesResults, setNearbyPlacesResults] = useState([]); // list of places from nearby search
 
-  const placeToContext = (e) => {
-    let place = e.place;
-    let attributes = e.selectedAttributes;
+  const placeToContext = (place_id) => {
+    let place = savedPlacesMap[place_id];
+    let attributes = selectedPlacesMap[place_id].selectedAttributes;
     let text = "";
 
     if (
@@ -70,10 +72,12 @@ export default function ContextGenerator() {
     try {
       const res = await placeApi.getPlaces();
       if (res.success) {
-        // save in lexigraphical order of name
-        console.log("Data: ", res.data);
-        res.data.sort((a, b) => a.name.localeCompare(b.name));
-        setSavedPlaces(res.data);
+        // create a map for easy access
+        const newSavedPlacesMap = {};
+        res.data.forEach((e) => {
+          newSavedPlacesMap[e.place_id] = e;
+        });
+        setSavedPlacesMap(newSavedPlacesMap);
       }
     } catch (error) {
       console.error("Error fetching data: ", error);
@@ -109,9 +113,18 @@ export default function ContextGenerator() {
     }
   };
 
+  const savePlaceToDatabase = async (place, status) => {
+    if (status === google.maps.places.PlacesServiceStatus.OK && place) {
+      const res = await placeApi.createPlace(place);
+      if (res.success) {
+        const newSavedPlacesMap = { ...savedPlacesMap };
+        newSavedPlacesMap[res.data[0].place_id] = res.data[0];
+        setSavedPlacesMap(newSavedPlacesMap);
+      }
+    }
+  };
+
   const handleSave = async () => {
-    console.log("Saved: ", selectedPlace);
-    // Save the selected place as needed
     try {
       const service = new google.maps.places.PlacesService(
         document.getElementById("map")
@@ -119,52 +132,21 @@ export default function ContextGenerator() {
       const request = {
         placeId: selectedPlace["place_id"],
       };
-      service.getDetails(request, async (place, status) => {
-        if (
-          status === google.maps.places.PlacesServiceStatus.OK &&
-          place &&
-          place.geometry &&
-          place.geometry.location
-        ) {
-          console.log("Saving:", place);
-          const res = await placeApi.createPlace(place);
-          if (res.success) {
-            console.log("Place saved successfully", res.data[0]);
-            // Add the saved place to the list if place_id already exist, update it
-            const index = savedPlaces.findIndex(
-              (e) => e.place_id === res.data[0].place_id
-            );
-            if (index !== -1) {
-              // update
-              const newSavedPlaces = [...savedPlaces];
-              newSavedPlaces[index] = res.data[0];
-              newSavedPlaces.sort((a, b) => a.name.localeCompare(b.name));
-              setSavedPlaces(newSavedPlaces);
-            } else {
-              const newSavedPlaces = [...savedPlaces, res.data[0]];
-              newSavedPlaces.sort((a, b) => a.name.localeCompare(b.name));
-              setSavedPlaces(newSavedPlaces);
-            }
-            return res.data[0];
-          }
-        }
-      });
+      service.getDetails(request, savePlaceToDatabase);
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
   };
 
   const addNearbyPlaces = () => {
-    const newSavedPlaces = [...savedPlaces];
-    const newSelectedPlaces = [...selectedPlaces];
-    const newNearbyPlaces = [...nearbyPlaces];
+    const newSavedPlacesMap = { ...savedPlacesMap };
+    const newSelectedPlacesMap = { ...selectedPlacesMap };
+    const newNearbyPlacesMap = { ...nearbyPlacesMap };
     nearbyPlacesResults
       .filter((e) => e.selected)
       .forEach(async (e) => {
-        const index = newSavedPlaces.findIndex(
-          (place) => place.place_id === e.place.place_id
-        );
-        if (index === -1) {
+        if (newSavedPlacesMap[e.place.place_id] === undefined) {
+          // not saved
           const service = new google.maps.places.PlacesService(
             document.getElementById("map")
           );
@@ -178,68 +160,72 @@ export default function ContextGenerator() {
               place.geometry &&
               place.geometry.location
             ) {
-              const res = await placeApi.createPlace(place);
+              const res = await placeApi.createPlace(place); //save
               if (res.success) {
-                console.log("Place saved successfully", res.data[0]);
-                if (
-                  newSelectedPlaces.find(
-                    (e) => e.place.place_id === place.place_id
-                  ) === undefined
-                ) {
-                  const newPlace = {
-                    place: res.data[0],
-                    alias: "",
-                    selectedAttributes: ["formatted_address", "geometry"],
-                    attributes: Object.keys(place).filter(
-                      (e) => place[e] !== null
-                    ),
-                  };
-                  newSelectedPlaces.push(newPlace);
-                  newNearbyPlaces[newNearbyPlaces.length - 1].list.push(
-                    newPlace
+                newSavedPlacesMap[res.data[0].place_id] = res.data[0];
+                newSelectedPlacesMap[res.data[0].place_id] = {
+                  alias: "",
+                  selectedAttributes: ["formatted_address", "geometry"],
+                  attributes: Object.keys(res.data[0]).filter(
+                    (e) => res.data[0][e] !== null
+                  ),
+                };
+                if (newNearbyPlacesMap[newNearbyPlaces.location]) {
+                  newNearbyPlacesMap[newNearbyPlaces.location].list.push(
+                    res.data[0].place_id
                   );
+                } else {
+                  newNearbyPlacesMap[newNearbyPlaces.location] = {
+                    type: newNearbyPlaces.type,
+                    list: [res.data[0].place_id],
+                  };
                 }
               }
             }
           });
         } else {
-          const p = newSavedPlaces[index];
-          if (
-            newSelectedPlaces.find((e) => e.place.place_id === p.place_id) ===
-            undefined
-          ) {
-            const newPlace = {
-              place: p,
+          if (newSelectedPlacesMap[e.place.place_id] === undefined) {
+            newSelectedPlacesMap[e.place.place_id] = {
               alias: "",
               selectedAttributes: ["formatted_address", "geometry"],
-              attributes: Object.keys(p).filter((e) => p[e] !== null),
+              attributes: Object.keys(
+                newSavedPlacesMap[e.place.place_id]
+              ).filter(
+                (key) => newSavedPlacesMap[e.place.place_id][key] !== null
+              ),
             };
-            newSelectedPlaces.push(newPlace);
-            newNearbyPlaces[newNearbyPlaces.length - 1].list.push(newPlace);
+          }
+          if (newNearbyPlacesMap[newNearbyPlaces.location]) {
+            newNearbyPlacesMap[newNearbyPlaces.location].list.push(
+              e.place.place_id
+            );
+          } else {
+            newNearbyPlacesMap[newNearbyPlaces.location] = {
+              type: newNearbyPlaces.type,
+              list: [e.place.place_id],
+            };
           }
         }
       });
 
-    newNearbyPlaces.push({ location: null, type: "", list: [] });
-
-    setSavedPlaces(newSavedPlaces);
-    setSelectedPlaces(newSelectedPlaces);
-    setNearbyPlaces(newNearbyPlaces);
+    setNewNearbyPlaces({ location: null, type: "", list: [] });
+    setSavedPlacesMap(newSavedPlacesMap);
+    setSelectedPlacesMap(newSelectedPlacesMap);
+    setNearbyPlacesMap(newNearbyPlacesMap);
     setNearbyPlacesResults([]);
   };
 
   const searchNearbyPlaces = async () => {
-    console.log("Nearby Places: ", nearbyPlaces);
-    const prev = nearbyPlaces[nearbyPlaces.length - 1];
-    if (prev.location === null || prev.type === "") return;
+    if (newNearbyPlaces.location === null || newNearbyPlaces.type === "")
+      return;
     try {
       const service = new google.maps.places.PlacesService(
         document.getElementById("map")
       );
       const request = {
-        location: prev.location.place.geometry.location,
+        location: savedPlacesMap[newNearbyPlaces.location].geometry.location,
         // radius: prev.radius,
-        type: prev.type,
+        type: newNearbyPlaces.type,
         rankBy: google.maps.places.RankBy.DISTANCE,
       };
       service.nearbySearch(request, async (places, status) => {
@@ -277,33 +263,20 @@ export default function ContextGenerator() {
           console.log("Saving:", place);
           const res = await placeApi.createPlace(place);
           if (res.success) {
-            console.log("Place saved successfully", res.data[0]);
-            // Add the saved place to the list
-            const index = savedPlaces.findIndex(
-              (e) => e.place_id === res.data[0].place_id
-            );
-            if (index !== -1) {
-              const newSavedPlaces = [...savedPlaces];
-              newSavedPlaces[index] = res.data[0];
-              newSavedPlaces.sort((a, b) => a.name.localeCompare(b.name));
-              setSavedPlaces(newSavedPlaces);
-            } else {
-              const newSavedPlaces = [...savedPlaces, res.data[0]];
-              newSavedPlaces.sort((a, b) => a.name.localeCompare(b.name));
-              setSavedPlaces(newSavedPlaces);
-            }
+            const newSavedPlacesMap = { ...savedPlacesMap };
+            newSavedPlacesMap[res.data[0].place_id] = res.data[0];
+            setSavedPlacesMap(newSavedPlacesMap);
 
-            setSelectedPlaces([
-              ...selectedPlaces,
-              {
-                place: res.data[0],
-                alias: "",
-                selectedAttributes: ["formatted_address", "geometry"],
-                attributes: Object.keys(res.data[0]).filter(
-                  (e) => res.data[0][e] !== null
-                ),
-              },
-            ]);
+            const newSelectedPlacesMap = { ...selectedPlacesMap };
+            newSelectedPlacesMap[res.data[0].place_id] = {
+              alias: "",
+              selectedAttributes: ["formatted_address", "geometry"],
+              attributes: Object.keys(res.data[0]).filter(
+                (e) => res.data[0][e] !== null
+              ),
+            };
+            setSelectedPlacesMap(newSelectedPlacesMap);
+
             setSelectedPlace(null);
             return res.data[0];
           }
@@ -314,41 +287,31 @@ export default function ContextGenerator() {
     }
   };
 
-  const handleAdd = (place) => {
+  const handleAdd = (place_id) => {
     // Don't add if already added
-    console.log("Place: ", place);
-    if (place === null || place === undefined) return;
-    if (selectedPlaces.find((e) => e.place === place) !== undefined) {
-      setAddPlace(null);
-      return;
-    }
-    setSelectedPlaces([
-      ...selectedPlaces,
-      {
-        place: place,
-        alias: "",
-        selectedAttributes: ["formatted_address", "geometry"],
-        attributes: Object.keys(place).filter((e) => place[e] !== null),
-      },
-    ]);
+    if (place_id === "") return;
 
-    setAddPlace(null);
+    const newSelectedPlacesMap = { ...selectedPlacesMap };
+    newSelectedPlacesMap[place_id] = {
+      alias: "",
+      selectedAttributes: ["formatted_address", "geometry"],
+      attributes: Object.keys(savedPlacesMap[place_id]).filter(
+        (key) => savedPlacesMap[place_id][key] !== null
+      ),
+    };
+    setSelectedPlacesMap(newSelectedPlacesMap);
+
+    setAddPlace("");
   };
 
   const handleDistanceAdd = () => {
-    const prev = distances[distances.length - 1];
-    console.log(
-      "->",
-      "place_id:" + prev.from.place.place_id,
-      "place_id:" + prev.to.place.place_id
-    );
-    if (prev.from === null || prev.to === null) return;
+    if (newDistance.from === "" || newDistance.to === "") return;
     // Fetch the distance between the two places from google maps
     const service = new google.maps.DistanceMatrixService();
     service.getDistanceMatrix(
       {
-        origins: [prev.from.place.formatted_address],
-        destinations: [prev.to.place.formatted_address],
+        origins: [savedPlacesMap[newDistance.from].formatted_address],
+        destinations: [savedPlacesMap[newDistance.to].formatted_address],
         travelMode: google.maps.TravelMode.WALKING,
         unitSystem: google.maps.UnitSystem.METRIC,
         avoidHighways: false,
@@ -360,21 +323,21 @@ export default function ContextGenerator() {
         } else {
           console.log("Response: ", response);
           const distance = response.rows[0].elements[0];
-          const newDistances = [...distances];
-          newDistances[distances.length - 1].value = {
-            duration: distance.duration.text,
-            distance: distance.distance.text,
-          };
-          console.log("Distance: ", newDistances[distances.length - 1].value);
-          setDistances([
-            ...newDistances,
-            {
-              from: null,
-              to: null,
-              attributes: ["duration", "distance"],
-              value: { duration: "", distance: "" },
-            },
-          ]);
+          const newDistanceMatrix = { ...distanceMatrix };
+          if (newDistanceMatrix[newDistance.from])
+            newDistanceMatrix[newDistance.from][newDistance.to] = {
+              duration: distance.duration.text,
+              distance: distance.distance.text,
+            };
+          else {
+            newDistanceMatrix[newDistance.from] = {
+              [newDistance.to]: {
+                duration: distance.duration.text,
+                distance: distance.distance.text,
+              },
+            };
+          }
+          setDistanceMatrix(newDistanceMatrix);
         }
       }
     );
@@ -390,45 +353,6 @@ export default function ContextGenerator() {
           <h1 className="text-3xl text-black">Context Generator</h1>
           <p className="text-lg">Generate context for a given question</p>
           <h1 className="bg-black h-1 w-full mt-2"></h1>
-
-          {/* <div className="border-4 w-full border-black rounded-lg">
-            <div className="flex flex-col items-center bg-black">
-              <h1 className="text-2xl text-white">Selected Places</h1>
-              <p className="text-lg text-white">
-                Places that are used in context
-              </p>
-            </div>
-            <div className="flex flex-col m-3 p-1 bg-blue-400 gap-1">
-              <div className="flex flex-row">
-                <h1 className="text-lg w-[70%] text-center font-bold">Place</h1>
-                <h1 className="text-lg w-[30%] text-center font-bold">Alias</h1>
-              </div>
-              {selectedPlaces.map((e, index) => (
-                <div
-                  key={index}
-                  className="flex flex-row gap-1 items-center bg-white px-2"
-                >
-                  <h1
-                    className={`flex flex-row justify-center full p-2 mt-2 w-[70%]`}
-                  >
-                
-                    {e.place.name} - {e.place.formatted_address}
-                  </h1>
-                  <input
-                    type="text"
-                    placeholder="Alias"
-                    value={e.alias}
-                    className="border border-black p-2 w-[30%]"
-                    onChange={(event) => {
-                      const newSelectedPlaces = [...selectedPlaces];
-                      newSelectedPlaces[index].alias = event.target.value;
-                      setSelectedPlaces(newSelectedPlaces);
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          </div> */}
         </div>
 
         <div className="flex flex-row gap-4">
@@ -440,54 +364,30 @@ export default function ContextGenerator() {
               </p>
             </div>
 
-            {/* <form
-            className="flex flex-col items-center mt-10"
-            onSubmit={handleSearch}
-          >
-            <input
-              type="text"
-              placeholder="Search for a place"
-              className="border border-black rounded-lg p-2"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <button
-              className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
-              type="submit"
-            >
-              Search
-            </button>
-          </form> */}
-            {/* Show the saved places */}
-            {/* <button
-              className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
-              onClick={fetchPlaces}
-            >
-              refresh
-            </button> */}
-
             <div className="p-2 w-full overflow-y-auto max-h-[40vh] flex flex-col gap-1">
-              {savedPlaces.map((place, index) => (
+              {Object.keys(savedPlacesMap).map((place_id, index) => (
                 <li key={index} className="flex flex-row gap-2 items-center">
                   <button
                     className={`border-black flex flex-row justify-center border w-full rounded-lg p-2 mt-2 ${
-                      addPlace === place ? "bg-[#888888]" : "hover:bg-[#cccccc]"
+                      addPlace === place_id
+                        ? "bg-[#888888]"
+                        : "hover:bg-[#cccccc]"
                     }`}
                     onClick={() => {
-                      if (addPlace === place) {
-                        setAddPlace(null);
+                      if (addPlace === place_id) {
+                        setAddPlace("");
                       } else {
-                        setAddPlace(place);
+                        setAddPlace(place_id);
                       }
                     }}
                   >
-                    {/* <h1 className="text-3xl">{index + 1}</h1> */}
-                    {place.name} - {place.formatted_address}
+                    {savedPlacesMap[place_id].name} -{" "}
+                    {savedPlacesMap[place_id].formatted_address}
                   </button>
                 </li>
               ))}
             </div>
-            {addPlace && (
+            {addPlace !== "" && (
               <button
                 className="bg-blue-500 rounded-sm p-2 w-full"
                 onClick={() => handleAdd(addPlace)}
@@ -566,7 +466,7 @@ export default function ContextGenerator() {
           </div>
         </div>
 
-        {selectedPlaces.length > 0 && (
+        {Object.keys(selectedPlacesMap).length > 0 && (
           <div className="border-4 w-full border-black rounded-lg">
             <div className="flex flex-col items-center bg-black">
               <h1 className="text-3xl text-white">Places Information</h1>
@@ -583,7 +483,7 @@ export default function ContextGenerator() {
                   </h1>
                 </div>
 
-                {selectedPlaces.map((e, index) => (
+                {Object.keys(selectedPlacesMap).map((place_id, index) => (
                   <div
                     key={index}
                     className="flex flex-row gap-1 items-center bg-white p-2"
@@ -591,7 +491,8 @@ export default function ContextGenerator() {
                     <div className="flex flex-col gap-2 w-[70%]">
                       <h1 className={`w-full text-left`}>
                         {/* <h1 className="text-3xl">{index + 1}</h1> */}
-                        {e.place.name} - {e.place.formatted_address}
+                        {savedPlacesMap[place_id].name} -{" "}
+                        {savedPlacesMap[place_id].formatted_address}
                       </h1>
                       <FormControl
                         // fullWidth
@@ -611,44 +512,45 @@ export default function ContextGenerator() {
                           multiple
                           id="outlined-adornment"
                           className="outlined-input"
-                          value={e.selectedAttributes}
+                          value={selectedPlacesMap[place_id].selectedAttributes}
                           onChange={(event) => {
                             const newAttributes = event.target.value;
-                            const newSelectedPlaces = [...selectedPlaces];
-                            console.log("New Attributes: ", newAttributes);
-                            console.log(
-                              "Old Attributes: ",
-                              newSelectedPlaces[index].selectedAttributes
-                            );
-                            newSelectedPlaces[index].selectedAttributes =
+
+                            const newSelectedPlacesMap = {
+                              ...selectedPlacesMap,
+                            };
+                            newSelectedPlacesMap[place_id].selectedAttributes =
                               newAttributes;
-                            setSelectedPlaces(newSelectedPlaces);
+                            setSelectedPlacesMap(newSelectedPlacesMap);
                           }}
                           input={<OutlinedInput label={"Attributes"} />}
                           // MenuProps={MenuProps}
                         >
-                          {e.attributes.map((value, index) => (
-                            <MenuItem
-                              key={index}
-                              value={value}
-                              // sx={{ width: "2rem" }}
-                              // style={getStyles(name, personName, theme)}
-                            >
-                              {value}
-                            </MenuItem>
-                          ))}
+                          {selectedPlacesMap[place_id].attributes.map(
+                            (value, index) => (
+                              <MenuItem
+                                key={index}
+                                value={value}
+                                // sx={{ width: "2rem" }}
+                                // style={getStyles(name, personName, theme)}
+                              >
+                                {value}
+                              </MenuItem>
+                            )
+                          )}
                         </Select>
                       </FormControl>
                     </div>
                     <input
                       type="text"
                       placeholder="Alias"
-                      value={e.alias}
+                      value={selectedPlacesMap[place_id].alias}
                       className="border border-black p-2 w-[30%]"
                       onChange={(event) => {
-                        const newSelectedPlaces = [...selectedPlaces];
-                        newSelectedPlaces[index].alias = event.target.value;
-                        setSelectedPlaces(newSelectedPlaces);
+                        const newSelectedPlacesMap = { ...selectedPlacesMap };
+                        newSelectedPlacesMap[place_id].alias =
+                          event.target.value;
+                        setSelectedPlacesMap(newSelectedPlacesMap);
                       }}
                     />
                   </div>
@@ -658,7 +560,7 @@ export default function ContextGenerator() {
           </div>
         )}
 
-        {selectedPlaces.length > 0 && (
+        {Object.keys(selectedPlacesMap).length > 0 && (
           <div className="flex flex-col border-4 w-full border-black rounded-lg">
             <div className="flex flex-col items-center bg-black">
               <h1 className="text-3xl text-white">Distance Information</h1>
@@ -666,8 +568,8 @@ export default function ContextGenerator() {
                 Distance and Duration from one place to another
               </p>
             </div>
-            {distances.length > 1 && (
-              <div className="m-3 p-1 bg-blue-500 gap-1">
+            {Object.keys(distanceMatrix).length > 0 && (
+              <div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
                 <div className="flex flex-row">
                   <h1 className="text-lg w-[30%] text-center font-bold">
                     From
@@ -681,27 +583,44 @@ export default function ContextGenerator() {
                   </h1>
                 </div>
 
-                {distances.map((e, index) =>
-                  index < distances.length - 1 ? (
-                    <div
-                      key={index}
-                      className="flex flex-row gap-1 items-center bg-white p-2"
-                    >
-                      <h1 className={`text-center w-1/4`}>
-                        {e.from.alias || e.from.place.name}
-                      </h1>
-                      <h1 className={`text-center w-1/4`}>
-                        {e.to.alias || e.to.place.name}
-                      </h1>
-                      <h1 className={`text-center w-1/4`}>
-                        {e.value.distance}
-                      </h1>
-                      <h1 className={`text-center w-1/4`}>
-                        {e.value.duration}
-                      </h1>
+                {Object.keys(distanceMatrix).map((from_id, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-row gap-1 items-center bg-white p-2"
+                  >
+                    <h1 className={`text-center w-1/4`}>
+                      {selectedPlacesMap[from_id].alias ||
+                        savedPlacesMap[from_id].name}
+                    </h1>
+                    <div className="flex flex-col w-3/4">
+                      {Object.keys(distanceMatrix[from_id]).map(
+                        (to_id, index) => (
+                          <>
+                            <div
+                              key={index}
+                              className="flex flex-row gap-1 items-center"
+                            >
+                              <h1 className={`text-center w-1/3`}>
+                                {selectedPlacesMap[to_id].alias ||
+                                  savedPlacesMap[to_id].name}
+                              </h1>
+                              <h1 className={`text-center w-1/3`}>
+                                {distanceMatrix[from_id][to_id].distance}
+                              </h1>
+                              <h1 className={`text-center w-1/3`}>
+                                {distanceMatrix[from_id][to_id].duration}
+                              </h1>
+                            </div>
+                            {Object.keys(distanceMatrix[from_id]).length >
+                              index + 1 && (
+                              <div className="h-[1px] bg-black w-full"></div>
+                            )}
+                          </>
+                        )
+                      )}
                     </div>
-                  ) : null
-                )}
+                  </div>
+                ))}
               </div>
             )}
 
@@ -724,24 +643,19 @@ export default function ContextGenerator() {
                     required
                     id="outlined-adornment"
                     className="outlined-input"
-                    value={distances[distances.length - 1].from}
+                    value={newDistance.from}
                     onChange={(event) => {
-                      const newDistances = [...distances];
-                      newDistances[distances.length - 1].from =
-                        event.target.value;
-                      setDistances(newDistances);
+                      setNewDistance((prev) => ({
+                        ...prev,
+                        from: event.target.value,
+                      }));
                     }}
                     input={<OutlinedInput label={"Attributes"} />}
-                    // MenuProps={MenuProps}
                   >
-                    {selectedPlaces.map((e, index) => (
-                      <MenuItem
-                        key={index}
-                        value={e}
-                        // sx={{ width: "2rem" }}
-                        // style={getStyles(name, personName, theme)}
-                      >
-                        {e.alias || e.place.name}
+                    {Object.keys(selectedPlacesMap).map((place_id, index) => (
+                      <MenuItem key={index} value={place_id}>
+                        {selectedPlacesMap[place_id].alias ||
+                          savedPlacesMap[place_id].name}
                       </MenuItem>
                     ))}
                   </Select>
@@ -765,24 +679,19 @@ export default function ContextGenerator() {
                     required
                     id="outlined-adornment"
                     className="outlined-input"
-                    value={distances[distances.length - 1].to}
+                    value={newDistance.to}
                     onChange={(event) => {
-                      const newDistances = [...distances];
-                      newDistances[distances.length - 1].to =
-                        event.target.value;
-                      setDistances(newDistances);
+                      setNewDistance((prev) => ({
+                        ...prev,
+                        to: event.target.value,
+                      }));
                     }}
                     input={<OutlinedInput label={"Attributes"} />}
-                    // MenuProps={MenuProps}
                   >
-                    {selectedPlaces.map((e, index) => (
-                      <MenuItem
-                        key={index}
-                        value={e}
-                        // sx={{ width: "2rem" }}
-                        // style={getStyles(name, personName, theme)}
-                      >
-                        {e.alias || e.place.name}
+                    {Object.keys(selectedPlacesMap).map((place_id, index) => (
+                      <MenuItem key={index} value={place_id}>
+                        {selectedPlacesMap[place_id].alias ||
+                          savedPlacesMap[place_id].name}
                       </MenuItem>
                     ))}
                   </Select>
@@ -801,7 +710,7 @@ export default function ContextGenerator() {
           </div>
         )}
 
-        {selectedPlaces.length > 0 && (
+        {Object.keys(selectedPlacesMap).length > 0 && (
           <div className="flex flex-col border-4 w-full border-black rounded-lg">
             <div className="flex flex-col items-center bg-black">
               <h1 className="text-3xl text-white">Nearby Places</h1>
@@ -810,7 +719,7 @@ export default function ContextGenerator() {
               </p>
             </div>
 
-            {nearbyPlaces.length > 1 && (
+            {Object.keys(nearbyPlacesMap).length > 0 && (
               <div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
                 <div className="flex flex-row">
                   <h1 className="text-lg w-1/3 text-center font-bold">
@@ -820,20 +729,23 @@ export default function ContextGenerator() {
                   <h1 className="text-lg w-1/3 text-center font-bold">Count</h1>
                 </div>
 
-                {nearbyPlaces.map((e, index) =>
-                  index < nearbyPlaces.length - 1 ? (
-                    <div
-                      key={index}
-                      className="flex flex-row gap-1 items-center bg-white p-2"
-                    >
-                      <h1 className={`text-center w-1/3`}>
-                        {e.location.alias || e.location.place.name}
-                      </h1>
-                      <h1 className={`text-center w-1/3`}>{e.type}</h1>
-                      <h1 className={`text-center w-1/3`}>{e.list.length}</h1>
-                    </div>
-                  ) : null
-                )}
+                {Object.keys(nearbyPlacesMap).map((place_id, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-row gap-1 items-center bg-white p-2"
+                  >
+                    <h1 className={`text-center w-1/3`}>
+                      {selectedPlacesMap[place_id].alias ||
+                        savedPlacesMap[place_id].name}
+                    </h1>
+                    <h1 className={`text-center w-1/3`}>
+                      {nearbyPlacesMap[place_id].type}
+                    </h1>
+                    <h1 className={`text-center w-1/3`}>
+                      {nearbyPlacesMap[place_id].list.length}
+                    </h1>
+                  </div>
+                ))}
               </div>
             )}
 
@@ -856,69 +768,26 @@ export default function ContextGenerator() {
                     required
                     id="outlined-adornment"
                     className="outlined-input"
-                    value={nearbyPlaces[nearbyPlaces.length - 1].location}
+                    value={newNearbyPlaces.location}
                     onChange={(event) => {
-                      const newNearbyPlaces = [...nearbyPlaces];
-                      newNearbyPlaces[nearbyPlaces.length - 1].location =
-                        event.target.value;
-                      setNearbyPlaces(newNearbyPlaces);
+                      setNewNearbyPlaces((prev) => ({
+                        ...prev,
+                        location: event.target.value,
+                      }));
                     }}
                     input={<OutlinedInput label={"Location"} />}
                     // MenuProps={MenuProps}
                   >
-                    {selectedPlaces.map((e, index) => (
-                      <MenuItem
-                        key={index}
-                        value={e}
-                        // sx={{ width: "2rem" }}
-                        // style={getStyles(name, personName, theme)}
-                      >
-                        {e.alias || e.place.name}
+                    {Object.keys(selectedPlacesMap).map((place_id, index) => (
+                      <MenuItem key={index} value={place_id}>
+                        {selectedPlacesMap[place_id].alias ||
+                          savedPlacesMap[place_id].name}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </div>
-              {/* <div className="w-[20%]">
-                <FormControl
-                  fullWidth
-                  className="input-field"
-                  variant="outlined"
-                  size="small"
-                >
-                  <InputLabel
-                    htmlFor="outlined-adornment"
-                    className="input-label"
-                  >
-                    Radius(m)
-                  </InputLabel>
-                  <OutlinedInput
-                    required
-                    placeholder="0"
-                    inputProps={{
-                      step: 1,
-                      min: 0,
-                      max: 50000,
-                    }}
-                    id="outlined-adornment"
-                    className="outlined-input"
-                    type="number"
-                    value={
-                      nearbyPlaces[nearbyPlaces.length - 1].radius === 0
-                        ? ""
-                        : nearbyPlaces[nearbyPlaces.length - 1].radius
-                    }
-                    onChange={(event) => {
-                      const newNearbyPlaces = [...nearbyPlaces];
-                      newNearbyPlaces[nearbyPlaces.length - 1].radius =
-                        event.target.value;
-                      setNearbyPlaces(newNearbyPlaces);
-                    }}
-                    label={"Radius(m)"}
-                    // endAdornment={props.endAdornment}
-                  />
-                </FormControl>
-              </div> */}
+
               <div className="w-[40%]">
                 <FormControl
                   fullWidth
@@ -937,12 +806,12 @@ export default function ContextGenerator() {
                     required
                     id="outlined-adornment"
                     className="outlined-input"
-                    value={nearbyPlaces[nearbyPlaces.length - 1].type}
+                    value={newNearbyPlaces.type}
                     onChange={(event) => {
-                      const newNearbyPlaces = [...nearbyPlaces];
-                      newNearbyPlaces[nearbyPlaces.length - 1].type =
-                        event.target.value;
-                      setNearbyPlaces(newNearbyPlaces);
+                      setNewNearbyPlaces((prev) => ({
+                        ...prev,
+                        type: event.target.value,
+                      }));
                     }}
                     input={<OutlinedInput label={"Type"} />}
                     // MenuProps={MenuProps}
@@ -1101,12 +970,12 @@ export default function ContextGenerator() {
             )}
           </div>
         )}
-        {selectedPlaces.length > 0 && (
+        {Object.keys(selectedPlacesMap).length > 0 && (
           <div className="flex flex-col border-4 w-full border-black rounded-lg">
             <div className="flex flex-col items-center bg-black">
               <h1 className="text-3xl text-white">Generated Context</h1>
               <p className="text-lg text-white">
-                Distance and Duration from one place to another
+                Context generated by our system
               </p>
             </div>
             <div className="p-2 flex flex-col gap-2 w-full">
@@ -1133,45 +1002,52 @@ export default function ContextGenerator() {
                 onClick={() => {
                   // From selected places generate context
                   let newContext = [];
-                  selectedPlaces.forEach((e) => {
-                    const text = placeToContext(e);
+                  Object.keys(selectedPlacesMap).forEach((place_id) => {
+                    const text = placeToContext(place_id);
                     if (text !== "")
                       newContext.push(
                         `Information of ${
-                          e.alias === "" ? e.place.name : e.alias
+                          selectedPlacesMap[place_id].alias ||
+                          savedPlacesMap[place_id].name
                         }: ${text}`
                       );
                   });
 
-                  distances.forEach((e, index) => {
-                    if (index < distances.length - 1) {
-                      newContext.push(
-                        `Distance from ${
-                          e.from.alias === "" ? e.from.place.name : e.from.alias
-                        } to ${
-                          e.to.alias === "" ? e.to.place.name : e.to.alias
-                        } is ${e.value.distance} (${e.value.duration}).`
-                      );
-                    }
+                  Object.keys(distanceMatrix).forEach((from_id, index) => {
+                    Object.keys(distanceMatrix[from_id]).forEach(
+                      (to_id, index) => {
+                        newContext.push(
+                          `Distance from ${
+                            selectedPlacesMap[from_id].alias ||
+                            savedPlacesMap[from_id].name
+                          } to ${
+                            selectedPlacesMap[to_id].alias ||
+                            savedPlacesMap[to_id].name
+                          } is ${distanceMatrix[from_id][to_id].distance} (${
+                            distanceMatrix[from_id][to_id].duration
+                          }).`
+                        );
+                      }
+                    );
                   });
 
-                  nearbyPlaces.forEach((e, index) => {
-                    if (index < nearbyPlaces.length - 1) {
-                      newContext.push(
-                        `Nearby places of ${
-                          e.location.alias === ""
-                            ? e.location.place.name
-                            : e.location.alias
-                        } of type ${e.type} are:`
-                      );
-                      e.list.forEach((place, index) => {
+                  Object.keys(nearbyPlacesMap).forEach((place_id, index) => {
+                    newContext.push(
+                      `Nearby places of ${
+                        selectedPlacesMap[place_id].alias ||
+                        savedPlacesMap[place_id].name
+                      } of type ${nearbyPlacesMap[place_id].type} are:`
+                    );
+                    nearbyPlacesMap[place_id].list.forEach(
+                      (near_place_id, index) => {
                         newContext.push(
                           `${index + 1}. ${
-                            place.alias === "" ? place.place.name : place.alias
+                            selectedPlacesMap[near_place_id].alias ||
+                            savedPlacesMap[near_place_id].name
                           }`
                         );
-                      });
-                    }
+                      }
+                    );
                   });
                   setContext(newContext);
                 }}

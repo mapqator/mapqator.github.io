@@ -4,8 +4,16 @@ import React, { useEffect, useState } from "react";
 import QueryApi from "@/api/queryApi";
 const queryApi = new QueryApi();
 import FormControl from "@mui/material/FormControl";
-import { FormLabel, RadioGroup, FormControlLabel, Radio } from "@mui/material";
+import {
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  IconButton,
+} from "@mui/material";
 import QueryCard from "./QueryCard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default function DatasetCreator() {
   const [query, setQuery] = useState({
@@ -79,7 +87,7 @@ export default function DatasetCreator() {
       </FormControl>
 
       {query.answer.type === "mcq" ? (
-        <div className="w-full">
+        <div className="w-full flex flex-col gap-2">
           <FormLabel id="demo-radio-buttons-group-label">
             <label className="text-lg w-full text-left font-bold text-black focus:text-black">
               Answer
@@ -120,14 +128,46 @@ export default function DatasetCreator() {
                 <input
                   type="radio"
                   checked={query.answer.correct === index}
-                  onChange={() =>
+                  onClick={() =>
                     setQuery((prev) => ({
                       ...prev,
-                      answer: { ...prev.answer, correct: index },
+                      answer: {
+                        ...prev.answer,
+                        correct: prev.answer.correct === index ? -1 : index,
+                      },
                     }))
                   }
                 />
-                <h1 className="text-lg">{option}</h1>
+                <input
+                  type="text"
+                  className="text-lg"
+                  value={option}
+                  onChange={(e) => {
+                    setQuery((prev) => {
+                      const options = [...prev.answer.options];
+                      options[index] = e.target.value;
+                      return {
+                        ...prev,
+                        answer: { ...prev.answer, options },
+                      };
+                    });
+                  }}
+                />
+                <IconButton
+                  onClick={() => {
+                    setQuery((prev) => {
+                      const options = [...prev.answer.options];
+                      options.splice(index, 1);
+                      return {
+                        ...prev,
+                        answer: { ...prev.answer, options },
+                      };
+                    });
+                  }}
+                  sx={{ height: "2rem", width: "2rem" }}
+                >
+                  <FontAwesomeIcon icon={faTrash} color="red" size="sm" />
+                </IconButton>
               </div>
             ))}
           </div>
