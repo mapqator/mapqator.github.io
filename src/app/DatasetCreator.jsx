@@ -27,6 +27,7 @@ export default function DatasetCreator({ contextJSON, context }) {
     },
     context: "",
     contextJSON: {},
+    contextGPT: "",
     class: "",
   });
   const [newOption, setNewOption] = useState("");
@@ -215,14 +216,42 @@ export default function DatasetCreator({ contextJSON, context }) {
       </div>
 
       {contextCopied && (
-        <textarea
-          className="border border-black w-full"
-          value={query.context}
-          onChange={(e) =>
-            setQuery((prev) => ({ ...prev, context: e.target.value }))
-          }
-        />
+        <>
+          <textarea
+            className="border border-black w-full"
+            value={query.context}
+            onChange={(e) =>
+              setQuery((prev) => ({ ...prev, context: e.target.value }))
+            }
+          />
+          <textarea
+            className="border border-black w-full"
+            value={query.contextGPT}
+            onChange={(e) =>
+              setQuery((prev) => ({ ...prev, contextGPT: e.target.value }))
+            }
+          />
+        </>
       )}
+      <Button
+        className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
+        variant="contained"
+        onClick={async () => {
+          console.log(query.context);
+          const res = await queryApi.getGPTContext(query.context);
+          if (res.success) {
+            console.log("Context generated successfully");
+            setQuery((prev) => ({
+              ...prev,
+              contextGPT: res.data,
+            }));
+          } else {
+            console.error("Error generating context");
+          }
+        }}
+      >
+        Generate GPT Context
+      </Button>
 
       <div className="flex flex-col gap-2 mr-auto">
         <label className="text-lg text-left font-bold">Category</label>
