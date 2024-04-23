@@ -8,6 +8,60 @@ import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { Select, MenuItem, Button } from "@mui/material";
 
+const AutocompleteSearchBox = ({ savedPlacesMap, addPlace, setAddPlace }) => {
+  const [search, setSearch] = useState("");
+
+  const filteredPlaces = Object.values(savedPlacesMap).filter((place) =>
+    place.name.toLowerCase().includes(search.toLowerCase())
+  );
+  return (
+    <>
+      <form
+        className="flex flex-col items-center w-full py-3 px-2"
+        // onSubmit={handleSearch}
+      >
+        <input
+          type="text"
+          placeholder="Search for a place"
+          className="border border-black rounded-lg p-2 w-full"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <button
+          className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
+          type="submit"
+        >
+          Search
+        </button>
+      </form>
+      <div className="p-2 w-full overflow-y-auto max-h-[40vh] flex flex-col gap-1">
+        {search !== "" &&
+          filteredPlaces.map((place, index) => (
+            <li key={index} className="flex flex-row gap-2 items-center">
+              <button
+                className={`border-black flex flex-row justify-center border w-full rounded-lg p-2 mt-2 ${
+                  addPlace === place.place_id
+                    ? "bg-[#888888]"
+                    : "hover:bg-[#cccccc]"
+                }`}
+                onClick={() => {
+                  if (addPlace === place.place_id) {
+                    setAddPlace("");
+                  } else {
+                    setAddPlace(place.place_id);
+                  }
+                }}
+              >
+                {savedPlacesMap[place.place_id].name} -{" "}
+                {savedPlacesMap[place.place_id].formatted_address}
+              </button>
+            </li>
+          ))}
+      </div>
+    </>
+  );
+};
+
 export default function ContextGenerator({
   setContextJSON,
   context,
@@ -382,30 +436,13 @@ export default function ContextGenerator({
                 Choose a place from the database
               </p>
             </div>
+            <AutocompleteSearchBox
+              savedPlacesMap={savedPlacesMap}
+              addPlace={addPlace}
+              setAddPlace={setAddPlace}
+            />
+            {/* Implment autocomplete search box to search for subsequence in the savedPlaces */}
 
-            <div className="p-2 w-full overflow-y-auto max-h-[40vh] flex flex-col gap-1">
-              {Object.keys(savedPlacesMap).map((place_id, index) => (
-                <li key={index} className="flex flex-row gap-2 items-center">
-                  <button
-                    className={`border-black flex flex-row justify-center border w-full rounded-lg p-2 mt-2 ${
-                      addPlace === place_id
-                        ? "bg-[#888888]"
-                        : "hover:bg-[#cccccc]"
-                    }`}
-                    onClick={() => {
-                      if (addPlace === place_id) {
-                        setAddPlace("");
-                      } else {
-                        setAddPlace(place_id);
-                      }
-                    }}
-                  >
-                    {savedPlacesMap[place_id].name} -{" "}
-                    {savedPlacesMap[place_id].formatted_address}
-                  </button>
-                </li>
-              ))}
-            </div>
             {addPlace !== "" && (
               <button
                 className="bg-blue-500 rounded-sm p-2 w-full"
