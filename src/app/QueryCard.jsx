@@ -3,8 +3,13 @@
 import React, { useState } from "react";
 import { IconButton, Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-
+import {
+  faChevronDown,
+  faChevronUp,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import QueryApi from "@/api/queryApi";
+const queryApi = new QueryApi();
 export default function QueryCard({ query }) {
   const [expanded, setExpanded] = useState(false);
   return (
@@ -62,6 +67,20 @@ export default function QueryCard({ query }) {
             </Button>
             <Button variant="contained" color="primary">
               Ask GPT
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              startIcon={<FontAwesomeIcon icon={faTrash} />}
+              onClick={async () => {
+                // Delete the question from the database
+                console.log("Delete question");
+                const response = await queryApi.deleteQuery(query.id);
+                // rrerender the page
+                window.location.reload();
+              }}
+            >
+              Delete
             </Button>
           </div>
         </div>
