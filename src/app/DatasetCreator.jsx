@@ -231,27 +231,27 @@ export default function DatasetCreator({ contextJSON, context }) {
               setQuery((prev) => ({ ...prev, contextGPT: e.target.value }))
             }
           />
+          <Button
+            className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
+            variant="contained"
+            onClick={async () => {
+              console.log(query.context);
+              const res = await queryApi.getGPTContext(query.context);
+              if (res.success) {
+                console.log("Context generated successfully");
+                setQuery((prev) => ({
+                  ...prev,
+                  contextGPT: res.data,
+                }));
+              } else {
+                console.error("Error generating context");
+              }
+            }}
+          >
+            Generate GPT Context
+          </Button>
         </>
       )}
-      <Button
-        className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
-        variant="contained"
-        onClick={async () => {
-          console.log(query.context);
-          const res = await queryApi.getGPTContext(query.context);
-          if (res.success) {
-            console.log("Context generated successfully");
-            setQuery((prev) => ({
-              ...prev,
-              contextGPT: res.data,
-            }));
-          } else {
-            console.error("Error generating context");
-          }
-        }}
-      >
-        Generate GPT Context
-      </Button>
 
       <div className="flex flex-col gap-2 mr-auto">
         <label className="text-lg text-left font-bold">Category</label>

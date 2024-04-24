@@ -6,17 +6,19 @@ const placeApi = new PlaceApi();
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import { Select, MenuItem, Button } from "@mui/material";
+import { Select, MenuItem, Button, TextField } from "@mui/material";
 
 const AutocompleteSearchBox = ({ savedPlacesMap, addPlace, setAddPlace }) => {
   const [search, setSearch] = useState("");
 
-  const filteredPlaces = Object.values(savedPlacesMap).filter((place) =>
-    place.name.toLowerCase().includes(search.toLowerCase())
+  const filteredPlaces = Object.values(savedPlacesMap).filter(
+    (place) =>
+      place.name.toLowerCase().includes(search.toLowerCase()) ||
+      place.formatted_address.toLowerCase().includes(search.toLowerCase())
   );
   return (
     <>
-      <form
+      <div
         className="flex flex-col items-center w-full py-3 px-2"
         // onSubmit={handleSearch}
       >
@@ -29,11 +31,11 @@ const AutocompleteSearchBox = ({ savedPlacesMap, addPlace, setAddPlace }) => {
         />
         <button
           className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
-          type="submit"
+          // type="submit"
         >
           Search
         </button>
-      </form>
+      </div>
       <div className="p-2 w-full overflow-y-auto max-h-[40vh] flex flex-col gap-1">
         {search !== "" &&
           filteredPlaces.map((place, index) => (
@@ -91,11 +93,26 @@ export default function ContextGenerator({
   const [nearbyPlacesMap, setNearbyPlacesMap] = useState({}); // place_id -> place
   const [newNearbyPlaces, setNewNearbyPlaces] = useState({
     location: "",
-    type: "",
+    type: "any",
+    keyword: "",
+    radius: 1,
+    rankBy: 1,
+    hasRadius: false,
     list: [],
   });
   const [nearbyPlacesResults, setNearbyPlacesResults] = useState([]); // list of places from nearby search
 
+  useEffect(() => {
+    setNewNearbyPlaces({
+      location: "",
+      type: "any",
+      keyword: "",
+      radius: 1,
+      rankBy: google.maps.places.RankBy.DISTANCE,
+      hasRadius: false,
+      list: [],
+    });
+  }, []);
   const placeToContext = (place_id) => {
     let place = savedPlacesMap[place_id];
     let attributes = selectedPlacesMap[place_id].selectedAttributes;
@@ -229,31 +246,19 @@ export default function ContextGenerator({
     const newNearbyPlacesMap = { ...nearbyPlacesMap };
     const selectedPlaces = nearbyPlacesResults.filter((e) => e.selected);
 
-    if (
-      newNearbyPlacesMap[newNearbyPlaces.location] &&
-      newNearbyPlacesMap[newNearbyPlaces.location][newNearbyPlaces.type]
-    ) {
-      newNearbyPlacesMap[newNearbyPlaces.location][newNearbyPlaces.type] = [];
+    if (newNearbyPlacesMap[newNearbyPlaces.location] === undefined) {
+      newNearbyPlacesMap[newNearbyPlaces.location] = [];
     }
-    for (const e of selectedPlaces) {
-      if (newNearbyPlacesMap[newNearbyPlaces.location]) {
-        if (
-          newNearbyPlacesMap[newNearbyPlaces.location][newNearbyPlaces.type]
-        ) {
-          newNearbyPlacesMap[newNearbyPlaces.location][
-            newNearbyPlaces.type
-          ].push(e.place.place_id);
-        } else {
-          newNearbyPlacesMap[newNearbyPlaces.location][newNearbyPlaces.type] = [
-            e.place.place_id,
-          ];
-        }
-      } else {
-        newNearbyPlacesMap[newNearbyPlaces.location] = {
-          [newNearbyPlaces.type]: [e.place.place_id],
-        };
-      }
-    }
+
+    newNearbyPlacesMap[newNearbyPlaces.location].push({
+      type: newNearbyPlaces.type,
+      places: selectedPlaces.map((e) => e.place.place_id),
+      keyword: newNearbyPlaces.keyword,
+      radius: newNearbyPlaces.radius,
+      hasRadius: newNearbyPlaces.hasRadius,
+      rankBy: newNearbyPlaces.rankBy,
+    });
+
     setNearbyPlacesMap(newNearbyPlacesMap);
     setNearbyPlacesResults([]);
 
@@ -272,15 +277,15 @@ export default function ContextGenerator({
         }
       }
 
-      if (newSelectedPlacesMap[e.place.place_id] === undefined) {
-        newSelectedPlacesMap[e.place.place_id] = {
-          alias: "",
-          selectedAttributes: ["formatted_address", "geometry"],
-          attributes: Object.keys(newSavedPlacesMap[e.place.place_id]).filter(
-            (key) => newSavedPlacesMap[e.place.place_id][key] !== null
-          ),
-        };
-      }
+      // if (newSelectedPlacesMap[e.place.place_id] === undefined) {
+      //   newSelectedPlacesMap[e.place.place_id] = {
+      //     alias: "",
+      //     selectedAttributes: ["formatted_address", "geometry"],
+      //     attributes: Object.keys(newSavedPlacesMap[e.place.place_id]).filter(
+      //       (key) => newSavedPlacesMap[e.place.place_id][key] !== null
+      //     ),
+      //   };
+      // }
     }
 
     setSelectedPlacesMap(newSelectedPlacesMap);
@@ -295,12 +300,23 @@ export default function ContextGenerator({
       const service = new google.maps.places.PlacesService(
         document.getElementById("map")
       );
-      const request = {
-        location: savedPlacesMap[newNearbyPlaces.location].geometry.location,
-        // radius: prev.radius,
-        type: newNearbyPlaces.type,
-        rankBy: google.maps.places.RankBy.DISTANCE,
-      };
+      const request = newNearbyPlaces.hasRadius
+        ? {
+            location:
+              savedPlacesMap[newNearbyPlaces.location].geometry.location,
+            radius: newNearbyPlaces.radius,
+            type: newNearbyPlaces.type === "any" ? "" : newNearbyPlaces.type,
+            keyword: newNearbyPlaces.keyword,
+          }
+        : {
+            location:
+              savedPlacesMap[newNearbyPlaces.location].geometry.location,
+            type: newNearbyPlaces.type === "any" ? "" : newNearbyPlaces.type,
+            keyword: newNearbyPlaces.keyword,
+            // rankBy: google.maps.places.RankBy.DISTANCE,
+            rankBy: newNearbyPlaces.rankBy,
+          };
+      // type, keyword, rankBy, radius
       service.nearbySearch(request, async (places, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK && places) {
           console.log("Nearby Places: ", places);
@@ -778,51 +794,61 @@ export default function ContextGenerator({
             {Object.keys(nearbyPlacesMap).length > 0 && (
               <div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
                 <div className="flex flex-row">
-                  <h1 className="text-lg w-1/3 text-center font-bold">
+                  <h1 className="text-lg w-[36%] text-center font-bold">
                     Location
                   </h1>
-                  <h1 className="text-lg w-1/3 text-center font-bold">Type</h1>
-                  <h1 className="text-lg w-1/3 text-center font-bold">Count</h1>
+                  <h1 className="text-lg w-[16%] text-center font-bold">
+                    Type
+                  </h1>
+                  <h1 className="text-lg w-[16%] text-center font-bold">
+                    Keyword
+                  </h1>
+                  <h1 className="text-lg w-[16%] text-center font-bold">
+                    Rank By/Radius
+                  </h1>
+                  <h1 className="text-lg w-[16%] text-center font-bold">
+                    Count
+                  </h1>
                 </div>
 
-                {Object.keys(nearbyPlacesMap).map((place_id, index) => (
+                {Object.keys(nearbyPlacesMap).map((place_id, index1) => (
                   <div
-                    key={index}
+                    key={index1}
                     className="flex flex-row gap-1 items-center bg-white p-2"
                   >
-                    <h1 className={`text-center w-1/3`}>
+                    <h1 className={`text-center w-[36%]`}>
                       {selectedPlacesMap[place_id].alias ||
                         savedPlacesMap[place_id].name}
                     </h1>
-                    <div className={`flex flex-col gap-2 w-2/3`}>
-                      {Object.keys(nearbyPlacesMap[place_id]).map(
-                        (type, index) => (
-                          <>
-                            <div
-                              key={index}
-                              className="flex flex-row gap-1 items-center w-full"
-                            >
-                              <h1 className={`text-center w-1/2`}>{type}</h1>
-                              <h1 className={`text-center w-1/2`}>
-                                {nearbyPlacesMap[place_id][type].length}
-                              </h1>
-                            </div>
-                            {index <
-                              Object.keys(nearbyPlacesMap[place_id]).length -
-                                1 && (
-                              <div className="h-[1px] bg-black w-full"></div>
-                            )}
-                          </>
-                        )
-                      )}
+                    <div className={`flex flex-col gap-2 w-[64%]`}>
+                      {nearbyPlacesMap[place_id].map((e, index2) => (
+                        <>
+                          <div
+                            key={index2}
+                            className="flex flex-row gap-1 items-center w-full"
+                          >
+                            <h1 className={`text-center w-1/3`}>{e.type}</h1>
+                            <h1 className={`text-center w-1/3`}>{e.keyword}</h1>
+                            <h1 className={`text-center w-1/3`}>
+                              {e.hasRadius ? e.radius + " m" : "Distance"}
+                            </h1>
+                            <h1 className={`text-center w-1/3`}>
+                              {e.places.length}
+                            </h1>
+                          </div>
+                          {index2 < nearbyPlacesMap[place_id].length - 1 && (
+                            <div className="h-[1px] bg-black w-full"></div>
+                          )}
+                        </>
+                      ))}
                     </div>
                   </div>
                 ))}
               </div>
             )}
 
-            <div className="flex flex-row gap-2 w-full p-2">
-              <div className="w-[40%]">
+            <div className="flex flex-col gap-2 w-full p-2">
+              <div className="w-full">
                 <FormControl
                   fullWidth
                   className="input-field"
@@ -859,8 +885,7 @@ export default function ContextGenerator({
                   </Select>
                 </FormControl>
               </div>
-
-              <div className="w-[40%]">
+              <div className="w-full">
                 <FormControl
                   fullWidth
                   className="input-field"
@@ -889,6 +914,7 @@ export default function ContextGenerator({
                     // MenuProps={MenuProps}
                   >
                     {[
+                      "any",
                       "accounting",
                       "airport",
                       "amusement_park",
@@ -1001,6 +1027,122 @@ export default function ContextGenerator({
                   </Select>
                 </FormControl>
               </div>
+              <div className="w-full">
+                <TextField
+                  // required
+                  fullWidth
+                  id="outlined-adornment"
+                  className="outlined-input"
+                  size="small"
+                  label="Keyword"
+                  value={newNearbyPlaces.keyword}
+                  onChange={(event) => {
+                    setNewNearbyPlaces((prev) => ({
+                      ...prev,
+                      keyword: event.target.value,
+                    }));
+                  }}
+                  input={<OutlinedInput label={"Keyword"} />}
+                  // MenuProps={MenuProps}
+                />
+              </div>
+              <div className="flex flex-row w-full gap-2">
+                <div className="w-full">
+                  <FormControl
+                    fullWidth
+                    className="input-field"
+                    variant="outlined"
+                    size="small"
+                  >
+                    <InputLabel
+                      htmlFor="outlined-adornment"
+                      className="input-label"
+                    >
+                      {/* Location */}
+                    </InputLabel>
+                    <Select
+                      required
+                      id="outlined-adornment"
+                      className="outlined-input"
+                      value={newNearbyPlaces.hasRadius ? "radius" : "rankBy"}
+                      onChange={(event) => {
+                        setNewNearbyPlaces((prev) => ({
+                          ...prev,
+                          hasRadius:
+                            event.target.value === "radius" ? true : false,
+                        }));
+                      }}
+                      // input={<OutlinedInput label={"Location"} />}
+                      // MenuProps={MenuProps}
+                    >
+                      {["rankBy", "radius"].map((e, index) => (
+                        <MenuItem key={index} value={e}>
+                          {e}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+                <div className="w-full">
+                  {newNearbyPlaces.hasRadius ? (
+                    <TextField
+                      // required
+                      fullWidth
+                      id="outlined-adornment"
+                      className="outlined-input"
+                      size="small"
+                      label="Radius"
+                      value={newNearbyPlaces.radius}
+                      onChange={(event) => {
+                        setNewNearbyPlaces((prev) => ({
+                          ...prev,
+                          radius: event.target.value,
+                        }));
+                      }}
+                      type="number"
+                      // input={<OutlinedInput label={"Radius"} />}
+                      // MenuProps={MenuProps}
+                    />
+                  ) : (
+                    <FormControl
+                      fullWidth
+                      className="input-field"
+                      variant="outlined"
+                      size="small"
+                    >
+                      <InputLabel
+                        htmlFor="outlined-adornment"
+                        className="input-label"
+                      ></InputLabel>
+                      <Select
+                        required
+                        id="outlined-adornment"
+                        className="outlined-input"
+                        value={newNearbyPlaces.rankBy}
+                        onChange={(event) => {
+                          setNewNearbyPlaces((prev) => ({
+                            ...prev,
+                            rankBy: event.target.value,
+                          }));
+                        }}
+                        // input={<OutlinedInput label={"Location"} />}
+                        // MenuProps={MenuProps}
+                      >
+                        {[
+                          {
+                            label: "DISTANCE",
+                            value: google.maps.places.RankBy.DISTANCE,
+                          },
+                        ].map((e, index) => (
+                          <MenuItem key={index} value={e.value}>
+                            {e.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                </div>
+              </div>
               <div className="w-1/5">
                 <Button
                   variant="contained"
@@ -1104,25 +1246,33 @@ export default function ContextGenerator({
                   });
 
                   Object.keys(nearbyPlacesMap).forEach((place_id, index) => {
-                    Object.keys(nearbyPlacesMap[place_id]).forEach((type) => {
+                    nearbyPlacesMap[place_id].forEach((e) => {
                       newContext.push(
                         `Nearby places of ${
                           selectedPlacesMap[place_id].alias ||
                           savedPlacesMap[place_id].name
-                        } of type ${type} are (ranked by distance):`
+                        } ${
+                          e.type === "any" ? "" : 'of type "' + e.type + '"'
+                        } ${
+                          e.keyword !== ""
+                            ? 'with keyword "' + e.keyword + '"'
+                            : ""
+                        } are (${
+                          e.hasRadius
+                            ? "in " + e.radius + " m radius"
+                            : "ranked by distance"
+                        }):`
                       );
-                      nearbyPlacesMap[place_id][type].forEach(
-                        (near_place_id, index) => {
-                          newContext.push(
-                            `${index + 1}. ${
-                              selectedPlacesMap[near_place_id].alias ||
-                              savedPlacesMap[near_place_id].name
-                            } | ${
-                              savedPlacesMap[near_place_id].formatted_address
-                            }`
-                          );
-                        }
-                      );
+                      e.places.forEach((near_place_id, index) => {
+                        newContext.push(
+                          `${index + 1}. ${
+                            selectedPlacesMap[near_place_id]?.alias ||
+                            savedPlacesMap[near_place_id].name
+                          } | ${
+                            savedPlacesMap[near_place_id].formatted_address
+                          }`
+                        );
+                      });
                     });
                   });
                   setContext(newContext);
