@@ -93,16 +93,20 @@ export default function ContextPreview({
 
               Object.keys(distanceMatrix).forEach((from_id, index) => {
                 Object.keys(distanceMatrix[from_id]).forEach((to_id, index) => {
-                  newContext.push(
-                    `Distance from ${
-                      selectedPlacesMap[from_id].alias ||
-                      savedPlacesMap[from_id].name
-                    } to ${
-                      selectedPlacesMap[to_id].alias ||
-                      savedPlacesMap[to_id].name
-                    } is ${distanceMatrix[from_id][to_id].distance} (${
-                      distanceMatrix[from_id][to_id].duration
-                    }).`
+                  Object.keys(distanceMatrix[from_id][to_id]).forEach(
+                    (mode) => {
+                      newContext.push(
+                        `${mode} Distance from ${
+                          selectedPlacesMap[from_id].alias ||
+                          savedPlacesMap[from_id].name
+                        } to ${
+                          selectedPlacesMap[to_id].alias ||
+                          savedPlacesMap[to_id].name
+                        } is ${
+                          distanceMatrix[from_id][to_id][mode].distance
+                        } (${distanceMatrix[from_id][to_id][mode].duration}).`
+                      );
+                    }
                   );
                 });
               });

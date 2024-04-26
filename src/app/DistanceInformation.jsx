@@ -24,6 +24,7 @@ export default function DistanceInformation({
     setNewDistance({
       from: null,
       to: null,
+      travelMode: "WALKING",
     });
   }, [selectedPlacesMap]);
   const handleDistanceAdd = () => {
@@ -32,9 +33,9 @@ export default function DistanceInformation({
     const service = new google.maps.DistanceMatrixService();
     service.getDistanceMatrix(
       {
-        origins: [savedPlacesMap[newDistance.from].formatted_address],
-        destinations: [savedPlacesMap[newDistance.to].formatted_address],
-        travelMode: google.maps.TravelMode.WALKING,
+        origins: [{ placeId: newDistance.from }],
+        destinations: [{ placeId: newDistance.to }],
+        travelMode: newDistance.travelMode,
         unitSystem: google.maps.UnitSystem.METRIC,
         avoidHighways: false,
         avoidTolls: false,
@@ -48,14 +49,19 @@ export default function DistanceInformation({
           const newDistanceMatrix = { ...distanceMatrix };
           if (newDistanceMatrix[newDistance.from])
             newDistanceMatrix[newDistance.from][newDistance.to] = {
-              duration: distance.duration.text,
-              distance: distance.distance.text,
+              ...newDistanceMatrix[newDistance.from][newDistance.to],
+              [newDistance.travelMode]: {
+                duration: distance.duration.text,
+                distance: distance.distance.text,
+              },
             };
           else {
             newDistanceMatrix[newDistance.from] = {
               [newDistance.to]: {
-                duration: distance.duration.text,
-                distance: distance.distance.text,
+                [newDistance.travelMode]: {
+                  duration: distance.duration.text,
+                  distance: distance.distance.text,
+                },
               },
             };
           }
@@ -78,11 +84,12 @@ export default function DistanceInformation({
           <div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
             <div className="flex flex-row">
               <h1 className="text-lg w-[30%] text-center font-bold">From</h1>
-              <h1 className="text-lg w-[30%] text-center font-bold">To</h1>
-              <h1 className="text-lg w-[30%] text-center font-bold">
+              <h1 className="text-lg w-[25%] text-center font-bold">To</h1>
+              <h1 className="text-lg w-[15%] text-center font-bold">Mode</h1>
+              <h1 className="text-lg w-[15%] text-center font-bold">
                 Distance
               </h1>
-              <h1 className="text-lg w-[30%] text-center font-bold">
+              <h1 className="text-lg w-[15%] text-center font-bold">
                 Duration
               </h1>
             </div>
@@ -92,34 +99,42 @@ export default function DistanceInformation({
                 key={index}
                 className="flex flex-row gap-1 items-center bg-white p-2"
               >
-                <h1 className={`text-center w-1/4`}>
+                <h1 className={`text-center w-[30%]`}>
                   {selectedPlacesMap[from_id].alias ||
                     savedPlacesMap[from_id].name}
                 </h1>
-                <div className="flex flex-col w-3/4">
-                  {Object.keys(distanceMatrix[from_id]).map((to_id, index) => (
-                    <>
-                      <div
-                        key={index}
-                        className="flex flex-row gap-1 items-center"
-                      >
-                        <h1 className={`text-center w-1/3`}>
-                          {selectedPlacesMap[to_id].alias ||
-                            savedPlacesMap[to_id].name}
-                        </h1>
-                        <h1 className={`text-center w-1/3`}>
-                          {distanceMatrix[from_id][to_id].distance}
-                        </h1>
-                        <h1 className={`text-center w-1/3`}>
-                          {distanceMatrix[from_id][to_id].duration}
-                        </h1>
-                      </div>
-                      {Object.keys(distanceMatrix[from_id]).length >
-                        index + 1 && (
-                        <div className="h-[1px] bg-black w-full"></div>
-                      )}
-                    </>
-                  ))}
+                <div className="flex flex-col w-[70%]">
+                  {Object.keys(distanceMatrix[from_id]).map((to_id, index1) =>
+                    Object.keys(distanceMatrix[from_id][to_id]).map(
+                      (mode, index2) => (
+                        <>
+                          <div
+                            key={index2}
+                            className="flex flex-row gap-1 items-center"
+                          >
+                            <h1 className={`text-center w-[37%]`}>
+                              {selectedPlacesMap[to_id].alias ||
+                                savedPlacesMap[to_id].name}
+                            </h1>
+                            <h1 className={`text-center w-[21%]`}>{mode}</h1>
+                            <h1 className={`text-center w-[21%]`}>
+                              {distanceMatrix[from_id][to_id][mode].distance}
+                            </h1>
+                            <h1 className={`text-center w-[21%]`}>
+                              {distanceMatrix[from_id][to_id][mode].duration}
+                            </h1>
+                          </div>
+                          {Object.keys(distanceMatrix[from_id]).length >
+                            index1 + 1 ||
+                            (index2 + 1 <
+                              Object.keys(distanceMatrix[from_id][to_id])
+                                .length && (
+                              <div className="h-[1px] bg-black w-full"></div>
+                            ))}
+                        </>
+                      )
+                    )
+                  )}
                 </div>
               </div>
             ))}
@@ -127,7 +142,7 @@ export default function DistanceInformation({
         )}
 
         <div className="flex flex-row gap-2 w-full p-2">
-          <div className="w-[40%]">
+          <div className="w-[30%]">
             <FormControl
               fullWidth
               className="input-field"
@@ -160,7 +175,7 @@ export default function DistanceInformation({
               </Select>
             </FormControl>
           </div>
-          <div className="w-[40%]">
+          <div className="w-[30%]">
             <FormControl
               fullWidth
               className="input-field"
@@ -193,6 +208,40 @@ export default function DistanceInformation({
               </Select>
             </FormControl>
           </div>
+
+          <div className="w-[20%]">
+            <FormControl
+              fullWidth
+              className="input-field"
+              variant="outlined"
+              // style={{ width: "20rem" }}
+              size="small"
+            >
+              <InputLabel htmlFor="outlined-adornment" className="input-label">
+                Travel Mode
+              </InputLabel>
+              <Select
+                required
+                id="outlined-adornment"
+                className="outlined-input"
+                value={newDistance.travelMode}
+                onChange={(event) => {
+                  setNewDistance((prev) => ({
+                    ...prev,
+                    travelMode: event.target.value,
+                  }));
+                }}
+                input={<OutlinedInput label={"Travel Mode"} />}
+              >
+                {["WALKING", "DRIVING", "TRANSIT"].map((mode, index) => (
+                  <MenuItem key={index} value={mode}>
+                    {mode}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+
           <div className="w-1/5">
             <Button variant="contained" fullWidth onClick={handleDistanceAdd}>
               + Add
