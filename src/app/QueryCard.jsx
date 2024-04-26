@@ -6,12 +6,26 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronDown,
   faChevronUp,
+  faPen,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import QueryApi from "@/api/queryApi";
+import QueryFields from "./QueryFields";
 const queryApi = new QueryApi();
-export default function QueryCard({ query, index }) {
+export default function QueryCard({
+  query,
+  index,
+  setSelectedPlacesMap,
+  setDistanceMatrix,
+  setNearbyPlacesMap,
+  setContext,
+  context,
+  setContextJSON,
+  contextJSON,
+}) {
   const [expanded, setExpanded] = useState(false);
+  const [mode, setMode] = useState("view");
+
   return (
     <div className="flex flex-col border-4 border-black rounded-md">
       <div className="flex flex-row items-center justify-between bg-black">
@@ -30,7 +44,17 @@ export default function QueryCard({ query, index }) {
           </IconButton>
         </div>
       </div>
-      {expanded ? (
+      {mode === "edit" ? (
+        <QueryFields
+          {...{ contextJSON, context }}
+          onSave={async (new_query) => {
+            const res = await queryApi.updateQuery(query.id, new_query);
+            setMode("view");
+            window.location.reload();
+          }}
+          initialQuery={query}
+        />
+      ) : expanded ? (
         <div className="px-1 pb-1">
           <h1 className="text-lg font-bold underline">Context (Template)</h1>
           <h1 className="text-lg">{query.context}</h1>
@@ -69,6 +93,21 @@ export default function QueryCard({ query, index }) {
               }}
             >
               Copy
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<FontAwesomeIcon icon={faPen} />}
+              onClick={async () => {
+                setSelectedPlacesMap(query.context_json.places);
+                setDistanceMatrix(query.context_json.distance_matrix);
+                setNearbyPlacesMap(query.context_json.nearby_places);
+                setContext([]);
+                setContextJSON({});
+                setMode("edit");
+              }}
+            >
+              Edit
             </Button>
             <Button
               variant="contained"
