@@ -29,20 +29,31 @@ export default function QueryCard({
   return (
     <div className="flex flex-col border-4 border-black rounded-md">
       <div className="flex flex-row items-center justify-between bg-black">
-        <h1 className="text-2xl font-bold text-white pl-2"> # {index + 1}</h1>
-        <div>
-          <IconButton
-            sx={{ height: "3rem", width: "3rem" }}
-            onClick={() => setExpanded((prev) => !prev)}
-          >
-            <div className="text-sm md:text-2xl">
-              <FontAwesomeIcon
-                icon={expanded ? faChevronUp : faChevronDown}
-                color="white"
-              />
-            </div>
-          </IconButton>
+        <div className="flex flex-row gap-2 items-center">
+          <h1 className="text-2xl font-bold text-white pl-2 py-2">
+            {" "}
+            # {index + 1}
+          </h1>
+          <div className="text-xl font-bold text-white px-1 lowercase border-2 rounded-md">
+            {query.classification}
+          </div>
         </div>
+
+        {mode == "view" && (
+          <div>
+            <IconButton
+              sx={{ height: "3rem", width: "3rem" }}
+              onClick={() => setExpanded((prev) => !prev)}
+            >
+              <div className="text-sm md:text-2xl">
+                <FontAwesomeIcon
+                  icon={expanded ? faChevronUp : faChevronDown}
+                  color="white"
+                />
+              </div>
+            </IconButton>
+          </div>
+        )}
       </div>
       {mode === "edit" ? (
         <QueryFields

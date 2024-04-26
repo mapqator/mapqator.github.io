@@ -31,9 +31,9 @@ export default function QueryFields({
       correct: -1,
     },
     context: "",
-    contextJSON: {},
-    contextGPT: "",
-    class: "",
+    context_json: {},
+    context_gpt: "",
+    classification: "",
   });
   const [newOption, setNewOption] = useState("");
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function QueryFields({
             setQuery((prev) => ({
               ...prev,
               context: context.reduce((acc, e) => acc + e + "\n", ""),
-              contextJSON: contextJSON,
+              context_json: contextJSON,
             }));
           }}
           variant="contained"
@@ -82,9 +82,9 @@ export default function QueryFields({
           />
           <textarea
             className="border border-black w-full"
-            value={query.contextGPT}
+            value={query.context_gpt}
             onChange={(e) =>
-              setQuery((prev) => ({ ...prev, contextGPT: e.target.value }))
+              setQuery((prev) => ({ ...prev, context_gpt: e.target.value }))
             }
           />
           <Button
@@ -97,7 +97,7 @@ export default function QueryFields({
                 console.log("Context generated successfully");
                 setQuery((prev) => ({
                   ...prev,
-                  contextGPT: res.data,
+                  context_gpt: res.data,
                 }));
               } else {
                 console.error("Error generating context");
@@ -243,9 +243,9 @@ export default function QueryFields({
         <TextField
           type="text"
           className="border border-black mr-auto"
-          value={query.class}
+          value={query.classification}
           onChange={(e) =>
-            setQuery((prev) => ({ ...prev, class: e.target.value }))
+            setQuery((prev) => ({ ...prev, classification: e.target.value }))
           }
           size="small"
           // label="Category"
