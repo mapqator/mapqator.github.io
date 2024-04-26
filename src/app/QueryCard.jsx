@@ -11,7 +11,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import QueryApi from "@/api/queryApi";
 import QueryFields from "./QueryFields";
+import GptApi from "@/api/gptApi";
 const queryApi = new QueryApi();
+const gptApi = new GptApi();
+
 export default function QueryCard({
   query,
   index,
@@ -104,6 +107,23 @@ export default function QueryCard({
               }}
             >
               Copy
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={async () => {
+                // Ask GPT for the answer
+                const res = await gptApi.askGPT(query.id);
+                if (res.success) {
+                  alert(
+                    parseInt(res.data) - 1 === query.answer.correct
+                      ? "Correct Answer"
+                      : "Wrong Answer" + "\n" + res.data
+                  );
+                }
+              }}
+            >
+              Ask GPT
             </Button>
             <Button
               variant="contained"
