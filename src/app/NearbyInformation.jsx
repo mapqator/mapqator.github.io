@@ -6,7 +6,9 @@ const placeApi = new PlaceApi();
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import { Select, MenuItem, Button, TextField } from "@mui/material";
+import { Select, MenuItem, Button, TextField, IconButton } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 export default function NearbyInformation({
   savedPlacesMap,
@@ -77,7 +79,7 @@ export default function NearbyInformation({
   };
   const addNearbyPlaces = async () => {
     const newSavedPlacesMap = { ...savedPlacesMap };
-    const newSelectedPlacesMap = { ...selectedPlacesMap };
+    // const newSelectedPlacesMap = { ...selectedPlacesMap };
     const newNearbyPlacesMap = { ...nearbyPlacesMap };
     const selectedPlaces = nearbyPlacesResults.filter((e) => e.selected);
 
@@ -123,7 +125,7 @@ export default function NearbyInformation({
       // }
     }
 
-    setSelectedPlacesMap(newSelectedPlacesMap);
+    // setSelectedPlacesMap(newSelectedPlacesMap);
     setSavedPlacesMap(newSavedPlacesMap);
     // setNewNearbyPlaces({ location: null, type: "", list: [] });
   };
@@ -183,12 +185,12 @@ export default function NearbyInformation({
               <h1 className="text-lg w-[36%] text-center font-bold">
                 Location
               </h1>
-              <h1 className="text-lg w-[16%] text-center font-bold">Type</h1>
-              <h1 className="text-lg w-[16%] text-center font-bold">Keyword</h1>
-              <h1 className="text-lg w-[16%] text-center font-bold">
+              <h1 className="text-lg w-[14%] text-center font-bold">Type</h1>
+              <h1 className="text-lg w-[14%] text-center font-bold">Keyword</h1>
+              <h1 className="text-lg w-[14%] text-center font-bold">
                 Rank By/Radius
               </h1>
-              <h1 className="text-lg w-[16%] text-center font-bold">Count</h1>
+              <h1 className="text-lg w-[14%] text-center font-bold">Count</h1>
             </div>
 
             {Object.keys(nearbyPlacesMap).map((place_id, index1) => (
@@ -207,14 +209,29 @@ export default function NearbyInformation({
                         key={index2}
                         className="flex flex-row gap-1 items-center w-full"
                       >
-                        <h1 className={`text-center w-1/3`}>{e.type}</h1>
-                        <h1 className={`text-center w-1/3`}>{e.keyword}</h1>
-                        <h1 className={`text-center w-1/3`}>
+                        <h1 className={`text-center w-[21.5%]`}>{e.type}</h1>
+                        <h1 className={`text-center w-[21.5%]`}>{e.keyword}</h1>
+                        <h1 className={`text-center w-[21.5%]`}>
                           {e.hasRadius ? e.radius + " m" : "Distance"}
                         </h1>
-                        <h1 className={`text-center w-1/3`}>
+                        <h1 className={`text-center w-[21.5%]`}>
                           {e.places.length}
                         </h1>
+                        <IconButton
+                          sx={{ height: "3rem", width: "3rem" }}
+                          onClick={() => {
+                            const newNearbyPlacesMap = { ...nearbyPlacesMap };
+                            newNearbyPlacesMap[place_id].splice(index2, 1);
+
+                            if (newNearbyPlacesMap[place_id].length === 0)
+                              delete newNearbyPlacesMap[place_id];
+                            setNearbyPlacesMap(newNearbyPlacesMap);
+                          }}
+                        >
+                          <div className="text-sm md:text-2xl">
+                            <FontAwesomeIcon icon={faTrashCan} color="red" />
+                          </div>
+                        </IconButton>
                       </div>
                       {index2 < nearbyPlacesMap[place_id].length - 1 && (
                         <div className="h-[1px] bg-black w-full"></div>
