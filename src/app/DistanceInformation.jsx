@@ -345,7 +345,7 @@ export default function DistanceInformation({
 							fullWidth
 							onClick={handleDistanceAdd}
 						>
-							+ Add
+							+ Add ($)
 						</Button>
 					</div>
 				</div>

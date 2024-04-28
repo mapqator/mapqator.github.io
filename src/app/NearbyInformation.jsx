@@ -571,13 +571,14 @@ export default function NearbyInformation({
 							)}
 						</div>
 					</div>
-					<div className="w-1/5">
+					<div className="w-full">
 						<Button
 							variant="contained"
 							fullWidth
 							onClick={searchNearbyPlaces}
+							sx={{ fontSize: "1rem" }}
 						>
-							Search
+							Search ($)
 						</Button>
 					</div>
 				</div>
@@ -610,7 +611,7 @@ export default function NearbyInformation({
 							sx={{ fontSize: "1rem" }}
 							onClick={addNearbyPlaces}
 						>
-							+ Add
+							+ Add ($)
 						</Button>
 					</div>
 				)}

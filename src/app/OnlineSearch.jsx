@@ -115,7 +115,7 @@ export default function OnlineSearch({
 						className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
 						type="submit"
 					>
-						Search
+						Search ($)
 					</button>
 				</form>
 
