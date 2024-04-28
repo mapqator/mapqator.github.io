@@ -328,13 +328,16 @@ export default function DistanceInformation({
 								}}
 								input={<OutlinedInput label={"Travel Mode"} />}
 							>
-								{["WALKING", "DRIVING", "TRANSIT"].map(
-									(mode, index) => (
-										<MenuItem key={index} value={mode}>
-											{mode}
-										</MenuItem>
-									)
-								)}
+								{[
+									"WALKING",
+									"DRIVING",
+									"BICYCLING",
+									"TRANSIT",
+								].map((mode, index) => (
+									<MenuItem key={index} value={mode}>
+										{mode}
+									</MenuItem>
+								))}
 							</Select>
 						</FormControl>
 					</div>
