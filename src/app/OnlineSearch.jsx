@@ -73,7 +73,7 @@ export default function OnlineSearch({
 					const newSelectedPlacesMap = { ...selectedPlacesMap };
 					newSelectedPlacesMap[res.data[0].place_id] = {
 						alias: "",
-						selectedAttributes: ["formatted_address", "geometry"],
+						selectedAttributes: ["formatted_address"],
 						attributes: Object.keys(res.data[0]).filter(
 							(e) => res.data[0][e] !== null
 						),

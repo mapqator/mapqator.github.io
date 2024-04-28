@@ -50,6 +50,60 @@ export default function ContextPreview({
 		if (attributes.includes("rating")) {
 			text += `Rating: ${place.rating}. (${place.user_ratings_total} ratings). `;
 		}
+
+		if (attributes.includes("reviews")) {
+			text += `Reviews: ${place.reviews.map((review) => {
+				return `${review.author_name} (${review.rating}): ${review.text}`;
+			})} `;
+		}
+		if (attributes.includes("price_level")) {
+			// - 0 Free
+			// - 1 Inexpensive
+			// - 2 Moderate
+			// - 3 Expensive
+			// - 4 Very Expensive
+			// Convert price level from number to string
+
+			let priceLevel = "";
+			const priceMap = [
+				"Free",
+				"Inexpensive",
+				"Moderate",
+				"Expensive",
+				"Very Expensive",
+			];
+
+			text += `Price Level: ${priceMap[place.price_level]}. `;
+		}
+
+		if (attributes.includes("delivery")) {
+			text += place.delivery
+				? "Delivery Available. "
+				: "Delivery Not Available. ";
+		}
+
+		if (attributes.includes("dine_in")) {
+			text += place.dine_in
+				? "Dine In Available. "
+				: "Dine In Not Available. ";
+		}
+
+		if (attributes.includes("takeaway")) {
+			text += place.takeaway
+				? "Takeaway Available. "
+				: "Takeaway Not Available. ";
+		}
+
+		if (attributes.includes("reservable")) {
+			text += place.reservable ? "Reservable. " : "Not Reservable. ";
+		}
+
+		if (attributes.includes("wheelchair_accessible_entrance")) {
+			text += place.wheelchair_accessible_entrance
+				? "Wheelchair Accessible Entrance. "
+				: "Not Wheelchair Accessible Entrance. ";
+		}
+
 		return text;
 	};
 

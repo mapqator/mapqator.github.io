@@ -79,7 +79,7 @@ export default function OfflineSearch({
 		const newSelectedPlacesMap = { ...selectedPlacesMap };
 		newSelectedPlacesMap[place_id] = {
 			alias: "",
-			selectedAttributes: ["formatted_address", "geometry"],
+			selectedAttributes: ["formatted_address"],
 			attributes: Object.keys(savedPlacesMap[place_id]).filter(
 				(key) => savedPlacesMap[place_id][key] !== null
 			),

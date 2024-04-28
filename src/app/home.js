@@ -40,7 +40,9 @@ export default function Home() {
 			</div>
 
 			<footer className="w-full h-20 text-white flex items-center justify-center">
-				© Mahir Labib Dihan
+				<a href="https://mahirlabibdihan.github.io/">
+					© Mahir Labib Dihan
+				</a>
 			</footer>
 		</main>
 	);
