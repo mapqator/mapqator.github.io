@@ -80,18 +80,18 @@ export default function ContextGenerator({
 							: "ranked by distance"
 					}):`
 				);
-				e.places.forEach((near_place, index) => {
-					newContext.push(
-						`${index + 1}. ${
-							selectedPlacesMap[near_place.place_id]?.alias ||
-							savedPlacesMap[near_place.place_id]?.name ||
-							near_place.name
-						} | ${
-							savedPlacesMap[near_place.place_id]
-								?.formatted_address ||
-							near_place.formatted_address
-						}`
-					);
+				let counter = 1;
+				e.places.forEach((near_place) => {
+					if (near_place.selected) {
+						newContext.push(
+							`${counter}. ${
+								selectedPlacesMap[near_place.place_id]?.alias ||
+								savedPlacesMap[near_place.place_id]?.name ||
+								near_place.name
+							} | ${near_place.formatted_address}`
+						);
+						counter++;
+					}
 				});
 			});
 		});

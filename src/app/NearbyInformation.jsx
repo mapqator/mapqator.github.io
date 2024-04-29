@@ -10,8 +10,99 @@ import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { Select, MenuItem, Button, TextField, IconButton } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import {
+	faChevronDown,
+	faChevronUp,
+	faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
 
+function NearbyCard({
+	index2,
+	selectedPlacesMap,
+	savedPlacesMap,
+	nearbyPlacesMap,
+	setNearbyPlacesMap,
+	place_id,
+	e,
+}) {
+	const [expanded, setExpanded] = useState(false);
+	return (
+		<div className="bg-white" key={index2}>
+			<div className="flex flex-row gap-1 w-full items-center bg-white p-2">
+				<h1 className={`text-center w-[36%]`}>
+					{selectedPlacesMap[place_id].alias ||
+						savedPlacesMap[place_id].name}
+				</h1>
+				<h1 className={`text-center w-[17%]`}>{e.type}</h1>
+				<h1 className={`text-center w-[17%]`}>{e.keyword || "N/A"}</h1>
+				<h1 className={`text-center w-[17%]`}>
+					{e.hasRadius ? e.radius + " m" : "Distance"}
+				</h1>
+				{/* <h1
+														className={`text-center w-[14%]`}
+													>
+														{e.places.length}
+													</h1> */}
+				<IconButton
+					sx={{
+						height: "3rem",
+						width: "3rem",
+					}}
+					onClick={() => {
+						const newNearbyPlacesMap = {
+							...nearbyPlacesMap,
+						};
+						newNearbyPlacesMap[place_id].splice(index2, 1);
+
+						if (newNearbyPlacesMap[place_id].length === 0)
+							delete newNearbyPlacesMap[place_id];
+						setNearbyPlacesMap(newNearbyPlacesMap);
+					}}
+				>
+					<div className="text-sm md:text-2xl">
+						<FontAwesomeIcon icon={faTrashCan} color="red" />
+					</div>
+				</IconButton>
+
+				<IconButton
+					sx={{ height: "3rem", width: "3rem" }}
+					onClick={() => setExpanded((prev) => !prev)}
+				>
+					<div className="text-sm md:text-2xl">
+						<FontAwesomeIcon
+							icon={expanded ? faChevronUp : faChevronDown}
+							color="black"
+						/>
+					</div>
+				</IconButton>
+			</div>
+			{expanded && (
+				<div className="bg-white px-2 py-1 border-2 rounded-md border-black mx-5 mb-5">
+					{e.places.map((place, index3) => (
+						<div key={index3} className="flex flex-row gap-2">
+							<input
+								type="checkbox"
+								checked={place.selected}
+								onChange={(event) => {
+									const newNearbyPlacesMap = {
+										...nearbyPlacesMap,
+									};
+									newNearbyPlacesMap[place_id][index2].places[
+										index3
+									].selected = event.target.checked;
+									setNearbyPlacesMap(newNearbyPlacesMap);
+								}}
+							/>
+							<h1 className="overflow-hidden whitespace-nowrap overflow-ellipsis w-[95%]">
+								{place.name} | {place.formatted_address}
+							</h1>
+						</div>
+					))}
+				</div>
+			)}
+		</div>
+	);
+}
 export default function NearbyInformation({
 	savedPlacesMap,
 	setSavedPlacesMap,
@@ -127,11 +218,58 @@ export default function NearbyInformation({
 			if (response.success) {
 				const places = response.data.results;
 				console.log("Nearby Places: ", response.data);
+				const newNearbyPlacesMap = { ...nearbyPlacesMap };
+				if (
+					newNearbyPlacesMap[newNearbyPlaces.location] === undefined
+				) {
+					newNearbyPlacesMap[newNearbyPlaces.location] = [];
+				}
+
 				const placesWithSelection = places.map((place) => ({
 					selected: true,
-					place,
+					place_id: place.place_id,
+					name: place.name,
+					formatted_address: place.vicinity,
 				}));
+
+				newNearbyPlacesMap[newNearbyPlaces.location].push({
+					type: newNearbyPlaces.type,
+					places: placesWithSelection,
+					keyword: newNearbyPlaces.keyword,
+					radius: newNearbyPlaces.radius,
+					hasRadius: newNearbyPlaces.hasRadius,
+					rankBy: newNearbyPlaces.rankBy,
+				});
+
+				setNearbyPlacesMap(newNearbyPlacesMap);
+
 				setNearbyPlacesResults(placesWithSelection);
+				const newSavedPlacesMap = { ...savedPlacesMap };
+				for (const place of places) {
+					if (newSavedPlacesMap[place.place_id] === undefined) {
+						try {
+							const response = await mapApi.getDetails(
+								place.place_id
+							);
+							if (response.success) {
+								const res = await placeApi.createPlace(
+									response.data.result
+								);
+								if (res.success) {
+									newSavedPlacesMap[place.place_id] =
+										res.data[0];
+									console.log(
+										"saved: ",
+										res.data[0].place_id
+									);
+								}
+							}
+						} catch (error) {
+							console.error(error);
+						}
+					}
+				}
+				setSavedPlacesMap(newSavedPlacesMap);
 			}
 		} catch (error) {
 			console.error("Error fetching data: ", error);
@@ -154,115 +292,42 @@ export default function NearbyInformation({
 							<h1 className="text-lg w-[36%] text-center font-bold">
 								Location
 							</h1>
-							<h1 className="text-lg w-[14%] text-center font-bold">
+							<h1 className="text-lg w-[17%] text-center font-bold">
 								Type
 							</h1>
-							<h1 className="text-lg w-[14%] text-center font-bold">
+							<h1 className="text-lg w-[17%] text-center font-bold">
 								Keyword
 							</h1>
-							<h1 className="text-lg w-[14%] text-center font-bold">
+							<h1 className="text-lg w-[17%] text-center font-bold">
 								Rank By/Radius
 							</h1>
-							<h1 className="text-lg w-[14%] text-center font-bold">
+							{/* <h1 className="text-lg w-[14%] text-center font-bold">
 								Count
-							</h1>
+							</h1> */}
 						</div>
 
 						{Object.keys(nearbyPlacesMap).map(
 							(place_id, index1) => (
 								<div
 									key={index1}
-									className="flex flex-row gap-1 items-center bg-white p-2"
+									className="flex flex-col gap-1 "
 								>
-									<h1 className={`text-center w-[36%]`}>
-										{selectedPlacesMap[place_id].alias ||
-											savedPlacesMap[place_id].name}
-									</h1>
-									<div
-										className={`flex flex-col gap-2 w-[64%]`}
-									>
-										{nearbyPlacesMap[place_id].map(
-											(e, index2) => (
-												<>
-													<div
-														key={index2}
-														className="flex flex-row gap-1 items-center w-full"
-													>
-														<h1
-															className={`text-center w-[21.5%]`}
-														>
-															{e.type}
-														</h1>
-														<h1
-															className={`text-center w-[21.5%]`}
-														>
-															{e.keyword}
-														</h1>
-														<h1
-															className={`text-center w-[21.5%]`}
-														>
-															{e.hasRadius
-																? e.radius +
-																  " m"
-																: "Distance"}
-														</h1>
-														<h1
-															className={`text-center w-[21.5%]`}
-														>
-															{e.places.length}
-														</h1>
-														<IconButton
-															sx={{
-																height: "3rem",
-																width: "3rem",
-															}}
-															onClick={() => {
-																const newNearbyPlacesMap =
-																	{
-																		...nearbyPlacesMap,
-																	};
-																newNearbyPlacesMap[
-																	place_id
-																].splice(
-																	index2,
-																	1
-																);
-
-																if (
-																	newNearbyPlacesMap[
-																		place_id
-																	].length ===
-																	0
-																)
-																	delete newNearbyPlacesMap[
-																		place_id
-																	];
-																setNearbyPlacesMap(
-																	newNearbyPlacesMap
-																);
-															}}
-														>
-															<div className="text-sm md:text-2xl">
-																<FontAwesomeIcon
-																	icon={
-																		faTrashCan
-																	}
-																	color="red"
-																/>
-															</div>
-														</IconButton>
-													</div>
-													{index2 <
-														nearbyPlacesMap[
-															place_id
-														].length -
-															1 && (
-														<div className="h-[1px] bg-black w-full"></div>
-													)}
-												</>
-											)
-										)}
-									</div>
+									{nearbyPlacesMap[place_id].map(
+										(e, index2) => (
+											<NearbyCard
+												key={index2}
+												{...{
+													index2,
+													selectedPlacesMap,
+													savedPlacesMap,
+													nearbyPlacesMap,
+													setNearbyPlacesMap,
+													place_id,
+													e,
+												}}
+											/>
+										)
+									)}
 								</div>
 							)
 						)}
@@ -584,11 +649,11 @@ export default function NearbyInformation({
 							onClick={searchNearbyPlaces}
 							sx={{ fontSize: "1rem" }}
 						>
-							Search ($)
+							+ Add ($)
 						</Button>
 					</div>
 				</div>
-				{nearbyPlacesResults.length > 0 && (
+				{/* {nearbyPlacesResults.length > 0 && (
 					<div className="flex flex-col gap-2 p-2">
 						{nearbyPlacesResults.map((e, index) => (
 							<div key={index} className="flex flex-row gap-2">
@@ -620,7 +685,7 @@ export default function NearbyInformation({
 							+ Add ($)
 						</Button>
 					</div>
-				)}
+				)} */}
 			</div>
 		)
 	);
