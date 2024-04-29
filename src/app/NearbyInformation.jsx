@@ -48,24 +48,9 @@ export default function NearbyInformation({
 	const addNearbyPlaces = async () => {
 		const newSavedPlacesMap = { ...savedPlacesMap };
 		// const newSelectedPlacesMap = { ...selectedPlacesMap };
+		// setNewNearbyPlaces({ location: null, type: "", list: [] });
 		const newNearbyPlacesMap = { ...nearbyPlacesMap };
 		const selectedPlaces = nearbyPlacesResults.filter((e) => e.selected);
-
-		if (newNearbyPlacesMap[newNearbyPlaces.location] === undefined) {
-			newNearbyPlacesMap[newNearbyPlaces.location] = [];
-		}
-
-		newNearbyPlacesMap[newNearbyPlaces.location].push({
-			type: newNearbyPlaces.type,
-			places: selectedPlaces.map((e) => e.place.place_id),
-			keyword: newNearbyPlaces.keyword,
-			radius: newNearbyPlaces.radius,
-			hasRadius: newNearbyPlaces.hasRadius,
-			rankBy: newNearbyPlaces.rankBy,
-		});
-
-		setNearbyPlacesMap(newNearbyPlacesMap);
-		setNearbyPlacesResults([]);
 
 		console.log("Need to save in database");
 		for (const e of selectedPlaces) {
@@ -99,7 +84,22 @@ export default function NearbyInformation({
 
 		// setSelectedPlacesMap(newSelectedPlacesMap);
 		setSavedPlacesMap(newSavedPlacesMap);
-		// setNewNearbyPlaces({ location: null, type: "", list: [] });
+
+		if (newNearbyPlacesMap[newNearbyPlaces.location] === undefined) {
+			newNearbyPlacesMap[newNearbyPlaces.location] = [];
+		}
+
+		newNearbyPlacesMap[newNearbyPlaces.location].push({
+			type: newNearbyPlaces.type,
+			places: selectedPlaces.map((e) => e.place.place_id),
+			keyword: newNearbyPlaces.keyword,
+			radius: newNearbyPlaces.radius,
+			hasRadius: newNearbyPlaces.hasRadius,
+			rankBy: newNearbyPlaces.rankBy,
+		});
+
+		setNearbyPlacesMap(newNearbyPlacesMap);
+		setNearbyPlacesResults([]);
 	};
 
 	const searchNearbyPlaces = async () => {

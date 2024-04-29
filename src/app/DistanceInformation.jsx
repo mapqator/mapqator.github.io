@@ -347,6 +347,7 @@ export default function DistanceInformation({
 							variant="contained"
 							fullWidth
 							onClick={handleDistanceAdd}
+							sx={{ fontSize: "1rem" }}
 						>
 							+ Add ($)
 						</Button>

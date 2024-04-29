@@ -135,7 +135,7 @@ export default function ContextPreview({
             >
               Copy
             </Button> */}
-					<Button
+					{/* <Button
 						className="bg-blue-500 rounded-lg p-2 my-2 w-full"
 						onClick={() => {
 							// From selected places generate context
@@ -250,7 +250,7 @@ export default function ContextPreview({
 						variant="contained"
 					>
 						Generate
-					</Button>
+					</Button> */}
 				</div>
 			</div>
 		)
