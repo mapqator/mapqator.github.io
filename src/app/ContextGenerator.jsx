@@ -31,7 +31,7 @@ export default function ContextGenerator({
 
 	useEffect(() => {
 		generateContext();
-	}, [distanceMatrix, selectedPlacesMap, nearbyPlacesMap]);
+	}, [distanceMatrix, selectedPlacesMap, nearbyPlacesMap, savedPlacesMap]);
 
 	const generateContext = () => {
 		let newContext = [];
