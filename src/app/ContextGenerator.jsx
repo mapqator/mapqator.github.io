@@ -80,13 +80,8 @@ export default function ContextGenerator({
 							: "ranked by distance"
 					}):`
 				);
-				e.places.forEach((near_place_id, index) => {
-					newContext.push(
-						`${index + 1}. ${
-							selectedPlacesMap[near_place_id]?.alias ||
-							savedPlacesMap[near_place_id].name
-						} | ${savedPlacesMap[near_place_id].formatted_address}`
-					);
+				e.places.forEach((near_place, index) => {
+					newContext.push(`${index + 1}. ${near_place.name}`);
 				});
 			});
 		});
