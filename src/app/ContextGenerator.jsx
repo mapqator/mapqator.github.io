@@ -81,7 +81,17 @@ export default function ContextGenerator({
 					}):`
 				);
 				e.places.forEach((near_place, index) => {
-					newContext.push(`${index + 1}. ${near_place.name}`);
+					newContext.push(
+						`${index + 1}. ${
+							selectedPlacesMap[near_place.place_id]?.alias ||
+							savedPlacesMap[near_place.place_id]?.name ||
+							near_place.name
+						} | ${
+							savedPlacesMap[near_place.place_id]
+								?.formatted_address ||
+							near_place.formatted_address
+						}`
+					);
 				});
 			});
 		});

@@ -60,7 +60,8 @@ export default function NearbyInformation({
 			places: selectedPlaces.map((e) => {
 				return {
 					place_id: e.place.place_id,
-					name: `${e.place.name} | ${e.place.vicinity}`,
+					name: e.place.name,
+					formatted_address: e.place.vicinity,
 				};
 			}),
 			keyword: newNearbyPlaces.keyword,
