@@ -13,7 +13,7 @@ const API_BASE_URL = "https://mapquest-app.onrender.com/api";
 //       config.headers.Authorization = `Bearer ${token}`;
 //     }
 //     return config;
-//   },
+//   },D
 //   (error) => Promise.reject(error)
 // );
 // axios.interceptors.response.use(
@@ -50,114 +50,114 @@ const API_BASE_URL = "https://mapquest-app.onrender.com/api";
 // );
 
 export default class Api {
-  //   getToken = () => {
-  //     // const token =
-  //     //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoyLCJpYXQiOjE2OTM0MjQ2MzN9.y_2W8PFdUYlbQ316GtufzsuN_tlVRwsmZwbPKzbyifc";
-  //     const token = localStorage.getItem("token");
-  //     return token;
-  //   };
+	//   getToken = () => {
+	//     // const token =
+	//     //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoyLCJpYXQiOjE2OTM0MjQ2MzN9.y_2W8PFdUYlbQ316GtufzsuN_tlVRwsmZwbPKzbyifc";
+	//     const token = localStorage.getItem("token");
+	//     return token;
+	//   };
 
-  /**
-   *
-   * @param {String} url
-   * @returns {Object} Either { success: true, data: string } or { success: false, error: string }
-   */
-  get = async (url, query) => {
-    // console.log(API_BASE_URL);
-    // const token = this.getToken();
-    // console.log("Profile Called" + token);
-    try {
-      const res = await axios.get(API_BASE_URL + url, { params: query });
-      return {
-        success: true,
-        data: res.data,
-      };
-    } catch (err) {
-      if (err.hasOwnProperty("response")) {
-        return err.response.data;
-      } else {
-        return {
-          success: false,
-          error: "Can't connect to server",
-        };
-      }
-    }
-  };
+	/**
+	 *
+	 * @param {String} url
+	 * @returns {Object} Either { success: true, data: string } or { success: false, error: string }
+	 */
+	get = async (url, query) => {
+		// console.log(API_BASE_URL);
+		// const token = this.getToken();
+		// console.log("Profile Called" + token);
+		try {
+			const res = await axios.get(API_BASE_URL + url, { params: query });
+			return {
+				success: true,
+				data: res.data,
+			};
+		} catch (err) {
+			if (err.hasOwnProperty("response")) {
+				return err.response.data;
+			} else {
+				return {
+					success: false,
+					error: "Can't connect to server",
+				};
+			}
+		}
+	};
 
-  /**
-   *
-   * @param {String} url
-   * @param {Object} body
-   * @returns {Object} Either { success: true, data: string } or { success: false, error: string }
-   */
-  post = async (url, body) => {
-    // const token = this.getToken();
-    try {
-      const res = await axios.post(API_BASE_URL + url, body);
-      return {
-        success: true,
-        data: res.data,
-      };
-    } catch (err) {
-      if (err.hasOwnProperty("response")) {
-        return err.response.data;
-      } else {
-        return {
-          success: false,
-          error: "Can't connect to server",
-        };
-      }
-    }
-  };
+	/**
+	 *
+	 * @param {String} url
+	 * @param {Object} body
+	 * @returns {Object} Either { success: true, data: string } or { success: false, error: string }
+	 */
+	post = async (url, body) => {
+		// const token = this.getToken();
+		try {
+			const res = await axios.post(API_BASE_URL + url, body);
+			return {
+				success: true,
+				data: res.data,
+			};
+		} catch (err) {
+			if (err.hasOwnProperty("response")) {
+				return err.response.data;
+			} else {
+				return {
+					success: false,
+					error: "Can't connect to server",
+				};
+			}
+		}
+	};
 
-  /**
-   *
-   * @param {String} url
-   * @param {Object} body
-   * @returns {Object} Either { success: true, data: string } or { success: false, error: string }
-   */
-  put = async (url, body) => {
-    // const token = this.getToken();
-    try {
-      const res = await axios.put(API_BASE_URL + url, body);
-      return {
-        success: true,
-        data: res.data,
-      };
-    } catch (err) {
-      if (err.hasOwnProperty("response")) {
-        return err.response.data;
-      } else {
-        return {
-          success: false,
-          error: "Can't connect to server",
-        };
-      }
-    }
-  };
+	/**
+	 *
+	 * @param {String} url
+	 * @param {Object} body
+	 * @returns {Object} Either { success: true, data: string } or { success: false, error: string }
+	 */
+	put = async (url, body) => {
+		// const token = this.getToken();
+		try {
+			const res = await axios.put(API_BASE_URL + url, body);
+			return {
+				success: true,
+				data: res.data,
+			};
+		} catch (err) {
+			if (err.hasOwnProperty("response")) {
+				return err.response.data;
+			} else {
+				return {
+					success: false,
+					error: "Can't connect to server",
+				};
+			}
+		}
+	};
 
-  /**
-   *
-   * @param {String} url
-   * @returns {Object} Either { success: true, data: string } or { success: false, error: string }
-   */
-  delete = async (url) => {
-    // const token = this.getToken();
-    try {
-      const res = await axios.delete(API_BASE_URL + url);
-      return {
-        success: true,
-        data: res.data,
-      };
-    } catch (err) {
-      if (err.hasOwnProperty("response")) {
-        return err.response.data;
-      } else {
-        return {
-          success: false,
-          error: "Can't connect to server",
-        };
-      }
-    }
-  };
+	/**
+	 *
+	 * @param {String} url
+	 * @returns {Object} Either { success: true, data: string } or { success: false, error: string }
+	 */
+	delete = async (url) => {
+		// const token = this.getToken();
+		try {
+			const res = await axios.delete(API_BASE_URL + url);
+			return {
+				success: true,
+				data: res.data,
+			};
+		} catch (err) {
+			if (err.hasOwnProperty("response")) {
+				return err.response.data;
+			} else {
+				return {
+					success: false,
+					error: "Can't connect to server",
+				};
+			}
+		}
+	};
 }
