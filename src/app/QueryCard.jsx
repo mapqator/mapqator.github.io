@@ -32,7 +32,7 @@ export default function QueryCard({
 	const [mode, setMode] = useState("view");
 
 	return (
-		<div className="flex flex-col border-4 border-black rounded-md">
+		<div className="flex flex-col border-4 border-black rounded-md w-full">
 			<div className="flex flex-row items-center justify-between bg-black">
 				<div className="flex flex-row gap-2 items-center">
 					<h1 className="text-2xl font-bold text-white pl-2 py-2">

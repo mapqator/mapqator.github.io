@@ -20,6 +20,7 @@ import {
 import QueryCard from "./QueryCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 
 export default function QueryFields({
 	contextJSON,
@@ -50,13 +51,25 @@ export default function QueryFields({
 			<label className="text-lg w-full text-left font-bold">
 				Question
 			</label>
-			<textarea
+			<TextareaAutosize
+				value={query.question}
+				onChange={(e) =>
+					setQuery((prev) => ({ ...prev, question: e.target.value }))
+				}
+				style={{
+					borderColor: "black",
+					borderWidth: "1px",
+					borderRadius: "3px",
+					padding: "2px 5px",
+				}}
+			/>
+			{/* <textarea
 				className="border border-black w-full rounded-sm"
 				value={query.question}
 				onChange={(e) =>
 					setQuery((prev) => ({ ...prev, question: e.target.value }))
 				}
-			/>
+			/> */}
 			<div className="flex flex-row gap-2 w-full justify-start items-center">
 				<label className="text-lg text-left font-bold">Context</label>
 				<Button
@@ -82,7 +95,22 @@ export default function QueryFields({
 			</div>
 			{query.context !== "" && (
 				<>
-					<textarea
+					<TextareaAutosize
+						value={query.context}
+						onChange={(e) =>
+							setQuery((prev) => ({
+								...prev,
+								context: e.target.value,
+							}))
+						}
+						style={{
+							borderColor: "black",
+							borderWidth: "1px",
+							borderRadius: "3px",
+							padding: "2px 5px",
+						}}
+					/>
+					{/* <textarea
 						className="border border-black w-full"
 						value={query.context}
 						onChange={(e) =>
@@ -91,8 +119,24 @@ export default function QueryFields({
 								context: e.target.value,
 							}))
 						}
+					/> */}
+
+					<TextareaAutosize
+						value={query.context_gpt}
+						onChange={(e) =>
+							setQuery((prev) => ({
+								...prev,
+								context_gpt: e.target.value,
+							}))
+						}
+						style={{
+							borderColor: "black",
+							borderWidth: "1px",
+							borderRadius: "3px",
+							padding: "2px 5px",
+						}}
 					/>
-					<textarea
+					{/* <textarea
 						className="border border-black w-full"
 						value={query.context_gpt}
 						onChange={(e) =>
@@ -101,7 +145,7 @@ export default function QueryFields({
 								context_gpt: e.target.value,
 							}))
 						}
-					/>
+					/> */}
 					<Button
 						className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
 						variant="contained"
@@ -280,11 +324,30 @@ export default function QueryFields({
 					</div>
 				</div>
 			) : (
-				<>
+				<div className="flex flex-col mb-2">
 					<label className="text-lg w-full text-left font-bold">
 						Answer
 					</label>
-					<textarea
+
+					<TextareaAutosize
+						value={query.answer.correct}
+						onChange={(e) =>
+							setQuery((prev) => ({
+								...prev,
+								answer: {
+									...prev.answer,
+									correct: e.target.value,
+								},
+							}))
+						}
+						style={{
+							borderColor: "black",
+							borderWidth: "1px",
+							borderRadius: "3px",
+							padding: "2px 5px",
+						}}
+					/>
+					{/* <textarea
 						className="border border-black w-full"
 						value={query.answer.correct}
 						onChange={(e) =>
@@ -296,8 +359,8 @@ export default function QueryFields({
 								},
 							}))
 						}
-					/>
-				</>
+					/> */}
+				</div>
 			)}
 			{/* <div className="flex flex-col gap-2 mr-auto">
 				<label className="text-lg text-left font-bold">Category</label>

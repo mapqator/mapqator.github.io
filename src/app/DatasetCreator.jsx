@@ -90,7 +90,7 @@ export default function DatasetCreator({
 			<QueryForm {...{ contextJSON, context, handleSave }} />
 			{/*<h1 className="bg-black h-1 w-full my-2"></h1>*/}
 			{/*<h1 className="text-2xl w-full">Previous Queries</h1>*/}
-			<div className="flex flex-col gap-2 mt-1">
+			<div className="flex flex-col gap-2 mt-1 w-full">
 				{queries.map((query, index) => (
 					<QueryCard
 						key={query.id}
