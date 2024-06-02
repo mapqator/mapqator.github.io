@@ -394,7 +394,7 @@ export default function QueryFields({
 					multiple
 					id="outlined-adornment"
 					className="outlined-input"
-					value={query.classification.split(",")}
+					value={query.classification.split(",").filter(Boolean)}
 					onChange={(e) => {
 						setQuery((prev) => ({
 							...prev,
