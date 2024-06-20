@@ -15,6 +15,8 @@ import NearbyInformation from "./NearbyInformation";
 import ContextPreview from "./ContextPreview";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRefresh } from "@fortawesome/free-solid-svg-icons";
+import CurrentInformation from "./CurrentInformation";
+import { format } from "date-fns";
 
 export default function ContextGenerator({
 	setContextJSON,
@@ -26,12 +28,20 @@ export default function ContextGenerator({
 	setSelectedPlacesMap,
 	nearbyPlacesMap,
 	setNearbyPlacesMap,
+	currentInformation,
+	setCurrentInformation,
 }) {
 	const [savedPlacesMap, setSavedPlacesMap] = useState({});
 
 	useEffect(() => {
 		generateContext();
-	}, [distanceMatrix, selectedPlacesMap, nearbyPlacesMap, savedPlacesMap]);
+	}, [
+		distanceMatrix,
+		selectedPlacesMap,
+		nearbyPlacesMap,
+		savedPlacesMap,
+		currentInformation,
+	]);
 
 	const generateContext = () => {
 		let newContext = [];
@@ -95,18 +105,44 @@ export default function ContextGenerator({
 				});
 			});
 		});
+
+		if (currentInformation.time && currentInformation.day !== "") {
+			newContext.push(
+				`Current time is ${currentInformation.time.format(
+					"h:mm a"
+				)} on ${currentInformation.day}.`
+			);
+		} else if (currentInformation.time) {
+			newContext.push(
+				`Current time is ${currentInformation.time.format("h:mm a")}.`
+			);
+		} else if (currentInformation.day !== "") {
+			newContext.push(`Today is ${currentInformation.day}.`);
+		}
+
+		if (currentInformation.location !== "") {
+			newContext.push(
+				`I am at ${
+					selectedPlacesMap[currentInformation.location]?.alias ||
+					savedPlacesMap[currentInformation.location]?.name
+				}.`
+			);
+		}
+
 		setContext(newContext);
 
 		console.log({
 			distance_matrix: distanceMatrix,
 			places: selectedPlacesMap,
 			nearby_places: nearbyPlacesMap,
+			current_information: currentInformation,
 		});
 
 		setContextJSON({
 			distance_matrix: distanceMatrix,
 			places: selectedPlacesMap,
 			nearby_places: nearbyPlacesMap,
+			current_information: currentInformation,
 		});
 	};
 
@@ -230,6 +266,11 @@ export default function ContextGenerator({
 							setNearbyPlacesMap({});
 							setContext([]);
 							setContextJSON({});
+							setCurrentInformation({
+								time: null,
+								day: "",
+								location: "",
+							});
 						}}
 					>
 						<FontAwesomeIcon icon={faRefresh} color="black" />
@@ -283,6 +324,15 @@ export default function ContextGenerator({
 						savedPlacesMap,
 						nearbyPlacesMap,
 						setNearbyPlacesMap,
+					}}
+				/>
+
+				<CurrentInformation
+					{...{
+						selectedPlacesMap,
+						currentInformation,
+						setCurrentInformation,
+						savedPlacesMap,
 					}}
 				/>
 				<ContextPreview

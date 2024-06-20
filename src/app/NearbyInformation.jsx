@@ -282,7 +282,7 @@ export default function NearbyInformation({
 				<div className="flex flex-col items-center bg-black">
 					<h1 className="text-3xl text-white">Nearby Places</h1>
 					<p className="text-lg text-white">
-						Distance and Duration from one place to another
+						Nearby places of a given place
 					</p>
 				</div>
 

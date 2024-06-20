@@ -12,6 +12,7 @@ import {
 import QueryApi from "@/api/queryApi";
 import QueryFields from "./QueryFields";
 import GptApi from "@/api/gptApi";
+import dayjs from "dayjs";
 const queryApi = new QueryApi();
 const gptApi = new GptApi();
 
@@ -21,6 +22,7 @@ export default function QueryCard({
 	setSelectedPlacesMap,
 	setDistanceMatrix,
 	setNearbyPlacesMap,
+	setCurrentInformation,
 	setContext,
 	context,
 	setContextJSON,
@@ -157,6 +159,27 @@ export default function QueryCard({
 								);
 								setNearbyPlacesMap(
 									query.context_json.nearby_places ?? {}
+								);
+								setCurrentInformation(
+									query.context_json.current_information
+										? {
+												time: dayjs(
+													query.context_json
+														.current_information
+														.time
+												),
+												day: query.context_json
+													.current_information.day,
+												location:
+													query.context_json
+														.current_information
+														.location,
+										  }
+										: {
+												time: null,
+												day: "",
+												location: "",
+										  }
 								);
 								setContext([]);
 								setContextJSON({});

@@ -10,6 +10,11 @@ export default function Home() {
 	const [distanceMatrix, setDistanceMatrix] = useState({});
 	const [selectedPlacesMap, setSelectedPlacesMap] = useState({});
 	const [nearbyPlacesMap, setNearbyPlacesMap] = useState({});
+	const [currentInformation, setCurrentInformation] = useState({
+		time: null,
+		day: "",
+		location: "",
+	});
 	return (
 		<main className="flex min-h-screen flex-col bg-black">
 			<div className="flex flex-row gap-1">
@@ -20,6 +25,7 @@ export default function Home() {
 						setSelectedPlacesMap,
 						setDistanceMatrix,
 						setNearbyPlacesMap,
+						setCurrentInformation,
 						setContext,
 						setContextJSON,
 					}}
@@ -35,6 +41,8 @@ export default function Home() {
 						setSelectedPlacesMap,
 						nearbyPlacesMap,
 						setNearbyPlacesMap,
+						currentInformation,
+						setCurrentInformation,
 					}}
 				/>
 			</div>

@@ -26,6 +26,7 @@ export default function DatasetCreator({
 	setSelectedPlacesMap,
 	setDistanceMatrix,
 	setNearbyPlacesMap,
+	setCurrentInformation,
 }) {
 	const [queries, setQueries] = useState([]);
 	const fetchQueries = async () => {
@@ -100,6 +101,7 @@ export default function DatasetCreator({
 							setSelectedPlacesMap,
 							setDistanceMatrix,
 							setNearbyPlacesMap,
+							setCurrentInformation,
 							setContextJSON,
 							setContext,
 							context,
