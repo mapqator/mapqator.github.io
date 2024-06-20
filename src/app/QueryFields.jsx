@@ -78,7 +78,7 @@ export default function QueryFields({
 						setQuery((prev) => ({
 							...prev,
 							context: context.reduce(
-								(acc, e) => acc + e + "\n",
+								(acc, e) => acc + e + ",\n",
 								""
 							),
 							context_json: contextJSON,
