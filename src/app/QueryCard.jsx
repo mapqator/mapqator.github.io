@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IconButton, Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -32,9 +32,22 @@ export default function QueryCard({
 }) {
 	const [expanded, setExpanded] = useState(false);
 	const [mode, setMode] = useState("view");
+	const [flag, setFlag] = useState(false);
 
+	useEffect(() => {
+		// Check if there is any invalid verdict in evaluation
+
+		const invalid = query.evaluation?.find((e) => e.verdict === "invalid");
+		if (invalid) {
+			setFlag(true);
+		}
+	}, [query]);
 	return (
-		<div className="flex flex-col border-4 border-black rounded-md w-full">
+		<div
+			className={`flex flex-col border-4 rounded-md w-full ${
+				flag ? "border-red-500" : "border-black"
+			}`}
+		>
 			<div className="flex flex-row items-center justify-between bg-black">
 				<div className="flex flex-row gap-2 items-center">
 					<h1 className="text-2xl font-bold text-white pl-2 py-2">
@@ -127,8 +140,11 @@ export default function QueryCard({
 								>
 									<h1 className="text-lg w-1/2">{e.model}</h1>
 									{e.verdict == "invalid" ? (
-										<h1 className="text-lg w-1/2">
-											Can't answer
+										<h1 className="text-lg w-1/2 ">
+											Can't answer{" "}
+											{e.answer !== ""
+												? "(" + e.answer + ")"
+												: ""}
 										</h1>
 									) : e.verdict == "right" ? (
 										<h1 className="text-lg w-1/2  text-green-500 font-semibold">
