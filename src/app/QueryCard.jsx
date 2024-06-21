@@ -39,7 +39,7 @@ export default function QueryCard({
 				<div className="flex flex-row gap-2 items-center">
 					<h1 className="text-2xl font-bold text-white pl-2 py-2">
 						{" "}
-						# {index + 1}
+						# {query.id}
 					</h1>
 					<div className="text-xl font-bold text-white px-1 lowercase border-2 rounded-md">
 						{query.classification}
@@ -115,6 +115,34 @@ export default function QueryCard({
 						<h1 className="text-lg">{query.answer.correct}</h1>
 					)}
 
+					<div>
+						<h1 className="text-lg font-bold underline">
+							Evaluation
+						</h1>
+						<div className="flex flex-col gap-1">
+							{query.evaluation?.map((e, index) => (
+								<div
+									key={index}
+									className="flex flex-row gap-2"
+								>
+									<h1 className="text-lg w-1/2">{e.model}</h1>
+									{e.verdict == "invalid" ? (
+										<h1 className="text-lg w-1/2">
+											Can't answer
+										</h1>
+									) : e.verdict == "right" ? (
+										<h1 className="text-lg w-1/2  text-green-500 font-semibold">
+											Correct
+										</h1>
+									) : (
+										<h1 className="text-lg w-1/2  text-red-500 font-semibold">
+											Wrong
+										</h1>
+									)}
+								</div>
+							))}
+						</div>
+					</div>
 					<div className="flex flex-row gap-2 mx-auto">
 						<Button
 							variant="contained"
