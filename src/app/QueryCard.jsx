@@ -141,7 +141,7 @@ export default function QueryCard({
 									<h1 className="text-lg w-1/2">{e.model}</h1>
 									{e.verdict == "invalid" ? (
 										<h1 className="text-lg w-1/2 ">
-											Can't answer{" "}
+											{"Can't answer"}
 											{e.answer !== ""
 												? "(" + e.answer + ")"
 												: ""}
