@@ -87,7 +87,7 @@ export default function ContextGenerator({
 					} are (${
 						e.hasRadius
 							? "in " + e.radius + " m radius"
-							: "ranked by distance"
+							: "sorted by distance in ascending order"
 					}):`
 				);
 				let counter = 1;
