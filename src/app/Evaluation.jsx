@@ -28,8 +28,6 @@ export default function Evaluation({ queries }) {
 								? tmp[e.model].correct + 1
 								: 1,
 						};
-						tmp[e.model].accuracy =
-							(tmp[e.model].correct * 100.0) / valid_questions;
 					} else if (e.verdict == "invalid") {
 						console.log("Invalid question");
 						tmp[e.model] = {
@@ -47,6 +45,8 @@ export default function Evaluation({ queries }) {
 						};
 					}
 					console.log(query.id, tmp[e.model], e.model);
+					tmp[e.model].accuracy =
+						(tmp[e.model].correct * 100.0) / valid_questions;
 				});
 			}
 		});
