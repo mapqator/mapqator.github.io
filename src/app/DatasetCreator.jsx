@@ -17,6 +17,8 @@ import QueryCard from "./QueryCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import QueryForm from "./QueryForm";
+import Evaluation from "./Evaluation";
+import DatasetInformation from "./DatasetInformation";
 
 export default function DatasetCreator({
 	contextJSON,
@@ -91,6 +93,8 @@ export default function DatasetCreator({
 			<QueryForm {...{ contextJSON, context, handleSave }} />
 			{/*<h1 className="bg-black h-1 w-full my-2"></h1>*/}
 			{/*<h1 className="text-2xl w-full">Previous Queries</h1>*/}
+			<DatasetInformation {...{ queries }} />
+			<Evaluation {...{ queries }} />
 			<div className="flex flex-col gap-2 mt-1 w-full">
 				{queries.map((query, index) => (
 					<QueryCard
