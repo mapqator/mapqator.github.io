@@ -152,7 +152,7 @@ export default function QueryCard({
 										</h1>
 									) : (
 										<h1 className="text-lg w-1/2  text-red-500 font-semibold">
-											Wrong
+											Wrong {"(" + e.answer + ")"}
 										</h1>
 									)}
 								</div>
