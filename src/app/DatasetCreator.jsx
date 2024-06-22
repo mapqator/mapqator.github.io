@@ -19,6 +19,7 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import QueryForm from "./QueryForm";
 import Evaluation from "./Evaluation";
 import DatasetInformation from "./DatasetInformation";
+import { showSuccess } from "./home";
 
 export default function DatasetCreator({
 	contextJSON,
@@ -55,6 +56,7 @@ export default function DatasetCreator({
 			// push front
 			newQueries.unshift(res.data[0]);
 			setQueries(newQueries);
+			showSuccess("Query saved successfully", res);
 		}
 	};
 

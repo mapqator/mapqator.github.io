@@ -1,8 +1,27 @@
 "use client";
-
+import { ToastContainer, toast } from "react-toastify";
 import DatasetCreator from "./DatasetCreator";
 import ContextGenerator from "./ContextGenerator";
 import { useState } from "react";
+
+export const showToast = (message, type) => {
+	console.log(message, type);
+	if (type === "success") toast.success(message, {});
+	else if (type === "error") toast.error(message, {});
+	else {
+		toast.dark(message, {});
+	}
+};
+export const showSuccess = (message, res) => {
+	if (res === undefined) showToast("Couldn't connect to server", "error");
+	else if (res.success) showToast(message, "success");
+	else showToast(res.error, "error");
+};
+export const showMessage = (message, res) => {
+	if (res === undefined) showToast("Couldn't connect to server", "error");
+	else if (res.success) showToast(message);
+	else showToast(res.error, "error");
+};
 
 export default function Home() {
 	const [contextJSON, setContextJSON] = useState({});
