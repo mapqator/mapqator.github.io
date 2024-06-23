@@ -214,11 +214,14 @@ export default function QueryCard({
 								setCurrentInformation(
 									query.context_json.current_information
 										? {
-												time: dayjs(
-													query.context_json
-														.current_information
-														.time
-												),
+												time: query.context_json
+													.current_information.time
+													? dayjs(
+															query.context_json
+																.current_information
+																.time
+													  )
+													: null,
 												day: query.context_json
 													.current_information.day,
 												location:

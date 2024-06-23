@@ -430,7 +430,10 @@ export default function QueryFields({
 					Clear
 				</Button>
 				<Button
-					onClick={() => onSave(query)}
+					onClick={() => {
+						onSave(query);
+						setQuery(init);
+					}}
 					variant="contained"
 					fullWidth
 					sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
