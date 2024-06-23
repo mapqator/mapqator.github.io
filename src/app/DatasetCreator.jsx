@@ -15,11 +15,11 @@ import {
 } from "@mui/material";
 import QueryCard from "./QueryCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faRefresh, faTrash } from "@fortawesome/free-solid-svg-icons";
 import QueryForm from "./QueryForm";
 import Evaluation from "./Evaluation";
 import DatasetInformation from "./DatasetInformation";
-import { showSuccess } from "./home";
+import { showSuccess, showToast } from "./home";
 
 export default function DatasetCreator({
 	contextJSON,
@@ -57,6 +57,8 @@ export default function DatasetCreator({
 			newQueries.unshift(res.data[0]);
 			setQueries(newQueries);
 			showSuccess("Query saved successfully", res);
+		} else {
+			showToast("Can't save this query", "error");
 		}
 	};
 
@@ -86,6 +88,7 @@ export default function DatasetCreator({
 	};
 	return (
 		<div className="w-1/2 flex flex-col items-center p-5 bg-white gap-2">
+			
 			<div className="bg-white flex flex-col items-center w-full">
 				<h1 className="text-3xl">Map Dataset Creator</h1>
 				<p className="text-lg">

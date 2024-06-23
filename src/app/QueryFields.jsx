@@ -28,7 +28,7 @@ export default function QueryFields({
 	initialQuery,
 	onSave,
 }) {
-	const [query, setQuery] = useState({
+	const init = {
 		question: "",
 		answer: {
 			type: "mcq",
@@ -39,7 +39,8 @@ export default function QueryFields({
 		context_json: {},
 		context_gpt: "",
 		classification: "",
-	});
+	};
+	const [query, setQuery] = useState(init);
 	const [newOption, setNewOption] = useState("");
 	useEffect(() => {
 		if (initialQuery) {
@@ -427,6 +428,17 @@ export default function QueryFields({
 					sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
 				>
 					Save
+				</Button>
+			</div>
+			<div className="mx-auto w-full font-bold">
+				<Button
+					onClick={() => setQuery(init)}
+					variant="contained"
+					fullWidth
+					sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
+					color="error"
+				>
+					Clear
 				</Button>
 			</div>
 		</div>
