@@ -103,7 +103,14 @@ export default function QueryCard({
 					<h1 className="text-lg font-bold underline">
 						Context (GPT)
 					</h1>
-					<h1 className="text-lg">{query.context_gpt}</h1>
+					<h1 className="text-lg">
+						{query.context_gpt.split("\n").map((line, index) => (
+							<React.Fragment key={index}>
+								{line}
+								<br />
+							</React.Fragment>
+						))}
+					</h1>
 
 					<h1 className="text-xl font-bold underline">Question</h1>
 					<h1 className="text-lg">{query.question}</h1>

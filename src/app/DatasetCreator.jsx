@@ -67,6 +67,7 @@ export default function DatasetCreator({
 			const newQueries = [...queries];
 			newQueries[index] = res.data[0];
 			setQueries(newQueries);
+			showSuccess("Query edited successfully", res);
 		}
 	};
 	const handleDelete = async (index) => {
