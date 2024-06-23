@@ -419,18 +419,7 @@ export default function QueryFields({
 					))}
 				</Select>
 			</FormControl>
-
-			<div className="mx-auto w-full font-bold">
-				<Button
-					onClick={() => onSave(query)}
-					variant="contained"
-					fullWidth
-					sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
-				>
-					Save
-				</Button>
-			</div>
-			<div className="mx-auto w-full font-bold">
+			<div className="mx-auto w-full font-bold flex flex-row gap-1">
 				<Button
 					onClick={() => setQuery(init)}
 					variant="contained"
@@ -439,6 +428,14 @@ export default function QueryFields({
 					color="error"
 				>
 					Clear
+				</Button>
+				<Button
+					onClick={() => onSave(query)}
+					variant="contained"
+					fullWidth
+					sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
+				>
+					Save
 				</Button>
 			</div>
 		</div>
