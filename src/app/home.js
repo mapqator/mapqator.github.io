@@ -23,6 +23,7 @@ export const showMessage = (message, res) => {
 	else showToast(res.error, "error");
 };
 
+export var setLoading;
 export default function Home() {
 	const [contextJSON, setContextJSON] = useState({});
 	const [context, setContext] = useState([]);
@@ -34,8 +35,18 @@ export default function Home() {
 		day: "",
 		location: "",
 	});
+	const [poisMap, setPoisMap] = useState([]);
+	const [loading, setL] = useState(true);
+	setLoading = setL;
 	return (
 		<main className="flex min-h-screen flex-col bg-black">
+			{loading ? (
+				<div className="bg-white fixed z-40 top-0 left-0 w-full h-full flex justify-center items-center">
+					<div className="border-[6px] border-solid border-gray rounded-full border-t-[8px] border-t-blue-500 w-16 h-16 animate-spin"></div>
+				</div>
+			) : (
+				<></>
+			)}
 			<div className="flex flex-row gap-1">
 				<DatasetCreator
 					contextJSON={contextJSON}
@@ -62,6 +73,8 @@ export default function Home() {
 						setNearbyPlacesMap,
 						currentInformation,
 						setCurrentInformation,
+						poisMap,
+						setPoisMap,
 					}}
 				/>
 			</div>

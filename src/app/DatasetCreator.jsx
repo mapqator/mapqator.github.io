@@ -47,7 +47,7 @@ export default function DatasetCreator({
 		fetchQueries();
 	}, []);
 
-	const handleSave = async (query) => {
+	const handleSave = async (query) => {	
 		const res = await queryApi.createQuery(query);
 		if (res.success) {
 			// update the queries
@@ -88,7 +88,6 @@ export default function DatasetCreator({
 	};
 	return (
 		<div className="w-1/2 flex flex-col items-center p-5 bg-white gap-2">
-			
 			<div className="bg-white flex flex-col items-center w-full">
 				<h1 className="text-3xl">Map Dataset Creator</h1>
 				<p className="text-lg">

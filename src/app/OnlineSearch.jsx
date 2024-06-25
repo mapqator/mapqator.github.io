@@ -15,6 +15,7 @@ export default function OnlineSearch({
 	setSavedPlacesMap,
 	selectedPlacesMap,
 	setSelectedPlacesMap,
+	setPoisMap,
 }) {
 	const [search, setSearch] = useState("");
 	const [results, setResults] = useState([]);
@@ -89,6 +90,45 @@ export default function OnlineSearch({
 		}
 	};
 
+	const handleAddAll = async () => {
+		try {
+			setPoisMap((prev) => [
+				...prev,
+				{
+					query: search,
+					places: results.map((place) => ({
+						...place,
+						selected: true,
+					})),
+				},
+			]);
+
+			const newSavedPlacesMap = { ...savedPlacesMap };
+			for (const place of results) {
+				if (newSavedPlacesMap[place.place_id] === undefined) {
+					try {
+						const response = await mapApi.getDetails(
+							place.place_id
+						);
+						if (response.success) {
+							const res = await placeApi.createPlace(
+								response.data.result
+							);
+							if (res.success) {
+								newSavedPlacesMap[place.place_id] = res.data[0];
+								console.log("saved: ", res.data[0].place_id);
+							}
+						}
+					} catch (error) {
+						console.error(error);
+					}
+				}
+			}
+		} catch (error) {
+			console.error("Error fetching data: ", error);
+		}
+	};
+
 	return (
 		<div className="w-1/2 flex flex-col items-center bg-white border-4 rounded-lg border-black gap-1">
 			<div className="flex flex-col bg-black w-full items-center p-1">
@@ -118,7 +158,31 @@ export default function OnlineSearch({
 						Search ($)
 					</button>
 				</form>
-
+				{results.length > 0 && (
+					<div className="flex flex-row gap-2">
+						<Button
+							onClick={() => {
+								setResults([]);
+								setSearch("");
+							}}
+							variant="contained"
+							fullWidth
+							// sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
+							color="error"
+						>
+							Clear
+						</Button>
+						<Button
+							onClick={handleAddAll}
+							variant="contained"
+							fullWidth
+							// sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
+							// color="error"
+						>
+							Add all
+						</Button>
+					</div>
+				)}
 				{/* <h1 className="bg-black h-1 w-full my-2"></h1> */}
 				<ul className="flex flex-col gap-2 overflow-y-auto max-h-[40vh] ">
 					{results.map((place, index) => (

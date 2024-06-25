@@ -17,6 +17,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 import CurrentInformation from "./CurrentInformation";
 import { format } from "date-fns";
+import { setLoading } from "./home";
+import POI from "./POI";
 
 export default function ContextGenerator({
 	setContextJSON,
@@ -30,6 +32,8 @@ export default function ContextGenerator({
 	setNearbyPlacesMap,
 	currentInformation,
 	setCurrentInformation,
+	poisMap,
+	setPoisMap,
 }) {
 	const [savedPlacesMap, setSavedPlacesMap] = useState({});
 
@@ -41,6 +45,7 @@ export default function ContextGenerator({
 		nearbyPlacesMap,
 		savedPlacesMap,
 		currentInformation,
+		poisMap,
 	]);
 
 	const generateContext = () => {
@@ -98,11 +103,28 @@ export default function ContextGenerator({
 								selectedPlacesMap[near_place.place_id]?.alias ||
 								savedPlacesMap[near_place.place_id]?.name ||
 								near_place.name
-							} | ${near_place.formatted_address}`
+							} - ${near_place.formatted_address}`
 						);
 						counter++;
 					}
 				});
+			});
+		});
+
+		poisMap.forEach((poi, index) => {
+			newContext.push(`POIs for query "${poi.query}" are:`);
+			let counter = 1;
+			poi.places.forEach((place) => {
+				if (place.selected) {
+					newContext.push(
+						`${counter}. ${
+							selectedPlacesMap[place.place_id]?.alias ||
+							savedPlacesMap[place.place_id]?.name ||
+							place.name
+						} - ${place.formatted_address}`
+					);
+					counter++;
+				}
 			});
 		});
 
@@ -122,7 +144,7 @@ export default function ContextGenerator({
 
 		if (currentInformation.location !== "") {
 			newContext.push(
-				`I am at ${
+				`Current location of user is ${
 					selectedPlacesMap[currentInformation.location]?.alias ||
 					savedPlacesMap[currentInformation.location]?.name
 				}.`
@@ -245,6 +267,7 @@ export default function ContextGenerator({
 					newSavedPlacesMap[e.place_id] = e;
 				});
 				setSavedPlacesMap(newSavedPlacesMap);
+				setLoading(false);
 			}
 		} catch (error) {
 			console.error("Error fetching data: ", error);
@@ -289,13 +312,15 @@ export default function ContextGenerator({
 						savedPlacesMap={savedPlacesMap}
 						selectedPlacesMap={selectedPlacesMap}
 						setSelectedPlacesMap={setSelectedPlacesMap}
-						generateContext
 					/>
 					<OnlineSearch
-						savedPlacesMap={savedPlacesMap}
-						setSavedPlacesMap={setSavedPlacesMap}
-						selectedPlacesMap={selectedPlacesMap}
-						setSelectedPlacesMap={setSelectedPlacesMap}
+						{...{
+							savedPlacesMap,
+							setSavedPlacesMap,
+							selectedPlacesMap,
+							setSelectedPlacesMap,
+							setPoisMap,
+						}}
 					/>
 				</div>
 
@@ -321,9 +346,18 @@ export default function ContextGenerator({
 						savedPlacesMap,
 						setSavedPlacesMap,
 						selectedPlacesMap,
-						savedPlacesMap,
 						nearbyPlacesMap,
 						setNearbyPlacesMap,
+					}}
+				/>
+
+				<POI
+					{...{
+						savedPlacesMap,
+						setSavedPlacesMap,
+						selectedPlacesMap,
+						poisMap,
+						setPoisMap,
 					}}
 				/>
 
