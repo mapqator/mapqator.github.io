@@ -101,27 +101,28 @@ export default function POI({
 		console.log(poisMap);
 	}, [poisMap]);
 	return (
-		// Object.keys(selectedPlacesMap).length > 0 &&
-		<div className="flex flex-col border-4 w-full border-black rounded-lg">
-			<div className="flex flex-col items-center bg-black">
-				<h1 className="text-3xl text-white">POIs</h1>
-				<p className="text-lg text-white">
-					Results of the Points of Interest search
-				</p>
+		poisMap.length > 0 && (
+			<div className="flex flex-col border-4 w-full border-black rounded-lg">
+				<div className="flex flex-col items-center bg-black">
+					<h1 className="text-3xl text-white">POIs</h1>
+					<p className="text-lg text-white">
+						Results of the Points of Interest search
+					</p>
+				</div>
+				<div className="flex flex-col gap-2 w-full p-2">
+					{poisMap?.map((poi, index) => (
+						<POICard
+							key={index}
+							selectedPlacesMap={selectedPlacesMap}
+							savedPlacesMap={savedPlacesMap}
+							poi={poi}
+							poisMap={poisMap}
+							setPoisMap={setPoisMap}
+							index2={index}
+						/>
+					))}
+				</div>
 			</div>
-			<div className="flex flex-col gap-2 w-full p-2">
-				{poisMap?.map((poi, index) => (
-					<POICard
-						key={index}
-						selectedPlacesMap={selectedPlacesMap}
-						savedPlacesMap={savedPlacesMap}
-						poi={poi}
-						poisMap={poisMap}
-						setPoisMap={setPoisMap}
-						index2={index}
-					/>
-				))}
-			</div>
-		</div>
+		)
 	);
 }

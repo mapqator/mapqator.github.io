@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 export default function DatasetInformation({ queries }) {
-	const [state, setState] = useState({});
+	const [state, setState] = useState(null);
 	useEffect(() => {
 		const tmp = {};
 		let valid_questions = 0;
@@ -50,16 +50,18 @@ export default function DatasetInformation({ queries }) {
 				<hr className="bg-black border-black" />
 				<div className="flex flex-row gap-1 w-full">
 					<h1 className="text-lg w-[25%] text-center">
-						{state.total_questions}
+						{state?.total_questions}
 					</h1>
 					<h1 className="text-lg w-[25%] text-center">
-						{state.total_questions - state.questions_with_context}
+						{(state?.total_questions ?? 0) -
+							(state?.questions_with_context ?? 0)}
 					</h1>
 					<h1 className="text-lg w-[25%] text-center">
-						{state.total_questions - state.questions_with_answer}
+						{(state?.total_questions ?? 0) -
+							(state?.questions_with_answer ?? 0)}
 					</h1>
 					<h1 className="text-lg w-[25%] text-center text-green-500 font-semibold">
-						{state.valid_questions}
+						{state?.valid_questions}
 					</h1>
 				</div>
 			</div>

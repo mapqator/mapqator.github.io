@@ -2,8 +2,8 @@ import axios from "axios";
 // import Cookies from "universal-cookie";
 // import { API_BASE_URL } from "../index";
 // const cookies = new Cookies();
-// const API_BASE_URL = "https://mapquest-app.onrender.com/api";
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = "https://mapquest-app.onrender.com/api";
+// const API_BASE_URL = "http://localhost:5000/api";
 
 // axios.defaults.withCredentials = true;
 // axios.interceptors.request.use(
