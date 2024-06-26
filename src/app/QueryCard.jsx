@@ -29,6 +29,7 @@ export default function QueryCard({
 	contextJSON,
 	handleDelete,
 	handleEdit,
+	setPoisMap,
 }) {
 	const [expanded, setExpanded] = useState(false);
 	const [mode, setMode] = useState("view");
@@ -59,23 +60,30 @@ export default function QueryCard({
 					</div>
 				</div>
 
-				{mode == "view" && (
-					<div>
-						<IconButton
-							sx={{ height: "3rem", width: "3rem" }}
-							onClick={() => setExpanded((prev) => !prev)}
-						>
-							<div className="text-sm md:text-2xl">
-								<FontAwesomeIcon
-									icon={
-										expanded ? faChevronUp : faChevronDown
-									}
-									color="white"
-								/>
-							</div>
-						</IconButton>
-					</div>
-				)}
+				<div className="flex flex-row justify-end items-center">
+					<h2 className="text-xl font-bold text-white px-1">
+						{"@" + query.username}
+					</h2>
+					{mode == "view" && (
+						<div>
+							<IconButton
+								sx={{ height: "3rem", width: "3rem" }}
+								onClick={() => setExpanded((prev) => !prev)}
+							>
+								<div className="text-sm md:text-2xl">
+									<FontAwesomeIcon
+										icon={
+											expanded
+												? faChevronUp
+												: faChevronDown
+										}
+										color="white"
+									/>
+								</div>
+							</IconButton>
+						</div>
+					)}
+				</div>
 			</div>
 			{mode === "edit" ? (
 				<QueryFields
@@ -234,6 +242,11 @@ export default function QueryCard({
 												day: "",
 												location: "",
 										  }
+								);
+								setPoisMap(
+									query.context_json.pois?.length > 0
+										? query.context_json.pois
+										: []
 								);
 								setContext([]);
 								setContextJSON({});

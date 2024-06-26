@@ -2,52 +2,39 @@ import axios from "axios";
 // import Cookies from "universal-cookie";
 // import { API_BASE_URL } from "../index";
 // const cookies = new Cookies();
-const API_BASE_URL = "https://mapquest-app.onrender.com/api";
-// const API_BASE_URL = "http://localhost:5000/api";
+// const API_BASE_URL = "https://mapquest-app.onrender.com/api";
+export const API_BASE_URL = "http://localhost:5000/api";
 
 // axios.defaults.withCredentials = true;
-// axios.interceptors.request.use(
-//   (config) => {
-//     const token = localStorage.getItem("token");
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
-//     }
-//     return config;
-//   },D
-//   (error) => Promise.reject(error)
-// );
-// axios.interceptors.response.use(
-//   (response) => response,
-//   async (error) => {
-//     let originalRequest = error.config;
-//     // If the error status is 401 and there is no originalRequest._retry flag,
-//     // it means the token has expired and we need to refresh it
-//     console.log("Retry:", originalRequest._retry);
-//     if (error.response.status === 401 && !originalRequest._retry) {
-//       originalRequest._retry = true;
-//       console.log("Retry:", originalRequest._retry);
-//       try {
-//         const res = await axios.post(API_BASE_URL + "/auth/refresh");
-//         // const { token, type } = response.data;
-//         const token = res.data.access_token;
-//         // console.log("yeeeeeeeeeeeeeeeeeee", response.data);
-//         localStorage.setItem("token", res.data.access_token);
-//         // localStorage.setItem("type", type);
+axios.interceptors.request.use(
+	(config) => {
+		const token = localStorage.getItem("token");
+		if (token) {
+			config.headers.Authorization = `Bearer ${token}`;
+		}
+		return config;
+	},
+	(error) => Promise.reject(error)
+);
 
-//         // Retry the original request with the new token
-//         originalRequest.headers.Authorization = `Bearer ${token}`;
-//         return axios(originalRequest);
-//       } catch (error) {
-//         // Handle refresh token error or redirect to login
-//         console.log("Redirect to login");
-//         localStorage.removeItem("token");
-//         localStorage.removeItem("type");
-//         window.location.href = "/login?type=solver";
-//       }
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+axios.interceptors.response.use(
+	(response) => response,
+	async (error) => {
+		let originalRequest = error.config;
+		// If the error status is 401 and there is no originalRequest._retry flag,
+		// it means the token has expired and we need to refresh it
+		console.log("Retry:", originalRequest._retry);
+		if (error.response.status === 401) {
+			// Handle refresh token error or redirect to login
+			console.log("Redirect to login");
+			localStorage.removeItem("token");
+			const event = new Event("storage");
+			// Dispatch the event
+			window.dispatchEvent(event);
+		}
+		return Promise.reject(error);
+	}
+);
 
 export default class Api {
 	//   getToken = () => {

@@ -30,6 +30,7 @@ export default function DatasetCreator({
 	setDistanceMatrix,
 	setNearbyPlacesMap,
 	setCurrentInformation,
+	setPoisMap,
 }) {
 	const [queries, setQueries] = useState([]);
 	const fetchQueries = async () => {
@@ -47,7 +48,7 @@ export default function DatasetCreator({
 		fetchQueries();
 	}, []);
 
-	const handleSave = async (query) => {	
+	const handleSave = async (query) => {
 		const res = await queryApi.createQuery(query);
 		if (res.success) {
 			// update the queries
@@ -117,6 +118,7 @@ export default function DatasetCreator({
 							contextJSON,
 							handleDelete,
 							handleEdit,
+							setPoisMap,
 						}}
 					/>
 				))}

@@ -17,8 +17,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 import CurrentInformation from "./CurrentInformation";
 import { format } from "date-fns";
-import { setLoading } from "./home";
 import POI from "./POI";
+import { setLoading } from "./page";
 
 export default function ContextGenerator({
 	setContextJSON,
@@ -158,6 +158,7 @@ export default function ContextGenerator({
 			places: selectedPlacesMap,
 			nearby_places: nearbyPlacesMap,
 			current_information: currentInformation,
+			pois: poisMap,
 		});
 
 		setContextJSON({
@@ -165,6 +166,7 @@ export default function ContextGenerator({
 			places: selectedPlacesMap,
 			nearby_places: nearbyPlacesMap,
 			current_information: currentInformation,
+			pois: poisMap,
 		});
 	};
 
