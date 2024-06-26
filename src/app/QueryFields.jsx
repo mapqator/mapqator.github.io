@@ -152,6 +152,11 @@ export default function QueryFields({
 						variant="contained"
 						onClick={async () => {
 							console.log(query.context);
+							setQuery((prev) => ({
+								...prev,
+								context_gpt:
+									"Generating context. Please wait. It may take 20-30 seconds.",
+							}));
 							const res = await queryApi.getGPTContext(
 								query.context
 							);
