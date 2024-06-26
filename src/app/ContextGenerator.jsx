@@ -52,13 +52,18 @@ export default function ContextGenerator({
 		let newContext = [];
 		Object.keys(selectedPlacesMap).forEach((place_id) => {
 			const text = placeToContext(place_id);
-			if (text !== "")
+			if (text !== "") {
 				newContext.push(
 					`Information of ${
 						selectedPlacesMap[place_id].alias ||
 						savedPlacesMap[place_id].name
-					}: ${text}`
+					}:`
 				);
+				// Split the text into lines and add to context
+				text.split("\n").forEach((line) => {
+					newContext.push(line);
+				});
+			}
 		});
 
 		Object.keys(distanceMatrix).forEach((from_id, index) => {
@@ -187,7 +192,7 @@ export default function ContextGenerator({
 				typeof place.geometry.location.lng === "function"
 					? place.geometry.location.lng()
 					: place.geometry.location.lng;
-			text += `Location: ${
+			text += `- Location: ${
 				attributes.includes("formatted_address")
 					? place.formatted_address
 					: ""
@@ -195,20 +200,26 @@ export default function ContextGenerator({
 				attributes.includes("geometry")
 					? "(" + lat + ", " + lng + ")"
 					: ""
-			}. `;
+			}.\n`;
 		}
 		if (attributes.includes("opening_hours")) {
-			text += `Open: ${place.opening_hours.weekday_text.join(", ")}. `;
+			text += `- Open: ${place.opening_hours.weekday_text.join(", ")}.\n`;
 		}
 		if (attributes.includes("rating")) {
-			text += `Rating: ${place.rating}. (${place.user_ratings_total} ratings). `;
+			text += `- Rating: ${place.rating}. (${place.user_ratings_total} ratings).\n`;
 		}
 
 		if (attributes.includes("reviews")) {
-			text += `Reviews: ${place.reviews.map((review) => {
-				return `${review.author_name} (${review.rating}): ${review.text}`;
-			})} `;
+			text += `- Reviews: \n${place.reviews
+				.map((review, index) => {
+					console.log(review.text);
+					return `   ${index + 1}. ${review.author_name} ("Rating": ${
+						review.rating
+					}): ${review.text}\n`;
+				})
+				.join("")} `; // Use .join('') to concatenate without commas
 		}
+		console.log(text);
 		if (attributes.includes("price_level")) {
 			// - 0 Free
 			// - 1 Inexpensive
@@ -226,35 +237,37 @@ export default function ContextGenerator({
 				"Very Expensive",
 			];
 
-			text += `Price Level: ${priceMap[place.price_level]}. `;
+			text += `- Price Level: ${priceMap[place.price_level]}.\n`;
 		}
 
 		if (attributes.includes("delivery")) {
 			text += place.delivery
-				? "Delivery Available. "
-				: "Delivery Not Available. ";
+				? "- Delivery Available.\n"
+				: "- Delivery Not Available.\n";
 		}
 
 		if (attributes.includes("dine_in")) {
 			text += place.dine_in
-				? "Dine In Available. "
-				: "Dine In Not Available. ";
+				? "- Dine In Available.\n"
+				: "- Dine In Not Available.\n";
 		}
 
 		if (attributes.includes("takeaway")) {
 			text += place.takeaway
-				? "Takeaway Available. "
-				: "Takeaway Not Available. ";
+				? "- Takeaway Available.\n"
+				: "- Takeaway Not Available.\n";
 		}
 
 		if (attributes.includes("reservable")) {
-			text += place.reservable ? "Reservable. " : "Not Reservable. ";
+			text += place.reservable
+				? "- Reservable.\n"
+				: "- Not Reservable.\n";
 		}
 
 		if (attributes.includes("wheelchair_accessible_entrance")) {
 			text += place.wheelchair_accessible_entrance
-				? "Wheelchair Accessible Entrance. "
-				: "Not Wheelchair Accessible Entrance. ";
+				? "- Wheelchair Accessible Entrance.\n"
+				: "- Not Wheelchair Accessible Entrance.\n";
 		}
 
 		return text;

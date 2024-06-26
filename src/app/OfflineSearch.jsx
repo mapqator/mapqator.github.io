@@ -19,7 +19,7 @@ const AutocompleteSearchBox = ({ savedPlacesMap, addPlace, setAddPlace }) => {
 	return (
 		<>
 			<div
-				className="flex flex-col items-center w-full py-3 px-2"
+				className="flex flex-col items-center w-full py-3 px-2 border-b-4 border-black"
 				// onSubmit={handleSearch}
 			>
 				<input
@@ -36,14 +36,14 @@ const AutocompleteSearchBox = ({ savedPlacesMap, addPlace, setAddPlace }) => {
 					Search
 				</button>
 			</div>
-			<div className="p-2 w-full overflow-y-auto max-h-[40vh] flex flex-col gap-1">
+			<div className="p-2 w-full overflow-y-auto max-h-[40vh] flex flex-col gap-2">
 				{filteredPlaces.map((place, index) => (
 					<li
 						key={index}
 						className="flex flex-row gap-2 items-center"
 					>
 						<button
-							className={`border-black flex flex-row justify-center border w-full rounded-lg p-2 mt-2 ${
+							className={`border-black flex flex-row justify-center border w-full rounded-lg p-2 ${
 								addPlace === place.place_id
 									? "bg-[#888888]"
 									: "hover:bg-[#cccccc]"
@@ -102,12 +102,23 @@ export default function OfflineSearch({
 				setAddPlace={setAddPlace}
 			/>
 			{addPlace !== "" && (
-				<button
-					className="bg-blue-500 rounded-sm p-2 w-full"
-					onClick={() => handleAdd(addPlace)}
-				>
-					+ Add
-				</button>
+				<div className="flex flex-row gap-2 w-full p-2 border-t-4 border-black">
+					{/* <button
+						className="bg-blue-500 rounded-md p-2 w-full"
+						onClick={() => handleAdd(addPlace)}
+					>
+						Edit
+					</button> */}
+
+					<Button
+						variant="contained"
+						fullWidth
+						onClick={() => handleAdd(addPlace)}
+						sx={{ fontSize: "1rem" }}
+					>
+						+ Add
+					</Button>
+				</div>
 			)}
 		</div>
 	);
