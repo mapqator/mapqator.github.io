@@ -283,7 +283,7 @@ export default function QueryFields({
 								/>
 								<input
 									type="text"
-									className="text-lg"
+									className="text-lg border-2 w-full"
 									value={option}
 									onChange={(e) => {
 										setQuery((prev) => {
