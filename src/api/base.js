@@ -2,7 +2,7 @@ import axios from "axios";
 // import Cookies from "universal-cookie";
 // import { API_BASE_URL } from "../index";
 // const cookies = new Cookies();
-const API_BASE_URL = "https://mapquest-app.onrender.com/api";
+export const API_BASE_URL = "https://mapquest-app.onrender.com/api";
 // export const API_BASE_URL = "http://localhost:5000/api";
 
 // axios.defaults.withCredentials = true;
@@ -37,13 +37,6 @@ axios.interceptors.response.use(
 );
 
 export default class Api {
-	//   getToken = () => {
-	//     // const token =
-	//     //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoyLCJpYXQiOjE2OTM0MjQ2MzN9.y_2W8PFdUYlbQ316GtufzsuN_tlVRwsmZwbPKzbyifc";
-	//     const token = localStorage.getItem("token");
-	//     return token;
-	//   };
-
 	/**
 	 *
 	 * @param {String} url
