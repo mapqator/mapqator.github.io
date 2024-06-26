@@ -8,6 +8,7 @@ import {
 	faChevronUp,
 	faPen,
 	faTrash,
+	faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import QueryApi from "@/api/queryApi";
 import QueryFields from "./QueryFields";
@@ -61,8 +62,9 @@ export default function QueryCard({
 				</div>
 
 				<div className="flex flex-row justify-end items-center">
-					<h2 className="text-xl font-bold text-white px-1">
-						{"@" + query.username}
+					<h2 className="text-xl font-bold text-white px-1 flex flex-row gap-1 items-center">
+						<FontAwesomeIcon icon={faUser} />
+						{query.username}
 					</h2>
 					{mode == "view" && (
 						<div>
