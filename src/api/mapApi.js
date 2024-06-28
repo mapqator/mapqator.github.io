@@ -32,5 +32,15 @@ class MapApi extends Api {
 				mode
 		);
 	};
+	getDirections = async (origin, destination, mode) => {
+		return await this.get(
+			"/map/directions?origin=" +
+				origin +
+				"&destination=" +
+				destination +
+				"&mode=" +
+				mode
+		);
+	};
 }
 export default MapApi;

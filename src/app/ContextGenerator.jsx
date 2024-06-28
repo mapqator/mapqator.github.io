@@ -19,6 +19,7 @@ import CurrentInformation from "./CurrentInformation";
 import { format } from "date-fns";
 import POI from "./POI";
 import { setLoading } from "./page";
+import DirectionInformation from "./DirectionInformation";
 
 export default function ContextGenerator({
 	setContextJSON,
@@ -32,6 +33,8 @@ export default function ContextGenerator({
 	setNearbyPlacesMap,
 	currentInformation,
 	setCurrentInformation,
+	directionInformation,
+	setDirectionInformation,
 	poisMap,
 	setPoisMap,
 }) {
@@ -401,7 +404,14 @@ export default function ContextGenerator({
 						setDistanceMatrix,
 					}}
 				/>
-
+				<DirectionInformation
+					{...{
+						selectedPlacesMap,
+						savedPlacesMap,
+						directionInformation,
+						setDirectionInformation,
+					}}
+				/>
 				<NearbyInformation
 					{...{
 						savedPlacesMap,

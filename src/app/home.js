@@ -34,11 +34,11 @@ export default function Home() {
 		day: "",
 		location: "",
 	});
+	const [directionInformation, setDirectionInformation] = useState({});
 	const [poisMap, setPoisMap] = useState([]);
 
 	return (
 		<main className="flex min-h-screen flex-col bg-black">
-			
 			<div className="flex flex-row gap-1">
 				<DatasetCreator
 					contextJSON={contextJSON}
@@ -48,6 +48,7 @@ export default function Home() {
 						setDistanceMatrix,
 						setNearbyPlacesMap,
 						setCurrentInformation,
+						setDirectionInformation,
 						setContext,
 						setContextJSON,
 						setPoisMap,
@@ -66,6 +67,8 @@ export default function Home() {
 						setNearbyPlacesMap,
 						currentInformation,
 						setCurrentInformation,
+						directionInformation,
+						setDirectionInformation,
 						poisMap,
 						setPoisMap,
 					}}
