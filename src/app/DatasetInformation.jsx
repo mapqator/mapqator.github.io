@@ -20,7 +20,10 @@ export default function DatasetInformation({ queries }) {
 				questions_with_answer++;
 			}
 			if (query.context !== "" && query.answer.correct !== -1) {
-				valid_questions++;
+				const invalid = query.evaluation?.find(
+					(e) => e.verdict === "invalid"
+				);
+				if (!invalid) valid_questions++;
 			}
 		});
 		tmp["total_questions"] = total_questions;
