@@ -81,11 +81,11 @@ export default function ContextGenerator({
 							} to ${
 								selectedPlacesMap[to_id].alias ||
 								savedPlacesMap[to_id].name
-							} is ${
+							} by public transport is ${
 								distanceMatrix[from_id][to_id][mode].distance
 							} (${
 								distanceMatrix[from_id][to_id][mode].duration
-							}) by public transport.`
+							}).`
 						);
 					} else if (mode === "DRIVING") {
 						newContext.push(
@@ -95,11 +95,11 @@ export default function ContextGenerator({
 							} to ${
 								selectedPlacesMap[to_id].alias ||
 								savedPlacesMap[to_id].name
-							} is ${
+							} by car is ${
 								distanceMatrix[from_id][to_id][mode].distance
 							} (${
 								distanceMatrix[from_id][to_id][mode].duration
-							}) by car.`
+							}).`
 						);
 					} else if (mode === "CYCLING") {
 						newContext.push(
@@ -109,21 +109,21 @@ export default function ContextGenerator({
 							} to ${
 								selectedPlacesMap[to_id].alias ||
 								savedPlacesMap[to_id].name
-							} is ${
+							} by cycle is ${
 								distanceMatrix[from_id][to_id][mode].distance
 							} (${
 								distanceMatrix[from_id][to_id][mode].duration
-							}) by cycle.`
+							}).`
 						);
-					} else {
+					} else if (mode === "WALKING") {
 						newContext.push(
-							`${mode} Distance from ${
+							`Distance from ${
 								selectedPlacesMap[from_id].alias ||
 								savedPlacesMap[from_id].name
 							} to ${
 								selectedPlacesMap[to_id].alias ||
 								savedPlacesMap[to_id].name
-							} is ${
+							} on foot is ${
 								distanceMatrix[from_id][to_id][mode].distance
 							} (${
 								distanceMatrix[from_id][to_id][mode].duration
@@ -177,18 +177,18 @@ export default function ContextGenerator({
 									savedPlacesMap[to_id].name
 								} by cycle. They are:`
 							);
-						} else {
+						} else if (mode === "WALKING") {
 							newContext.push(
 								`There are ${
 									directionInformation[from_id][to_id][mode]
 										.routes.length
-								} ${mode} routes from ${
+								} routes from ${
 									selectedPlacesMap[from_id].alias ||
 									savedPlacesMap[from_id].name
 								} to ${
 									selectedPlacesMap[to_id].alias ||
 									savedPlacesMap[to_id].name
-								}. They are:`
+								} on foot. They are:`
 							);
 						}
 
