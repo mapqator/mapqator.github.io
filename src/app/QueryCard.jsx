@@ -24,6 +24,7 @@ export default function QueryCard({
 	setDistanceMatrix,
 	setNearbyPlacesMap,
 	setCurrentInformation,
+	setDirectionInformation,
 	setContext,
 	context,
 	setContextJSON,
@@ -105,8 +106,15 @@ export default function QueryCard({
 					<h1 className="text-lg">
 						{query.context.split("\n").map((line, index) => (
 							<React.Fragment key={index}>
-								{line}
-								<br />
+								{/* {line} */}
+								<p
+									key={index}
+									className="w-full text-left"
+									dangerouslySetInnerHTML={{
+										__html: line,
+									}}
+								/>
+								{/* <br /> */}
 							</React.Fragment>
 						))}
 					</h1>
@@ -218,6 +226,10 @@ export default function QueryCard({
 								setDistanceMatrix(
 									query.context_json.distance_matrix ?? {}
 								);
+								setDirectionInformation(
+									query.context_json.directions ?? {}
+								);
+
 								setNearbyPlacesMap(
 									query.context_json.nearby_places ?? {}
 								);

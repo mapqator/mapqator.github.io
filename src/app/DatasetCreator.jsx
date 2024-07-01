@@ -29,6 +29,7 @@ export default function DatasetCreator({
 	setSelectedPlacesMap,
 	setDistanceMatrix,
 	setNearbyPlacesMap,
+	setDirectionInformation,
 	setCurrentInformation,
 	setPoisMap,
 }) {
@@ -67,6 +68,7 @@ export default function DatasetCreator({
 		const res = await queryApi.updateQuery(queries[index].id, query);
 		if (res.success) {
 			// update the queries
+			console.log("New Query: ", res.data[0]);
 			const newQueries = [...queries];
 			newQueries[index] = res.data[0];
 			setQueries(newQueries);
@@ -112,6 +114,7 @@ export default function DatasetCreator({
 							setDistanceMatrix,
 							setNearbyPlacesMap,
 							setCurrentInformation,
+							setDirectionInformation,
 							setContextJSON,
 							setContext,
 							context,

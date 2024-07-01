@@ -15,6 +15,7 @@ import {
 	faChevronUp,
 	faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
+import { CheckBox, Radio } from "@mui/icons-material";
 
 function DirectionCard({
 	selectedPlacesMap,
@@ -30,56 +31,79 @@ function DirectionCard({
 	return (
 		<div className="flex flex-col">
 			<div key={index2} className="flex flex-row gap-1 items-center">
-				<h1 className={`text-center w-[40%]`}>
+				<h1 className={`text-center w-[30%]`}>
 					{selectedPlacesMap[to_id].alias ||
 						savedPlacesMap[to_id].name}
 				</h1>
 				<h1 className={`text-center w-[20%]`}>{mode}</h1>
-				<h1 className={`text-center w-[20%]`}>
-					{directionInformation[from_id][to_id][mode].length}
+				<h1 className={`text-center w-[15%]`}>
+					{directionInformation[from_id][to_id][mode].routes.length}
 				</h1>
-				<IconButton
-					sx={{
-						height: "3rem",
-						width: "3rem",
-					}}
-					onClick={() => {
-						const newDirectionMatrix = {
-							...directionInformation,
-						};
-						delete newDirectionMatrix[from_id][to_id][mode];
-						if (
-							Object.keys(newDirectionMatrix[from_id][to_id])
-								.length === 0
-						)
-							delete newDirectionMatrix[from_id][to_id];
-						if (
-							Object.keys(newDirectionMatrix[from_id]).length ===
-							0
-						)
-							delete newDirectionMatrix[from_id];
-						setDirectionInformation(newDirectionMatrix);
-					}}
-				>
-					<div className="text-sm md:text-2xl">
-						<FontAwesomeIcon icon={faTrashCan} color="red" />
-					</div>
-				</IconButton>
-				<IconButton
-					sx={{ height: "3rem", width: "3rem" }}
-					onClick={() => setExpanded((prev) => !prev)}
-				>
-					<div className="text-sm md:text-2xl">
-						<FontAwesomeIcon
-							icon={expanded ? faChevronUp : faChevronDown}
-							color="black"
-						/>
-					</div>
-				</IconButton>
+				<div className="w-[16%] flex item-center justify-center z-10">
+					<input
+						type="checkbox"
+						checked={
+							directionInformation[from_id][to_id][mode].showSteps
+						}
+						onClick={() => {
+							const newDirectionMatrix = {
+								...directionInformation,
+							};
+							newDirectionMatrix[from_id][to_id][mode].showSteps =
+								!newDirectionMatrix[from_id][to_id][mode]
+									.showSteps;
+							setDirectionInformation(newDirectionMatrix);
+						}}
+						className="cursor-pointer h-5 w-5"
+					/>
+				</div>
+				<div className="w-[7%] flex item-center justify-center">
+					<IconButton
+						sx={{
+							height: "3rem",
+							width: "3rem",
+						}}
+						onClick={() => {
+							const newDirectionMatrix = {
+								...directionInformation,
+							};
+							delete newDirectionMatrix[from_id][to_id][mode];
+							if (
+								Object.keys(newDirectionMatrix[from_id][to_id])
+									.length === 0
+							)
+								delete newDirectionMatrix[from_id][to_id];
+							if (
+								Object.keys(newDirectionMatrix[from_id])
+									.length === 0
+							)
+								delete newDirectionMatrix[from_id];
+							setDirectionInformation(newDirectionMatrix);
+						}}
+					>
+						<div className="text-sm md:text-2xl">
+							<FontAwesomeIcon icon={faTrashCan} color="red" />
+						</div>
+					</IconButton>
+				</div>
+
+				<div className="w-[7%] flex item-center justify-center">
+					<IconButton
+						sx={{ height: "3rem", width: "3rem" }}
+						onClick={() => setExpanded((prev) => !prev)}
+					>
+						<div className="text-sm md:text-2xl">
+							<FontAwesomeIcon
+								icon={expanded ? faChevronUp : faChevronDown}
+								color="black"
+							/>
+						</div>
+					</IconButton>
+				</div>
 			</div>
 			{expanded && (
 				<div className="flex flex-col gap-1">
-					{directionInformation[from_id][to_id][mode].map(
+					{directionInformation[from_id][to_id][mode].routes.map(
 						(route, index) => (
 							<div
 								key={index}
@@ -96,18 +120,20 @@ function DirectionCard({
 										{route.distance}
 									</h1>
 								</div>
-
-								<div className="flex flex-col gap-1">
-									{route.steps.map((step, index1) => (
-										<p
-											key={index1}
-											className="text-sm"
-											dangerouslySetInnerHTML={{
-												__html: "- " + step,
-											}}
-										/>
-									))}
-								</div>
+								{directionInformation[from_id][to_id][mode]
+									.showSteps && (
+									<div className="flex flex-col gap-1">
+										{route.steps.map((step, index1) => (
+											<p
+												key={index1}
+												className="text-sm"
+												dangerouslySetInnerHTML={{
+													__html: "- " + step,
+												}}
+											/>
+										))}
+									</div>
+								)}
 							</div>
 						)
 					)}
@@ -164,12 +190,18 @@ export default function DirectionInformation({
 			if (newDirectionInfo[newDirection.from])
 				newDirectionInfo[newDirection.from][newDirection.to] = {
 					...newDirectionInfo[newDirection.from][newDirection.to],
-					[newDirection.travelMode]: all_routes,
+					[newDirection.travelMode]: {
+						routes: all_routes,
+						showSteps: false,
+					},
 				};
 			else {
 				newDirectionInfo[newDirection.from] = {
 					[newDirection.to]: {
-						[newDirection.travelMode]: all_routes,
+						[newDirection.travelMode]: {
+							routes: all_routes,
+							showSteps: false,
+						},
 					},
 				};
 			}
@@ -194,14 +226,17 @@ export default function DirectionInformation({
 							<h1 className="text-lg w-[30%] text-center font-bold">
 								From
 							</h1>
-							<h1 className="text-lg w-[28%] text-center font-bold">
+							<h1 className="text-lg w-[21.5%] text-center font-bold">
 								To
 							</h1>
 							<h1 className="text-lg w-[14%] text-center font-bold">
 								Mode
 							</h1>
-							<h1 className="text-lg w-[14%] text-center font-bold">
+							<h1 className="text-lg w-[11%] text-center font-bold">
 								Routes
+							</h1>
+							<h1 className="text-lg w-[11%] text-center font-bold">
+								Steps
 							</h1>
 						</div>
 

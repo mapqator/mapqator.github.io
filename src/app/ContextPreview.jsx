@@ -118,9 +118,13 @@ export default function ContextPreview({
 			</div>
 			<div className="p-2 flex flex-col gap-2 w-full">
 				{context.map((text, index) => (
-					<h1 key={index} className="w-full text-left">
-						{text}
-					</h1>
+					<p
+						key={index}
+						className="w-full text-left"
+						dangerouslySetInnerHTML={{
+							__html: text,
+						}}
+					/>
 				))}
 			</div>
 			<div className="flex flex-row w-full gap-2 p-2">

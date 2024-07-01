@@ -48,6 +48,7 @@ export default function ContextGenerator({
 		nearbyPlacesMap,
 		savedPlacesMap,
 		currentInformation,
+		directionInformation,
 		poisMap,
 	]);
 
@@ -69,8 +70,8 @@ export default function ContextGenerator({
 			}
 		});
 
-		Object.keys(distanceMatrix).forEach((from_id, index) => {
-			Object.keys(distanceMatrix[from_id]).forEach((to_id, index) => {
+		Object.keys(distanceMatrix).forEach((from_id) => {
+			Object.keys(distanceMatrix[from_id]).forEach((to_id) => {
 				Object.keys(distanceMatrix[from_id][to_id]).forEach((mode) => {
 					if (mode === "TRANSIT") {
 						newContext.push(
@@ -133,6 +134,86 @@ export default function ContextGenerator({
 			});
 		});
 
+		Object.keys(directionInformation).forEach((from_id) => {
+			Object.keys(directionInformation[from_id]).forEach((to_id) => {
+				Object.keys(directionInformation[from_id][to_id]).forEach(
+					(mode) => {
+						if (mode === "TRANSIT") {
+							newContext.push(
+								`There are ${
+									directionInformation[from_id][to_id][mode]
+										.routes.length
+								} routes from ${
+									selectedPlacesMap[from_id].alias ||
+									savedPlacesMap[from_id].name
+								} to ${
+									selectedPlacesMap[to_id].alias ||
+									savedPlacesMap[to_id].name
+								} by public transport. They are:`
+							);
+						} else if (mode === "DRIVING") {
+							newContext.push(
+								`There are ${
+									directionInformation[from_id][to_id][mode]
+										.routes.length
+								} routes from ${
+									selectedPlacesMap[from_id].alias ||
+									savedPlacesMap[from_id].name
+								} to ${
+									selectedPlacesMap[to_id].alias ||
+									savedPlacesMap[to_id].name
+								} by car. They are:`
+							);
+						} else if (mode === "CYCLING") {
+							newContext.push(
+								`There are ${
+									directionInformation[from_id][to_id][mode]
+										.routes.length
+								} routes from ${
+									selectedPlacesMap[from_id].alias ||
+									savedPlacesMap[from_id].name
+								} to ${
+									selectedPlacesMap[to_id].alias ||
+									savedPlacesMap[to_id].name
+								} by cycle. They are:`
+							);
+						} else {
+							newContext.push(
+								`There are ${
+									directionInformation[from_id][to_id][mode]
+										.routes.length
+								} ${mode} routes from ${
+									selectedPlacesMap[from_id].alias ||
+									savedPlacesMap[from_id].name
+								} to ${
+									selectedPlacesMap[to_id].alias ||
+									savedPlacesMap[to_id].name
+								}. They are:`
+							);
+						}
+
+						directionInformation[from_id][to_id][
+							mode
+						].routes.forEach((route, index) => {
+							newContext.push(
+								`${index + 1}. Via ${route.label} | ${
+									route.duration
+								} | ${route.distance}`
+							);
+
+							if (
+								directionInformation[from_id][to_id][mode]
+									.showSteps
+							) {
+								route.steps.forEach((step, index) => {
+									newContext.push(` - ${step}`);
+								});
+							}
+						});
+					}
+				);
+			});
+		});
 		Object.keys(nearbyPlacesMap).forEach((place_id, index) => {
 			nearbyPlacesMap[place_id].forEach((e) => {
 				newContext.push(
@@ -213,6 +294,7 @@ export default function ContextGenerator({
 			nearby_places: nearbyPlacesMap,
 			current_information: currentInformation,
 			pois: poisMap,
+			directions: directionInformation,
 		});
 
 		setContextJSON({
@@ -221,6 +303,7 @@ export default function ContextGenerator({
 			nearby_places: nearbyPlacesMap,
 			current_information: currentInformation,
 			pois: poisMap,
+			directions: directionInformation,
 		});
 	};
 
@@ -348,7 +431,6 @@ export default function ContextGenerator({
 				<div className="absolute top-5 right-5">
 					<IconButton
 						onClick={() => {
-							setSelectedPlacesMap({});
 							setDistanceMatrix({});
 							setNearbyPlacesMap({});
 							setContext([]);
@@ -358,6 +440,8 @@ export default function ContextGenerator({
 								day: "",
 								location: "",
 							});
+							setDirectionInformation({});
+							setSelectedPlacesMap({});
 						}}
 					>
 						<FontAwesomeIcon icon={faRefresh} color="black" />
