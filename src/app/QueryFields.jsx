@@ -411,12 +411,14 @@ export default function QueryFields({
 				>
 					{[
 						"nearest_poi",
+						"nearby_poi",
 						"planning",
 						"time_calculation",
 						"routing",
 						"location_finding",
 						"counting",
 						"opinion",
+						"navigation",
 					].map((value, index) => (
 						<MenuItem key={index} value={value}>
 							{value}
