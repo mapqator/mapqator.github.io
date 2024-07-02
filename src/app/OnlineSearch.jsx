@@ -172,7 +172,7 @@ export default function OnlineSearch({
 						>
 							Clear
 						</Button>
-						<Button
+						{/* <Button
 							onClick={handleAddAll}
 							variant="contained"
 							fullWidth
@@ -180,7 +180,7 @@ export default function OnlineSearch({
 							// color="error"
 						>
 							Add all
-						</Button>
+						</Button> */}
 					</div>
 				)}
 				{/* <h1 className="bg-black h-1 w-full my-2"></h1> */}
