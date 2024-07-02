@@ -207,6 +207,7 @@ export default function NearbyInformation({
 			const lat = typeof loc.lat === "function" ? loc.lat() : loc.lat;
 			const lng = typeof loc.lng === "function" ? loc.lng() : loc.lng;
 			const response = await mapApi.getNearby({
+				location: newNearbyPlaces.location,
 				lat,
 				lng,
 				radius: newNearbyPlaces.radius,
