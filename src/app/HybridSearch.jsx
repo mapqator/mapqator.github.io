@@ -121,7 +121,7 @@ const AutocompleteSearchBox = ({
 						onChange={(e) => setSearch(e.target.value)}
 					/>
 				</div>
-				<div className="w-1/2">
+				<div className="w-1/2 flex flex-row gap-1">
 					<Button
 						variant="contained"
 						type="submit"
@@ -130,6 +130,18 @@ const AutocompleteSearchBox = ({
 						className="!h-10"
 					>
 						Search ($)
+					</Button>
+					<Button
+						onClick={() => {
+							setResults([]);
+							setSearch("");
+						}}
+						variant="contained"
+						fullWidth
+						// sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
+						color="error"
+					>
+						Clear
 					</Button>
 				</div>
 			</form>
