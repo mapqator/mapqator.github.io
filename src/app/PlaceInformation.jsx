@@ -92,8 +92,13 @@ export default function PlaceInformation({
 											>
 												{selectedPlacesMap[
 													place_id
-												].attributes.map(
-													(value, index) => (
+												].attributes
+													.filter(
+														(attribute) =>
+															attribute !==
+															"last_updated"
+													) // Filter out "last_updated"
+													.map((value, index) => (
 														<MenuItem
 															key={index}
 															value={value}
@@ -102,8 +107,7 @@ export default function PlaceInformation({
 														>
 															{value}
 														</MenuItem>
-													)
-												)}
+													))}
 											</Select>
 										</FormControl>
 									</div>
