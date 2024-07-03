@@ -20,19 +20,21 @@ export default function DistanceInformation({
 }) {
 	//   const [distanceMatrix, setDistanceMatrix] = useState({});
 	const [newDistance, setNewDistance] = useState({
-		from: "",
-		to: "",
+		from: [],
+		to: [],
 	});
 
 	useEffect(() => {
 		setNewDistance({
-			from: "",
-			to: "",
+			from: [],
+			to: [],
 			travelMode: "WALKING",
 		});
 	}, [selectedPlacesMap]);
 	const handleDistanceAdd = async () => {
-		if (newDistance.from === "" || newDistance.to === "") return;
+		console.log(newDistance);
+		if (newDistance.from.length === 0 || newDistance.to.length === 0)
+			return;
 		// Fetch the distance between the two places from google maps
 		const response = await mapApi.getDistance(
 			newDistance.from,
@@ -40,25 +42,37 @@ export default function DistanceInformation({
 			newDistance.travelMode
 		);
 		if (response.success) {
-			const distance = response.data.rows[0].elements[0];
+			console.log(response.data.matrix);
+			const origin = newDistance.from;
+			const destination = newDistance.to;
+			const matrix = response.data.matrix;
 			const newDistanceMatrix = { ...distanceMatrix };
-			if (newDistanceMatrix[newDistance.from])
-				newDistanceMatrix[newDistance.from][newDistance.to] = {
-					...newDistanceMatrix[newDistance.from][newDistance.to],
-					[newDistance.travelMode]: {
-						duration: distance.duration.text,
-						distance: distance.distance.text,
-					},
-				};
-			else {
-				newDistanceMatrix[newDistance.from] = {
-					[newDistance.to]: {
-						[newDistance.travelMode]: {
-							duration: distance.duration.text,
-							distance: distance.distance.text,
-						},
-					},
-				};
+			for (let i = 0; i < origin.length; i++) {
+				const o = origin[i];
+				for (let j = 0; j < destination.length; j++) {
+					const d = destination[j];
+					if (o === d) {
+					} else if (matrix[i][j]) {
+						if (newDistanceMatrix[o])
+							newDistanceMatrix[o][d] = {
+								...newDistanceMatrix[o][d],
+								[newDistance.travelMode]: {
+									duration: matrix[i][j].duration.text,
+									distance: matrix[i][j].distance.text,
+								},
+							};
+						else {
+							newDistanceMatrix[o] = {
+								[d]: {
+									[newDistance.travelMode]: {
+										duration: matrix[i][j].duration.text,
+										distance: matrix[i][j].distance.text,
+									},
+								},
+							};
+						}
+					}
+				}
 			}
 			setDistanceMatrix(newDistanceMatrix);
 		}
@@ -238,6 +252,7 @@ export default function DistanceInformation({
 							</InputLabel>
 							<Select
 								required
+								multiple
 								id="outlined-adornment"
 								className="outlined-input"
 								value={newDistance.from}
@@ -277,6 +292,7 @@ export default function DistanceInformation({
 							</InputLabel>
 							<Select
 								required
+								multiple
 								id="outlined-adornment"
 								className="outlined-input"
 								value={newDistance.to}
