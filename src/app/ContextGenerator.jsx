@@ -20,6 +20,7 @@ import { format } from "date-fns";
 import POI from "./POI";
 import { setLoading } from "./page";
 import DirectionInformation from "./DirectionInformation";
+import HybridSearch from "./HybridSearch";
 
 export default function ContextGenerator({
 	setContextJSON,
@@ -464,12 +465,12 @@ export default function ContextGenerator({
 				</div>
 
 				<div className="flex flex-row gap-4">
-					<OfflineSearch
+					{/* <OfflineSearch
 						savedPlacesMap={savedPlacesMap}
 						selectedPlacesMap={selectedPlacesMap}
 						setSelectedPlacesMap={setSelectedPlacesMap}
-					/>
-					<OnlineSearch
+					/> */}
+					<HybridSearch
 						{...{
 							savedPlacesMap,
 							setSavedPlacesMap,

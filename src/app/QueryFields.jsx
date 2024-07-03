@@ -52,7 +52,7 @@ export default function QueryFields({
 			<label className="text-lg w-full text-left font-bold">
 				Question
 			</label>
-			<TextareaAutosize
+			<TextField
 				value={query.question}
 				onChange={(e) =>
 					setQuery((prev) => ({ ...prev, question: e.target.value }))
@@ -61,8 +61,9 @@ export default function QueryFields({
 					borderColor: "black",
 					borderWidth: "1px",
 					borderRadius: "3px",
-					padding: "2px 5px",
+					// padding: "2px 5px",
 				}}
+				multiline
 			/>
 			{/* <textarea
 				className="border border-black w-full rounded-sm"
@@ -96,7 +97,7 @@ export default function QueryFields({
 			</div>
 			{query.context !== "" && (
 				<>
-					<TextareaAutosize
+					<TextField
 						value={query.context}
 						onChange={(e) =>
 							setQuery((prev) => ({
@@ -108,8 +109,9 @@ export default function QueryFields({
 							borderColor: "black",
 							borderWidth: "1px",
 							borderRadius: "3px",
-							padding: "2px 5px",
+							// padding: "2px 5px",
 						}}
+						multiline
 					/>
 					{/* <textarea
 						className="border border-black w-full"
@@ -122,7 +124,7 @@ export default function QueryFields({
 						}
 					/> */}
 
-					<TextareaAutosize
+					<TextField
 						value={query.context_gpt}
 						onChange={(e) =>
 							setQuery((prev) => ({
@@ -134,8 +136,9 @@ export default function QueryFields({
 							borderColor: "black",
 							borderWidth: "1px",
 							borderRadius: "3px",
-							padding: "2px 5px",
+							// padding: "2px 5px",
 						}}
+						multiline
 					/>
 					{/* <textarea
 						className="border border-black w-full"
