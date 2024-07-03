@@ -156,41 +156,56 @@ const AutocompleteSearchBox = ({
 									Places saved in our database
 								</div>
 								<div className="overflow-y-auto max-h-[40vh] flex flex-col gap-px ">
-									{filteredPlaces.map((place, index) => (
-										<li key={index}>
-											<button
-												className={`flex flex-row justify-center w-full p-2 ${
-													addPlace === place.place_id
-														? "bg-[#888888]"
-														: "hover:bg-[#cccccc] bg-white"
-												}`}
-												onClick={() => {
-													if (
+									{filteredPlaces
+										.sort((a, b) => {
+											// Place null values at the end
+											if (a.last_updated === null)
+												return 1;
+											if (b.last_updated === null)
+												return -1;
+
+											// Sort in descending order
+											return (
+												new Date(b.last_updated) -
+												new Date(a.last_updated)
+											);
+										})
+										.map((place, index) => (
+											<li key={index}>
+												<button
+													className={`flex flex-row justify-center w-full p-2 ${
 														addPlace ===
 														place.place_id
-													) {
-														setAddPlace("");
-													} else {
-														setAddPlace(
+															? "bg-[#888888]"
+															: "hover:bg-[#cccccc] bg-white"
+													}`}
+													onClick={() => {
+														if (
+															addPlace ===
 															place.place_id
-														);
+														) {
+															setAddPlace("");
+														} else {
+															setAddPlace(
+																place.place_id
+															);
+														}
+													}}
+												>
+													{
+														savedPlacesMap[
+															place.place_id
+														].name
+													}{" "}
+													-{" "}
+													{
+														savedPlacesMap[
+															place.place_id
+														].formatted_address
 													}
-												}}
-											>
-												{
-													savedPlacesMap[
-														place.place_id
-													].name
-												}{" "}
-												-{" "}
-												{
-													savedPlacesMap[
-														place.place_id
-													].formatted_address
-												}
-											</button>
-										</li>
-									))}
+												</button>
+											</li>
+										))}
 								</div>
 							</div>
 							<div className="flex flex-row gap-2 w-full bg-white">
