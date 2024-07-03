@@ -60,27 +60,23 @@ const AutocompleteSearchBox = ({
 		console.log("Saved: ", selectedPlace);
 		// Save the selected place as needed
 		try {
-			const response = await mapApi.getDetails(selectedPlace["place_id"]);
-			if (response.success) {
-				const res = await placeApi.createPlace(response.data.result);
-				if (res.success) {
-					const newSavedPlacesMap = { ...savedPlacesMap };
-					newSavedPlacesMap[res.data[0].place_id] = res.data[0];
-					setSavedPlacesMap(newSavedPlacesMap);
+			const res = await mapApi.getDetails(selectedPlace["place_id"]);
+			if (res.success) {
+				const newSavedPlacesMap = { ...savedPlacesMap };
+				newSavedPlacesMap[res.data.result.place_id] = res.data.result;
+				setSavedPlacesMap(newSavedPlacesMap);
 
-					const newSelectedPlacesMap = { ...selectedPlacesMap };
-					newSelectedPlacesMap[res.data[0].place_id] = {
-						alias: "",
-						selectedAttributes: ["formatted_address"],
-						attributes: Object.keys(res.data[0]).filter(
-							(e) => res.data[0][e] !== null
-						),
-					};
-					setSelectedPlacesMap(newSelectedPlacesMap);
-
-					setSelectedPlace(null);
-					return res.data[0];
-				}
+				const newSelectedPlacesMap = { ...selectedPlacesMap };
+				newSelectedPlacesMap[res.data.result.place_id] = {
+					alias: "",
+					selectedAttributes: ["formatted_address"],
+					attributes: Object.keys(res.data.result).filter(
+						(e) => res.data.result[e] !== null
+					),
+				};
+				setSelectedPlacesMap(newSelectedPlacesMap);
+				setSelectedPlace(null);
+				return res.data.result;
 			}
 		} catch (error) {
 			console.error("Error fetching data: ", error);
