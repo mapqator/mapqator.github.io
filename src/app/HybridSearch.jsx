@@ -153,7 +153,7 @@ const AutocompleteSearchBox = ({
 						<div className="bg-black border-2 border-black flex flex-col gap-[1.5px]">
 							<div className="w-full flex flex-col">
 								<div className="text-white text-center p-2">
-									Saved Places
+									Places saved in our database
 								</div>
 								<div className="overflow-y-auto max-h-[40vh] flex flex-col gap-px ">
 									{filteredPlaces.map((place, index) => (
@@ -214,7 +214,7 @@ const AutocompleteSearchBox = ({
 						<div className="bg-black border-2 border-black flex flex-col gap-[1.5px]">
 							<ul className="w-full flex flex-col">
 								<div className="text-white text-center p-2">
-									Google Map Places
+									Places fetched using Google Map API
 								</div>
 								<div className="overflow-y-auto max-h-[40vh] flex flex-col gap-px">
 									{results.map((place, index) => (

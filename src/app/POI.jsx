@@ -74,21 +74,16 @@ function POICard({
 
 			{expanded && (
 				<div className="px-2 py-1 border-t-2 border-black">
-					{poi.places.map((place, index) => (
-						<div key={index} className="flex flex-row gap-2">
+					{poi.places.map((place, index3) => (
+						<div key={index3} className="flex flex-row gap-2">
 							<input
 								type="checkbox"
 								checked={place.selected}
 								onChange={(event) => {
-									const newPoisMap = [...poisMap];
-									newPoisMap[index2].places[index].selected =
-										event.target.checked;
-									console.log(
-										"Changed index ",
-										index2,
-										index,
-										newPoisMap
-									);
+									const newPoisMap = { ...poisMap };
+									newPoisMap[place_id][index2].places[
+										index3
+									].selected = event.target.checked;
 									setPoisMap(newPoisMap);
 								}}
 							/>
