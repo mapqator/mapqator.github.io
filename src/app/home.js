@@ -35,7 +35,7 @@ export default function Home() {
 		location: "",
 	});
 	const [directionInformation, setDirectionInformation] = useState({});
-	const [poisMap, setPoisMap] = useState([]);
+	const [poisMap, setPoisMap] = useState({});
 
 	return (
 		<main className="flex min-h-screen flex-col bg-black">

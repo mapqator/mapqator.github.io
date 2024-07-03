@@ -214,6 +214,7 @@ export default function ContextGenerator({
 				);
 			});
 		});
+
 		Object.keys(nearbyPlacesMap).forEach((place_id, index) => {
 			nearbyPlacesMap[place_id].forEach((e) => {
 				newContext.push(
@@ -246,20 +247,27 @@ export default function ContextGenerator({
 			});
 		});
 
-		poisMap.forEach((poi, index) => {
-			newContext.push(`POIs for query "${poi.query}" are:`);
-			let counter = 1;
-			poi.places.forEach((place) => {
-				if (place.selected) {
-					newContext.push(
-						`${counter}. ${
-							selectedPlacesMap[place.place_id]?.alias ||
-							savedPlacesMap[place.place_id]?.name ||
-							place.name
-						} - ${place.formatted_address}`
-					);
-					counter++;
-				}
+		Object.keys(poisMap).forEach((place_id, index) => {
+			poisMap[place_id].forEach((poi) => {
+				newContext.push(
+					`Places in ${
+						selectedPlacesMap[place_id].alias ||
+						savedPlacesMap[place_id].name
+					} of type \"${poi.type}\" are:`
+				);
+				let counter = 1;
+				poi.places.forEach((place) => {
+					if (place.selected) {
+						newContext.push(
+							`${counter}. ${
+								selectedPlacesMap[place.place_id]?.alias ||
+								savedPlacesMap[place.place_id]?.name ||
+								place.name
+							} - ${place.formatted_address}`
+						);
+						counter++;
+					}
+				});
 			});
 		});
 

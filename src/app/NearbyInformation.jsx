@@ -167,15 +167,10 @@ export default function NearbyInformation({
 		for (const e of selectedPlaces) {
 			if (newSavedPlacesMap[e.place.place_id] === undefined) {
 				try {
-					const response = await mapApi.getDetails(e.place.place_id);
-					if (response.success) {
-						const res = await placeApi.createPlace(
-							response.data.result
-						);
-						if (res.success) {
-							newSavedPlacesMap[e.place.place_id] = res.data[0];
-							console.log("saved: ", res.data[0].place_id);
-						}
+					const res2 = await mapApi.getDetails(e.place.place_id);
+					if (res2.success) {
+						newSavedPlacesMap[e.place.place_id] = res2.data[0];
+						console.log("saved: ", res2.data[0].place_id);
 					}
 				} catch (error) {
 					console.error(error);

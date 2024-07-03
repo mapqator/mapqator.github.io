@@ -16,7 +16,19 @@ class MapApi extends Api {
 				(params.type !== "" ? "&type=" + params.type : "") +
 				(params.keyword !== "" ? "&keyword=" + params.keyword : "") +
 				"&rankby=" +
-				params.rankBy
+				params.rankBy +
+				"&location=" +
+				params.location
+		);
+	};
+	getInside = async (params) => {
+		if (params.type === "") return;
+		return await this.get(
+			"/map/inside?" +
+				"type=" +
+				params.type +
+				"&location=" +
+				params.location
 		);
 	};
 	search = async (query) => {

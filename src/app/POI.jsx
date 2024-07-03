@@ -24,12 +24,24 @@ function POICard({
 	poisMap,
 	setPoisMap,
 	index2,
+	place_id,
 }) {
 	const [expanded, setExpanded] = useState(false);
 	return (
-		<div className="border-2 border-black rounded-lg">
+		<div className="border-2 bg-white border-black rounded-lg">
 			<div className="flex flex-row gap-1 w-full items-center p-2">
-				<h1 className={`w-[90%]`}>{poi.query}</h1>
+				<h1 className={`w-[50%] text-center`}>
+					{selectedPlacesMap[place_id].alias ||
+						savedPlacesMap[place_id].name}
+				</h1>
+				<h1 className={`w-[18%] text-center`}>{poi.type}</h1>
+				<h1 className={`w-[18%] text-center`}>
+					{
+						poisMap[place_id][index2].places.filter(
+							(place) => place.selected
+						).length
+					}
+				</h1>
 				<IconButton
 					sx={{
 						height: "3rem",
@@ -59,6 +71,7 @@ function POICard({
 					</div>
 				</IconButton>
 			</div>
+
 			{expanded && (
 				<div className="px-2 py-1 border-t-2 border-black">
 					{poi.places.map((place, index) => (
@@ -101,7 +114,97 @@ export default function POI({
 	// useEffect(() => {
 	// 	console.log(selectedPlacesMap);
 	// }, [selectedPlacesMap]);
-	const searchInsidePlaces = async () => {};
+
+	const handleAddAll = async () => {
+		try {
+			setPoisMap((prev) => [
+				...prev,
+				{
+					query: search,
+					places: results.map((place) => ({
+						...place,
+						selected: true,
+					})),
+				},
+			]);
+
+			const newSavedPlacesMap = { ...savedPlacesMap };
+			for (const place of results) {
+				if (newSavedPlacesMap[place.place_id] === undefined) {
+					try {
+						const response = await mapApi.getDetails(
+							place.place_id
+						);
+						if (response.success) {
+							const res = await placeApi.createPlace(
+								response.data.result
+							);
+							if (res.success) {
+								newSavedPlacesMap[place.place_id] = res.data[0];
+								console.log("saved: ", res.data[0].place_id);
+							}
+						}
+					} catch (error) {
+						console.error(error);
+					}
+				}
+			}
+		} catch (error) {
+			console.error("Error fetching data: ", error);
+		}
+	};
+
+	const searchInsidePlaces = async () => {
+		if (newPois.location === "" || newPois.type === "") return;
+		try {
+			const res = await mapApi.getInside({
+				location: newPois.location,
+				type: newPois.type,
+			});
+			if (res.success) {
+				const places = res.data.results;
+				const newPoisMap = { ...poisMap };
+				if (newPoisMap[newPois.location] === undefined) {
+					newPoisMap[newPois.location] = [];
+				}
+
+				const placesWithSelection = places.map((place) => ({
+					selected: true,
+					place_id: place.place_id,
+					name: place.name,
+					formatted_address: place.formatted_address,
+				}));
+
+				newPoisMap[newPois.location].push({
+					type: newPois.type,
+					places: placesWithSelection,
+				});
+
+				setPoisMap(newPoisMap);
+
+				const newSavedPlacesMap = { ...savedPlacesMap };
+				for (const place of results) {
+					if (newSavedPlacesMap[place.place_id] === undefined) {
+						try {
+							const res2 = await mapApi.getDetails(
+								place.place_id
+							);
+							if (res2.success) {
+								newSavedPlacesMap[place.place_id] =
+									res2.data[0];
+								console.log("saved: ", res.data[0].place_id);
+							}
+						} catch (error) {
+							console.error(error);
+						}
+					}
+				}
+				setSavedPlacesMap(newSavedPlacesMap);
+			}
+		} catch (error) {
+			console.error("Error fetching data: ", error);
+		}
+	};
 	return (
 		Object.keys(selectedPlacesMap).length > 0 && (
 			<div className="flex flex-col border-4 w-full border-black rounded-lg">
@@ -114,33 +217,38 @@ export default function POI({
 				{Object.keys(poisMap).length > 0 && (
 					<div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
 						<div className="flex flex-row">
-							<h1 className="text-lg w-[36%] text-center font-bold">
+							<h1 className="text-lg w-[50%] text-center font-bold">
 								Location
 							</h1>
-							<h1 className="text-lg w-[17%] text-center font-bold">
+							<h1 className="text-lg w-[18%] text-center font-bold">
 								Type
 							</h1>
 
-							{/* <h1 className="text-lg w-[14%] text-center font-bold">
+							<h1 className="text-lg w-[18%] text-center font-bold">
 								Count
-							</h1> */}
+							</h1>
 						</div>
-						{Object.keys(poisMap).map((poi, index) => (
-							<POICard
-								key={index}
-								selectedPlacesMap={selectedPlacesMap}
-								savedPlacesMap={savedPlacesMap}
-								poi={poi}
-								poisMap={poisMap}
-								setPoisMap={setPoisMap}
-								index2={index}
-							/>
+						{Object.keys(poisMap).map((place_id, index1) => (
+							<div key={index1} className="flex flex-col gap-1 ">
+								{poisMap[place_id].map((poi, index2) => (
+									<POICard
+										key={index2}
+										selectedPlacesMap={selectedPlacesMap}
+										savedPlacesMap={savedPlacesMap}
+										poi={poi}
+										poisMap={poisMap}
+										setPoisMap={setPoisMap}
+										index2={index2}
+										place_id={place_id}
+									/>
+								))}
+							</div>
 						))}
 					</div>
 				)}
 
 				<div className="flex flex-row gap-2 w-full p-2">
-					<div className="w-full">
+					<div className="w-[60%]">
 						<FormControl
 							fullWidth
 							className="input-field"
@@ -180,7 +288,7 @@ export default function POI({
 							</Select>
 						</FormControl>
 					</div>
-					<div className="w-full">
+					<div className="w-[20%]">
 						<FormControl
 							fullWidth
 							className="input-field"
@@ -222,7 +330,7 @@ export default function POI({
 						</FormControl>
 					</div>
 
-					<div className="w-full">
+					<div className="w-[20%]">
 						<Button
 							variant="contained"
 							fullWidth

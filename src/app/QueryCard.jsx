@@ -260,7 +260,7 @@ export default function QueryCard({
 								setPoisMap(
 									query.context_json.pois?.length > 0
 										? query.context_json.pois
-										: []
+										: {}
 								);
 								setContext([]);
 								setContextJSON({});
