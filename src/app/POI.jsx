@@ -93,11 +93,8 @@ function POICard({
 			{expanded && (
 				<div className="px-2 py-1 border-t-2 border-black">
 					{poi.places.map((place, index3) => (
-						<div className="flex flex-col w-full">
-							<div
-								key={index3}
-								className="flex flex-row gap-2 items-center"
-							>
+						<div className="flex flex-col w-full" key={index3}>
+							<div className="flex flex-row gap-2 items-center">
 								<input
 									type="checkbox"
 									className="w-5 h-5"

@@ -97,11 +97,8 @@ function NearbyCard({
 			{expanded && (
 				<div className="bg-white px-2 py-1 border-2 rounded-md border-black mx-5 mb-5">
 					{e.places.map((place, index3) => (
-						<div className="flex flex-col w-full">
-							<div
-								key={index3}
-								className="flex flex-row gap-2 items-center"
-							>
+						<div className="flex flex-col w-full" key={index3}>
+							<div className="flex flex-row gap-2 items-center">
 								<input
 									type="checkbox"
 									className="w-5 h-5"
