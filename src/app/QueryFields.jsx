@@ -20,7 +20,11 @@ import {
 } from "@mui/material";
 import QueryCard from "./QueryCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFloppyDisk, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+	faFloppyDisk,
+	faRobot,
+	faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 
 export default function QueryFields({
@@ -155,7 +159,12 @@ export default function QueryFields({
 									console.error("Error generating context");
 								}
 							}}
+							className="flex flex-row gap-2 items-center"
 						>
+							<FontAwesomeIcon
+								icon={faRobot}
+								className="text-xl"
+							/>
 							Take help from GPT
 						</Button>
 					</div>
