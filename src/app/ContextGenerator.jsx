@@ -440,6 +440,7 @@ export default function ContextGenerator({
 				<div className="absolute top-5 right-5">
 					<IconButton
 						onClick={() => {
+							setPoisMap({});
 							setDistanceMatrix({});
 							setNearbyPlacesMap({});
 							setContext([]);
@@ -512,6 +513,7 @@ export default function ContextGenerator({
 						selectedPlacesMap,
 						nearbyPlacesMap,
 						setNearbyPlacesMap,
+						setSelectedPlacesMap,
 					}}
 				/>
 
@@ -522,6 +524,7 @@ export default function ContextGenerator({
 						selectedPlacesMap,
 						poisMap,
 						setPoisMap,
+						setSelectedPlacesMap,
 					}}
 				/>
 

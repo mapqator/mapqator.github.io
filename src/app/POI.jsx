@@ -14,6 +14,7 @@ import {
 	faChevronDown,
 	faChevronUp,
 	faTrashCan,
+	faAdd,
 } from "@fortawesome/free-solid-svg-icons";
 import placeTypes from "@/app/types.json";
 
@@ -25,8 +26,23 @@ function POICard({
 	setPoisMap,
 	index2,
 	place_id,
+	setSelectedPlacesMap,
 }) {
 	const [expanded, setExpanded] = useState(false);
+	const handleAdd = (place_id) => {
+		// Don't add if already added
+		if (place_id === "") return;
+
+		const newSelectedPlacesMap = { ...selectedPlacesMap };
+		newSelectedPlacesMap[place_id] = {
+			alias: "",
+			selectedAttributes: ["formatted_address"],
+			attributes: Object.keys(savedPlacesMap[place_id]).filter(
+				(key) => savedPlacesMap[place_id][key] !== null
+			),
+		};
+		setSelectedPlacesMap(newSelectedPlacesMap);
+	};
 	return (
 		<div className="border-2 bg-white border-black rounded-lg">
 			<div className="flex flex-row gap-1 w-full items-center p-2">
@@ -51,7 +67,9 @@ function POICard({
 						const newPoisMap = {
 							...poisMap,
 						};
-						newPoisMap.splice(index2, 1);
+						newPoisMap[place_id].splice(index2, 1);
+						if (newPoisMap[place_id].length === 0)
+							delete newPoisMap[place_id];
 						setPoisMap(newPoisMap);
 					}}
 				>
@@ -75,21 +93,38 @@ function POICard({
 			{expanded && (
 				<div className="px-2 py-1 border-t-2 border-black">
 					{poi.places.map((place, index3) => (
-						<div key={index3} className="flex flex-row gap-2">
-							<input
-								type="checkbox"
-								checked={place.selected}
-								onChange={(event) => {
-									const newPoisMap = { ...poisMap };
-									newPoisMap[place_id][index2].places[
-										index3
-									].selected = event.target.checked;
-									setPoisMap(newPoisMap);
-								}}
-							/>
-							<h1 className="overflow-hidden whitespace-nowrap overflow-ellipsis w-[95%]">
-								{place.name} - {place.formatted_address}
-							</h1>
+						<div className="flex flex-col w-full">
+							<div
+								key={index3}
+								className="flex flex-row gap-2 items-center"
+							>
+								<input
+									type="checkbox"
+									className="w-5 h-5"
+									checked={place.selected}
+									onChange={(event) => {
+										const newPoisMap = { ...poisMap };
+										newPoisMap[place_id][index2].places[
+											index3
+										].selected = event.target.checked;
+										setPoisMap(newPoisMap);
+									}}
+								/>
+								<h1 className="overflow-hidden whitespace-nowrap overflow-ellipsis w-[95%]">
+									{place.name} - {place.formatted_address}
+								</h1>
+								<IconButton
+									sx={{ height: "3rem", width: "3rem" }}
+									onClick={() => {
+										handleAdd(place.place_id);
+									}}
+								>
+									<FontAwesomeIcon icon={faAdd} />
+								</IconButton>
+							</div>
+							{index3 < poi.places.length - 1 && (
+								<div className="border-b-2 border-black w-full"></div>
+							)}
 						</div>
 					))}
 				</div>
@@ -103,6 +138,7 @@ export default function POI({
 	setSavedPlacesMap,
 	selectedPlacesMap,
 	poisMap,
+	setSelectedPlacesMap,
 	setPoisMap,
 }) {
 	const [newPois, setNewPois] = useState({ location: "", type: "" });
@@ -235,6 +271,9 @@ export default function POI({
 										setPoisMap={setPoisMap}
 										index2={index2}
 										place_id={place_id}
+										setSelectedPlacesMap={
+											setSelectedPlacesMap
+										}
 									/>
 								))}
 							</div>

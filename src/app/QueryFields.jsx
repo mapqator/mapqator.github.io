@@ -16,10 +16,11 @@ import {
 	TextField,
 	Select,
 	MenuItem,
+	Card,
 } from "@mui/material";
 import QueryCard from "./QueryCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faFloppyDisk, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 
 export default function QueryFields({
@@ -48,23 +49,7 @@ export default function QueryFields({
 		}
 	}, [initialQuery]);
 	return (
-		<div className="p-1 flex flex-col w-full gap-1">
-			<label className="text-lg w-full text-left font-bold">
-				Question
-			</label>
-			<TextField
-				value={query.question}
-				onChange={(e) =>
-					setQuery((prev) => ({ ...prev, question: e.target.value }))
-				}
-				style={{
-					borderColor: "black",
-					borderWidth: "1px",
-					borderRadius: "3px",
-					// padding: "2px 5px",
-				}}
-				multiline
-			/>
+		<div className="p-2 flex flex-col w-full gap-2">
 			{/* <textarea
 				className="border border-black w-full rounded-sm"
 				value={query.question}
@@ -72,8 +57,10 @@ export default function QueryFields({
 					setQuery((prev) => ({ ...prev, question: e.target.value }))
 				}
 			/> */}
-			<div className="flex flex-row gap-2 w-full justify-start items-center">
-				<label className="text-lg text-left font-bold">Context</label>
+			<div className="flex flex-row gap-2 w-full justify-between items-center">
+				<label className="text-lg text-left font-bold">
+					Generated Context
+				</label>
 				<Button
 					className="bg-green-500 rounded-lg p-2"
 					onClick={() => {
@@ -96,8 +83,8 @@ export default function QueryFields({
 				</Button>
 			</div>
 			{query.context !== "" && (
-				<>
-					<TextField
+				<div className="flex flex-col gap-2">
+					<Card
 						value={query.context}
 						onChange={(e) =>
 							setQuery((prev) => ({
@@ -105,14 +92,30 @@ export default function QueryFields({
 								context: e.target.value,
 							}))
 						}
-						style={{
-							borderColor: "black",
-							borderWidth: "1px",
-							borderRadius: "3px",
-							// padding: "2px 5px",
-						}}
-						multiline
-					/>
+						// sx={{
+						// 	borderColor: "black",
+						// 	borderWidth: "1px",
+						// 	borderRadius: "3px",
+						// 	// padding: "2px 5px",
+						// }}
+						className="p-3 w-full !bg-slate-100"
+					>
+						<h1 className="text-base">
+							{query.context.split("\n").map((line, index) => (
+								<React.Fragment key={index}>
+									{/* {line} */}
+									<p
+										key={index}
+										className="w-full text-left"
+										dangerouslySetInnerHTML={{
+											__html: line,
+										}}
+									/>
+									{/* <br /> */}
+								</React.Fragment>
+							))}
+						</h1>
+					</Card>
 					{/* <textarea
 						className="border border-black w-full"
 						value={query.context}
@@ -123,61 +126,89 @@ export default function QueryFields({
 							}))
 						}
 					/> */}
-
-					<TextField
-						value={query.context_gpt}
-						onChange={(e) =>
-							setQuery((prev) => ({
-								...prev,
-								context_gpt: e.target.value,
-							}))
-						}
-						style={{
-							borderColor: "black",
-							borderWidth: "1px",
-							borderRadius: "3px",
-							// padding: "2px 5px",
-						}}
-						multiline
-					/>
-					{/* <textarea
-						className="border border-black w-full"
-						value={query.context_gpt}
-						onChange={(e) =>
-							setQuery((prev) => ({
-								...prev,
-								context_gpt: e.target.value,
-							}))
-						}
-					/> */}
-					<Button
-						className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
-						variant="contained"
-						onClick={async () => {
-							console.log(query.context);
-							setQuery((prev) => ({
-								...prev,
-								context_gpt:
-									"Generating context. Please wait. It may take 20-30 seconds.",
-							}));
-							const res = await queryApi.getGPTContext(
-								query.context
-							);
-							if (res.success) {
-								console.log("Context generated successfully");
+					<div className="flex flex-row gap-2 w-full justify-between items-center">
+						<label className="text-lg text-left font-bold">
+							Custom Context
+						</label>
+						<Button
+							// className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
+							variant="contained"
+							onClick={async () => {
+								console.log(query.context);
 								setQuery((prev) => ({
 									...prev,
-									context_gpt: res.data,
+									context_gpt:
+										"Generating context. Please wait. It may take 20-30 seconds.",
 								}));
-							} else {
-								console.error("Error generating context");
-							}
+								const res = await queryApi.getGPTContext(
+									query.context
+								);
+								if (res.success) {
+									console.log(
+										"Context generated successfully"
+									);
+									setQuery((prev) => ({
+										...prev,
+										context_gpt: res.data,
+									}));
+								} else {
+									console.error("Error generating context");
+								}
+							}}
+						>
+							Take help from GPT
+						</Button>
+					</div>
+					<TextField
+						value={query.context_gpt}
+						onChange={(e) =>
+							setQuery((prev) => ({
+								...prev,
+								context_gpt: e.target.value,
+							}))
+						}
+						style={{
+							borderColor: "black",
+							borderWidth: "1px",
+							borderRadius: "3px",
+							// padding: "2px 5px",
 						}}
-					>
-						Generate GPT Context
-					</Button>
-				</>
+						size="small"
+						multiline
+					/>
+					{/* <textarea
+						className="border border-black w-full"
+						value={query.context_gpt}
+						onChange={(e) =>
+							setQuery((prev) => ({
+								...prev,
+								context_gpt: e.target.value,
+							}))
+						}
+					/> */}
+				</div>
 			)}
+
+			<div className="border-t-4 border-black w-full mt-2"></div>
+
+			<label className="text-lg w-full text-left font-bold">
+				Question
+			</label>
+			<TextField
+				value={query.question}
+				onChange={(e) =>
+					setQuery((prev) => ({ ...prev, question: e.target.value }))
+				}
+				style={{
+					borderColor: "black",
+					borderWidth: "1px",
+					borderRadius: "3px",
+					// padding: "2px 5px",
+				}}
+				size="small"
+				multiline
+			/>
+
 			<FormControl fullWidth>
 				<FormLabel id="demo-radio-buttons-group-label">
 					<label className="text-lg w-full text-left font-bold text-black focus:text-black">
@@ -227,11 +258,12 @@ export default function QueryFields({
 					<div className="flex flex-row justify-start items-center gap-2">
 						<TextField
 							type="text"
-							className="border border-black mr-auto"
+							className="border border-black mr-auto !w-[80%]"
 							value={newOption}
 							onChange={(e) => setNewOption(e.target.value)}
 							size="small"
 							label="Option"
+							fullWidth
 						/>
 						{/* 
 						<input
@@ -241,8 +273,10 @@ export default function QueryFields({
 							value={newOption}
 							onChange={(e) => setNewOption(e.target.value)}
 						/> */}
-						<button
-							className="bg-blue-500 rounded-lg p-3"
+						<Button
+							variant="contained"
+							className="h-10 !w-[20%]"
+							fullWidth
 							onClick={() => {
 								if (newOption === "") return;
 								setQuery((prev) => ({
@@ -259,7 +293,7 @@ export default function QueryFields({
 							}}
 						>
 							+ Add option
-						</button>
+						</Button>
 					</div>
 					<div className="flex flex-col gap-2">
 						{query.answer.options.map((option, index) => (
@@ -338,7 +372,7 @@ export default function QueryFields({
 						Answer
 					</label>
 
-					<TextareaAutosize
+					<TextField
 						value={query.answer.correct}
 						onChange={(e) =>
 							setQuery((prev) => ({
@@ -353,8 +387,9 @@ export default function QueryFields({
 							borderColor: "black",
 							borderWidth: "1px",
 							borderRadius: "3px",
-							padding: "2px 5px",
+							// padding: "2px 5px",
 						}}
+						multiline
 					/>
 					{/* <textarea
 						className="border border-black w-full"
@@ -446,8 +481,11 @@ export default function QueryFields({
 					}}
 					variant="contained"
 					fullWidth
+					className="flex flex-row gap-2 items-center"
+					disabled={query.context === "" || query.question === ""}
 					sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
 				>
+					<FontAwesomeIcon icon={faFloppyDisk} />
 					Save
 				</Button>
 			</div>

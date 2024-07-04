@@ -14,6 +14,7 @@ import {
 	faChevronDown,
 	faChevronUp,
 	faTrashCan,
+	faAdd,
 } from "@fortawesome/free-solid-svg-icons";
 import placeTypes from "@/app/types.json";
 function NearbyCard({
@@ -22,10 +23,27 @@ function NearbyCard({
 	savedPlacesMap,
 	nearbyPlacesMap,
 	setNearbyPlacesMap,
+	setSelectedPlacesMap,
 	place_id,
 	e,
 }) {
 	const [expanded, setExpanded] = useState(false);
+
+	const handleAdd = (place_id) => {
+		// Don't add if already added
+		if (place_id === "") return;
+
+		const newSelectedPlacesMap = { ...selectedPlacesMap };
+		newSelectedPlacesMap[place_id] = {
+			alias: "",
+			selectedAttributes: ["formatted_address"],
+			attributes: Object.keys(savedPlacesMap[place_id]).filter(
+				(key) => savedPlacesMap[place_id][key] !== null
+			),
+		};
+		setSelectedPlacesMap(newSelectedPlacesMap);
+	};
+
 	return (
 		<div className="bg-white" key={index2}>
 			<div className="flex flex-row gap-1 w-full items-center bg-white p-2">
@@ -79,23 +97,41 @@ function NearbyCard({
 			{expanded && (
 				<div className="bg-white px-2 py-1 border-2 rounded-md border-black mx-5 mb-5">
 					{e.places.map((place, index3) => (
-						<div key={index3} className="flex flex-row gap-2">
-							<input
-								type="checkbox"
-								checked={place.selected}
-								onChange={(event) => {
-									const newNearbyPlacesMap = {
-										...nearbyPlacesMap,
-									};
-									newNearbyPlacesMap[place_id][index2].places[
-										index3
-									].selected = event.target.checked;
-									setNearbyPlacesMap(newNearbyPlacesMap);
-								}}
-							/>
-							<h1 className="overflow-hidden whitespace-nowrap overflow-ellipsis w-[95%]">
-								{place.name} - {place.formatted_address}
-							</h1>
+						<div className="flex flex-col w-full">
+							<div
+								key={index3}
+								className="flex flex-row gap-2 items-center"
+							>
+								<input
+									type="checkbox"
+									className="w-5 h-5"
+									checked={place.selected}
+									onChange={(event) => {
+										const newNearbyPlacesMap = {
+											...nearbyPlacesMap,
+										};
+										newNearbyPlacesMap[place_id][
+											index2
+										].places[index3].selected =
+											event.target.checked;
+										setNearbyPlacesMap(newNearbyPlacesMap);
+									}}
+								/>
+								<h1 className="overflow-hidden whitespace-nowrap overflow-ellipsis w-[95%]">
+									{place.name} - {place.formatted_address}
+								</h1>
+								<IconButton
+									sx={{ height: "3rem", width: "3rem" }}
+									onClick={() => {
+										handleAdd(place.place_id);
+									}}
+								>
+									<FontAwesomeIcon icon={faAdd} />
+								</IconButton>
+							</div>
+							{index3 < e.places.length - 1 && (
+								<div className="border-b-2 border-black w-full"></div>
+							)}
 						</div>
 					))}
 				</div>
@@ -107,6 +143,7 @@ export default function NearbyInformation({
 	savedPlacesMap,
 	setSavedPlacesMap,
 	selectedPlacesMap,
+	setSelectedPlacesMap,
 	nearbyPlacesMap,
 	setNearbyPlacesMap,
 }) {
@@ -318,6 +355,7 @@ export default function NearbyInformation({
 													nearbyPlacesMap,
 													setNearbyPlacesMap,
 													place_id,
+													setSelectedPlacesMap,
 													e,
 												}}
 											/>
