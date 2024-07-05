@@ -26,6 +26,7 @@ import {
 	faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
+import { Clear, Refresh } from "@mui/icons-material";
 
 export default function QueryFields({
 	contextJSON,
@@ -79,7 +80,7 @@ export default function QueryFields({
 					}}
 					variant="contained"
 					color="success"
-					disabled={Object.keys(contextJSON).length === 0}
+					disabled={context.length === 0}
 				>
 					{Object.keys(contextJSON).length === 0
 						? "Generate context first"
@@ -473,14 +474,16 @@ export default function QueryFields({
 					))}
 				</Select>
 			</FormControl>
-			<div className="mx-auto w-full font-bold flex flex-row gap-1">
+			<div className="ml-auto w-full font-bold flex flex-row justify-end gap-1">
 				<Button
 					onClick={() => setQuery(init)}
 					variant="contained"
-					fullWidth
+					// fullWidth
 					sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
+					className="flex flex-row gap-0 items-center"
 					color="error"
 				>
+					<Clear />
 					Clear
 				</Button>
 				<Button
@@ -489,7 +492,7 @@ export default function QueryFields({
 						setQuery(init);
 					}}
 					variant="contained"
-					fullWidth
+					// fullWidth
 					className="flex flex-row gap-2 items-center"
 					disabled={query.context === "" || query.question === ""}
 					sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
