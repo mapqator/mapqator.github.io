@@ -17,6 +17,7 @@ import {
 	Divider,
 	Typography,
 } from "@mui/material";
+import { Clear, Search } from "@mui/icons-material";
 
 const AutocompleteSearchBox = ({
 	savedPlacesMap,
@@ -125,6 +126,7 @@ const AutocompleteSearchBox = ({
 						// sx={{ height: "100%" }}
 						className="!h-10"
 					>
+						<Search />
 						Search ($)
 					</Button>
 					<Button
@@ -137,6 +139,7 @@ const AutocompleteSearchBox = ({
 						// sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
 						color="error"
 					>
+						<Clear />
 						Clear
 					</Button>
 				</div>
