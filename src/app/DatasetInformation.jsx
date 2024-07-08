@@ -21,7 +21,9 @@ export default function DatasetInformation({ queries }) {
 			}
 			if (query.context !== "" && query.answer.correct !== -1) {
 				const invalid = query.evaluation?.find(
-					(e) => e.verdict === "invalid"
+					(e) =>
+						e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
+						e.verdict === "invalid"
 				);
 				if (!invalid) valid_questions++;
 			}
