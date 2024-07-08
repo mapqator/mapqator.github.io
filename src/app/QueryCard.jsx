@@ -40,7 +40,11 @@ export default function QueryCard({
 	useEffect(() => {
 		// Check if there is any invalid verdict in evaluation
 
-		const invalid = query.evaluation?.find((e) => e.verdict === "invalid");
+		const invalid = query.evaluation?.find(
+			(e) =>
+				e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
+				e.verdict === "invalid"
+		);
 		if (invalid) {
 			setFlag(true);
 		}
