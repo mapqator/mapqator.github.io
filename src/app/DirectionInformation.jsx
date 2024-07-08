@@ -244,9 +244,9 @@ export default function DirectionInformation({
 							(from_id, index) => (
 								<div
 									key={index}
-									className="flex flex-row gap-1 items-center bg-white p-2"
+									className="flex flex-row gap-1 bg-white p-2"
 								>
-									<h1 className={`text-center w-[30%]`}>
+									<h1 className={`text-center w-[30%] py-3`}>
 										{selectedPlacesMap[from_id].alias ||
 											savedPlacesMap[from_id].name}
 									</h1>
@@ -322,7 +322,7 @@ export default function DirectionInformation({
 										from: event.target.value,
 									}));
 								}}
-								input={<OutlinedInput label={"Attributes"} />}
+								input={<OutlinedInput label={"From"} />}
 							>
 								{Object.keys(selectedPlacesMap).map(
 									(place_id, index) => (
@@ -361,7 +361,7 @@ export default function DirectionInformation({
 										to: event.target.value,
 									}));
 								}}
-								input={<OutlinedInput label={"Attributes"} />}
+								input={<OutlinedInput label={"To"} />}
 							>
 								{Object.keys(selectedPlacesMap).map(
 									(place_id, index) => (

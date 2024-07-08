@@ -21,6 +21,8 @@ import {
 import QueryCard from "./QueryCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+	faChevronDown,
+	faChevronUp,
 	faFloppyDisk,
 	faRobot,
 	faTrash,
@@ -34,6 +36,7 @@ export default function QueryFields({
 	initialQuery,
 	onSave,
 }) {
+	const [expanded, setExpanded] = useState(true);
 	const init = {
 		question: "",
 		answer: {
@@ -55,138 +58,152 @@ export default function QueryFields({
 	}, [initialQuery]);
 	return (
 		<div className="p-2 flex flex-col w-full gap-2">
-			{/* <textarea
-				className="border border-black w-full rounded-sm"
-				value={query.question}
-				onChange={(e) =>
-					setQuery((prev) => ({ ...prev, question: e.target.value }))
-				}
-			/> */}
-			<div className="flex flex-row gap-2 w-full justify-between items-center">
-				<label className="text-lg text-left font-bold">
-					Generated Context
-				</label>
-				<Button
-					className="bg-green-500 rounded-lg p-2"
-					onClick={() => {
-						setQuery((prev) => ({
-							...prev,
-							context: context.reduce(
-								(acc, e) => acc + e + "\n",
-								""
-							),
-							context_json: contextJSON,
-						}));
-					}}
-					variant="contained"
-					color="success"
-					disabled={context.length === 0}
-				>
-					{Object.keys(contextJSON).length === 0
-						? "Generate context first"
-						: "Use generated context"}
-				</Button>
-			</div>
-			{query.context !== "" && (
-				<div className="flex flex-col gap-2">
-					<Card
-						value={query.context}
-						onChange={(e) =>
-							setQuery((prev) => ({
-								...prev,
-								context: e.target.value,
-							}))
-						}
-						// sx={{
-						// 	borderColor: "black",
-						// 	borderWidth: "1px",
-						// 	borderRadius: "3px",
-						// 	// padding: "2px 5px",
-						// }}
-						className="p-3 w-full !bg-slate-100"
+			<div className="flex flex-col w-full border-2 border-black">
+				<div className="flex justify-end bg-black">
+					<IconButton
+						sx={{ height: "2rem", width: "2rem" }}
+						onClick={() => setExpanded((prev) => !prev)}
 					>
-						<h1 className="text-base">
-							{query.context.split("\n").map((line, index) => (
-								<React.Fragment key={index}>
-									{/* {line} */}
-									<p
-										key={index}
-										className="w-full text-left"
-										dangerouslySetInnerHTML={{
-											__html: line,
-										}}
-									/>
-									{/* <br /> */}
-								</React.Fragment>
-							))}
-						</h1>
-					</Card>
-					{/* <textarea
-						className="border border-black w-full"
-						value={query.context}
-						onChange={(e) =>
-							setQuery((prev) => ({
-								...prev,
-								context: e.target.value,
-							}))
-						}
-					/> */}
-					<div className="flex flex-row gap-2 w-full justify-between items-center">
-						<label className="text-lg text-left font-bold">
-							Custom Context
-						</label>
-						<Button
-							// className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
-							variant="contained"
-							onClick={async () => {
-								console.log(query.context);
-								setQuery((prev) => ({
-									...prev,
-									context_gpt:
-										"Generating context. Please wait. It may take 20-30 seconds.",
-								}));
-								const res = await queryApi.getGPTContext(
-									query.context
-								);
-								if (res.success) {
-									console.log(
-										"Context generated successfully"
-									);
+						<div className="text-base">
+							<FontAwesomeIcon
+								icon={expanded ? faChevronUp : faChevronDown}
+								color="white"
+							/>
+						</div>
+					</IconButton>
+				</div>
+				{expanded && (
+					<div className="p-2 flex flex-col gap-2">
+						<div className="flex flex-row gap-2 w-full justify-between items-center">
+							<label className="text-lg text-left font-bold">
+								Generated Context
+							</label>
+							<Button
+								className="bg-green-500 rounded-lg p-2"
+								onClick={() => {
 									setQuery((prev) => ({
 										...prev,
-										context_gpt: res.data,
+										context: context.reduce(
+											(acc, e) => acc + e + "\n",
+											""
+										),
+										context_json: contextJSON,
 									}));
-								} else {
-									console.error("Error generating context");
-								}
-							}}
-							className="flex flex-row gap-2 items-center"
-						>
-							<FontAwesomeIcon
-								icon={faRobot}
-								className="text-xl"
-							/>
-							Take help from GPT
-						</Button>
-					</div>
-					<TextField
-						value={query.context_gpt}
+								}}
+								variant="contained"
+								color="success"
+								disabled={context.length === 0}
+							>
+								{Object.keys(contextJSON).length === 0
+									? "Generate context first"
+									: "Use generated context"}
+							</Button>
+						</div>
+						{query.context !== "" && (
+							<div className="flex flex-col gap-2">
+								<Card
+									value={query.context}
+									onChange={(e) =>
+										setQuery((prev) => ({
+											...prev,
+											context: e.target.value,
+										}))
+									}
+									// sx={{
+									// 	borderColor: "black",
+									// 	borderWidth: "1px",
+									// 	borderRadius: "3px",
+									// 	// padding: "2px 5px",
+									// }}
+									className="p-3 w-full !bg-slate-100"
+								>
+									<h1 className="text-base">
+										{query.context
+											.split("\n")
+											.map((line, index) => (
+												<React.Fragment key={index}>
+													{/* {line} */}
+													<p
+														key={index}
+														className="w-full text-left"
+														dangerouslySetInnerHTML={{
+															__html: line,
+														}}
+													/>
+													{/* <br /> */}
+												</React.Fragment>
+											))}
+									</h1>
+								</Card>
+								{/* <textarea
+						className="border border-black w-full"
+						value={query.context}
 						onChange={(e) =>
 							setQuery((prev) => ({
 								...prev,
-								context_gpt: e.target.value,
+								context: e.target.value,
 							}))
 						}
-						style={{
-							borderColor: "black",
-							borderWidth: "1px",
-							borderRadius: "3px",
-							// padding: "2px 5px",
-						}}
-						size="small"
-						multiline
-					/>
-					{/* <textarea
+					/> */}
+								<div className="flex flex-row gap-2 w-full justify-between items-center">
+									<label className="text-lg text-left font-bold">
+										Custom Context
+									</label>
+									<Button
+										// className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
+										variant="contained"
+										onClick={async () => {
+											console.log(query.context);
+											setQuery((prev) => ({
+												...prev,
+												context_gpt:
+													"Generating context. Please wait. It may take 20-30 seconds.",
+											}));
+											const res =
+												await queryApi.getGPTContext(
+													query.context
+												);
+											if (res.success) {
+												console.log(
+													"Context generated successfully"
+												);
+												setQuery((prev) => ({
+													...prev,
+													context_gpt: res.data,
+												}));
+											} else {
+												console.error(
+													"Error generating context"
+												);
+											}
+										}}
+										className="flex flex-row gap-2 items-center"
+									>
+										<FontAwesomeIcon
+											icon={faRobot}
+											className="text-xl"
+										/>
+										Take help from GPT
+									</Button>
+								</div>
+								<TextField
+									value={query.context_gpt}
+									onChange={(e) =>
+										setQuery((prev) => ({
+											...prev,
+											context_gpt: e.target.value,
+										}))
+									}
+									style={{
+										borderColor: "black",
+										borderWidth: "1px",
+										borderRadius: "3px",
+										// padding: "2px 5px",
+									}}
+									size="small"
+									multiline
+								/>
+								{/* <textarea
 						className="border border-black w-full"
 						value={query.context_gpt}
 						onChange={(e) =>
@@ -196,10 +213,13 @@ export default function QueryFields({
 							}))
 						}
 					/> */}
-				</div>
-			)}
+							</div>
+						)}
+					</div>
+				)}
+			</div>
 
-			<div className="border-t-4 border-black w-full mt-2"></div>
+			{/* <div className="border-t-4 border-black w-full mt-2"></div> */}
 
 			<label className="text-lg w-full text-left font-bold">
 				Question

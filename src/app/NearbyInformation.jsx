@@ -440,7 +440,17 @@ export default function NearbyInformation({
 										// sx={{ width: "2rem" }}
 										// style={getStyles(name, personName, theme)}
 									>
-										{type}
+										{type
+											.replace(/_/g, " ") // Replace underscores with spaces
+											.split(" ") // Split the string into an array of words
+											.map(
+												(word) =>
+													word
+														.charAt(0)
+														.toUpperCase() +
+													word.slice(1)
+											) // Capitalize the first letter of each word
+											.join(" ")}
 									</MenuItem>
 								))}
 							</Select>
@@ -516,7 +526,7 @@ export default function NearbyInformation({
 									id="outlined-adornment"
 									className="outlined-input"
 									size="small"
-									label="Radius"
+									label="Radius (m)"
 									value={newNearbyPlaces.radius}
 									onChange={(event) => {
 										setNewNearbyPlaces((prev) => ({

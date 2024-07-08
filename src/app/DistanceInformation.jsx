@@ -262,7 +262,7 @@ export default function DistanceInformation({
 										from: event.target.value,
 									}));
 								}}
-								input={<OutlinedInput label={"Attributes"} />}
+								input={<OutlinedInput label={"From"} />}
 							>
 								{Object.keys(selectedPlacesMap).map(
 									(place_id, index) => (
@@ -302,7 +302,7 @@ export default function DistanceInformation({
 										to: event.target.value,
 									}));
 								}}
-								input={<OutlinedInput label={"Attributes"} />}
+								input={<OutlinedInput label={"To"} />}
 							>
 								{Object.keys(selectedPlacesMap).map(
 									(place_id, index) => (
