@@ -8,7 +8,14 @@ const mapApi = new MapApi();
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import { Select, MenuItem, Button, TextField, IconButton } from "@mui/material";
+import {
+	Select,
+	MenuItem,
+	Button,
+	TextField,
+	IconButton,
+	Typography,
+} from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faChevronDown,
@@ -53,9 +60,11 @@ function NearbyCard({
 					{selectedPlacesMap[place_id].alias ||
 						savedPlacesMap[place_id].name}
 				</h1>
-				<h1 className={`text-center w-[17%]`}>{e.type}</h1>
-				<h1 className={`text-center w-[17%]`}>{e.keyword || "N/A"}</h1>
-				<h1 className={`text-center w-[17%]`}>
+				<h1 className={`text-center w-[25%]`}>
+					{e.type === "any" ? e.keyword : e.type}
+				</h1>
+				{/* <h1 className={`text-center w-[17%]`}>{e.keyword || "N/A"}</h1> */}
+				<h1 className={`text-center w-[25%]`}>
 					{e.hasRadius ? e.radius + " m" : "Distance"}
 				</h1>
 				{/* <h1
@@ -330,13 +339,13 @@ export default function NearbyInformation({
 						<h1 className="text-lg w-[36%] text-center font-bold">
 							Location
 						</h1>
-						<h1 className="text-lg w-[17%] text-center font-bold">
+						<h1 className="text-lg w-[25%] text-center font-bold">
 							Type
 						</h1>
-						<h1 className="text-lg w-[17%] text-center font-bold">
+						{/* <h1 className="text-lg w-[17%] text-center font-bold">
 							Keyword
-						</h1>
-						<h1 className="text-lg w-[17%] text-center font-bold">
+						</h1> */}
+						<h1 className="text-lg w-[25%] text-center font-bold">
 							Rank By/Radius
 						</h1>
 						{/* <h1 className="text-lg w-[14%] text-center font-bold">
@@ -413,14 +422,6 @@ export default function NearbyInformation({
 					options={placeTypes}
 					fullWidth
 					freeSolo
-					value={newNearbyPlaces.type} // Step 3: Bind the value to state
-					onChange={(event, newValue) => {
-						console.log("newValue: ", newValue);
-						setNewNearbyPlaces((prev) => ({
-							...prev,
-							type: newValue,
-						}));
-					}}
 					getOptionLabel={(option) =>
 						`${option
 							.replace(/_/g, " ") // Replace underscores with spaces
@@ -432,7 +433,18 @@ export default function NearbyInformation({
 							.join(" ")}`
 					}
 					renderInput={(params) => (
-						<TextField {...params} label="Type" />
+						<TextField
+							{...params}
+							label="Type"
+							value={newNearbyPlaces.type} // Step 3: Bind the value to state
+							onChange={(e) => {
+								// console.log("newValue: ", newValue);
+								setNewNearbyPlaces((prev) => ({
+									...prev,
+									type: e.target.value,
+								}));
+							}}
+						/>
 					)}
 				/>
 				{/* <div className="w-full">
@@ -505,7 +517,56 @@ export default function NearbyInformation({
 							// MenuProps={MenuProps}
 						/>
 					</div> */}
+
 				<div className="flex flex-row w-full gap-2">
+					<div className="flex flex-row w-1/2 gap-2 items-center">
+						<input
+							type="radio"
+							className="w-5 h-5 cursor-pointer"
+							checked={!newNearbyPlaces.hasRadius}
+							onClick={() =>
+								setNewNearbyPlaces((prev) => ({
+									...prev,
+									hasRadius: false,
+								}))
+							}
+						/>
+						<Typography>Rank By Distance</Typography>
+					</div>
+
+					<div className="flex flex-row w-1/2 gap-2 items-center">
+						<input
+							type="radio"
+							className="w-5 h-5 cursor-pointer"
+							checked={newNearbyPlaces.hasRadius}
+							onClick={() =>
+								setNewNearbyPlaces((prev) => ({
+									...prev,
+									hasRadius: true,
+								}))
+							}
+						/>
+						<TextField
+							// required
+							fullWidth
+							id="outlined-adornment"
+							className="outlined-input"
+							size="small"
+							label="Radius (m)"
+							value={newNearbyPlaces.radius}
+							onChange={(event) => {
+								setNewNearbyPlaces((prev) => ({
+									...prev,
+									radius: event.target.value,
+								}));
+							}}
+							type="number"
+							// input={<OutlinedInput label={"Radius"} />}
+							// MenuProps={MenuProps}
+						/>
+					</div>
+				</div>
+				{/* <div className="flex flex-row w-full gap-2">
 					<div className="w-full">
 						<FormControl
 							fullWidth
@@ -513,12 +574,7 @@ export default function NearbyInformation({
 							variant="outlined"
 							size="small"
 						>
-							<InputLabel
-								htmlFor="outlined-adornment"
-								className="input-label"
-							>
-								{/* Location */}
-							</InputLabel>
+							
 							<Select
 								required
 								id="outlined-adornment"
@@ -607,7 +663,7 @@ export default function NearbyInformation({
 							</FormControl>
 						)}
 					</div>
-				</div>
+				</div> */}
 				<div className="w-full">
 					<Button
 						variant="contained"

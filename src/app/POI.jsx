@@ -325,14 +325,6 @@ export default function POI({
 						options={placeTypes}
 						fullWidth
 						freeSolo
-						value={newPois.type} // Step 3: Bind the value to state
-						onChange={(event, newValue) => {
-							console.log("newValue: ", newValue);
-							setNewPois((prev) => ({
-								...prev,
-								type: newValue,
-							}));
-						}}
 						getOptionLabel={(option) =>
 							`${option
 								.replace(/_/g, " ") // Replace underscores with spaces
@@ -345,7 +337,17 @@ export default function POI({
 								.join(" ")}`
 						}
 						renderInput={(params) => (
-							<TextField {...params} label="Type" />
+							<TextField
+								{...params}
+								label="Type"
+								value={newPois.type} // Step 3: Bind the value to state
+								onChange={(e) => {
+									setNewPois((prev) => ({
+										...prev,
+										type: e.target.value,
+									}));
+								}}
+							/>
 						)}
 					/>
 				</div>
