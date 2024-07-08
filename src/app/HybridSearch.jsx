@@ -17,10 +17,11 @@ import {
 	Divider,
 	Typography,
 } from "@mui/material";
+import _ from "lodash";
 
 import { LoadingButton } from "@mui/lab";
 import { Clear, Search } from "@mui/icons-material";
-
+import Fuse from "fuse.js";
 const AutocompleteSearchBox = ({
 	savedPlacesMap,
 	addPlace,
@@ -34,11 +35,8 @@ const AutocompleteSearchBox = ({
 	const [selectedPlace, setSelectedPlace] = useState(null);
 	const [loading, setLoading] = useState(false);
 
-	const filteredPlaces = Object.values(savedPlacesMap).filter(
-		(place) =>
-			place.name.toLowerCase().includes(search.toLowerCase()) ||
-			place.formatted_address.toLowerCase().includes(search.toLowerCase())
-	);
+	const [filteredPlaces, setFilteredPlaces] = useState([]);
+
 	const handleSearch = async (event) => {
 		event.preventDefault();
 		if (search === "") return;
@@ -61,6 +59,61 @@ const AutocompleteSearchBox = ({
 			setSelectedPlace(place);
 		}
 	};
+
+	// Debounced search function
+	const debouncedSearch = React.useCallback(
+		_.debounce((query) => {
+			// Your search logic here, for example:
+			const fuse = new Fuse(Object.values(savedPlacesMap), {
+				keys: ["name", "formatted_address"],
+				threshold: 0.3,
+				distance: 100,
+				ignoreLocation: true,
+			});
+			const result = fuse.search(query);
+			const filteredPlaces = result.map((item) => item.item);
+			setFilteredPlaces(filteredPlaces);
+		}, 300),
+		[savedPlacesMap]
+	); // Adjust debounce time as needed
+
+	const handleFuzzySearch = async () => {
+		// Convert savedPlacesMap object values to an array
+		const placesArray = Object.values(savedPlacesMap);
+
+		// Fuse.js options
+		const options = {
+			// Properties to search in
+			keys: ["name", "formatted_address"],
+			// // Other options like threshold can be added here
+			threshold: 0.2, // Lower this to make the search stricter, or increase for more fuzziness
+			// distance: 100, // Increase this to allow for more flexibility in term location
+			ignoreLocation: true, // Consider setting to true for more lenient matches
+			// // You can adjust these values based on testing to find what works best for your data
+			// findAllMatches: true,
+		};
+
+		// Create a new Fuse instance with the places array and options
+		const fuse = new Fuse(placesArray, options);
+
+		// Use Fuse to search
+		const result = fuse.search(search);
+
+		// Map the search result to get the original place objects
+		const filteredPlaces = result.map((item) => item.item);
+
+		// Update state with the filtered places
+		setFilteredPlaces(filteredPlaces);
+	};
+
+	useEffect(() => {
+		if (search) {
+			debouncedSearch(search);
+		} else {
+			// Handle the case when search is cleared
+			setFilteredPlaces(Object.values(savedPlacesMap));
+		}
+	}, [search, debouncedSearch]);
 
 	const handleAddSave = async () => {
 		console.log("Saved: ", selectedPlace);
