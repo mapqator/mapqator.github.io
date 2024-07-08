@@ -15,8 +15,8 @@ import {
 	faChevronUp,
 	faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
-import { CheckBox, Radio } from "@mui/icons-material";
-
+import { Add, CheckBox, Radio } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 function DirectionCard({
 	selectedPlacesMap,
 	savedPlacesMap,
@@ -154,6 +154,7 @@ export default function DirectionInformation({
 		to: "",
 		travelMode: "WALKING",
 	});
+	const [loading, setLoading] = useState(false);
 	// { from, to, mode, routes: [{label, duration, distance, steps:[]}]}
 	useEffect(() => {
 		setNewDirection({
@@ -165,6 +166,8 @@ export default function DirectionInformation({
 	const handleDirectionAdd = async () => {
 		if (newDirection.from === "" || newDirection.to === "") return;
 		// Fetch the direction between the two places from google maps
+
+		setLoading(true);
 		const response = await mapApi.getDirections(
 			newDirection.from,
 			newDirection.to,
@@ -207,228 +210,219 @@ export default function DirectionInformation({
 			}
 			setDirectionInformation(newDirectionInfo);
 		}
+		setLoading(false);
 	};
 
 	return (
-		Object.keys(selectedPlacesMap).length > 0 && (
-			<div className="flex flex-col border-4 w-full border-black rounded-lg">
-				<div className="flex flex-col items-center bg-black">
-					<h1 className="text-3xl text-white">
-						Direction Information
-					</h1>
-					<p className="text-lg text-white">
-						Routes from one place to another
-					</p>
-				</div>
-				{Object.keys(directionInformation).length > 0 && (
-					<div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
-						<div className="flex flex-row">
-							<h1 className="text-lg w-[30%] text-center font-bold">
-								From
+		// Object.keys(selectedPlacesMap).length > 0 &&
+		<div className="flex flex-col border-4 w-full border-black rounded-lg">
+			<div className="flex flex-col items-center bg-black">
+				<h1 className="text-3xl text-white">Direction Information</h1>
+				<p className="text-lg text-white">
+					Routes from one place to another
+				</p>
+			</div>
+			{Object.keys(directionInformation).length > 0 && (
+				<div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
+					<div className="flex flex-row">
+						<h1 className="text-lg w-[30%] text-center font-bold">
+							From
+						</h1>
+						<h1 className="text-lg w-[21.5%] text-center font-bold">
+							To
+						</h1>
+						<h1 className="text-lg w-[14%] text-center font-bold">
+							Mode
+						</h1>
+						<h1 className="text-lg w-[11%] text-center font-bold">
+							Routes
+						</h1>
+						<h1 className="text-lg w-[11%] text-center font-bold">
+							Steps
+						</h1>
+					</div>
+
+					{Object.keys(directionInformation).map((from_id, index) => (
+						<div
+							key={index}
+							className="flex flex-row gap-1 bg-white p-2"
+						>
+							<h1 className={`text-center w-[30%] py-3`}>
+								{selectedPlacesMap[from_id].alias ||
+									savedPlacesMap[from_id].name}
 							</h1>
-							<h1 className="text-lg w-[21.5%] text-center font-bold">
-								To
-							</h1>
-							<h1 className="text-lg w-[14%] text-center font-bold">
-								Mode
-							</h1>
-							<h1 className="text-lg w-[11%] text-center font-bold">
-								Routes
-							</h1>
-							<h1 className="text-lg w-[11%] text-center font-bold">
-								Steps
-							</h1>
+							<div className="flex flex-col w-[70%]">
+								{Object.keys(directionInformation[from_id]).map(
+									(to_id, index1) =>
+										Object.keys(
+											directionInformation[from_id][to_id]
+										).map((mode, index2) => (
+											<>
+												<DirectionCard
+													{...{
+														mode,
+														index2,
+														selectedPlacesMap,
+														savedPlacesMap,
+														directionInformation,
+														setDirectionInformation,
+														from_id,
+														to_id,
+													}}
+												/>
+												{Object.keys(
+													directionInformation[
+														from_id
+													]
+												).length >
+													index1 + 1 ||
+													(index2 + 1 <
+														Object.keys(
+															directionInformation[
+																from_id
+															][to_id]
+														).length && (
+														<div className="h-[1px] bg-black w-full"></div>
+													))}
+											</>
+										))
+								)}
+							</div>
 						</div>
+					))}
+				</div>
+			)}
 
-						{Object.keys(directionInformation).map(
-							(from_id, index) => (
-								<div
-									key={index}
-									className="flex flex-row gap-1 bg-white p-2"
-								>
-									<h1 className={`text-center w-[30%] py-3`}>
-										{selectedPlacesMap[from_id].alias ||
-											savedPlacesMap[from_id].name}
-									</h1>
-									<div className="flex flex-col w-[70%]">
-										{Object.keys(
-											directionInformation[from_id]
-										).map((to_id, index1) =>
-											Object.keys(
-												directionInformation[from_id][
-													to_id
-												]
-											).map((mode, index2) => (
-												<>
-													<DirectionCard
-														{...{
-															mode,
-															index2,
-															selectedPlacesMap,
-															savedPlacesMap,
-															directionInformation,
-															setDirectionInformation,
-															from_id,
-															to_id,
-														}}
-													/>
-													{Object.keys(
-														directionInformation[
-															from_id
-														]
-													).length >
-														index1 + 1 ||
-														(index2 + 1 <
-															Object.keys(
-																directionInformation[
-																	from_id
-																][to_id]
-															).length && (
-															<div className="h-[1px] bg-black w-full"></div>
-														))}
-												</>
-											))
-										)}
-									</div>
-								</div>
-							)
-						)}
-					</div>
-				)}
+			<div className="flex flex-row gap-2 w-full p-2">
+				<div className="w-[30%]">
+					<FormControl
+						fullWidth
+						className="input-field"
+						variant="outlined"
+						// style={{ width: "20rem" }}
+						size="small"
+					>
+						<InputLabel
+							htmlFor="outlined-adornment"
+							className="input-label"
+						>
+							From
+						</InputLabel>
+						<Select
+							required
+							id="outlined-adornment"
+							className="outlined-input"
+							value={newDirection.from}
+							onChange={(event) => {
+								setNewDirection((prev) => ({
+									...prev,
+									from: event.target.value,
+								}));
+							}}
+							input={<OutlinedInput label={"From"} />}
+						>
+							{Object.keys(selectedPlacesMap).map(
+								(place_id, index) => (
+									<MenuItem key={index} value={place_id}>
+										{selectedPlacesMap[place_id].alias ||
+											savedPlacesMap[place_id].name}
+									</MenuItem>
+								)
+							)}
+						</Select>
+					</FormControl>
+				</div>
+				<div className="w-[30%]">
+					<FormControl
+						fullWidth
+						className="input-field"
+						variant="outlined"
+						// style={{ width: "20rem" }}
+						size="small"
+					>
+						<InputLabel
+							htmlFor="outlined-adornment"
+							className="input-label"
+						>
+							To
+						</InputLabel>
+						<Select
+							required
+							id="outlined-adornment"
+							className="outlined-input"
+							value={newDirection.to}
+							onChange={(event) => {
+								setNewDirection((prev) => ({
+									...prev,
+									to: event.target.value,
+								}));
+							}}
+							input={<OutlinedInput label={"To"} />}
+						>
+							{Object.keys(selectedPlacesMap).map(
+								(place_id, index) => (
+									<MenuItem key={index} value={place_id}>
+										{selectedPlacesMap[place_id].alias ||
+											savedPlacesMap[place_id].name}
+									</MenuItem>
+								)
+							)}
+						</Select>
+					</FormControl>
+				</div>
 
-				<div className="flex flex-row gap-2 w-full p-2">
-					<div className="w-[30%]">
-						<FormControl
-							fullWidth
-							className="input-field"
-							variant="outlined"
-							// style={{ width: "20rem" }}
-							size="small"
+				<div className="w-[20%]">
+					<FormControl
+						fullWidth
+						className="input-field"
+						variant="outlined"
+						// style={{ width: "20rem" }}
+						size="small"
+					>
+						<InputLabel
+							htmlFor="outlined-adornment"
+							className="input-label"
 						>
-							<InputLabel
-								htmlFor="outlined-adornment"
-								className="input-label"
-							>
-								From
-							</InputLabel>
-							<Select
-								required
-								id="outlined-adornment"
-								className="outlined-input"
-								value={newDirection.from}
-								onChange={(event) => {
-									setNewDirection((prev) => ({
-										...prev,
-										from: event.target.value,
-									}));
-								}}
-								input={<OutlinedInput label={"From"} />}
-							>
-								{Object.keys(selectedPlacesMap).map(
-									(place_id, index) => (
-										<MenuItem key={index} value={place_id}>
-											{selectedPlacesMap[place_id]
-												.alias ||
-												savedPlacesMap[place_id].name}
-										</MenuItem>
-									)
-								)}
-							</Select>
-						</FormControl>
-					</div>
-					<div className="w-[30%]">
-						<FormControl
-							fullWidth
-							className="input-field"
-							variant="outlined"
-							// style={{ width: "20rem" }}
-							size="small"
+							Travel Mode
+						</InputLabel>
+						<Select
+							required
+							id="outlined-adornment"
+							className="outlined-input"
+							value={newDirection.travelMode}
+							onChange={(event) => {
+								setNewDirection((prev) => ({
+									...prev,
+									travelMode: event.target.value,
+								}));
+							}}
+							input={<OutlinedInput label={"Travel Mode"} />}
 						>
-							<InputLabel
-								htmlFor="outlined-adornment"
-								className="input-label"
-							>
-								To
-							</InputLabel>
-							<Select
-								required
-								id="outlined-adornment"
-								className="outlined-input"
-								value={newDirection.to}
-								onChange={(event) => {
-									setNewDirection((prev) => ({
-										...prev,
-										to: event.target.value,
-									}));
-								}}
-								input={<OutlinedInput label={"To"} />}
-							>
-								{Object.keys(selectedPlacesMap).map(
-									(place_id, index) => (
-										<MenuItem key={index} value={place_id}>
-											{selectedPlacesMap[place_id]
-												.alias ||
-												savedPlacesMap[place_id].name}
-										</MenuItem>
-									)
-								)}
-							</Select>
-						</FormControl>
-					</div>
-
-					<div className="w-[20%]">
-						<FormControl
-							fullWidth
-							className="input-field"
-							variant="outlined"
-							// style={{ width: "20rem" }}
-							size="small"
-						>
-							<InputLabel
-								htmlFor="outlined-adornment"
-								className="input-label"
-							>
-								Travel Mode
-							</InputLabel>
-							<Select
-								required
-								id="outlined-adornment"
-								className="outlined-input"
-								value={newDirection.travelMode}
-								onChange={(event) => {
-									setNewDirection((prev) => ({
-										...prev,
-										travelMode: event.target.value,
-									}));
-								}}
-								input={<OutlinedInput label={"Travel Mode"} />}
-							>
-								{[
-									"WALKING",
-									"DRIVING",
-									"BICYCLING",
-									"TRANSIT",
-								].map((mode, index) => (
+							{["WALKING", "DRIVING", "BICYCLING", "TRANSIT"].map(
+								(mode, index) => (
 									<MenuItem key={index} value={mode}>
 										{mode}
 									</MenuItem>
-								))}
-							</Select>
-						</FormControl>
-					</div>
+								)
+							)}
+						</Select>
+					</FormControl>
+				</div>
 
-					<div className="w-1/5">
-						<Button
-							variant="contained"
-							fullWidth
-							onClick={handleDirectionAdd}
-							sx={{ fontSize: "1rem" }}
-						>
-							+ Add ($)
-						</Button>
-					</div>
+				<div className="w-1/5">
+					<LoadingButton
+						variant="contained"
+						fullWidth
+						onClick={handleDirectionAdd}
+						sx={{ fontSize: "1rem" }}
+						loading={loading}
+						loadingPosition="start"
+						startIcon={<Add />}
+					>
+						Add ($)
+					</LoadingButton>
 				</div>
 			</div>
-		)
+		</div>
 	);
 }

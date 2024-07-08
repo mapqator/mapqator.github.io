@@ -17,6 +17,7 @@ import {
 	faAdd,
 } from "@fortawesome/free-solid-svg-icons";
 import placeTypes from "@/app/types.json";
+import Autocomplete from "@mui/material/Autocomplete";
 
 function POICard({
 	selectedPlacesMap,
@@ -234,155 +235,182 @@ export default function POI({
 		}
 	};
 	return (
-		Object.keys(selectedPlacesMap).length > 0 && (
-			<div className="flex flex-col border-4 w-full border-black rounded-lg">
-				<div className="flex flex-col items-center bg-black">
-					<h1 className="text-3xl text-white">Places in an Area</h1>
-					<p className="text-lg text-white">
-						Results of the Points of Interest search
-					</p>
-				</div>
-				{Object.keys(poisMap).length > 0 && (
-					<div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
-						<div className="flex flex-row">
-							<h1 className="text-lg w-[50%] text-center font-bold">
-								Location
-							</h1>
-							<h1 className="text-lg w-[18%] text-center font-bold">
-								Type
-							</h1>
+		// Object.keys(selectedPlacesMap).length > 0 &&
+		<div className="flex flex-col border-4 w-full border-black rounded-lg">
+			<div className="flex flex-col items-center bg-black">
+				<h1 className="text-3xl text-white">Places in an Area</h1>
+				<p className="text-lg text-white">
+					Results of the Points of Interest search
+				</p>
+			</div>
+			{Object.keys(poisMap).length > 0 && (
+				<div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
+					<div className="flex flex-row">
+						<h1 className="text-lg w-[50%] text-center font-bold">
+							Location
+						</h1>
+						<h1 className="text-lg w-[18%] text-center font-bold">
+							Type
+						</h1>
 
-							<h1 className="text-lg w-[18%] text-center font-bold">
-								Count
-							</h1>
+						<h1 className="text-lg w-[18%] text-center font-bold">
+							Count
+						</h1>
+					</div>
+					{Object.keys(poisMap).map((place_id, index1) => (
+						<div key={index1} className="flex flex-col gap-1 ">
+							{poisMap[place_id].map((poi, index2) => (
+								<POICard
+									key={index2}
+									selectedPlacesMap={selectedPlacesMap}
+									savedPlacesMap={savedPlacesMap}
+									poi={poi}
+									poisMap={poisMap}
+									setPoisMap={setPoisMap}
+									index2={index2}
+									place_id={place_id}
+									setSelectedPlacesMap={setSelectedPlacesMap}
+								/>
+							))}
 						</div>
-						{Object.keys(poisMap).map((place_id, index1) => (
-							<div key={index1} className="flex flex-col gap-1 ">
-								{poisMap[place_id].map((poi, index2) => (
-									<POICard
-										key={index2}
-										selectedPlacesMap={selectedPlacesMap}
-										savedPlacesMap={savedPlacesMap}
-										poi={poi}
-										poisMap={poisMap}
-										setPoisMap={setPoisMap}
-										index2={index2}
-										place_id={place_id}
-										setSelectedPlacesMap={
-											setSelectedPlacesMap
-										}
-									/>
-								))}
-							</div>
-						))}
-					</div>
-				)}
+					))}
+				</div>
+			)}
 
-				<div className="flex flex-row gap-2 w-full p-2">
-					<div className="w-[60%]">
-						<FormControl
-							fullWidth
-							className="input-field"
-							variant="outlined"
-							// style={{ width: "20rem" }}
-							size="small"
+			<div className="flex flex-row gap-2 w-full p-2">
+				<div className="w-[50%]">
+					<FormControl
+						fullWidth
+						className="input-field"
+						variant="outlined"
+						// style={{ width: "20rem" }}
+						size="small"
+					>
+						<InputLabel
+							htmlFor="outlined-adornment"
+							className="input-label"
 						>
-							<InputLabel
-								htmlFor="outlined-adornment"
-								className="input-label"
-							>
-								Location
-							</InputLabel>
-							<Select
-								required
-								id="outlined-adornment"
-								className="outlined-input"
-								value={newPois.location}
-								onChange={(event) => {
-									setNewPois((prev) => ({
-										...prev,
-										location: event.target.value,
-									}));
-								}}
-								input={<OutlinedInput label={"Location"} />}
-								// MenuProps={MenuProps}
-							>
-								{Object.keys(selectedPlacesMap).map(
-									(place_id, index) => (
-										<MenuItem key={index} value={place_id}>
-											{selectedPlacesMap[place_id]
-												.alias ||
-												savedPlacesMap[place_id].name}
-										</MenuItem>
-									)
-								)}
-							</Select>
-						</FormControl>
-					</div>
-					<div className="w-[20%]">
-						<FormControl
-							fullWidth
-							className="input-field"
-							variant="outlined"
-							// style={{ width: "20rem" }}
-							size="small"
+							Location
+						</InputLabel>
+						<Select
+							required
+							id="outlined-adornment"
+							className="outlined-input"
+							value={newPois.location}
+							onChange={(event) => {
+								setNewPois((prev) => ({
+									...prev,
+									location: event.target.value,
+								}));
+							}}
+							input={<OutlinedInput label={"Location"} />}
+							// MenuProps={MenuProps}
 						>
-							<InputLabel
-								htmlFor="outlined-adornment"
-								className="input-label"
-							>
-								Type
-							</InputLabel>
-							<Select
-								required
-								id="outlined-adornment"
-								className="outlined-input"
-								value={newPois.type}
-								onChange={(event) => {
-									setNewPois((prev) => ({
-										...prev,
-										type: event.target.value,
-									}));
-								}}
-								input={<OutlinedInput label={"Type"} />}
-								// MenuProps={MenuProps}
-							>
-								{placeTypes.map((type, index) => (
-									<MenuItem
-										key={index}
-										value={type}
-										// sx={{ width: "2rem" }}
-										// style={getStyles(name, personName, theme)}
-									>
-										{type
-											.replace(/_/g, " ") // Replace underscores with spaces
-											.split(" ") // Split the string into an array of words
-											.map(
-												(word) =>
-													word
-														.charAt(0)
-														.toUpperCase() +
-													word.slice(1)
-											) // Capitalize the first letter of each word
-											.join(" ")}
+							{Object.keys(selectedPlacesMap).map(
+								(place_id, index) => (
+									<MenuItem key={index} value={place_id}>
+										{selectedPlacesMap[place_id].alias ||
+											savedPlacesMap[place_id].name}
 									</MenuItem>
-								))}
-							</Select>
-						</FormControl>
-					</div>
+								)
+							)}
+						</Select>
+					</FormControl>
+				</div>
+				<div className="w-[30%]">
+					<Autocomplete
+						disablePortal
+						id="combo-box-demo"
+						size="small"
+						options={placeTypes}
+						fullWidth
+						freeSolo
+						value={newPois.type} // Step 3: Bind the value to state
+						onChange={(event, newValue) => {
+							console.log("newValue: ", newValue);
+							setNewPois((prev) => ({
+								...prev,
+								type: newValue,
+							}));
+						}}
+						getOptionLabel={(option) =>
+							`${option
+								.replace(/_/g, " ") // Replace underscores with spaces
+								.split(" ") // Split the string into an array of words
+								.map(
+									(word) =>
+										word.charAt(0).toUpperCase() +
+										word.slice(1)
+								) // Capitalize the first letter of each word
+								.join(" ")}`
+						}
+						renderInput={(params) => (
+							<TextField {...params} label="Type" />
+						)}
+					/>
+				</div>
 
-					<div className="w-[20%]">
-						<Button
-							variant="contained"
-							fullWidth
-							onClick={searchInsidePlaces}
-							sx={{ fontSize: "1rem" }}
+				{/* <div className="w-[20%]">
+					<FormControl
+						fullWidth
+						className="input-field"
+						variant="outlined"
+						// style={{ width: "20rem" }}
+						size="small"
+					>
+						<InputLabel
+							htmlFor="outlined-adornment"
+							className="input-label"
 						>
-							+ Add ($)
-						</Button>
-					</div>
+							Type
+						</InputLabel>
+						<Select
+							required
+							id="outlined-adornment"
+							className="outlined-input"
+							value={newPois.type}
+							onChange={(event) => {
+								setNewPois((prev) => ({
+									...prev,
+									type: event.target.value,
+								}));
+							}}
+							input={<OutlinedInput label={"Type"} />}
+							// MenuProps={MenuProps}
+						>
+							{placeTypes.map((type, index) => (
+								<MenuItem
+									key={index}
+									value={type}
+									// sx={{ width: "2rem" }}
+									// style={getStyles(name, personName, theme)}
+								>
+									{type
+										.replace(/_/g, " ") // Replace underscores with spaces
+										.split(" ") // Split the string into an array of words
+										.map(
+											(word) =>
+												word.charAt(0).toUpperCase() +
+												word.slice(1)
+										) // Capitalize the first letter of each word
+										.join(" ")}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				</div> */}
+
+				<div className="w-[20%]">
+					<Button
+						variant="contained"
+						fullWidth
+						onClick={searchInsidePlaces}
+						sx={{ fontSize: "1rem" }}
+					>
+						+ Add ($)
+					</Button>
 				</div>
 			</div>
-		)
+		</div>
 	);
 }

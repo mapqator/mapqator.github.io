@@ -17,6 +17,8 @@ import {
 	Divider,
 	Typography,
 } from "@mui/material";
+
+import { LoadingButton } from "@mui/lab";
 import { Clear, Search } from "@mui/icons-material";
 
 const AutocompleteSearchBox = ({
@@ -30,6 +32,7 @@ const AutocompleteSearchBox = ({
 	const [search, setSearch] = useState("");
 	const [results, setResults] = useState([]);
 	const [selectedPlace, setSelectedPlace] = useState(null);
+	const [loading, setLoading] = useState(false);
 
 	const filteredPlaces = Object.values(savedPlacesMap).filter(
 		(place) =>
@@ -39,6 +42,7 @@ const AutocompleteSearchBox = ({
 	const handleSearch = async (event) => {
 		event.preventDefault();
 		if (search === "") return;
+		setLoading(true);
 		try {
 			const response = await mapApi.search(search);
 			if (response.success) {
@@ -47,6 +51,7 @@ const AutocompleteSearchBox = ({
 		} catch (error) {
 			console.error("Error fetching data: ", error);
 		}
+		setLoading(false);
 	};
 
 	const handleSelectPlace = (place) => {
@@ -119,16 +124,18 @@ const AutocompleteSearchBox = ({
 					/>
 				</div>
 				<div className="w-1/2 flex flex-row gap-1">
-					<Button
+					<LoadingButton
 						variant="contained"
 						type="submit"
 						fullWidth
 						// sx={{ height: "100%" }}
 						className="!h-10"
+						loading={loading}
+						startIcon={<Search />}
+						loadingPosition="start"
 					>
-						<Search />
 						Search ($)
-					</Button>
+					</LoadingButton>
 					<Button
 						onClick={() => {
 							setResults([]);

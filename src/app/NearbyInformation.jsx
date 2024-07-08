@@ -17,6 +17,8 @@ import {
 	faAdd,
 } from "@fortawesome/free-solid-svg-icons";
 import placeTypes from "@/app/types.json";
+import Autocomplete from "@mui/material/Autocomplete";
+
 function NearbyCard({
 	index2,
 	selectedPlacesMap,
@@ -147,7 +149,7 @@ export default function NearbyInformation({
 	// place_id -> place
 	const [newNearbyPlaces, setNewNearbyPlaces] = useState({
 		location: "",
-		type: "any",
+		type: "",
 		keyword: "",
 		radius: 1,
 		rankBy: "distance",
@@ -159,7 +161,7 @@ export default function NearbyInformation({
 	useEffect(() => {
 		setNewNearbyPlaces({
 			location: "",
-			type: "any",
+			type: "",
 			keyword: "",
 			radius: 1,
 			rankBy: "distance",
@@ -261,10 +263,17 @@ export default function NearbyInformation({
 					formatted_address: place.vicinity,
 				}));
 
+				if (!placeTypes.includes(newNearbyPlaces.type)) {
+					newNearbyPlaces.keyword = newNearbyPlaces.type;
+				}
 				newNearbyPlacesMap[newNearbyPlaces.location].push({
-					type: newNearbyPlaces.type,
+					type: placeTypes.includes(newNearbyPlaces.type)
+						? newNearbyPlaces.type
+						: "any",
 					places: placesWithSelection,
-					keyword: newNearbyPlaces.keyword,
+					keyword: placeTypes.includes(newNearbyPlaces.type)
+						? ""
+						: newNearbyPlaces.keyword,
 					radius: newNearbyPlaces.radius,
 					hasRadius: newNearbyPlaces.hasRadius,
 					rankBy: newNearbyPlaces.rankBy,
@@ -306,106 +315,127 @@ export default function NearbyInformation({
 	};
 
 	return (
-		Object.keys(selectedPlacesMap).length > 0 && (
-			<div className="flex flex-col border-4 w-full border-black rounded-lg">
-				<div className="flex flex-col items-center bg-black">
-					<h1 className="text-3xl text-white">Nearby Places</h1>
-					<p className="text-lg text-white">
-						Nearby places of a given place
-					</p>
-				</div>
+		// Object.keys(selectedPlacesMap).length > 0 &&
+		<div className="flex flex-col border-4 w-full border-black rounded-lg">
+			<div className="flex flex-col items-center bg-black">
+				<h1 className="text-3xl text-white">Nearby Places</h1>
+				<p className="text-lg text-white">
+					Nearby places of a given place
+				</p>
+			</div>
 
-				{Object.keys(nearbyPlacesMap).length > 0 && (
-					<div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
-						<div className="flex flex-row">
-							<h1 className="text-lg w-[36%] text-center font-bold">
-								Location
-							</h1>
-							<h1 className="text-lg w-[17%] text-center font-bold">
-								Type
-							</h1>
-							<h1 className="text-lg w-[17%] text-center font-bold">
-								Keyword
-							</h1>
-							<h1 className="text-lg w-[17%] text-center font-bold">
-								Rank By/Radius
-							</h1>
-							{/* <h1 className="text-lg w-[14%] text-center font-bold">
+			{Object.keys(nearbyPlacesMap).length > 0 && (
+				<div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
+					<div className="flex flex-row">
+						<h1 className="text-lg w-[36%] text-center font-bold">
+							Location
+						</h1>
+						<h1 className="text-lg w-[17%] text-center font-bold">
+							Type
+						</h1>
+						<h1 className="text-lg w-[17%] text-center font-bold">
+							Keyword
+						</h1>
+						<h1 className="text-lg w-[17%] text-center font-bold">
+							Rank By/Radius
+						</h1>
+						{/* <h1 className="text-lg w-[14%] text-center font-bold">
 								Count
 							</h1> */}
+					</div>
+
+					{Object.keys(nearbyPlacesMap).map((place_id, index1) => (
+						<div key={index1} className="flex flex-col gap-1 ">
+							{nearbyPlacesMap[place_id].map((e, index2) => (
+								<NearbyCard
+									key={index2}
+									{...{
+										index2,
+										selectedPlacesMap,
+										savedPlacesMap,
+										nearbyPlacesMap,
+										setNearbyPlacesMap,
+										place_id,
+										setSelectedPlacesMap,
+										e,
+									}}
+								/>
+							))}
 						</div>
+					))}
+				</div>
+			)}
 
-						{Object.keys(nearbyPlacesMap).map(
-							(place_id, index1) => (
-								<div
-									key={index1}
-									className="flex flex-col gap-1 "
-								>
-									{nearbyPlacesMap[place_id].map(
-										(e, index2) => (
-											<NearbyCard
-												key={index2}
-												{...{
-													index2,
-													selectedPlacesMap,
-													savedPlacesMap,
-													nearbyPlacesMap,
-													setNearbyPlacesMap,
-													place_id,
-													setSelectedPlacesMap,
-													e,
-												}}
-											/>
-										)
-									)}
-								</div>
-							)
-						)}
-					</div>
-				)}
-
-				<div className="flex flex-col gap-2 w-full p-2">
-					<div className="w-full">
-						<FormControl
-							fullWidth
-							className="input-field"
-							variant="outlined"
-							// style={{ width: "20rem" }}
-							size="small"
+			<div className="flex flex-col gap-2 w-full p-2">
+				<div className="w-full">
+					<FormControl
+						fullWidth
+						className="input-field"
+						variant="outlined"
+						// style={{ width: "20rem" }}
+						size="small"
+					>
+						<InputLabel
+							htmlFor="outlined-adornment"
+							className="input-label"
 						>
-							<InputLabel
-								htmlFor="outlined-adornment"
-								className="input-label"
-							>
-								Location
-							</InputLabel>
-							<Select
-								required
-								id="outlined-adornment"
-								className="outlined-input"
-								value={newNearbyPlaces.location}
-								onChange={(event) => {
-									setNewNearbyPlaces((prev) => ({
-										...prev,
-										location: event.target.value,
-									}));
-								}}
-								input={<OutlinedInput label={"Location"} />}
-								// MenuProps={MenuProps}
-							>
-								{Object.keys(selectedPlacesMap).map(
-									(place_id, index) => (
-										<MenuItem key={index} value={place_id}>
-											{selectedPlacesMap[place_id]
-												.alias ||
-												savedPlacesMap[place_id].name}
-										</MenuItem>
-									)
-								)}
-							</Select>
-						</FormControl>
-					</div>
-					<div className="w-full">
+							Location
+						</InputLabel>
+						<Select
+							required
+							id="outlined-adornment"
+							className="outlined-input"
+							value={newNearbyPlaces.location}
+							onChange={(event) => {
+								setNewNearbyPlaces((prev) => ({
+									...prev,
+									location: event.target.value,
+								}));
+							}}
+							input={<OutlinedInput label={"Location"} />}
+							// MenuProps={MenuProps}
+						>
+							{Object.keys(selectedPlacesMap).map(
+								(place_id, index) => (
+									<MenuItem key={index} value={place_id}>
+										{selectedPlacesMap[place_id].alias ||
+											savedPlacesMap[place_id].name}
+									</MenuItem>
+								)
+							)}
+						</Select>
+					</FormControl>
+				</div>
+				<Autocomplete
+					disablePortal
+					id="combo-box-demo"
+					size="small"
+					options={placeTypes}
+					fullWidth
+					freeSolo
+					value={newNearbyPlaces.type} // Step 3: Bind the value to state
+					onChange={(event, newValue) => {
+						console.log("newValue: ", newValue);
+						setNewNearbyPlaces((prev) => ({
+							...prev,
+							type: newValue,
+						}));
+					}}
+					getOptionLabel={(option) =>
+						`${option
+							.replace(/_/g, " ") // Replace underscores with spaces
+							.split(" ") // Split the string into an array of words
+							.map(
+								(word) =>
+									word.charAt(0).toUpperCase() + word.slice(1)
+							) // Capitalize the first letter of each word
+							.join(" ")}`
+					}
+					renderInput={(params) => (
+						<TextField {...params} label="Type" />
+					)}
+				/>
+				{/* <div className="w-full">
 						<FormControl
 							fullWidth
 							className="input-field"
@@ -455,8 +485,8 @@ export default function NearbyInformation({
 								))}
 							</Select>
 						</FormControl>
-					</div>
-					<div className="w-full">
+					</div> */}
+				{/* <div className="w-full">
 						<TextField
 							// required
 							fullWidth
@@ -474,9 +504,71 @@ export default function NearbyInformation({
 							input={<OutlinedInput label={"Keyword"} />}
 							// MenuProps={MenuProps}
 						/>
+					</div> */}
+				<div className="flex flex-row w-full gap-2">
+					<div className="w-full">
+						<FormControl
+							fullWidth
+							className="input-field"
+							variant="outlined"
+							size="small"
+						>
+							<InputLabel
+								htmlFor="outlined-adornment"
+								className="input-label"
+							>
+								{/* Location */}
+							</InputLabel>
+							<Select
+								required
+								id="outlined-adornment"
+								className="outlined-input"
+								value={
+									newNearbyPlaces.hasRadius
+										? "radius"
+										: "rankBy"
+								}
+								onChange={(event) => {
+									setNewNearbyPlaces((prev) => ({
+										...prev,
+										hasRadius:
+											event.target.value === "radius"
+												? true
+												: false,
+									}));
+								}}
+								// input={<OutlinedInput label={"Location"} />}
+								// MenuProps={MenuProps}
+							>
+								{["rankBy", "radius"].map((e, index) => (
+									<MenuItem key={index} value={e}>
+										{e}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
 					</div>
-					<div className="flex flex-row w-full gap-2">
-						<div className="w-full">
+					<div className="w-full">
+						{newNearbyPlaces.hasRadius ? (
+							<TextField
+								// required
+								fullWidth
+								id="outlined-adornment"
+								className="outlined-input"
+								size="small"
+								label="Radius (m)"
+								value={newNearbyPlaces.radius}
+								onChange={(event) => {
+									setNewNearbyPlaces((prev) => ({
+										...prev,
+										radius: event.target.value,
+									}));
+								}}
+								type="number"
+								// input={<OutlinedInput label={"Radius"} />}
+								// MenuProps={MenuProps}
+							/>
+						) : (
 							<FormControl
 								fullWidth
 								className="input-field"
@@ -486,113 +578,48 @@ export default function NearbyInformation({
 								<InputLabel
 									htmlFor="outlined-adornment"
 									className="input-label"
-								>
-									{/* Location */}
-								</InputLabel>
+								></InputLabel>
 								<Select
 									required
 									id="outlined-adornment"
 									className="outlined-input"
-									value={
-										newNearbyPlaces.hasRadius
-											? "radius"
-											: "rankBy"
-									}
+									value={newNearbyPlaces.rankBy}
 									onChange={(event) => {
 										setNewNearbyPlaces((prev) => ({
 											...prev,
-											hasRadius:
-												event.target.value === "radius"
-													? true
-													: false,
+											rankBy: event.target.value,
 										}));
 									}}
 									// input={<OutlinedInput label={"Location"} />}
 									// MenuProps={MenuProps}
 								>
-									{["rankBy", "radius"].map((e, index) => (
-										<MenuItem key={index} value={e}>
-											{e}
+									{[
+										{
+											label: "distance",
+											value: "distance",
+										},
+									].map((e, index) => (
+										<MenuItem key={index} value={e.value}>
+											{e.label}
 										</MenuItem>
 									))}
 								</Select>
 							</FormControl>
-						</div>
-						<div className="w-full">
-							{newNearbyPlaces.hasRadius ? (
-								<TextField
-									// required
-									fullWidth
-									id="outlined-adornment"
-									className="outlined-input"
-									size="small"
-									label="Radius (m)"
-									value={newNearbyPlaces.radius}
-									onChange={(event) => {
-										setNewNearbyPlaces((prev) => ({
-											...prev,
-											radius: event.target.value,
-										}));
-									}}
-									type="number"
-									// input={<OutlinedInput label={"Radius"} />}
-									// MenuProps={MenuProps}
-								/>
-							) : (
-								<FormControl
-									fullWidth
-									className="input-field"
-									variant="outlined"
-									size="small"
-								>
-									<InputLabel
-										htmlFor="outlined-adornment"
-										className="input-label"
-									></InputLabel>
-									<Select
-										required
-										id="outlined-adornment"
-										className="outlined-input"
-										value={newNearbyPlaces.rankBy}
-										onChange={(event) => {
-											setNewNearbyPlaces((prev) => ({
-												...prev,
-												rankBy: event.target.value,
-											}));
-										}}
-										// input={<OutlinedInput label={"Location"} />}
-										// MenuProps={MenuProps}
-									>
-										{[
-											{
-												label: "distance",
-												value: "distance",
-											},
-										].map((e, index) => (
-											<MenuItem
-												key={index}
-												value={e.value}
-											>
-												{e.label}
-											</MenuItem>
-										))}
-									</Select>
-								</FormControl>
-							)}
-						</div>
-					</div>
-					<div className="w-full">
-						<Button
-							variant="contained"
-							fullWidth
-							onClick={searchNearbyPlaces}
-							sx={{ fontSize: "1rem" }}
-						>
-							+ Add ($)
-						</Button>
+						)}
 					</div>
 				</div>
-				{/* {nearbyPlacesResults.length > 0 && (
+				<div className="w-full">
+					<Button
+						variant="contained"
+						fullWidth
+						onClick={searchNearbyPlaces}
+						sx={{ fontSize: "1rem" }}
+					>
+						+ Add ($)
+					</Button>
+				</div>
+			</div>
+			{/* {nearbyPlacesResults.length > 0 && (
 					<div className="flex flex-col gap-2 p-2">
 						{nearbyPlacesResults.map((e, index) => (
 							<div key={index} className="flex flex-row gap-2">
@@ -625,7 +652,6 @@ export default function NearbyInformation({
 						</Button>
 					</div>
 				)} */}
-			</div>
-		)
+		</div>
 	);
 }
