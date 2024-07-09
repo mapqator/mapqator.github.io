@@ -12,6 +12,7 @@ import {
 	IconButton,
 	Button,
 	TextField,
+	Pagination,
 } from "@mui/material";
 import QueryCard from "./QueryCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,6 +21,8 @@ import QueryForm from "./QueryForm";
 import Evaluation from "./Evaluation";
 import DatasetInformation from "./DatasetInformation";
 import { showSuccess, showToast } from "./home";
+
+const itemsPerPage = 5;
 
 export default function DatasetCreator({
 	contextJSON,
@@ -45,9 +48,26 @@ export default function DatasetCreator({
 			console.error("Error fetching data: ", error);
 		}
 	};
+
+	const [db, setDb] = useState([]);
+	const [data, setData] = useState([]);
+	const [page, setPage] = useState(1);
+
+	const pageCount = Math.ceil(queries.length / itemsPerPage);
+
 	useEffect(() => {
 		fetchQueries();
 	}, []);
+
+	useEffect(() => {
+		const start = (page - 1) * itemsPerPage;
+		const end = start + itemsPerPage;
+		setData(queries.slice(start, end));
+	}, [page, queries]);
+
+	const handlePagination = (event, value) => {
+		setPage(value);
+	};
 
 	const handleSave = async (query) => {
 		const res = await queryApi.createQuery(query);
@@ -105,8 +125,19 @@ export default function DatasetCreator({
 			{/*<h1 className="text-2xl w-full">Previous Queries</h1>*/}
 			<DatasetInformation {...{ queries }} />
 			<Evaluation {...{ queries }} />
+
 			<div className="flex flex-col gap-2 mt-1 w-full">
-				{queries.map((query, index) => (
+				<div className="flex justify-center bottom-0 left-0 right-0 pt-4">
+					<Pagination
+						size="medium"
+						count={pageCount}
+						color="primary"
+						onChange={handlePagination}
+						siblingCount={1}
+						page={page}
+					/>
+				</div>
+				{data.map((query, index) => (
 					<QueryCard
 						key={query.id}
 						// query={query}

@@ -438,6 +438,7 @@ export default function ContextGenerator({
 
 	useEffect(() => {
 		fetchPlaces();
+		// setLoading(false);
 	}, []);
 
 	return (
