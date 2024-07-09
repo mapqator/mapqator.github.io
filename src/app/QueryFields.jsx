@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import QueryApi from "@/api/queryApi";
 const queryApi = new QueryApi();
+import GptApi from "@/api/gptApi";
+const gptApi = new GptApi();
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -29,6 +31,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 import { Clear, Refresh } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 
 export default function QueryFields({
 	contextJSON,
@@ -50,6 +53,7 @@ export default function QueryFields({
 		classification: "",
 	};
 	const [query, setQuery] = useState(init);
+	const [translating, setTranslating] = useState(false);
 	const [newOption, setNewOption] = useState("");
 	useEffect(() => {
 		if (initialQuery) {
@@ -78,26 +82,60 @@ export default function QueryFields({
 							<label className="text-lg text-left font-bold">
 								Generated Context
 							</label>
-							<Button
-								className="bg-green-500 rounded-lg p-2"
-								onClick={() => {
-									setQuery((prev) => ({
-										...prev,
-										context: context.reduce(
-											(acc, e) => acc + e + "\n",
-											""
-										),
-										context_json: contextJSON,
-									}));
-								}}
-								variant="contained"
-								color="success"
-								disabled={context.length === 0}
-							>
-								{Object.keys(contextJSON).length === 0
-									? "Generate context first"
-									: "Use generated context"}
-							</Button>
+							<div className="flex flex-row gap-2">
+								{query.context !== "" && (
+									<LoadingButton
+										// className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
+										variant="contained"
+										onClick={async () => {
+											setTranslating(true);
+											console.log(query.context);
+											const res = await gptApi.translate(
+												query.context
+											);
+											if (res.success) {
+												console.log(
+													"Context translated successfully"
+												);
+												setQuery((prev) => ({
+													...prev,
+													context: res.data,
+												}));
+											} else {
+												console.error(
+													"Error translating context"
+												);
+											}
+											setTranslating(false);
+										}}
+										loading={translating}
+										className="flex flex-row gap-2 items-center"
+									>
+										Translate
+									</LoadingButton>
+								)}
+
+								<Button
+									className="bg-green-500 rounded-lg p-2"
+									onClick={() => {
+										setQuery((prev) => ({
+											...prev,
+											context: context.reduce(
+												(acc, e) => acc + e + "\n",
+												""
+											),
+											context_json: contextJSON,
+										}));
+									}}
+									variant="contained"
+									color="success"
+									disabled={context.length === 0}
+								>
+									{Object.keys(contextJSON).length === 0
+										? "Generate context first"
+										: "Use generated context"}
+								</Button>
+							</div>
 						</div>
 						{query.context !== "" && (
 							<div className="flex flex-col gap-2">

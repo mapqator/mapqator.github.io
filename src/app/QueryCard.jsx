@@ -46,6 +46,10 @@ export default function QueryCard({
 	const [mode, setMode] = useState("view");
 	const [flag, setFlag] = useState(false);
 	const [query, setQuery] = useState(initQuery);
+
+	useEffect(() => {
+		setQuery(initQuery);
+	}, [initQuery]);
 	useEffect(() => {
 		// Check if there is any invalid verdict in evaluation
 
@@ -171,7 +175,7 @@ export default function QueryCard({
 					<h1 className="text-lg font-bold underline">
 						Context (Template)
 					</h1>
-					<h1 className="text-lg">
+					<h1 className="text-base">
 						{query.context.split("\n").map((line, index) => (
 							<React.Fragment key={index}>
 								{/* {line} */}

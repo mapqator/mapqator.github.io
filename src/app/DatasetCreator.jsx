@@ -69,9 +69,11 @@ export default function DatasetCreator({
 		if (res.success) {
 			// update the queries
 			console.log("New Query: ", res.data[0]);
-			const newQueries = [...queries];
-			newQueries[index] = res.data[0];
-			setQueries(newQueries);
+			setQueries((prevQueries) =>
+				prevQueries.map((query, i) =>
+					i === index ? res.data[0] : query
+				)
+			);
 			showSuccess("Query edited successfully", res);
 		}
 	};
