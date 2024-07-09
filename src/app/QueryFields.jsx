@@ -484,7 +484,6 @@ export default function QueryFields({
 						"time_calculation",
 						"routing",
 						"location_finding",
-						"counting",
 						"opinion",
 						"navigation",
 					].map((value, index) => (

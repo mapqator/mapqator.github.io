@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { IconButton, Button } from "@mui/material";
+import {
+	IconButton,
+	Button,
+	FormControl,
+	Select,
+	InputLabel,
+	OutlinedInput,
+	MenuItem,
+} from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faChevronDown,
@@ -14,11 +22,12 @@ import QueryApi from "@/api/queryApi";
 import QueryFields from "./QueryFields";
 import GptApi from "@/api/gptApi";
 import dayjs from "dayjs";
+import { Save } from "@mui/icons-material";
 const queryApi = new QueryApi();
 const gptApi = new GptApi();
 
 export default function QueryCard({
-	query,
+	initQuery,
 	index,
 	setSelectedPlacesMap,
 	setDistanceMatrix,
@@ -36,7 +45,7 @@ export default function QueryCard({
 	const [expanded, setExpanded] = useState(false);
 	const [mode, setMode] = useState("view");
 	const [flag, setFlag] = useState(false);
-
+	const [query, setQuery] = useState(initQuery);
 	useEffect(() => {
 		// Check if there is any invalid verdict in evaluation
 
@@ -103,7 +112,62 @@ export default function QueryCard({
 					initialQuery={query}
 				/>
 			) : expanded ? (
-				<div className="px-1 pb-1">
+				<div className="p-2 flex flex-col gap-2">
+					<div className="flex flex-row gap-2">
+						<FormControl
+							fullWidth
+							className="input-field"
+							variant="outlined"
+							size="small"
+						>
+							<InputLabel
+								htmlFor="outlined-adornment"
+								className="input-label"
+							>
+								Category
+							</InputLabel>
+							<Select
+								multiple
+								id="outlined-adornment"
+								className="outlined-input"
+								value={query.classification
+									.split(",")
+									.filter(Boolean)}
+								onChange={(e) => {
+									setQuery((prev) => ({
+										...prev,
+										classification:
+											e.target.value.join(","),
+									}));
+								}}
+								input={<OutlinedInput label={"Category"} />}
+							>
+								{[
+									"nearby_poi",
+									"planning",
+									"time_calculation",
+									"routing",
+									"location_finding",
+									"opinion",
+									"navigation",
+								].map((value, index) => (
+									<MenuItem key={index} value={value}>
+										{value}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+						<Button
+							variant="contained"
+							color="primary"
+							onClick={async () => {
+								await handleEdit(query, index);
+							}}
+							startIcon={<Save />}
+						>
+							Save
+						</Button>
+					</div>
 					<h1 className="text-lg font-bold underline">
 						Context (Template)
 					</h1>
@@ -188,6 +252,7 @@ export default function QueryCard({
 							))}
 						</div>
 					</div>
+
 					<div className="flex flex-row gap-2 mx-auto">
 						<Button
 							variant="contained"

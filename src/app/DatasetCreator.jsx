@@ -107,8 +107,9 @@ export default function DatasetCreator({
 				{queries.map((query, index) => (
 					<QueryCard
 						key={query.id}
-						query={query}
+						// query={query}
 						index={index}
+						initQuery={query}
 						{...{
 							setSelectedPlacesMap,
 							setDistanceMatrix,
