@@ -109,6 +109,17 @@ const AutocompleteSearchBox = ({
 	useEffect(() => {
 		if (search) {
 			debouncedSearch(search);
+			// setFilteredPlaces(
+			// 	Object.values(savedPlacesMap).filter(
+			// 		(place) =>
+			// 			place.name
+			// 				.toLowerCase()
+			// 				.includes(search.toLowerCase()) ||
+			// 			place.formatted_address
+			// 				.toLowerCase()
+			// 				.includes(search.toLowerCase())
+			// 	)
+			// );
 		} else {
 			// Handle the case when search is cleared
 			setFilteredPlaces(Object.values(savedPlacesMap));
@@ -166,6 +177,7 @@ const AutocompleteSearchBox = ({
 				<div className="w-1/2">
 					<TextField
 						// type="text"
+						autoComplete="off"
 						size="small"
 						fullWidth
 						placeholder="Search for a place"
