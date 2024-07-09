@@ -39,18 +39,17 @@ function NearbyCard({
 	const [expanded, setExpanded] = useState(false);
 
 	const handleAdd = (place_id) => {
-		// Don't add if already added
-		if (place_id === "") return;
-
-		const newSelectedPlacesMap = { ...selectedPlacesMap };
-		newSelectedPlacesMap[place_id] = {
-			alias: "",
-			selectedAttributes: ["formatted_address"],
-			attributes: Object.keys(savedPlacesMap[place_id]).filter(
-				(key) => savedPlacesMap[place_id][key] !== null
-			),
-		};
-		setSelectedPlacesMap(newSelectedPlacesMap);
+		if (place_id === "" || selectedPlacesMap[place_id]) return;
+		setSelectedPlacesMap((prev) => ({
+			...prev,
+			[place_id]: {
+				alias: "",
+				selectedAttributes: ["formatted_address"],
+				attributes: Object.keys(savedPlacesMap[place_id]).filter(
+					(key) => savedPlacesMap[place_id][key] !== null
+				),
+			},
+		}));
 	};
 
 	return (

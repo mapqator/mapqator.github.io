@@ -31,18 +31,17 @@ function POICard({
 }) {
 	const [expanded, setExpanded] = useState(false);
 	const handleAdd = (place_id) => {
-		// Don't add if already added
-		if (place_id === "") return;
-
-		const newSelectedPlacesMap = { ...selectedPlacesMap };
-		newSelectedPlacesMap[place_id] = {
-			alias: "",
-			selectedAttributes: ["formatted_address"],
-			attributes: Object.keys(savedPlacesMap[place_id]).filter(
-				(key) => savedPlacesMap[place_id][key] !== null
-			),
-		};
-		setSelectedPlacesMap(newSelectedPlacesMap);
+		if (place_id === "" || selectedPlacesMap[place_id]) return;
+		setSelectedPlacesMap((prev) => ({
+			...prev,
+			[place_id]: {
+				alias: "",
+				selectedAttributes: ["formatted_address"],
+				attributes: Object.keys(savedPlacesMap[place_id]).filter(
+					(key) => savedPlacesMap[place_id][key] !== null
+				),
+			},
+		}));
 	};
 	return (
 		<div className="border-2 bg-white border-black rounded-lg">
@@ -143,45 +142,6 @@ export default function POI({
 	// useEffect(() => {
 	// 	console.log(selectedPlacesMap);
 	// }, [selectedPlacesMap]);
-
-	const handleAddAll = async () => {
-		try {
-			setPoisMap((prev) => [
-				...prev,
-				{
-					query: search,
-					places: results.map((place) => ({
-						...place,
-						selected: true,
-					})),
-				},
-			]);
-
-			const newSavedPlacesMap = { ...savedPlacesMap };
-			for (const place of results) {
-				if (newSavedPlacesMap[place.place_id] === undefined) {
-					try {
-						const response = await mapApi.getDetails(
-							place.place_id
-						);
-						if (response.success) {
-							const res = await placeApi.createPlace(
-								response.data.result
-							);
-							if (res.success) {
-								newSavedPlacesMap[place.place_id] = res.data[0];
-								console.log("saved: ", res.data[0].place_id);
-							}
-						}
-					} catch (error) {
-						console.error(error);
-					}
-				}
-			}
-		} catch (error) {
-			console.error("Error fetching data: ", error);
-		}
-	};
 
 	const searchInsidePlaces = async () => {
 		if (newPois.location === "" || newPois.type === "") return;
