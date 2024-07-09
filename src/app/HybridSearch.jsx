@@ -146,7 +146,7 @@ const AutocompleteSearchBox = ({
 					return;
 				}
 			}
-			handleAdd(place_id);
+			handleAdd(details);
 		} else {
 			console.log("Already saved: ", details);
 		}
@@ -154,15 +154,16 @@ const AutocompleteSearchBox = ({
 		return details;
 	};
 
-	const handleAdd = (place_id) => {
+	const handleAdd = (details) => {
+		const place_id = details["place_id"];
 		if (place_id === "" || selectedPlacesMap[place_id]) return;
 		setSelectedPlacesMap((prev) => ({
 			...prev,
 			[place_id]: {
 				alias: "",
 				selectedAttributes: ["formatted_address"],
-				attributes: Object.keys(savedPlacesMap[place_id]).filter(
-					(key) => savedPlacesMap[place_id][key] !== null
+				attributes: Object.keys(details).filter(
+					(key) => details[key] !== null
 				),
 			},
 		}));
@@ -282,7 +283,7 @@ const AutocompleteSearchBox = ({
 									variant="contained"
 									fullWidth
 									onClick={() => {
-										handleAdd(addPlace);
+										handleAdd(savedPlacesMap[addPlace]);
 										setAddPlace("");
 									}}
 									sx={{ fontSize: "1rem" }}
