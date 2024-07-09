@@ -50,6 +50,7 @@ export default function QueryCard({
 	useEffect(() => {
 		setQuery(initQuery);
 	}, [initQuery]);
+
 	useEffect(() => {
 		// Check if there is any invalid verdict in evaluation
 
@@ -109,7 +110,7 @@ export default function QueryCard({
 				<QueryFields
 					{...{ contextJSON, context }}
 					onSave={async (new_query) => {
-						handleEdit(new_query, index);
+						await handleEdit(new_query, index);
 						setMode("view");
 						// window.location.reload();
 					}}
@@ -193,7 +194,7 @@ export default function QueryCard({
 					<h1 className="text-lg font-bold underline">
 						Context (GPT)
 					</h1>
-					<h1 className="text-lg">
+					<h1 className="text-base">
 						{query.context_gpt.split("\n").map((line, index) => (
 							<React.Fragment key={index}>
 								{line}

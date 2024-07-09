@@ -85,6 +85,8 @@ export default function DatasetCreator({
 	};
 
 	const handleEdit = async (query, index) => {
+		// console.log("Editing query: ", query, queries[index]);
+		// return;
 		const res = await queryApi.updateQuery(queries[index].id, query);
 		if (res.success) {
 			// update the queries
@@ -141,7 +143,7 @@ export default function DatasetCreator({
 					<QueryCard
 						key={query.id}
 						// query={query}
-						index={index}
+						index={(page - 1) * itemsPerPage + index}
 						initQuery={query}
 						{...{
 							setSelectedPlacesMap,
