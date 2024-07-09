@@ -118,45 +118,43 @@ const AutocompleteSearchBox = ({
 	const handleAddSave = async () => {
 		console.log("Saved: ", selectedPlace);
 		// Save the selected place as needed
-		try {
-			const res = await mapApi.getDetails(selectedPlace["place_id"]);
-			if (res.success) {
-				const newSavedPlacesMap = { ...savedPlacesMap };
-				newSavedPlacesMap[res.data.result.place_id] = res.data.result;
-				setSavedPlacesMap(newSavedPlacesMap);
-
-				const newSelectedPlacesMap = { ...selectedPlacesMap };
-				newSelectedPlacesMap[res.data.result.place_id] = {
-					alias: "",
-					selectedAttributes: ["formatted_address"],
-					attributes: Object.keys(res.data.result).filter(
-						(e) => res.data.result[e] !== null
-					),
-				};
-				setSelectedPlacesMap(newSelectedPlacesMap);
-				setSelectedPlace(null);
-				return res.data.result;
+		const place_id = selectedPlace["place_id"];
+		let details = selectedPlacesMap[place_id];
+		if (details === undefined) {
+			details = savedPlacesMap[place_id];
+			if (details === undefined) {
+				const res = await mapApi.getDetails(place_id);
+				if (res.success) {
+					details = res.data.result;
+					setSavedPlacesMap((prev) => ({
+						...prev,
+						[place_id]: details,
+					}));
+				} else {
+					console.error("Error fetching data: ", res.error);
+					return;
+				}
 			}
-		} catch (error) {
-			console.error("Error fetching data: ", error);
+			handleAdd(details);
+		} else {
+			console.log("Already saved: ", details);
 		}
+		setSelectedPlace(null);
+		return details;
 	};
 
-	const handleAdd = (place_id) => {
-		// Don't add if already added
-		if (place_id === "") return;
-
-		const newSelectedPlacesMap = { ...selectedPlacesMap };
-		newSelectedPlacesMap[place_id] = {
-			alias: "",
-			selectedAttributes: ["formatted_address"],
-			attributes: Object.keys(savedPlacesMap[place_id]).filter(
-				(key) => savedPlacesMap[place_id][key] !== null
-			),
-		};
-		setSelectedPlacesMap(newSelectedPlacesMap);
-
-		setAddPlace("");
+	const handleAdd = (details) => {
+		if (selectedPlacesMap[details["place_id"]]) return;
+		setSelectedPlacesMap((prev) => ({
+			...prev,
+			[details["place_id"]]: {
+				alias: "",
+				selectedAttributes: ["formatted_address"],
+				attributes: Object.keys(details).filter(
+					(key) => details[key] !== null
+				),
+			},
+		}));
 	};
 
 	return (
@@ -271,7 +269,10 @@ const AutocompleteSearchBox = ({
 								<Button
 									variant="contained"
 									fullWidth
-									onClick={() => handleAdd(addPlace)}
+									onClick={() => {
+										handleAdd(savedPlacesMap[addPlace]);
+										setAddPlace("");
+									}}
 									sx={{ fontSize: "1rem" }}
 									disabled={addPlace === ""}
 								>
