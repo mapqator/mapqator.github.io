@@ -32,8 +32,8 @@ function DirectionCard({
 		<div className="flex flex-col">
 			<div key={index2} className="flex flex-row gap-1 items-center">
 				<h1 className={`text-center w-[30%]`}>
-					{selectedPlacesMap[to_id].alias ||
-						savedPlacesMap[to_id].name}
+					{savedPlacesMap[to_id].name ||
+						selectedPlacesMap[to_id].alias}
 				</h1>
 				<h1 className={`text-center w-[20%]`}>{mode}</h1>
 				<h1 className={`text-center w-[15%]`}>
@@ -248,8 +248,8 @@ export default function DirectionInformation({
 							className="flex flex-row gap-1 bg-white p-2"
 						>
 							<h1 className={`text-center w-[30%] py-3`}>
-								{selectedPlacesMap[from_id].alias ||
-									savedPlacesMap[from_id].name}
+								{savedPlacesMap[from_id].name ||
+									selectedPlacesMap[from_id].alias}
 							</h1>
 							<div className="flex flex-col w-[70%]">
 								{Object.keys(directionInformation[from_id]).map(
@@ -324,8 +324,8 @@ export default function DirectionInformation({
 							{Object.keys(selectedPlacesMap).map(
 								(place_id, index) => (
 									<MenuItem key={index} value={place_id}>
-										{selectedPlacesMap[place_id].alias ||
-											savedPlacesMap[place_id].name}
+										{savedPlacesMap[place_id].name ||
+											selectedPlacesMap[place_id].alias}
 									</MenuItem>
 								)
 							)}
@@ -362,8 +362,8 @@ export default function DirectionInformation({
 							{Object.keys(selectedPlacesMap).map(
 								(place_id, index) => (
 									<MenuItem key={index} value={place_id}>
-										{selectedPlacesMap[place_id].alias ||
-											savedPlacesMap[place_id].name}
+										{savedPlacesMap[place_id].name ||
+											selectedPlacesMap[place_id].alias}
 									</MenuItem>
 								)
 							)}

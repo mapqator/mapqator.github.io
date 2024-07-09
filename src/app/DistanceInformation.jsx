@@ -118,8 +118,8 @@ export default function DistanceInformation({
 							className="flex flex-row gap-1 items-center bg-white p-2"
 						>
 							<h1 className={`text-center w-[30%]`}>
-								{selectedPlacesMap[from_id].alias ||
-									savedPlacesMap[from_id].name}
+								{savedPlacesMap[from_id].name ||
+									selectedPlacesMap[from_id].alias}
 							</h1>
 							<div className="flex flex-col w-[70%]">
 								{Object.keys(distanceMatrix[from_id]).map(
@@ -135,12 +135,11 @@ export default function DistanceInformation({
 													<h1
 														className={`text-center w-[30%]`}
 													>
-														{selectedPlacesMap[
-															to_id
-														].alias ||
-															savedPlacesMap[
+														{savedPlacesMap[to_id]
+															.name ||
+															selectedPlacesMap[
 																to_id
-															].name}
+															].alias}
 													</h1>
 													<h1
 														className={`text-center w-[20%]`}
@@ -268,8 +267,8 @@ export default function DistanceInformation({
 							{Object.keys(selectedPlacesMap).map(
 								(place_id, index) => (
 									<MenuItem key={index} value={place_id}>
-										{selectedPlacesMap[place_id].alias ||
-											savedPlacesMap[place_id].name}
+										{savedPlacesMap[place_id].name ||
+											selectedPlacesMap[place_id].alias}
 									</MenuItem>
 								)
 							)}
@@ -307,8 +306,8 @@ export default function DistanceInformation({
 							{Object.keys(selectedPlacesMap).map(
 								(place_id, index) => (
 									<MenuItem key={index} value={place_id}>
-										{selectedPlacesMap[place_id].alias ||
-											savedPlacesMap[place_id].name}
+										{savedPlacesMap[place_id].name ||
+											selectedPlacesMap[place_id].alias}
 									</MenuItem>
 								)
 							)}

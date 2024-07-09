@@ -60,7 +60,7 @@ export default function ContextGenerator({
 			if (text !== "") {
 				newContext.push(
 					`Information of ${
-						selectedPlacesMap[place_id].alias ||
+						// selectedPlacesMap[place_id].alias ||
 						savedPlacesMap[place_id].name
 					}:`
 				);
@@ -77,10 +77,10 @@ export default function ContextGenerator({
 					if (mode === "TRANSIT") {
 						newContext.push(
 							`Distance from ${
-								selectedPlacesMap[from_id].alias ||
+								// selectedPlacesMap[from_id].alias ||
 								savedPlacesMap[from_id].name
 							} to ${
-								selectedPlacesMap[to_id].alias ||
+								// selectedPlacesMap[to_id].alias ||
 								savedPlacesMap[to_id].name
 							} by public transport is ${
 								distanceMatrix[from_id][to_id][mode].distance
@@ -91,10 +91,10 @@ export default function ContextGenerator({
 					} else if (mode === "DRIVING") {
 						newContext.push(
 							`Distance from ${
-								selectedPlacesMap[from_id].alias ||
+								// selectedPlacesMap[from_id].alias ||
 								savedPlacesMap[from_id].name
 							} to ${
-								selectedPlacesMap[to_id].alias ||
+								// selectedPlacesMap[to_id].alias ||
 								savedPlacesMap[to_id].name
 							} by car is ${
 								distanceMatrix[from_id][to_id][mode].distance
@@ -105,10 +105,10 @@ export default function ContextGenerator({
 					} else if (mode === "BICYCLING") {
 						newContext.push(
 							`Distance from ${
-								selectedPlacesMap[from_id].alias ||
+								// selectedPlacesMap[from_id].alias ||
 								savedPlacesMap[from_id].name
 							} to ${
-								selectedPlacesMap[to_id].alias ||
+								// selectedPlacesMap[to_id].alias ||
 								savedPlacesMap[to_id].name
 							} by cycle is ${
 								distanceMatrix[from_id][to_id][mode].distance
@@ -119,10 +119,10 @@ export default function ContextGenerator({
 					} else if (mode === "WALKING") {
 						newContext.push(
 							`Distance from ${
-								selectedPlacesMap[from_id].alias ||
+								// selectedPlacesMap[from_id].alias ||
 								savedPlacesMap[from_id].name
 							} to ${
-								selectedPlacesMap[to_id].alias ||
+								// selectedPlacesMap[to_id].alias ||
 								savedPlacesMap[to_id].name
 							} on foot is ${
 								distanceMatrix[from_id][to_id][mode].distance
@@ -145,10 +145,10 @@ export default function ContextGenerator({
 									directionInformation[from_id][to_id][mode]
 										.routes.length
 								} routes from ${
-									selectedPlacesMap[from_id].alias ||
+									// selectedPlacesMap[from_id].alias ||
 									savedPlacesMap[from_id].name
 								} to ${
-									selectedPlacesMap[to_id].alias ||
+									// selectedPlacesMap[to_id].alias ||
 									savedPlacesMap[to_id].name
 								} by public transport. They are:`
 							);
@@ -158,10 +158,10 @@ export default function ContextGenerator({
 									directionInformation[from_id][to_id][mode]
 										.routes.length
 								} routes from ${
-									selectedPlacesMap[from_id].alias ||
+									// selectedPlacesMap[from_id].alias ||
 									savedPlacesMap[from_id].name
 								} to ${
-									selectedPlacesMap[to_id].alias ||
+									// selectedPlacesMap[to_id].alias ||
 									savedPlacesMap[to_id].name
 								} by car. They are:`
 							);
@@ -171,10 +171,10 @@ export default function ContextGenerator({
 									directionInformation[from_id][to_id][mode]
 										.routes.length
 								} routes from ${
-									selectedPlacesMap[from_id].alias ||
+									// selectedPlacesMap[from_id].alias ||
 									savedPlacesMap[from_id].name
 								} to ${
-									selectedPlacesMap[to_id].alias ||
+									// selectedPlacesMap[to_id].alias ||
 									savedPlacesMap[to_id].name
 								} by cycle. They are:`
 							);
@@ -184,10 +184,10 @@ export default function ContextGenerator({
 									directionInformation[from_id][to_id][mode]
 										.routes.length
 								} routes from ${
-									selectedPlacesMap[from_id].alias ||
+									// selectedPlacesMap[from_id].alias ||
 									savedPlacesMap[from_id].name
 								} to ${
-									selectedPlacesMap[to_id].alias ||
+									// selectedPlacesMap[to_id].alias ||
 									savedPlacesMap[to_id].name
 								} on foot. They are:`
 							);
@@ -220,7 +220,7 @@ export default function ContextGenerator({
 			nearbyPlacesMap[place_id].forEach((e) => {
 				newContext.push(
 					`Nearby places of ${
-						selectedPlacesMap[place_id].alias ||
+						// selectedPlacesMap[place_id].alias ||
 						savedPlacesMap[place_id].name
 					} ${e.type === "any" ? "" : 'of type "' + e.type + '"'} ${
 						e.keyword !== ""
@@ -237,10 +237,13 @@ export default function ContextGenerator({
 					if (near_place.selected) {
 						newContext.push(
 							`${counter}. ${
-								selectedPlacesMap[near_place.place_id]?.alias ||
+								// selectedPlacesMap[near_place.place_id]?.alias ||
 								savedPlacesMap[near_place.place_id]?.name ||
 								near_place.name
-							} - ${near_place.formatted_address}`
+							} - ${
+								near_place.formatted_address ||
+								savedPlacesMap[near_place.place_id]?.vicinity
+							}`
 						);
 						counter++;
 					}
@@ -252,7 +255,7 @@ export default function ContextGenerator({
 			poisMap[place_id].forEach((poi) => {
 				newContext.push(
 					`Places in ${
-						selectedPlacesMap[place_id].alias ||
+						// selectedPlacesMap[place_id].alias ||
 						savedPlacesMap[place_id].name
 					} of type \"${poi.type}\" are:`
 				);
@@ -261,10 +264,13 @@ export default function ContextGenerator({
 					if (place.selected) {
 						newContext.push(
 							`${counter}. ${
-								selectedPlacesMap[place.place_id]?.alias ||
+								// selectedPlacesMap[place.place_id]?.alias ||
 								savedPlacesMap[place.place_id]?.name ||
 								place.name
-							} - ${place.formatted_address}`
+							} - ${
+								place.formatted_address ||
+								savedPlacesMap[place.place_id]?.vicinity
+							}`
 						);
 						counter++;
 					}
@@ -289,7 +295,7 @@ export default function ContextGenerator({
 		if (currentInformation.location !== "") {
 			newContext.push(
 				`Current location of user is ${
-					selectedPlacesMap[currentInformation.location]?.alias ||
+					// selectedPlacesMap[currentInformation.location]?.alias ||
 					savedPlacesMap[currentInformation.location]?.name
 				}.`
 			);

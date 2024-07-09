@@ -67,7 +67,7 @@ const AutocompleteSearchBox = ({
 			const fuse = new Fuse(Object.values(savedPlacesMap), {
 				keys: ["name", "formatted_address"],
 				threshold: 0.3,
-				distance: 100,
+				// distance: 100,
 				ignoreLocation: true,
 			});
 			const result = fuse.search(query);

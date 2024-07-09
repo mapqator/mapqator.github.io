@@ -18,6 +18,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import placeTypes from "@/app/types.json";
 import Autocomplete from "@mui/material/Autocomplete";
+import { LoadingButton } from "@mui/lab";
+import { Add } from "@mui/icons-material";
 
 function POICard({
 	selectedPlacesMap,
@@ -47,8 +49,8 @@ function POICard({
 		<div className="border-2 bg-white border-black rounded-lg">
 			<div className="flex flex-row gap-1 w-full items-center p-2">
 				<h1 className={`w-[50%] text-center`}>
-					{selectedPlacesMap[place_id].alias ||
-						savedPlacesMap[place_id].name}
+					{savedPlacesMap[place_id].name ||
+						selectedPlacesMap[place_id].alias}
 				</h1>
 				<h1 className={`w-[18%] text-center`}>{poi.type}</h1>
 				<h1 className={`w-[18%] text-center`}>
@@ -139,12 +141,15 @@ export default function POI({
 	setPoisMap,
 }) {
 	const [newPois, setNewPois] = useState({ location: "", type: "" });
+	const [loading, setLoading] = useState(false);
 	// useEffect(() => {
 	// 	console.log(selectedPlacesMap);
 	// }, [selectedPlacesMap]);
 
 	const searchInsidePlaces = async () => {
 		if (newPois.location === "" || newPois.type === "") return;
+
+		setLoading(true);
 		try {
 			const res = await mapApi.getInside({
 				location: newPois.location,
@@ -170,7 +175,7 @@ export default function POI({
 				});
 
 				setPoisMap(newPoisMap);
-
+				setLoading(false);
 				const newSavedPlacesMap = { ...savedPlacesMap };
 				for (const place of results) {
 					if (newSavedPlacesMap[place.place_id] === undefined) {
@@ -191,8 +196,9 @@ export default function POI({
 				setSavedPlacesMap(newSavedPlacesMap);
 			}
 		} catch (error) {
-			console.error("Error fetching data: ", error);
+			// console.error("Error fetching data: ", error);
 		}
+		setLoading(false);
 	};
 	return (
 		// Object.keys(selectedPlacesMap).length > 0 &&
@@ -269,8 +275,8 @@ export default function POI({
 							{Object.keys(selectedPlacesMap).map(
 								(place_id, index) => (
 									<MenuItem key={index} value={place_id}>
-										{selectedPlacesMap[place_id].alias ||
-											savedPlacesMap[place_id].name}
+										{savedPlacesMap[place_id].name ||
+											selectedPlacesMap[place_id].alias}
 									</MenuItem>
 								)
 							)}
@@ -296,6 +302,12 @@ export default function POI({
 								) // Capitalize the first letter of each word
 								.join(" ")}`
 						}
+						onChange={(e, newValue) => {
+							setNewPois((prev) => ({
+								...prev,
+								type: newValue,
+							}));
+						}}
 						renderInput={(params) => (
 							<TextField
 								{...params}
@@ -363,14 +375,17 @@ export default function POI({
 				</div> */}
 
 				<div className="w-[20%]">
-					<Button
+					<LoadingButton
 						variant="contained"
 						fullWidth
 						onClick={searchInsidePlaces}
 						sx={{ fontSize: "1rem" }}
+						startIcon={<Add />}
+						loading={loading}
+						loadingPosition="start"
 					>
-						+ Add ($)
-					</Button>
+						Add ($)
+					</LoadingButton>
 				</div>
 			</div>
 		</div>

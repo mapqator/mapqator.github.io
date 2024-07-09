@@ -160,8 +160,8 @@ export default function CurrentInformation({
 							{Object.keys(selectedPlacesMap).map(
 								(place_id, index) => (
 									<MenuItem key={index} value={place_id}>
-										{selectedPlacesMap[place_id].alias ||
-											savedPlacesMap[place_id].name}
+										{savedPlacesMap[place_id].name ||
+											selectedPlacesMap[place_id].alias}
 									</MenuItem>
 								)
 							)}

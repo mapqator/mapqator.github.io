@@ -25,6 +25,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import placeTypes from "@/app/types.json";
 import Autocomplete from "@mui/material/Autocomplete";
+import { LoadingButton } from "@mui/lab";
+import { Add } from "@mui/icons-material";
 
 function NearbyCard({
 	index2,
@@ -56,8 +58,8 @@ function NearbyCard({
 		<div className="bg-white" key={index2}>
 			<div className="flex flex-row gap-1 w-full items-center bg-white p-2">
 				<h1 className={`text-center w-[36%]`}>
-					{selectedPlacesMap[place_id].alias ||
-						savedPlacesMap[place_id].name}
+					{savedPlacesMap[place_id].name ||
+						selectedPlacesMap[place_id].alias}
 				</h1>
 				<h1 className={`text-center w-[25%]`}>
 					{e.type === "any" ? e.keyword : e.type}
@@ -165,7 +167,7 @@ export default function NearbyInformation({
 		list: [],
 	});
 	const [nearbyPlacesResults, setNearbyPlacesResults] = useState([]); // list of places from nearby search
-
+	const [loading, setLoading] = useState(false);
 	useEffect(() => {
 		setNewNearbyPlaces({
 			location: "",
@@ -238,8 +240,11 @@ export default function NearbyInformation({
 	};
 
 	const searchNearbyPlaces = async () => {
+		console.log(newNearbyPlaces);
 		if (newNearbyPlaces.location === "" || newNearbyPlaces.type === "")
 			return;
+
+		setLoading(true);
 		try {
 			const loc =
 				savedPlacesMap[newNearbyPlaces.location].geometry.location;
@@ -288,7 +293,7 @@ export default function NearbyInformation({
 				});
 
 				setNearbyPlacesMap(newNearbyPlacesMap);
-
+				setLoading(false);
 				setNearbyPlacesResults(placesWithSelection);
 				const newSavedPlacesMap = { ...savedPlacesMap };
 				for (const place of places) {
@@ -320,6 +325,7 @@ export default function NearbyInformation({
 		} catch (error) {
 			console.error("Error fetching data: ", error);
 		}
+		setLoading(false);
 	};
 
 	return (
@@ -406,8 +412,8 @@ export default function NearbyInformation({
 							{Object.keys(selectedPlacesMap).map(
 								(place_id, index) => (
 									<MenuItem key={index} value={place_id}>
-										{selectedPlacesMap[place_id].alias ||
-											savedPlacesMap[place_id].name}
+										{savedPlacesMap[place_id].name ||
+											selectedPlacesMap[place_id].alias}
 									</MenuItem>
 								)
 							)}
@@ -431,6 +437,13 @@ export default function NearbyInformation({
 							) // Capitalize the first letter of each word
 							.join(" ")}`
 					}
+					onChange={(e, newValue) => {
+						// console.log("newValue: ", newValue);
+						setNewNearbyPlaces((prev) => ({
+							...prev,
+							type: newValue,
+						}));
+					}}
 					renderInput={(params) => (
 						<TextField
 							{...params}
@@ -664,14 +677,17 @@ export default function NearbyInformation({
 					</div>
 				</div> */}
 				<div className="w-full">
-					<Button
+					<LoadingButton
 						variant="contained"
 						fullWidth
 						onClick={searchNearbyPlaces}
 						sx={{ fontSize: "1rem" }}
+						startIcon={<Add />}
+						loading={loading}
+						loadingPosition="start"
 					>
-						+ Add ($)
-					</Button>
+						Add ($)
+					</LoadingButton>
 				</div>
 			</div>
 			{/* {nearbyPlacesResults.length > 0 && (
