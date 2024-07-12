@@ -254,7 +254,7 @@ export default function DirectionInformation({
 							<div className="flex flex-col w-[70%]">
 								{Object.keys(directionInformation[from_id]).map(
 									(to_id, index1) => (
-										<div ket={index1}>
+										<div key={index1}>
 											{Object.keys(
 												directionInformation[from_id][
 													to_id
