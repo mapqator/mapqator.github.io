@@ -125,7 +125,7 @@ export default function DistanceInformation({
 							<div className="flex flex-col w-[70%]">
 								{Object.keys(distanceMatrix[from_id]).map(
 									(to_id, index1) => (
-										<div>
+										<div key={index1}>
 											{Object.keys(
 												distanceMatrix[from_id][to_id]
 											).map((mode, index2) => (
