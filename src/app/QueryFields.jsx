@@ -62,8 +62,11 @@ export default function QueryFields({
 	}, [initialQuery]);
 	return (
 		<div className="p-2 flex flex-col w-full gap-2">
-			<div className="flex flex-col w-full border-2 border-black">
-				<div className="flex justify-end bg-black">
+			<div className="flex flex-col w-full border-2 border-blue-500">
+				<div className="flex justify-center bg-blue-500">
+					<h1 className="text-sm font-bold text-white p-2">
+						{expanded ? "Hide Context" : "Show Context"}
+					</h1>
 					<IconButton
 						sx={{ height: "2rem", width: "2rem" }}
 						onClick={() => setExpanded((prev) => !prev)}

@@ -46,6 +46,7 @@ export default function QueryCard({
 	const [mode, setMode] = useState("view");
 	const [flag, setFlag] = useState(false);
 	const [query, setQuery] = useState(initQuery);
+	const [contextExpanded, setContextExpanded] = useState(false);
 
 	useEffect(() => {
 		setQuery(initQuery);
@@ -173,35 +174,70 @@ export default function QueryCard({
 							Save
 						</Button>
 					</div>
-					<h1 className="text-lg font-bold underline">
-						Context (Template)
-					</h1>
-					<h1 className="text-base">
-						{query.context.split("\n").map((line, index) => (
-							<React.Fragment key={index}>
-								{/* {line} */}
-								<p
-									key={index}
-									className="w-full text-left"
-									dangerouslySetInnerHTML={{
-										__html: line,
-									}}
-								/>
-								{/* <br /> */}
-							</React.Fragment>
-						))}
-					</h1>
-					<h1 className="text-lg font-bold underline">
-						Context (GPT)
-					</h1>
-					<h1 className="text-base">
-						{query.context_gpt.split("\n").map((line, index) => (
-							<React.Fragment key={index}>
-								{line}
-								<br />
-							</React.Fragment>
-						))}
-					</h1>
+
+					<div className="flex flex-col w-full border-2 border-blue-500">
+						<div className="flex justify-center bg-blue-500 flex-row items-center">
+							<h1 className="text-sm font-bold text-white p-2">
+								{contextExpanded
+									? "Hide Context"
+									: "Show Context"}
+							</h1>
+							<IconButton
+								sx={{ height: "2rem", width: "2rem" }}
+								onClick={() =>
+									setContextExpanded((prev) => !prev)
+								}
+							>
+								<div className="text-base">
+									<FontAwesomeIcon
+										icon={
+											contextExpanded
+												? faChevronUp
+												: faChevronDown
+										}
+										color="white"
+									/>
+								</div>
+							</IconButton>
+						</div>
+						{contextExpanded && (
+							<div className="p-2 flex flex-col gap-2">
+								<h1 className="text-lg font-bold underline">
+									Context (Template)
+								</h1>
+								<h1 className="text-base">
+									{query.context
+										.split("\n")
+										.map((line, index) => (
+											<React.Fragment key={index}>
+												{/* {line} */}
+												<p
+													key={index}
+													className="w-full text-left"
+													dangerouslySetInnerHTML={{
+														__html: line,
+													}}
+												/>
+												{/* <br /> */}
+											</React.Fragment>
+										))}
+								</h1>
+								<h1 className="text-lg font-bold underline">
+									Context (GPT)
+								</h1>
+								<h1 className="text-base">
+									{query.context_gpt
+										.split("\n")
+										.map((line, index) => (
+											<React.Fragment key={index}>
+												{line}
+												<br />
+											</React.Fragment>
+										))}
+								</h1>
+							</div>
+						)}
+					</div>
 
 					<h1 className="text-xl font-bold underline">Question</h1>
 					<h1 className="text-lg">{query.question}</h1>
