@@ -21,6 +21,8 @@ import QueryForm from "./QueryForm";
 import Evaluation from "./Evaluation";
 import DatasetInformation from "./DatasetInformation";
 import { showSuccess, showToast } from "./home";
+import { LoadingButton } from "@mui/lab";
+import { Refresh } from "@mui/icons-material";
 // import { setLoading } from "./page";
 
 const itemsPerPage = 5;
@@ -39,27 +41,28 @@ export default function DatasetCreator({
 }) {
 	const [queries, setQueries] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [fetched, setFetched] = useState(false);
 	const fetchQueries = async () => {
 		try {
 			const res = await queryApi.getQueries();
 			if (res.success) {
 				console.log("Data: ", res.data);
 				setQueries(res.data);
+				setFetched(true);
 			}
-			setLoading(false);
 		} catch (error) {
 			console.error("Error fetching data: ", error);
 		}
 	};
 
-	const [db, setDb] = useState([]);
 	const [data, setData] = useState([]);
 	const [page, setPage] = useState(1);
 
 	const pageCount = Math.ceil(queries.length / itemsPerPage);
 
 	useEffect(() => {
-		fetchQueries();
+		// fetchQueries();
+		setLoading(false);
 	}, []);
 
 	useEffect(() => {
@@ -135,43 +138,56 @@ export default function DatasetCreator({
 			<QueryForm {...{ contextJSON, context, handleSave }} />
 			{/*<h1 className="bg-black h-1 w-full my-2"></h1>*/}
 			{/*<h1 className="text-2xl w-full">Previous Queries</h1>*/}
-			<DatasetInformation {...{ queries }} />
-			<Evaluation {...{ queries }} />
-
-			<div className="flex flex-col gap-2 mt-1 w-full">
-				<div className="flex justify-center bottom-0 left-0 right-0 pt-4">
-					<Pagination
-						size="medium"
-						count={pageCount}
-						color="primary"
-						onChange={handlePagination}
-						siblingCount={1}
-						page={page}
-					/>
-				</div>
-				{data.map((query, index) => (
-					<QueryCard
-						key={query.id}
-						// query={query}
-						index={(page - 1) * itemsPerPage + index}
-						initQuery={query}
-						{...{
-							setSelectedPlacesMap,
-							setDistanceMatrix,
-							setNearbyPlacesMap,
-							setCurrentInformation,
-							setDirectionInformation,
-							setContextJSON,
-							setContext,
-							context,
-							contextJSON,
-							handleDelete,
-							handleEdit,
-							setPoisMap,
-						}}
-					/>
-				))}
-			</div>
+			{fetched ? (
+				<>
+					<DatasetInformation {...{ queries }} />
+					<Evaluation {...{ queries }} />
+					<div className="flex flex-col gap-2 mt-1 w-full">
+						<div className="flex justify-center bottom-0 left-0 right-0 pt-4">
+							<Pagination
+								size="medium"
+								count={pageCount}
+								color="primary"
+								onChange={handlePagination}
+								siblingCount={1}
+								page={page}
+							/>
+						</div>
+						{data.map((query, index) => (
+							<QueryCard
+								key={query.id}
+								// query={query}
+								index={(page - 1) * itemsPerPage + index}
+								initQuery={query}
+								{...{
+									setSelectedPlacesMap,
+									setDistanceMatrix,
+									setNearbyPlacesMap,
+									setCurrentInformation,
+									setDirectionInformation,
+									setContextJSON,
+									setContext,
+									context,
+									contextJSON,
+									handleDelete,
+									handleEdit,
+									setPoisMap,
+								}}
+							/>
+						))}
+					</div>
+				</>
+			) : (
+				<LoadingButton
+					onClick={fetchQueries}
+					// loading={loading}
+					variant="contained"
+					color="primary"
+					endIcon={<Refresh />}
+				>
+					Load Dataset
+				</LoadingButton>
+			)}
 		</div>
 	);
 }

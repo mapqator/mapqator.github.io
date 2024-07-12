@@ -7,7 +7,7 @@ import { jwtDecode } from "jwt-decode";
 export var setLoading;
 export default function PageComponent() {
 	const [isAuthenticated, setIsAuthenticated] = useState(null);
-	const [loading, setL] = useState(true);
+	const [loading, setL] = useState(false);
 	setLoading = setL;
 
 	const handleStorageChange = () => {
