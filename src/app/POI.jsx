@@ -46,7 +46,7 @@ function POICard({
 		}));
 	};
 	return (
-		<div className="border-2 bg-white border-black rounded-lg">
+		<div className="bg-white">
 			<div className="flex flex-row gap-1 w-full items-center p-2">
 				<h1 className={`w-[50%] text-center`}>
 					{savedPlacesMap[place_id].name ||

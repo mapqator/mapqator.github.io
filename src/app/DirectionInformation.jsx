@@ -253,39 +253,36 @@ export default function DirectionInformation({
 							</h1>
 							<div className="flex flex-col w-[70%]">
 								{Object.keys(directionInformation[from_id]).map(
-									(to_id, index1) =>
-										Object.keys(
-											directionInformation[from_id][to_id]
-										).map((mode, index2) => (
-											<>
-												<DirectionCard
-													{...{
-														mode,
-														index2,
-														selectedPlacesMap,
-														savedPlacesMap,
-														directionInformation,
-														setDirectionInformation,
-														from_id,
-														to_id,
-													}}
-												/>
-												{Object.keys(
-													directionInformation[
-														from_id
-													]
-												).length >
-													index1 + 1 ||
-													(index2 + 1 <
-														Object.keys(
-															directionInformation[
-																from_id
-															][to_id]
-														).length && (
-														<div className="h-[1px] bg-black w-full"></div>
-													))}
-											</>
-										))
+									(to_id, index1) => (
+										<div>
+											{Object.keys(
+												directionInformation[from_id][
+													to_id
+												]
+											).map((mode, index2) => (
+												<>
+													<DirectionCard
+														{...{
+															mode,
+															index2,
+															selectedPlacesMap,
+															savedPlacesMap,
+															directionInformation,
+															setDirectionInformation,
+															from_id,
+															to_id,
+														}}
+													/>
+												</>
+											))}
+											{Object.keys(
+												directionInformation[from_id]
+											).length >
+												index1 + 1 && (
+												<div className="h-[1px] bg-black w-full"></div>
+											)}
+										</div>
+									)
 								)}
 							</div>
 						</div>

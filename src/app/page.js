@@ -35,13 +35,7 @@ export default function PageComponent() {
 			) : (
 				<></>
 			)}
-			{isAuthenticated == null ? (
-				<></>
-			) : isAuthenticated ? (
-				<Home />
-			) : (
-				<Login />
-			)}
+			<Home />
 		</div>
 	);
 }

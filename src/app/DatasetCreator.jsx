@@ -21,6 +21,7 @@ import QueryForm from "./QueryForm";
 import Evaluation from "./Evaluation";
 import DatasetInformation from "./DatasetInformation";
 import { showSuccess, showToast } from "./home";
+import { setLoading } from "./page";
 
 const itemsPerPage = 5;
 
@@ -44,6 +45,7 @@ export default function DatasetCreator({
 				console.log("Data: ", res.data);
 				setQueries(res.data);
 			}
+			setLoading(false);
 		} catch (error) {
 			console.error("Error fetching data: ", error);
 		}

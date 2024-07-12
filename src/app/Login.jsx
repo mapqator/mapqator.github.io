@@ -142,9 +142,9 @@ const Login = () => {
 		setLoading(false);
 	}, []);
 	return (
-		<section>
-			<div className="flex flex-col items-center justify-center px-6 py-8 mx-auto gap-5 min-h-screen">
-				<>
+		<>
+			<div className="bg-white w-1/2 min-h-screen">
+				<div className="fixed flex flex-col items-center justify-center px-6 py-8 mx-auto gap-5 h-screen w-[50vw]">
 					<div className="w-full rounded-lg shadow-lg border md:mt-0 sm:max-w-md xl:p-0 bu-card-secondary">
 						<div className="p-6 space-y-6 md:space-y-6 sm:p-10">
 							<h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl bu-text-primary">
@@ -181,9 +181,9 @@ const Login = () => {
 							</div>
 						</div>
 					</div>
-				</>
+				</div>
 			</div>
-		</section>
+		</>
 	);
 };
 

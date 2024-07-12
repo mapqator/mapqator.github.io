@@ -23,6 +23,7 @@ export default function DistanceInformation({
 	const [newDistance, setNewDistance] = useState({
 		from: [],
 		to: [],
+		travelMode: "WALKING",
 	});
 	const [loading, setLoading] = useState(false);
 
@@ -123,111 +124,111 @@ export default function DistanceInformation({
 							</h1>
 							<div className="flex flex-col w-[70%]">
 								{Object.keys(distanceMatrix[from_id]).map(
-									(to_id, index1) =>
-										Object.keys(
-											distanceMatrix[from_id][to_id]
-										).map((mode, index2) => (
-											<>
-												<div
-													key={index2}
-													className="flex flex-row gap-1 items-center"
-												>
-													<h1
-														className={`text-center w-[30%]`}
+									(to_id, index1) => (
+										<div>
+											{Object.keys(
+												distanceMatrix[from_id][to_id]
+											).map((mode, index2) => (
+												<>
+													<div
+														key={index2}
+														className="flex flex-row gap-1 items-center"
 													>
-														{savedPlacesMap[to_id]
-															.name ||
-															selectedPlacesMap[
+														<h1
+															className={`text-center w-[30%]`}
+														>
+															{savedPlacesMap[
 																to_id
-															].alias}
-													</h1>
-													<h1
-														className={`text-center w-[20%]`}
-													>
-														{mode}
-													</h1>
-													<h1
-														className={`text-center w-[20%]`}
-													>
-														{
-															distanceMatrix[
-																from_id
-															][to_id][mode]
-																.distance
-														}
-													</h1>
-													<h1
-														className={`text-center w-[20%]`}
-													>
-														{
-															distanceMatrix[
-																from_id
-															][to_id][mode]
-																.duration
-														}
-													</h1>
-													<IconButton
-														sx={{
-															height: "3rem",
-															width: "3rem",
-														}}
-														onClick={() => {
-															const newDistanceMatrix =
-																{
-																	...distanceMatrix,
-																};
-															delete newDistanceMatrix[
-																from_id
-															][to_id][mode];
-															if (
-																Object.keys(
-																	newDistanceMatrix[
-																		from_id
-																	][to_id]
-																).length === 0
-															)
+															].name ||
+																selectedPlacesMap[
+																	to_id
+																].alias}
+														</h1>
+														<h1
+															className={`text-center w-[20%]`}
+														>
+															{mode}
+														</h1>
+														<h1
+															className={`text-center w-[20%]`}
+														>
+															{
+																distanceMatrix[
+																	from_id
+																][to_id][mode]
+																	.distance
+															}
+														</h1>
+														<h1
+															className={`text-center w-[20%]`}
+														>
+															{
+																distanceMatrix[
+																	from_id
+																][to_id][mode]
+																	.duration
+															}
+														</h1>
+														<IconButton
+															sx={{
+																height: "3rem",
+																width: "3rem",
+															}}
+															onClick={() => {
+																const newDistanceMatrix =
+																	{
+																		...distanceMatrix,
+																	};
 																delete newDistanceMatrix[
 																	from_id
-																][to_id];
-															if (
-																Object.keys(
-																	newDistanceMatrix[
+																][to_id][mode];
+																if (
+																	Object.keys(
+																		newDistanceMatrix[
+																			from_id
+																		][to_id]
+																	).length ===
+																	0
+																)
+																	delete newDistanceMatrix[
 																		from_id
-																	]
-																).length === 0
-															)
-																delete newDistanceMatrix[
-																	from_id
-																];
-															setDistanceMatrix(
-																newDistanceMatrix
-															);
-														}}
-													>
-														<div className="text-sm md:text-2xl">
-															<FontAwesomeIcon
-																icon={
-																	faTrashCan
-																}
-																color="red"
-															/>
-														</div>
-													</IconButton>
-												</div>
-												{Object.keys(
-													distanceMatrix[from_id]
-												).length >
-													index1 + 1 ||
-													(index2 + 1 <
-														Object.keys(
-															distanceMatrix[
-																from_id
-															][to_id]
-														).length && (
-														<div className="h-[1px] bg-black w-full"></div>
-													))}
-											</>
-										))
+																	][to_id];
+																if (
+																	Object.keys(
+																		newDistanceMatrix[
+																			from_id
+																		]
+																	).length ===
+																	0
+																)
+																	delete newDistanceMatrix[
+																		from_id
+																	];
+																setDistanceMatrix(
+																	newDistanceMatrix
+																);
+															}}
+														>
+															<div className="text-sm md:text-2xl">
+																<FontAwesomeIcon
+																	icon={
+																		faTrashCan
+																	}
+																	color="red"
+																/>
+															</div>
+														</IconButton>
+													</div>
+												</>
+											))}
+											{Object.keys(
+												distanceMatrix[from_id]
+											).length >
+												index1 + 1 && (
+												<div className="h-[1px] bg-black w-full"></div>
+											)}
+										</div>
+									)
 								)}
 							</div>
 						</div>

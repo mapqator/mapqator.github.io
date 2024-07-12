@@ -19,7 +19,7 @@ export default function PlaceInformation({
 				<div className="flex flex-col items-center bg-black">
 					<h1 className="text-3xl text-white">Places Information</h1>
 					<p className="text-lg text-white">
-						Assign alias to the places
+						List of all places in the context
 					</p>
 				</div>
 				<div className="flex flex-col items-center px-2">

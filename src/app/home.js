@@ -2,7 +2,8 @@
 import { ToastContainer, toast } from "react-toastify";
 import DatasetCreator from "./DatasetCreator";
 import ContextGenerator from "./ContextGenerator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Login from "./Login";
 
 export const showToast = (message, type) => {
 	console.log(message, type);
@@ -37,23 +38,47 @@ export default function Home() {
 	const [directionInformation, setDirectionInformation] = useState({});
 	const [poisMap, setPoisMap] = useState({});
 
+	const [isAuthenticated, setIsAuthenticated] = useState(null);
+	const handleStorageChange = () => {
+		console.log("storage change", localStorage.getItem("token"));
+		if (localStorage.getItem("token")) {
+			setIsAuthenticated(true);
+		} else {
+			setIsAuthenticated(false);
+		}
+	};
+
+	useEffect(() => {
+		handleStorageChange();
+		window.addEventListener("storage", handleStorageChange);
+		return () => {
+			window.removeEventListener("storage", handleStorageChange);
+		};
+	}, []);
 	return (
 		<main className="flex min-h-screen flex-col bg-black">
 			<div className="flex flex-row gap-1">
-				<DatasetCreator
-					contextJSON={contextJSON}
-					context={context}
-					{...{
-						setSelectedPlacesMap,
-						setDistanceMatrix,
-						setNearbyPlacesMap,
-						setCurrentInformation,
-						setDirectionInformation,
-						setContext,
-						setContextJSON,
-						setPoisMap,
-					}}
-				/>
+				{isAuthenticated == null ? (
+					<></>
+				) : isAuthenticated ? (
+					<DatasetCreator
+						contextJSON={contextJSON}
+						context={context}
+						{...{
+							setSelectedPlacesMap,
+							setDistanceMatrix,
+							setNearbyPlacesMap,
+							setCurrentInformation,
+							setDirectionInformation,
+							setContext,
+							setContextJSON,
+							setPoisMap,
+						}}
+					/>
+				) : (
+					<Login />
+				)}
+
 				<ContextGenerator
 					setContextJSON={setContextJSON}
 					context={context}

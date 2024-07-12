@@ -110,7 +110,7 @@ export default function QueryCard({
 				<QueryFields
 					{...{ contextJSON, context }}
 					onSave={async (new_query) => {
-						await handleEdit(new_query, index);
+						handleEdit(new_query, index);
 						setMode("view");
 						// window.location.reload();
 					}}

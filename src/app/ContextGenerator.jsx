@@ -21,6 +21,8 @@ import POI from "./POI";
 import { setLoading } from "./page";
 import DirectionInformation from "./DirectionInformation";
 import HybridSearch from "./HybridSearch";
+import { LoadingButton } from "@mui/lab";
+import { Start } from "@mui/icons-material";
 
 export default function ContextGenerator({
 	setContextJSON,
@@ -40,7 +42,8 @@ export default function ContextGenerator({
 	setPoisMap,
 }) {
 	const [savedPlacesMap, setSavedPlacesMap] = useState({});
-
+	const [start, setStart] = useState(false);
+	const [buttonLoading, setButtonLoading] = useState(false);
 	useEffect(() => {
 		generateContext();
 	}, [
@@ -54,15 +57,19 @@ export default function ContextGenerator({
 	]);
 
 	const generateContext = () => {
+		if (Object.keys(selectedPlacesMap).length > 0 && !start) {
+			setStart(true);
+			return;
+		}
 		let newContext = [];
 		Object.keys(selectedPlacesMap).forEach((place_id) => {
 			const text = placeToContext(place_id);
 			if (text !== "") {
 				newContext.push(
-					`Information of ${
+					`Information of <b>${
 						// selectedPlacesMap[place_id].alias ||
 						savedPlacesMap[place_id].name
-					}:`
+					}</b>:`
 				);
 				// Split the text into lines and add to context
 				text.split("\n").forEach((line) => {
@@ -236,18 +243,20 @@ export default function ContextGenerator({
 				e.places.forEach((near_place) => {
 					if (near_place.selected) {
 						newContext.push(
-							`${counter}. ${
+							`${counter}. <b>${
 								// selectedPlacesMap[near_place.place_id]?.alias ||
 								savedPlacesMap[near_place.place_id]?.name ||
 								near_place.name
-							} - ${
+							}</b> (${
 								near_place.formatted_address ||
 								savedPlacesMap[near_place.place_id]?.vicinity
-							}`
+							})`
 						);
 						counter++;
 					}
 				});
+
+				newContext.push("\n");
 			});
 		});
 
@@ -263,18 +272,20 @@ export default function ContextGenerator({
 				poi.places.forEach((place) => {
 					if (place.selected) {
 						newContext.push(
-							`${counter}. ${
+							`${counter}. <b>${
 								// selectedPlacesMap[place.place_id]?.alias ||
 								savedPlacesMap[place.place_id]?.name ||
 								place.name
-							} - ${
+							}</b> (${
 								place.formatted_address ||
 								savedPlacesMap[place.place_id]?.vicinity
-							}`
+							})`
 						);
 						counter++;
 					}
 				});
+
+				newContext.push("");
 			});
 		});
 
@@ -324,6 +335,8 @@ export default function ContextGenerator({
 
 	const placeToContext = (place_id) => {
 		let place = savedPlacesMap[place_id];
+		if (!place) return "";
+
 		let attributes = selectedPlacesMap[place_id].selectedAttributes;
 		let text = "";
 
@@ -419,7 +432,10 @@ export default function ContextGenerator({
 
 		return text;
 	};
+
 	const fetchPlaces = async () => {
+		console.log("Fetching places");
+		setButtonLoading(true);
 		try {
 			const res = await placeApi.getPlaces();
 			if (res.success) {
@@ -429,132 +445,156 @@ export default function ContextGenerator({
 					newSavedPlacesMap[e.place_id] = e;
 				});
 				setSavedPlacesMap(newSavedPlacesMap);
-				setLoading(false);
+				// setLoading(false);
 			}
 		} catch (error) {
 			console.error("Error fetching data: ", error);
 		}
+		setButtonLoading(false);
 	};
 
 	useEffect(() => {
-		fetchPlaces();
+		if (start) fetchPlaces();
 		// setLoading(false);
-	}, []);
+	}, [start]);
 
 	return (
 		<>
-			<div className="flex flex-col w-1/2 bg-white gap-4  min-h-screen p-5">
-				<div className="absolute top-5 right-5">
-					<IconButton
-						onClick={() => {
-							setPoisMap({});
-							setDistanceMatrix({});
-							setNearbyPlacesMap({});
-							setContext([]);
-							setContextJSON({});
-							setCurrentInformation({
-								time: null,
-								day: "",
-								location: "",
-							});
-							setDirectionInformation({});
-							setSelectedPlacesMap({});
-						}}
-					>
-						<FontAwesomeIcon icon={faRefresh} color="black" />
-					</IconButton>
-				</div>
-				<div className="bg-white flex flex-col items-center">
-					<h1 className="text-3xl text-black">Context Generator</h1>
-					<p className="text-lg">
-						Generate context for a given question
-					</p>
-					<h1 className="bg-black h-1 w-full mt-2"></h1>
-				</div>
+			{Object.keys(savedPlacesMap).length > 0 ? (
+				<div className="flex flex-col w-1/2 bg-white gap-4  min-h-screen p-5">
+					<div className="absolute top-5 right-5">
+						<IconButton
+							onClick={() => {
+								setPoisMap({});
+								setDistanceMatrix({});
+								setNearbyPlacesMap({});
+								setContext([]);
+								setContextJSON({});
+								setCurrentInformation({
+									time: null,
+									day: "",
+									location: "",
+								});
+								setDirectionInformation({});
+								setSelectedPlacesMap({});
+							}}
+						>
+							<FontAwesomeIcon icon={faRefresh} color="black" />
+						</IconButton>
+					</div>
+					<div className="bg-white flex flex-col items-center">
+						<h1 className="text-3xl text-black">
+							Context Generator
+						</h1>
+						<p className="text-lg">
+							Generate context for a given question
+						</p>
+						<h1 className="bg-black h-1 w-full mt-2"></h1>
+					</div>
 
-				<div className="flex flex-row gap-4">
-					{/* <OfflineSearch
+					<div className="flex flex-row gap-4">
+						{/* <OfflineSearch
 						savedPlacesMap={savedPlacesMap}
 						selectedPlacesMap={selectedPlacesMap}
 						setSelectedPlacesMap={setSelectedPlacesMap}
 					/> */}
-					<HybridSearch
+						<HybridSearch
+							{...{
+								savedPlacesMap,
+								setSavedPlacesMap,
+								selectedPlacesMap,
+								setSelectedPlacesMap,
+								setPoisMap,
+							}}
+						/>
+					</div>
+
+					<PlaceInformation
+						{...{
+							selectedPlacesMap,
+							setSelectedPlacesMap,
+							savedPlacesMap,
+						}}
+					/>
+
+					<DistanceInformation
+						{...{
+							selectedPlacesMap,
+							savedPlacesMap,
+							distanceMatrix,
+							setDistanceMatrix,
+						}}
+					/>
+					<DirectionInformation
+						{...{
+							selectedPlacesMap,
+							savedPlacesMap,
+							directionInformation,
+							setDirectionInformation,
+						}}
+					/>
+					<NearbyInformation
 						{...{
 							savedPlacesMap,
 							setSavedPlacesMap,
 							selectedPlacesMap,
+							nearbyPlacesMap,
+							setNearbyPlacesMap,
 							setSelectedPlacesMap,
+						}}
+					/>
+
+					<POI
+						{...{
+							savedPlacesMap,
+							setSavedPlacesMap,
+							selectedPlacesMap,
+							poisMap,
 							setPoisMap,
+							setSelectedPlacesMap,
+						}}
+					/>
+
+					<CurrentInformation
+						{...{
+							selectedPlacesMap,
+							currentInformation,
+							setCurrentInformation,
+							savedPlacesMap,
+						}}
+					/>
+					<ContextPreview
+						{...{
+							setContextJSON,
+							context,
+							setContext,
+							savedPlacesMap,
+							selectedPlacesMap,
+							distanceMatrix,
+							nearbyPlacesMap,
 						}}
 					/>
 				</div>
+			) : (
+				<div className="flex flex-col w-1/2 bg-white gap-4  min-h-screen p-5">
+					<div className="fixed flex flex-col items-center justify-center px-6 py-8 mx-auto gap-5 h-screen w-[50vw]">
+						<LoadingButton
+							variant="contained"
+							color="primary"
+							onClick={() => {
+								setStart(true);
+							}}
+							loading={buttonLoading}
+							endIcon={<Start />}
+							loadingPosition="end"
+							size="large"
+						>
+							{start ? "Starting..." : "Create Context"}
+						</LoadingButton>
+					</div>
+				</div>
+			)}
 
-				<PlaceInformation
-					{...{
-						selectedPlacesMap,
-						setSelectedPlacesMap,
-						savedPlacesMap,
-					}}
-				/>
-
-				<DistanceInformation
-					{...{
-						selectedPlacesMap,
-						savedPlacesMap,
-						distanceMatrix,
-						setDistanceMatrix,
-					}}
-				/>
-				<DirectionInformation
-					{...{
-						selectedPlacesMap,
-						savedPlacesMap,
-						directionInformation,
-						setDirectionInformation,
-					}}
-				/>
-				<NearbyInformation
-					{...{
-						savedPlacesMap,
-						setSavedPlacesMap,
-						selectedPlacesMap,
-						nearbyPlacesMap,
-						setNearbyPlacesMap,
-						setSelectedPlacesMap,
-					}}
-				/>
-
-				<POI
-					{...{
-						savedPlacesMap,
-						setSavedPlacesMap,
-						selectedPlacesMap,
-						poisMap,
-						setPoisMap,
-						setSelectedPlacesMap,
-					}}
-				/>
-
-				<CurrentInformation
-					{...{
-						selectedPlacesMap,
-						currentInformation,
-						setCurrentInformation,
-						savedPlacesMap,
-					}}
-				/>
-				<ContextPreview
-					{...{
-						setContextJSON,
-						context,
-						setContext,
-						savedPlacesMap,
-						selectedPlacesMap,
-						distanceMatrix,
-						nearbyPlacesMap,
-					}}
-				/>
-			</div>
 			<div className="hidden" id="map"></div>
 		</>
 	);
