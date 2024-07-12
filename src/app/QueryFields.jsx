@@ -555,7 +555,6 @@ export default function QueryFields({
 							input={<OutlinedInput label={"Category"} />}
 						>
 							{[
-								"nearest_poi",
 								"nearby_poi",
 								"planning",
 								"time_calculation",
