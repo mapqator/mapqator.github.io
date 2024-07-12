@@ -30,7 +30,7 @@ import {
 	faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
-import { Clear, Refresh } from "@mui/icons-material";
+import { Clear, Refresh, Save } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 
 export default function QueryFields({
@@ -44,7 +44,7 @@ export default function QueryFields({
 		question: "",
 		answer: {
 			type: "mcq",
-			options: [],
+			options: ["", "", "", ""],
 			correct: -1,
 		},
 		context: "",
@@ -61,7 +61,7 @@ export default function QueryFields({
 		}
 	}, [initialQuery]);
 	return (
-		<div className="p-2 flex flex-col w-full gap-2">
+		<div className="p-2 flex flex-col w-full gap-5">
 			<div className="flex flex-col w-full border-2 border-blue-500">
 				<div className="flex justify-center bg-blue-500">
 					<h1 className="text-sm font-bold text-white p-2">
@@ -262,72 +262,83 @@ export default function QueryFields({
 
 			{/* <div className="border-t-4 border-black w-full mt-2"></div> */}
 
-			<label className="text-lg w-full text-left font-bold">
-				Question
-			</label>
-			<TextField
-				value={query.question}
-				onChange={(e) =>
-					setQuery((prev) => ({ ...prev, question: e.target.value }))
-				}
-				style={{
-					borderColor: "black",
-					borderWidth: "1px",
-					borderRadius: "3px",
-					// padding: "2px 5px",
-				}}
-				size="small"
-				multiline
-			/>
-
-			<FormControl fullWidth>
-				<FormLabel id="demo-radio-buttons-group-label">
-					<label className="text-lg w-full text-left font-bold text-black focus:text-black">
-						Type
-					</label>
-				</FormLabel>
-				<RadioGroup
-					aria-labelledby="demo-radio-buttons-group-label"
-					defaultValue="mcq"
-					name="radio-buttons-group"
-					value={query.answer.type}
+			<div className="flex flex-col gap-2">
+				<label className="text-lg w-full text-left font-bold flex flex-row gap-2">
+					Question
+					<h1 className="font-normal">
+						(Use place names exactly as in context)
+					</h1>
+				</label>
+				<TextField
+					value={query.question}
 					onChange={(e) =>
 						setQuery((prev) => ({
 							...prev,
-							answer: {
-								...prev.answer,
-								type: e.target.value,
-								correct: e.target.value === "mcq" ? -1 : "",
-								options:
-									e.target.value === "mcq" ? [] : undefined,
-							},
+							question: e.target.value,
 						}))
 					}
-					row
-				>
-					<FormControlLabel
-						value="mcq"
-						control={<Radio />}
-						label="MCQ"
-					/>
-					<FormControlLabel
-						value="short"
-						control={<Radio />}
-						label="Short"
-					/>
-					{/* <FormControlLabel value="other" control={<Radio />} label="Other" /> */}
-				</RadioGroup>
-			</FormControl>
-			{query.answer.type === "mcq" ? (
-				<div className="w-full flex flex-col gap-2">
+					style={{
+						borderColor: "black",
+						borderWidth: "1px",
+						borderRadius: "3px",
+						// padding: "2px 5px",
+					}}
+					size="small"
+					multiline
+				/>
+			</div>
+
+			<div className="flex flex-col gap-2">
+				<div className="flex flex-row">
 					<FormLabel id="demo-radio-buttons-group-label">
-						<label className="text-lg w-full text-left font-bold text-black focus:text-black">
-							Answer
+						<label className="text-lg w-full text-left font-bold text-black focus:text-black flex flex-row gap-2">
+							Options{" "}
+							<h1 className="font-normal">
+								(Mark correct option)
+							</h1>
 						</label>
 					</FormLabel>
+					{/* <FormControl fullWidth>
+					<RadioGroup
+						aria-labelledby="demo-radio-buttons-group-label"
+						defaultValue="mcq"
+						name="radio-buttons-group"
+						value={query.answer.type}
+						onChange={(e) =>
+							setQuery((prev) => ({
+								...prev,
+								answer: {
+									...prev.answer,
+									type: e.target.value,
+									correct: e.target.value === "mcq" ? -1 : "",
+									options:
+										e.target.value === "mcq"
+											? []
+											: undefined,
+								},
+							}))
+						}
+						row
+					>
+						<FormControlLabel
+							value="mcq"
+							control={<Radio />}
+							label="MCQ"
+						/>
+						<FormControlLabel
+							value="short"
+							control={<Radio />}
+							label="Short"
+						/>
+						<FormControlLabel value="other" control={<Radio />} label="Other" />
+					</RadioGroup>
+				</FormControl> */}
+				</div>
 
-					<div className="flex flex-row justify-start items-center gap-2">
-						<TextField
+				{query.answer.type === "mcq" ? (
+					<div className="w-full flex flex-col gap-2">
+						<div className="flex flex-row justify-start items-center gap-2">
+							{/* <TextField
 							type="text"
 							className="border border-black mr-auto !w-[80%]"
 							value={newOption}
@@ -335,8 +346,8 @@ export default function QueryFields({
 							size="small"
 							label="Option"
 							fullWidth
-						/>
-						{/* 
+						/> */}
+							{/* 
 						<input
 							type="text"
 							placeholder="Option"
@@ -344,7 +355,7 @@ export default function QueryFields({
 							value={newOption}
 							onChange={(e) => setNewOption(e.target.value)}
 						/> */}
-						<Button
+							{/* <Button
 							variant="contained"
 							className="h-10 !w-[20%]"
 							fullWidth
@@ -364,32 +375,59 @@ export default function QueryFields({
 							}}
 						>
 							+ Add option
-						</Button>
-					</div>
-					<div className="flex flex-col gap-2">
-						{query.answer.options.map((option, index) => (
-							<div
-								key={index}
-								className="flex flex-row justify-start items-center gap-2"
-							>
-								<input
-									type="radio"
-									checked={query.answer.correct === index}
-									onClick={() =>
-										setQuery((prev) => ({
-											...prev,
-											answer: {
-												...prev.answer,
-												correct:
-													prev.answer.correct ===
-													index
-														? -1
-														: index,
-											},
-										}))
-									}
-								/>
-								<input
+						</Button> */}
+						</div>
+						<div className="flex flex-col gap-2">
+							{query.answer.options.map((option, index) => (
+								<div
+									key={index}
+									className="flex flex-row justify-start items-center gap-2"
+								>
+									<Radio
+										checked={query.answer.correct === index}
+										onChange={() =>
+											setQuery((prev) => ({
+												...prev,
+												answer: {
+													...prev.answer,
+													correct:
+														prev.answer.correct ===
+														index
+															? -1
+															: index,
+												},
+											}))
+										}
+										value={index}
+										name="radio-buttons"
+										inputProps={{
+											"aria-label": `Option ${index}`,
+										}}
+										disabled={option === ""}
+									/>
+									<TextField
+										// className="text-lg border-2 w-full"
+										value={option}
+										size={"small"}
+										fullWidth
+										label={`Option ${index + 1}`}
+										onChange={(e) => {
+											setQuery((prev) => {
+												const options = [
+													...prev.answer.options,
+												];
+												options[index] = e.target.value;
+												return {
+													...prev,
+													answer: {
+														...prev.answer,
+														options,
+													},
+												};
+											});
+										}}
+									></TextField>
+									{/* <input
 									type="text"
 									className="text-lg border-2 w-full"
 									value={option}
@@ -408,8 +446,8 @@ export default function QueryFields({
 											};
 										});
 									}}
-								/>
-								<IconButton
+								/> */}
+									{/* <IconButton
 									onClick={() => {
 										setQuery((prev) => {
 											const options = [
@@ -432,37 +470,33 @@ export default function QueryFields({
 										color="red"
 										size="sm"
 									/>
-								</IconButton>
-							</div>
-						))}
+								</IconButton> */}
+								</div>
+							))}
+						</div>
 					</div>
-				</div>
-			) : (
-				<div className="flex flex-col mb-2">
-					<label className="text-lg w-full text-left font-bold">
-						Answer
-					</label>
-
-					<TextField
-						value={query.answer.correct}
-						onChange={(e) =>
-							setQuery((prev) => ({
-								...prev,
-								answer: {
-									...prev.answer,
-									correct: e.target.value,
-								},
-							}))
-						}
-						style={{
-							borderColor: "black",
-							borderWidth: "1px",
-							borderRadius: "3px",
-							// padding: "2px 5px",
-						}}
-						multiline
-					/>
-					{/* <textarea
+				) : (
+					<div className="flex flex-col mb-2">
+						<TextField
+							value={query.answer.correct}
+							onChange={(e) =>
+								setQuery((prev) => ({
+									...prev,
+									answer: {
+										...prev.answer,
+										correct: e.target.value,
+									},
+								}))
+							}
+							style={{
+								borderColor: "black",
+								borderWidth: "1px",
+								borderRadius: "3px",
+								// padding: "2px 5px",
+							}}
+							multiline
+						/>
+						{/* <textarea
 						className="border border-black w-full"
 						value={query.answer.correct}
 						onChange={(e) =>
@@ -475,8 +509,10 @@ export default function QueryFields({
 							}))
 						}
 					/> */}
-				</div>
-			)}
+					</div>
+				)}
+			</div>
+
 			{/* <div className="flex flex-col gap-2 mr-auto">
 				<label className="text-lg text-left font-bold">Category</label>
 				<TextField
@@ -493,73 +529,90 @@ export default function QueryFields({
 					// label="Category"
 				/>
 			</div> */}
-			<FormControl
-				fullWidth
-				className="input-field"
-				variant="outlined"
-				size="small"
-			>
-				<InputLabel
-					htmlFor="outlined-adornment"
-					className="input-label"
-				>
-					Category
-				</InputLabel>
-				<Select
-					multiple
-					id="outlined-adornment"
-					className="outlined-input"
-					value={query.classification.split(",").filter(Boolean)}
-					onChange={(e) => {
-						setQuery((prev) => ({
-							...prev,
-							classification: e.target.value.join(","),
-						}));
-					}}
-					input={<OutlinedInput label={"Category"} />}
-				>
-					{[
-						"nearest_poi",
-						"nearby_poi",
-						"planning",
-						"time_calculation",
-						"routing",
-						"location_finding",
-						"opinion",
-						"navigation",
-					].map((value, index) => (
-						<MenuItem key={index} value={value}>
-							{value}
-						</MenuItem>
-					))}
-				</Select>
-			</FormControl>
-			<div className="ml-auto w-full font-bold flex flex-row justify-end gap-1">
-				<Button
-					onClick={() => setQuery(init)}
-					variant="contained"
-					// fullWidth
-					sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
-					className="flex flex-row gap-0 items-center"
-					color="error"
-				>
-					<Clear />
-					Clear
-				</Button>
-				<Button
-					onClick={() => {
-						onSave(query);
-						setQuery(init);
-					}}
-					variant="contained"
-					// fullWidth
-					className="flex flex-row gap-2 items-center"
-					disabled={query.context === "" || query.question === ""}
-					sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
-				>
-					<FontAwesomeIcon icon={faFloppyDisk} />
-					Save
-				</Button>
+
+			<div className="ml-auto w-full font-bold flex flex-row gap-2 justify-between">
+				<div className="input-field w-1/2">
+					<FormControl fullWidth variant="outlined" size="small">
+						<InputLabel
+							htmlFor="outlined-adornment"
+							className="input-label"
+						>
+							Category
+						</InputLabel>
+						<Select
+							multiple
+							id="outlined-adornment"
+							className="outlined-input"
+							value={query.classification
+								.split(",")
+								.filter(Boolean)}
+							onChange={(e) => {
+								setQuery((prev) => ({
+									...prev,
+									classification: e.target.value.join(","),
+								}));
+							}}
+							input={<OutlinedInput label={"Category"} />}
+						>
+							{[
+								"nearest_poi",
+								"nearby_poi",
+								"planning",
+								"time_calculation",
+								"routing",
+								"location_finding",
+								"opinion",
+								"navigation",
+							].map((value, index) => (
+								<MenuItem key={index} value={value}>
+									{value}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				</div>
+
+				<div className="flex flex-row gap-2">
+					<Button
+						onClick={() => setQuery(init)}
+						variant="contained"
+						size="small"
+						startIcon={<Clear />}
+						color="error"
+						fullWidth
+					>
+						Clear
+					</Button>
+					<Button
+						onClick={() => {
+							let flag = false;
+							const options = query.answer.options;
+							for (let i = 0; i < options.length; i++) {
+								if (options[i] === "") {
+									flag = true;
+								}
+								if (options[i] !== "" && flag) {
+									alert(
+										"Can't save. You need to fill option " +
+											i +
+											" first to use option " +
+											(i + 1)
+									);
+									return;
+								}
+							}
+
+							onSave(query);
+							setQuery(init);
+						}}
+						startIcon={<Save />}
+						variant="contained"
+						fullWidth
+						disabled={query.context === "" || query.question === ""}
+					>
+						Save
+					</Button>
+				</div>
 			</div>
 		</div>
 	);

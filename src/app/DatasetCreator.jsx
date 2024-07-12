@@ -40,15 +40,18 @@ export default function DatasetCreator({
 	setPoisMap,
 }) {
 	const [queries, setQueries] = useState([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
+
 	const [fetched, setFetched] = useState(false);
 	const fetchQueries = async () => {
+		setLoading(true);
 		try {
 			const res = await queryApi.getQueries();
 			if (res.success) {
 				console.log("Data: ", res.data);
 				setQueries(res.data);
 				setFetched(true);
+				setLoading(false);
 			}
 		} catch (error) {
 			console.error("Error fetching data: ", error);
@@ -62,7 +65,7 @@ export default function DatasetCreator({
 
 	useEffect(() => {
 		// fetchQueries();
-		setLoading(false);
+		// setLoading(false);
 	}, []);
 
 	useEffect(() => {
@@ -79,7 +82,6 @@ export default function DatasetCreator({
 		const res = await queryApi.createQuery(query);
 		if (res.success) {
 			// update the queries
-
 			const newQueries = [...queries];
 			// push front
 			newQueries.unshift(res.data[0]);
@@ -121,13 +123,6 @@ export default function DatasetCreator({
 	};
 	return (
 		<div className="w-1/2 flex flex-col items-center p-5 bg-white gap-2">
-			{loading ? (
-				<div className="bg-white fixed z-40 top-0 left-0 w-[50vw] h-full flex justify-center items-center">
-					<div className="border-[6px] border-solid border-gray rounded-full border-t-[8px] border-t-blue-500 w-16 h-16 animate-spin"></div>
-				</div>
-			) : (
-				<></>
-			)}
 			<div className="bg-white flex flex-col items-center w-full">
 				<h1 className="text-3xl">Map Dataset Creator</h1>
 				<p className="text-lg">
@@ -180,10 +175,11 @@ export default function DatasetCreator({
 			) : (
 				<LoadingButton
 					onClick={fetchQueries}
-					// loading={loading}
+					loading={loading}
 					variant="contained"
 					color="primary"
 					endIcon={<Refresh />}
+					loadingPosition="end"
 				>
 					Load Dataset
 				</LoadingButton>

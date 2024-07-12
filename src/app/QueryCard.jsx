@@ -119,7 +119,7 @@ export default function QueryCard({
 				/>
 			) : expanded ? (
 				<div className="p-2 flex flex-col gap-2">
-					<div className="flex flex-row gap-2">
+					{/* <div className="flex flex-row gap-2">
 						<FormControl
 							fullWidth
 							className="input-field"
@@ -173,7 +173,7 @@ export default function QueryCard({
 						>
 							Save
 						</Button>
-					</div>
+					</div> */}
 
 					<div className="flex flex-col w-full border-2 border-blue-500">
 						<div className="flex justify-center bg-blue-500 flex-row items-center">
@@ -242,57 +242,69 @@ export default function QueryCard({
 					<h1 className="text-xl font-bold underline">Question</h1>
 					<h1 className="text-lg">{query.question}</h1>
 
-					<h1 className="text-lg font-bold underline">Answer</h1>
+					<h1 className="text-lg font-bold underline">Options</h1>
 					{query.answer.type === "mcq" ? (
 						<div className="flex flex-col gap-1">
-							{query.answer.options.map((option, index) => (
-								<div
-									key={index}
-									className="flex flex-row gap-2"
-								>
-									<input
-										type="radio"
-										checked={query.answer.correct === index}
-									/>
-									<h1 className="text-lg">{option}</h1>
-								</div>
-							))}
+							{query.answer.options.map(
+								(option, index) =>
+									option !== "" && (
+										<div
+											key={index}
+											className="flex flex-row gap-2"
+										>
+											<input
+												type="radio"
+												checked={
+													query.answer.correct ===
+													index
+												}
+											/>
+											<h1 className="text-lg">
+												{option}
+											</h1>
+										</div>
+									)
+							)}
 						</div>
 					) : (
 						<h1 className="text-lg">{query.answer.correct}</h1>
 					)}
 
-					<div>
-						<h1 className="text-lg font-bold underline">
-							Evaluation
-						</h1>
-						<div className="flex flex-col gap-1">
-							{query.evaluation?.map((e, index) => (
-								<div
-									key={index}
-									className="flex flex-row gap-2"
-								>
-									<h1 className="text-lg w-1/2">{e.model}</h1>
-									{e.verdict == "invalid" ? (
-										<h1 className="text-lg w-1/2 ">
-											{"Can't answer"}
-											{e.answer !== ""
-												? "(" + e.answer + ")"
-												: ""}
+					{query.evaluation?.length > 0 && (
+						<div>
+							<h1 className="text-lg font-bold underline">
+								Evaluation
+							</h1>
+							<div className="flex flex-col gap-1">
+								{query.evaluation?.map((e, index) => (
+									<div
+										key={index}
+										className="flex flex-row gap-2"
+									>
+										<h1 className="text-lg w-1/2">
+											{e.model}
 										</h1>
-									) : e.verdict == "right" ? (
-										<h1 className="text-lg w-1/2  text-green-500 font-semibold">
-											Correct
-										</h1>
-									) : (
-										<h1 className="text-lg w-1/2  text-red-500 font-semibold">
-											Wrong {"(" + e.answer + ")"}
-										</h1>
-									)}
-								</div>
-							))}
+										{e.verdict == "invalid" ? (
+											<h1 className="text-lg w-1/2 ">
+												{"Can't answer"}
+												{e.answer !== ""
+													? "(" + e.answer + ")"
+													: ""}
+											</h1>
+										) : e.verdict == "right" ? (
+											<h1 className="text-lg w-1/2  text-green-500 font-semibold">
+												Correct
+											</h1>
+										) : (
+											<h1 className="text-lg w-1/2  text-red-500 font-semibold">
+												Wrong {"(" + e.answer + ")"}
+											</h1>
+										)}
+									</div>
+								))}
+							</div>
 						</div>
-					</div>
+					)}
 
 					<div className="flex flex-row gap-2 mx-auto">
 						<Button

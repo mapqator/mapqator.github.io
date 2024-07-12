@@ -11,7 +11,7 @@ import {
 	Radio,
 	IconButton,
 	Button,
-	TextField,w
+	TextField,
 } from "@mui/material";
 import QueryCard from "./QueryCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,7 +23,7 @@ export default function QueryForm({ contextJSON, context, handleSave }) {
 		<div className="w-full flex flex-col items-center bg-white border-4 rounded-lg border-black">
 			<div className="flex flex-col bg-black w-full items-center p-1">
 				<h1 className="text-3xl text-white">Create new query</h1>
-				<p className="text-base text-white">Question+Context+Answer</p>
+				<p className="text-base text-white">Context+Question+Answer</p>
 			</div>
 			<QueryFields {...{ contextJSON, context }} onSave={handleSave} />
 		</div>
