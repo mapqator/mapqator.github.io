@@ -461,7 +461,7 @@ export default function ContextGenerator({
 	return (
 		<>
 			{Object.keys(savedPlacesMap).length > 0 ? (
-				<div className="flex flex-col w-1/2 bg-white gap-4  min-h-screen p-5">
+				<div className="flex flex-col w-full md:w-1/2 bg-white gap-4  min-h-screen p-5">
 					<div className="absolute top-5 right-5">
 						<IconButton
 							onClick={() => {
@@ -576,8 +576,8 @@ export default function ContextGenerator({
 					/>
 				</div>
 			) : (
-				<div className="flex flex-col w-1/2 bg-white gap-4  min-h-screen p-5">
-					<div className="fixed flex flex-col items-center justify-center px-6 py-8 mx-auto gap-5 h-screen w-[50vw]">
+				<div className="flex flex-col w-full md:w-1/2 bg-white gap-4  min-h-screen p-5">
+					<div className="flex flex-col items-center justify-center px-6 py-8 mx-auto gap-5 h-screen w-full">
 						<LoadingButton
 							variant="contained"
 							color="primary"
