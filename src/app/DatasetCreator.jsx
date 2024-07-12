@@ -173,16 +173,18 @@ export default function DatasetCreator({
 					</div>
 				</>
 			) : (
-				<LoadingButton
-					onClick={fetchQueries}
-					loading={loading}
-					variant="contained"
-					color="primary"
-					endIcon={<Refresh />}
-					loadingPosition="end"
-				>
-					Load Dataset
-				</LoadingButton>
+				<div className="p-10">
+					<LoadingButton
+						onClick={fetchQueries}
+						loading={loading}
+						variant="contained"
+						color="primary"
+						endIcon={<Refresh />}
+						loadingPosition="end"
+					>
+						Load Dataset
+					</LoadingButton>
+				</div>
 			)}
 		</div>
 	);
