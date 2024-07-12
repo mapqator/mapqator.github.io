@@ -16,30 +16,32 @@ export default function PlaceInformation({
 	return (
 		Object.keys(selectedPlacesMap).length > 0 && (
 			<div className="border-4 w-full border-black rounded-lg h-[30rem] overflow-y-auto">
-				<div className="flex flex-col items-center bg-black">
-					<h1 className="text-3xl text-white">Places Information</h1>
-					<p className="text-lg text-white">
+				<div className="flex flex-col items-center bg-black text-center pb-2">
+					<h1 className="text-xl md:text-3xl text-white">
+						Places Information
+					</h1>
+					<p className="text-sm md:text-lg text-zinc-300">
 						List of all places in the context
 					</p>
 				</div>
 				<div className="flex flex-col items-center px-2">
 					<div className="flex flex-col m-3 p-1 bg-blue-500 gap-1 w-full">
-						<div className="flex flex-row">
+						{/* <div className="flex flex-row">
 							<h1 className="text-lg w-[60%] text-center font-bold">
 								Place
 							</h1>
 							<h1 className="text-lg w-[40%] text-center font-bold">
 								Attributes
 							</h1>
-						</div>
+						</div> */}
 
 						{Object.keys(selectedPlacesMap).map(
 							(place_id, index) => (
 								<div
 									key={index}
-									className="flex flex-row gap-1 items-center bg-white p-2"
+									className="flex flex-col md:flex-row gap-1 items-center bg-white p-2"
 								>
-									<div className="flex flex-col gap-2 w-[60%]">
+									<div className="flex flex-col gap-2 w-sfull md:w-[60%]">
 										<h1 className={`w-full text-left`}>
 											{/* <h1 className="text-3xl">{index + 1}</h1> */}
 											<b>
@@ -72,75 +74,79 @@ export default function PlaceInformation({
 											);
 										}}
 									/> */}
-
-									<FormControl
-										// fullWidth
-										className="input-field"
-										variant="outlined"
-										style={{ width: "40%" }}
-										size="small"
-									>
-										<Select
-											required
-											multiple
-											id="outlined-adornment"
-											className="outlined-input"
-											value={
-												selectedPlacesMap[place_id]
-													.selectedAttributes
-											}
-											onChange={(event) => {
-												const newAttributes =
-													event.target.value;
-
-												const newSelectedPlacesMap = {
-													...selectedPlacesMap,
-												};
-												newSelectedPlacesMap[
-													place_id
-												].selectedAttributes =
-													newAttributes;
-												setSelectedPlacesMap(
-													newSelectedPlacesMap
-												);
-											}}
-											input={<OutlinedInput />}
-											// MenuProps={MenuProps}
+									<div className="w-full md:w-[40%]">
+										<FormControl
+											fullWidth
+											className="input-field"
+											variant="outlined"
+											size="small"
 										>
-											{selectedPlacesMap[
-												place_id
-											].attributes
-												.filter(
-													(attribute) =>
-														attribute !==
-														"last_updated"
-												) // Filter out "last_updated"
-												.map((value, index) => (
-													<MenuItem
-														key={index}
-														value={value}
-														// sx={{ width: "2rem" }}
-														// style={getStyles(name, personName, theme)}
-													>
-														{value
-															.replace(/_/g, " ") // Replace underscores with spaces
-															.split(" ") // Split the string into an array of words
-															.map(
-																(word) =>
-																	word
-																		.charAt(
-																			0
+											<Select
+												required
+												multiple
+												id="outlined-adornment"
+												className="outlined-input"
+												value={
+													selectedPlacesMap[place_id]
+														.selectedAttributes
+												}
+												onChange={(event) => {
+													const newAttributes =
+														event.target.value;
+
+													const newSelectedPlacesMap =
+														{
+															...selectedPlacesMap,
+														};
+													newSelectedPlacesMap[
+														place_id
+													].selectedAttributes =
+														newAttributes;
+													setSelectedPlacesMap(
+														newSelectedPlacesMap
+													);
+												}}
+												input={<OutlinedInput />}
+												// MenuProps={MenuProps}
+											>
+												{selectedPlacesMap[
+													place_id
+												].attributes
+													.filter(
+														(attribute) =>
+															attribute !==
+															"last_updated"
+													) // Filter out "last_updated"
+													.map((value, index) => (
+														<MenuItem
+															key={index}
+															value={value}
+															// sx={{ width: "2rem" }}
+															// style={getStyles(name, personName, theme)}
+														>
+															{value
+																.replace(
+																	/_/g,
+																	" "
+																) // Replace underscores with spaces
+																.split(" ") // Split the string into an array of words
+																.map(
+																	(word) =>
+																		word
+																			.charAt(
+																				0
+																			)
+																			.toUpperCase() +
+																		word.slice(
+																			1
 																		)
-																		.toUpperCase() +
-																	word.slice(
-																		1
-																	)
-															) // Capitalize the first letter of each word
-															.join(" ")}
-													</MenuItem>
-												))}
-										</Select>
-									</FormControl>
+																) // Capitalize the first letter of each word
+																.join(" ")}
+														</MenuItem>
+													))}
+											</Select>
+										</FormControl>
+									</div>
 								</div>
 							)
 						)}

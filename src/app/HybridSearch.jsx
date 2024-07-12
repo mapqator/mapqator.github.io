@@ -172,10 +172,10 @@ const AutocompleteSearchBox = ({
 	return (
 		<div className="flex flex-col gap-1">
 			<form
-				className="flex flex-row items-center w-full gap-1"
+				className="flex flex-col md:flex-row w-full gap-1"
 				onSubmit={handleSearch}
 			>
-				<div className="w-1/2">
+				<div className="w-full md:w-1/2">
 					<TextField
 						// type="text"
 						autoComplete="off"
@@ -187,13 +187,13 @@ const AutocompleteSearchBox = ({
 						onChange={(e) => setSearch(e.target.value)}
 					/>
 				</div>
-				<div className="w-1/2 flex flex-row gap-1">
+				<div className="w-full md:w-1/2 flex flex-row gap-1">
 					<LoadingButton
 						variant="contained"
 						type="submit"
 						fullWidth
 						// sx={{ height: "100%" }}
-						className="!h-10"
+						// className="!h-10"
 						loading={loading}
 						startIcon={<Search />}
 						loadingPosition="start"
@@ -209,16 +209,16 @@ const AutocompleteSearchBox = ({
 						fullWidth
 						// sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
 						color="error"
+						startIcon={<Clear />}
 					>
-						<Clear />
 						Clear
 					</Button>
 				</div>
 			</form>
 
-			<div className="w-full flex flex-row gap-1">
+			<div className="w-full flex flex-col md:flex-row gap-1">
 				{/* Column 1 */}
-				<div className="w-1/2 ">
+				<div className="w-full md:w-1/2 ">
 					{filteredPlaces.length > 0 && (
 						<div className="bg-black border-2 border-black flex flex-col gap-[1.5px]">
 							<div className="w-full flex flex-col">
@@ -297,7 +297,7 @@ const AutocompleteSearchBox = ({
 				</div>
 
 				{/* Column 2 */}
-				<div className="w-1/2">
+				<div className="w-full md:w-1/2">
 					{results.length > 0 && (
 						<div className="bg-black border-2 border-black flex flex-col gap-[1.5px]">
 							<ul className="w-full flex flex-col">

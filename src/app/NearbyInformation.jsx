@@ -331,13 +331,14 @@ export default function NearbyInformation({
 	return (
 		// Object.keys(selectedPlacesMap).length > 0 &&
 		<div className="flex flex-col border-4 w-full border-black rounded-lg">
-			<div className="flex flex-col items-center bg-black">
-				<h1 className="text-3xl text-white">Nearby Places</h1>
-				<p className="text-lg text-white">
-					Nearby places of a given place
+			<div className="flex flex-col items-center bg-black text-center pb-2">
+				<h1 className="text-xl md:text-3xl text-white">
+					Nearby Places
+				</h1>
+				<p className="text-sm md:text-lg text-zinc-300">
+					Nearby POIs of a given location
 				</p>
 			</div>
-
 			{Object.keys(nearbyPlacesMap).length > 0 && (
 				<div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
 					<div className="flex flex-row">

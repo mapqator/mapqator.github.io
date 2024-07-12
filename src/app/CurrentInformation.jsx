@@ -29,12 +29,15 @@ export default function CurrentInformation({
 	return (
 		// Object.keys(selectedPlacesMap).length > 0 &&
 		<div className="flex flex-col border-4 w-full border-black rounded-lg">
-			<div className="flex flex-col items-center bg-black">
-				<h1 className="text-3xl text-white">Current Information</h1>
-				<p className="text-lg text-white">
+			<div className="flex flex-col items-center bg-black text-center pb-2">
+				<h1 className="text-xl md:text-3xl text-white">
+					Current Information
+				</h1>
+				<p className="text-sm md:text-lg text-zinc-300">
 					Some information about current situation
 				</p>
 			</div>
+
 			<div className="flex flex-col gap-2 w-full p-2">
 				<div className="flex flex-row items-center w-full">
 					<div className="w-full">

@@ -216,9 +216,11 @@ export default function DirectionInformation({
 	return (
 		// Object.keys(selectedPlacesMap).length > 0 &&
 		<div className="flex flex-col border-4 w-full border-black rounded-lg">
-			<div className="flex flex-col items-center bg-black">
-				<h1 className="text-3xl text-white">Direction Information</h1>
-				<p className="text-lg text-white">
+			<div className="flex flex-col items-center bg-black text-center pb-2">
+				<h1 className="text-xl md:text-3xl text-white">
+					Direction Information
+				</h1>
+				<p className="text-sm md:text-lg text-zinc-300">
 					Routes from one place to another
 				</p>
 			</div>
@@ -290,85 +292,89 @@ export default function DirectionInformation({
 				</div>
 			)}
 
-			<div className="flex flex-row gap-2 w-full p-2">
-				<div className="w-[30%]">
-					<FormControl
-						fullWidth
-						className="input-field"
-						variant="outlined"
-						// style={{ width: "20rem" }}
-						size="small"
-					>
-						<InputLabel
-							htmlFor="outlined-adornment"
-							className="input-label"
+			<div className="flex flex-col gap-2 w-full p-2">
+				<div className="flex flex-col md:flex-row gap-2">
+					<div className="w-full md:w-1/2">
+						<FormControl
+							fullWidth
+							className="input-field"
+							variant="outlined"
+							// style={{ width: "20rem" }}
+							size="small"
 						>
-							From
-						</InputLabel>
-						<Select
-							required
-							id="outlined-adornment"
-							className="outlined-input"
-							value={newDirection.from}
-							onChange={(event) => {
-								setNewDirection((prev) => ({
-									...prev,
-									from: event.target.value,
-								}));
-							}}
-							input={<OutlinedInput label={"From"} />}
+							<InputLabel
+								htmlFor="outlined-adornment"
+								className="input-label"
+							>
+								From
+							</InputLabel>
+							<Select
+								required
+								id="outlined-adornment"
+								className="outlined-input"
+								value={newDirection.from}
+								onChange={(event) => {
+									setNewDirection((prev) => ({
+										...prev,
+										from: event.target.value,
+									}));
+								}}
+								input={<OutlinedInput label={"From"} />}
+							>
+								{Object.keys(selectedPlacesMap).map(
+									(place_id, index) => (
+										<MenuItem key={index} value={place_id}>
+											{savedPlacesMap[place_id].name ||
+												selectedPlacesMap[place_id]
+													.alias}
+										</MenuItem>
+									)
+								)}
+							</Select>
+						</FormControl>
+					</div>
+					<div className="w-full md:w-1/2">
+						<FormControl
+							fullWidth
+							className="input-field"
+							variant="outlined"
+							// style={{ width: "20rem" }}
+							size="small"
 						>
-							{Object.keys(selectedPlacesMap).map(
-								(place_id, index) => (
-									<MenuItem key={index} value={place_id}>
-										{savedPlacesMap[place_id].name ||
-											selectedPlacesMap[place_id].alias}
-									</MenuItem>
-								)
-							)}
-						</Select>
-					</FormControl>
-				</div>
-				<div className="w-[30%]">
-					<FormControl
-						fullWidth
-						className="input-field"
-						variant="outlined"
-						// style={{ width: "20rem" }}
-						size="small"
-					>
-						<InputLabel
-							htmlFor="outlined-adornment"
-							className="input-label"
-						>
-							To
-						</InputLabel>
-						<Select
-							required
-							id="outlined-adornment"
-							className="outlined-input"
-							value={newDirection.to}
-							onChange={(event) => {
-								setNewDirection((prev) => ({
-									...prev,
-									to: event.target.value,
-								}));
-							}}
-							input={<OutlinedInput label={"To"} />}
-						>
-							{Object.keys(selectedPlacesMap).map(
-								(place_id, index) => (
-									<MenuItem key={index} value={place_id}>
-										{savedPlacesMap[place_id].name ||
-											selectedPlacesMap[place_id].alias}
-									</MenuItem>
-								)
-							)}
-						</Select>
-					</FormControl>
+							<InputLabel
+								htmlFor="outlined-adornment"
+								className="input-label"
+							>
+								To
+							</InputLabel>
+							<Select
+								required
+								id="outlined-adornment"
+								className="outlined-input"
+								value={newDirection.to}
+								onChange={(event) => {
+									setNewDirection((prev) => ({
+										...prev,
+										to: event.target.value,
+									}));
+								}}
+								input={<OutlinedInput label={"To"} />}
+							>
+								{Object.keys(selectedPlacesMap).map(
+									(place_id, index) => (
+										<MenuItem key={index} value={place_id}>
+											{savedPlacesMap[place_id].name ||
+												selectedPlacesMap[place_id]
+													.alias}
+										</MenuItem>
+									)
+								)}
+							</Select>
+						</FormControl>
+					</div>
 				</div>
 
-				<div className="w-[20%]">
+				<div className="w-full">
 					<FormControl
 						fullWidth
 						className="input-field"
@@ -406,7 +412,7 @@ export default function DirectionInformation({
 					</FormControl>
 				</div>
 
-				<div className="w-1/5">
+				<div className="w-full">
 					<LoadingButton
 						variant="contained"
 						fullWidth

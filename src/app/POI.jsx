@@ -203,9 +203,11 @@ export default function POI({
 	return (
 		// Object.keys(selectedPlacesMap).length > 0 &&
 		<div className="flex flex-col border-4 w-full border-black rounded-lg">
-			<div className="flex flex-col items-center bg-black">
-				<h1 className="text-3xl text-white">Places in an Area</h1>
-				<p className="text-lg text-white">
+			<div className="flex flex-col items-center bg-black text-center pb-2">
+				<h1 className="text-xl md:text-3xl text-white">
+					Places in an Area
+				</h1>
+				<p className="text-sm md:text-lg text-zinc-300">
 					Results of the Points of Interest search
 				</p>
 			</div>
@@ -243,8 +245,8 @@ export default function POI({
 				</div>
 			)}
 
-			<div className="flex flex-row gap-2 w-full p-2">
-				<div className="w-[50%]">
+			<div className="flex flex-col gap-2 w-full p-2">
+				<div className="w-full">
 					<FormControl
 						fullWidth
 						className="input-field"
@@ -283,7 +285,7 @@ export default function POI({
 						</Select>
 					</FormControl>
 				</div>
-				<div className="w-[30%]">
+				<div className="w-full">
 					<Autocomplete
 						disablePortal
 						id="combo-box-demo"
@@ -374,7 +376,7 @@ export default function POI({
 					</FormControl>
 				</div> */}
 
-				<div className="w-[20%]">
+				<div className="w-full">
 					<LoadingButton
 						variant="contained"
 						fullWidth

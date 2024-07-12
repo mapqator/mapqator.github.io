@@ -530,8 +530,8 @@ export default function QueryFields({
 				/>
 			</div> */}
 
-			<div className="ml-auto w-full font-bold flex flex-row gap-2 justify-between">
-				<div className="input-field w-1/2">
+			<div className="ml-auto w-full font-bold flex flex-col md:flex-row gap-2 justify-between">
+				<div className="input-field w-full md:w-1/2">
 					<FormControl fullWidth variant="outlined" size="small">
 						<InputLabel
 							htmlFor="outlined-adornment"
