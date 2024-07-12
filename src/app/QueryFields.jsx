@@ -83,7 +83,7 @@ export default function QueryFields({
 								Generated Context
 							</label>
 							<div className="flex flex-row gap-2">
-								{query.context !== "" && (
+								{/* {query.context !== "" && (
 									<LoadingButton
 										// className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
 										variant="contained"
@@ -113,7 +113,7 @@ export default function QueryFields({
 									>
 										Translate
 									</LoadingButton>
-								)}
+								)} */}
 
 								<Button
 									className="bg-green-500 rounded-lg p-2"
