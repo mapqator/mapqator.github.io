@@ -21,7 +21,7 @@ import QueryForm from "./QueryForm";
 import Evaluation from "./Evaluation";
 import DatasetInformation from "./DatasetInformation";
 import { showSuccess, showToast } from "./home";
-import { setLoading } from "./page";
+// import { setLoading } from "./page";
 
 const itemsPerPage = 5;
 
@@ -38,6 +38,7 @@ export default function DatasetCreator({
 	setPoisMap,
 }) {
 	const [queries, setQueries] = useState([]);
+	const [loading, setLoading] = useState(true);
 	const fetchQueries = async () => {
 		try {
 			const res = await queryApi.getQueries();
@@ -117,6 +118,13 @@ export default function DatasetCreator({
 	};
 	return (
 		<div className="w-1/2 flex flex-col items-center p-5 bg-white gap-2">
+			{loading ? (
+				<div className="bg-white fixed z-40 top-0 left-0 w-[50vw] h-full flex justify-center items-center">
+					<div className="border-[6px] border-solid border-gray rounded-full border-t-[8px] border-t-blue-500 w-16 h-16 animate-spin"></div>
+				</div>
+			) : (
+				<></>
+			)}
 			<div className="bg-white flex flex-col items-center w-full">
 				<h1 className="text-3xl">Map Dataset Creator</h1>
 				<p className="text-lg">

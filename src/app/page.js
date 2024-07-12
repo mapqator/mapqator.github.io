@@ -28,13 +28,13 @@ export default function PageComponent() {
 	}, []);
 	return (
 		<div>
-			{loading ? (
+			{/* {loading ? (
 				<div className="bg-white fixed z-40 top-0 left-0 w-full h-full flex justify-center items-center">
 					<div className="border-[6px] border-solid border-gray rounded-full border-t-[8px] border-t-blue-500 w-16 h-16 animate-spin"></div>
 				</div>
 			) : (
 				<></>
-			)}
+			)} */}
 			<Home />
 		</div>
 	);

@@ -59,7 +59,7 @@ export default function Home() {
 		<main className="flex min-h-screen flex-col bg-black">
 			<div className="flex flex-row gap-1">
 				{isAuthenticated == null ? (
-					<></>
+					<div className="w-1/2 bg-white h-screen"> </div>
 				) : isAuthenticated ? (
 					<DatasetCreator
 						contextJSON={contextJSON}

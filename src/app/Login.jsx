@@ -3,6 +3,7 @@ import AuthService from "../services/authService";
 import { FormControl, InputLabel, OutlinedInput, Button } from "@mui/material";
 import EyeIcon from "../components/Icons/EyeIcon";
 import { setLoading } from "./page";
+import { LoadingButton } from "@mui/lab";
 
 const MuiTextField = (props) => {
 	return (
@@ -125,12 +126,13 @@ const Login = () => {
 	const handleSubmit = async () => {
 		if (!loggingIn) {
 			setLoading(true);
+			setLoggingIn(true);
+
 			const res = await AuthService.login({
 				username: username,
 				password: password,
 			});
 			if (res.success) {
-				setLoggingIn(true);
 				// navigate("/");
 			} else {
 				setLoading(false);
@@ -167,17 +169,16 @@ const Login = () => {
 									}
 									value={password}
 								/>
-								{!loggingIn && (
-									<Button
-										type="submit"
-										className="w-full rounded-lg text-sm px-5 py-2.5 text-center font-medium"
-										onClick={handleSubmit}
-										variant="contained"
-										fullWidth
-									>
-										Sign in
-									</Button>
-								)}
+								<LoadingButton
+									type="submit"
+									className="w-full rounded-lg text-sm px-5 py-2.5 text-center font-medium"
+									onClick={handleSubmit}
+									variant="contained"
+									fullWidth
+									loading={loggingIn}
+								>
+									Sign in
+								</LoadingButton>
 							</div>
 						</div>
 					</div>
