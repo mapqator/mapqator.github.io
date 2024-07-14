@@ -112,12 +112,11 @@ const AutocompleteSearchBox = ({
 			setFilteredPlaces(
 				Object.values(savedPlacesMap).filter(
 					(place) =>
-						place.name
-							.toLowerCase()
-							.includes(search.toLowerCase()) ||
-						place.formatted_address
-							.toLowerCase()
-							.includes(search.toLowerCase())
+						place.name.toLowerCase().includes(search.toLowerCase())
+					// ||
+					// place.formatted_address
+					// 	.toLowerCase()
+					// 	.includes(search.toLowerCase())
 				)
 			);
 		} else {
