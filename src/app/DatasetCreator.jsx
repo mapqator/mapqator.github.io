@@ -173,7 +173,7 @@ export default function DatasetCreator({
 					</div>
 				</>
 			) : (
-				<div className="p-10">
+				<div className="p-5">
 					<LoadingButton
 						onClick={fetchQueries}
 						loading={loading}
