@@ -305,10 +305,10 @@ export default function ContextGenerator({
 
 		if (currentInformation.location !== "") {
 			newContext.push(
-				`Current location of user is ${
+				`Current location of user is <b>${
 					// selectedPlacesMap[currentInformation.location]?.alias ||
 					savedPlacesMap[currentInformation.location]?.name
-				}.`
+				}</b>.`
 			);
 		}
 
