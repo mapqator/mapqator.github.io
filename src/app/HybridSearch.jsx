@@ -64,15 +64,26 @@ const AutocompleteSearchBox = ({
 	const debouncedSearch = React.useCallback(
 		_.debounce((query) => {
 			// Your search logic here, for example:
-			const fuse = new Fuse(Object.values(savedPlacesMap), {
-				keys: ["name", "formatted_address"],
-				threshold: 0.3,
-				// distance: 100,
-				ignoreLocation: true,
-			});
-			const result = fuse.search(query);
-			const filteredPlaces = result.map((item) => item.item);
-			setFilteredPlaces(filteredPlaces);
+			// const fuse = new Fuse(Object.values(savedPlacesMap), {
+			// 	keys: ["name", "formatted_address"],
+			// 	threshold: 0.3,
+			// 	// distance: 100,
+			// 	ignoreLocation: true,
+			// });
+			// const result = fuse.search(query);
+			// const filteredPlaces = result.map((item) => item.item);
+			// setFilteredPlaces(filteredPlaces);
+
+			setFilteredPlaces(
+				Object.values(savedPlacesMap).filter(
+					(place) =>
+						place.name.toLowerCase().startsWith(query.toLowerCase())
+					// ||
+					// place.formatted_address
+					// 	.toLowerCase()
+					// 	.includes(search.toLowerCase())
+				)
+			);
 		}, 300),
 		[savedPlacesMap]
 	); // Adjust debounce time as needed
@@ -108,17 +119,17 @@ const AutocompleteSearchBox = ({
 
 	useEffect(() => {
 		if (search) {
-			// debouncedSearch(search);
-			setFilteredPlaces(
-				Object.values(savedPlacesMap).filter(
-					(place) =>
-						place.name.toLowerCase().includes(search.toLowerCase())
-					// ||
-					// place.formatted_address
-					// 	.toLowerCase()
-					// 	.includes(search.toLowerCase())
-				)
-			);
+			debouncedSearch(search);
+			// setFilteredPlaces(
+			// 	Object.values(savedPlacesMap).filter(
+			// 		(place) =>
+			// 			place.name.toLowerCase().includes(search.toLowerCase())
+			// 		// ||
+			// 		// place.formatted_address
+			// 		// 	.toLowerCase()
+			// 		// 	.includes(search.toLowerCase())
+			// 	)
+			// );
 		} else {
 			// Handle the case when search is cleared
 			setFilteredPlaces(Object.values(savedPlacesMap));

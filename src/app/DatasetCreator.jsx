@@ -13,6 +13,10 @@ import {
 	Button,
 	TextField,
 	Pagination,
+	Select,
+	OutlinedInput,
+	MenuItem,
+	InputLabel,
 } from "@mui/material";
 import QueryCard from "./QueryCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,7 +28,7 @@ import { showSuccess, showToast } from "./home";
 import { LoadingButton } from "@mui/lab";
 import { Refresh } from "@mui/icons-material";
 // import { setLoading } from "./page";
-
+import categories from "./categories.json";
 const itemsPerPage = 5;
 
 export default function DatasetCreator({
@@ -40,8 +44,9 @@ export default function DatasetCreator({
 	setPoisMap,
 }) {
 	const [queries, setQueries] = useState([]);
+	const [filteredQueries, setFilteredQueries] = useState([]);
 	const [loading, setLoading] = useState(false);
-
+	const [category, setCategory] = useState("");
 	const [fetched, setFetched] = useState(false);
 	const fetchQueries = async () => {
 		setLoading(true);
@@ -61,7 +66,7 @@ export default function DatasetCreator({
 	const [data, setData] = useState([]);
 	const [page, setPage] = useState(1);
 
-	const pageCount = Math.ceil(queries.length / itemsPerPage);
+	const [pageCount, setPageCount] = useState(0);
 
 	useEffect(() => {
 		// fetchQueries();
@@ -71,8 +76,14 @@ export default function DatasetCreator({
 	useEffect(() => {
 		const start = (page - 1) * itemsPerPage;
 		const end = start + itemsPerPage;
-		setData(queries.slice(start, end));
-	}, [page, queries]);
+		const newQueries = queries.filter(
+			(query) =>
+				category === "" || query.classification.includes(category)
+		);
+		setFilteredQueries(newQueries);
+		setPageCount(Math.ceil(newQueries.length / itemsPerPage));
+		setData(newQueries.slice(start, end));
+	}, [page, queries, category]);
 
 	const handlePagination = (event, value) => {
 		setPage(value);
@@ -95,13 +106,16 @@ export default function DatasetCreator({
 	const handleEdit = async (query, index) => {
 		// console.log("Editing query: ", query, queries[index]);
 		// return;
-		const res = await queryApi.updateQuery(queries[index].id, query);
+		const res = await queryApi.updateQuery(
+			filteredQueries[index].id,
+			query
+		);
 		if (res.success) {
 			// update the queries
 			console.log("New Query: ", res.data[0]);
 			setQueries((prevQueries) =>
 				prevQueries.map((query, i) =>
-					i === index ? res.data[0] : query
+					query.id === res.data[0].id ? res.data[0] : query
 				)
 			);
 			showSuccess("Query edited successfully", res);
@@ -137,6 +151,7 @@ export default function DatasetCreator({
 				<>
 					<DatasetInformation {...{ queries }} />
 					<Evaluation {...{ queries }} />
+
 					<div className="flex flex-col gap-2 mt-1 w-full">
 						<div className="flex justify-center bottom-0 left-0 right-0 pt-4">
 							<Pagination
@@ -148,6 +163,31 @@ export default function DatasetCreator({
 								page={page}
 							/>
 						</div>
+						<FormControl fullWidth size="small">
+							{/* <InputLabel id="category-select-label">
+								Category
+							</InputLabel> */}
+							<Select
+								labelId="category-select-label"
+								id="category-select"
+								value={category}
+								size="small"
+								onChange={(e) => {
+									setCategory(e.target.value);
+								}}
+								// input={<OutlinedInput label={"Category"} />}
+								displayEmpty
+							>
+								<MenuItem value="">
+									<em>All</em>
+								</MenuItem>
+								{categories.map((value, index) => (
+									<MenuItem key={index} value={value}>
+										{value}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
 						{data.map((query, index) => (
 							<QueryCard
 								key={query.id}

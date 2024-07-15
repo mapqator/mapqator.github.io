@@ -407,6 +407,7 @@ export default function QueryFields({
 									/>
 									<TextField
 										// className="text-lg border-2 w-full"
+										multiline
 										value={option}
 										size={"small"}
 										fullWidth
