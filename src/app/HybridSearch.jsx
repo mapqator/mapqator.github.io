@@ -20,7 +20,7 @@ import {
 import _ from "lodash";
 
 import { LoadingButton } from "@mui/lab";
-import { Clear, Search } from "@mui/icons-material";
+import { Add, Clear, Download, Search, Start } from "@mui/icons-material";
 import Fuse from "fuse.js";
 const AutocompleteSearchBox = ({
 	savedPlacesMap,
@@ -34,8 +34,28 @@ const AutocompleteSearchBox = ({
 	const [results, setResults] = useState([]);
 	const [selectedPlace, setSelectedPlace] = useState(null);
 	const [loading, setLoading] = useState(false);
-
 	const [filteredPlaces, setFilteredPlaces] = useState([]);
+	const [buttonLoading, setButtonLoading] = useState(false);
+	const [fetched, setFetched] = useState(false);
+	const fetchPlaces = async () => {
+		console.log("Fetching places");
+		setButtonLoading(true);
+		try {
+			const res = await placeApi.getPlaces();
+			if (res.success) {
+				// create a map for easy access
+				const newSavedPlacesMap = {};
+				res.data.forEach((e) => {
+					newSavedPlacesMap[e.place_id] = e;
+				});
+				setSavedPlacesMap(newSavedPlacesMap);
+				setFetched(true);
+			}
+		} catch (error) {
+			console.error("Error fetching data: ", error);
+		}
+		setButtonLoading(false);
+	};
 
 	const handleSearch = async (event) => {
 		event.preventDefault();
@@ -228,80 +248,99 @@ const AutocompleteSearchBox = ({
 
 			<div className="w-full flex flex-col md:flex-row gap-1">
 				{/* Column 1 */}
-				<div className="w-full md:w-1/2 ">
-					{filteredPlaces.length > 0 && (
-						<div className="bg-black border-2 border-black flex flex-col gap-[1.5px]">
-							<div className="w-full flex flex-col">
-								<div className="text-white text-center p-2">
-									Places saved in our database
-								</div>
-								<div className="overflow-y-auto max-h-[40vh] flex flex-col gap-[1px]">
-									{filteredPlaces
-										.sort((a, b) => {
-											// Place null values at the end
-											if (a.last_updated === null)
-												return 1;
-											if (b.last_updated === null)
-												return -1;
+				<div className="w-full md:w-1/2 flex flex-col justify-between h-full gap-1">
+					<div className="bg-white border-2 border-black flex flex-col gap-[1.5px]">
+						<div className="w-full flex flex-col ">
+							<div className="text-white text-center p-2 bg-black">
+								Places saved in our database
+							</div>
+							<div className="overflow-y-auto h-[40vh] flex flex-col">
+								{filteredPlaces
+									.sort((a, b) => {
+										// Place null values at the end
+										if (a.last_updated === null) return 1;
+										if (b.last_updated === null) return -1;
 
-											// Sort in descending order
-											return (
-												new Date(b.last_updated) -
-												new Date(a.last_updated)
-											);
-										})
-										.map((place, index) => (
-											<li key={index}>
-												<button
-													className={`flex flex-row justify-center w-full p-2 ${
+										// Sort in descending order
+										return (
+											new Date(b.last_updated) -
+											new Date(a.last_updated)
+										);
+									})
+									.map((place, index) => (
+										<li key={index}>
+											<button
+												className={`flex border-b-2 border-black flex-row justify-center w-full p-2 ${
+													addPlace === place.place_id
+														? "bg-[#888888]"
+														: "hover:bg-[#cccccc] bg-white"
+												}`}
+												onClick={() => {
+													if (
 														addPlace ===
 														place.place_id
-															? "bg-[#888888]"
-															: "hover:bg-[#cccccc] bg-white"
-													}`}
-													onClick={() => {
-														if (
-															addPlace ===
+													) {
+														setAddPlace("");
+													} else {
+														setAddPlace(
 															place.place_id
-														) {
-															setAddPlace("");
-														} else {
-															setAddPlace(
-																place.place_id
-															);
-														}
-													}}
-												>
-													{
-														savedPlacesMap[
-															place.place_id
-														].name
-													}{" "}
-													-{" "}
-													{
-														savedPlacesMap[
-															place.place_id
-														].formatted_address
+														);
 													}
-												</button>
-											</li>
-										))}
-								</div>
+												}}
+											>
+												{
+													savedPlacesMap[
+														place.place_id
+													].name
+												}{" "}
+												-{" "}
+												{
+													savedPlacesMap[
+														place.place_id
+													].formatted_address
+												}
+											</button>
+										</li>
+									))}
+
+								{filteredPlaces.length === 0 && (
+									<div className="flex flex-row justify-center p-2 text-zinc-400 my-auto text-xl">
+										No places found
+									</div>
+								)}
 							</div>
-							<div className="flex flex-row gap-2 w-full bg-white">
-								<Button
-									variant="contained"
-									fullWidth
-									onClick={() => {
-										handleAdd(savedPlacesMap[addPlace]);
-										setAddPlace("");
-									}}
-									sx={{ fontSize: "1rem" }}
-									disabled={addPlace === ""}
-								>
-									+ Add
-								</Button>
-							</div>
+						</div>
+						<div className="flex flex-row gap-2 w-full bg-white">
+							<Button
+								variant="contained"
+								fullWidth
+								onClick={() => {
+									handleAdd(savedPlacesMap[addPlace]);
+									setAddPlace("");
+								}}
+								sx={{ fontSize: "1rem" }}
+								disabled={addPlace === ""}
+							>
+								+ Add
+							</Button>
+						</div>
+					</div>
+					{!fetched && (
+						<div className="flex flex-col items-center justify-center mx-auto gap-5 w-full">
+							<LoadingButton
+								fullWidth
+								variant="contained"
+								color="primary"
+								onClick={() => {
+									fetchPlaces();
+								}}
+								loading={buttonLoading}
+								endIcon={<Download />}
+								loadingPosition="end"
+								size="large"
+							>
+								Fetch Previous Places
+							</LoadingButton>
 						</div>
 					)}
 				</div>
@@ -309,16 +348,16 @@ const AutocompleteSearchBox = ({
 				{/* Column 2 */}
 				<div className="w-full md:w-1/2">
 					{results.length > 0 && (
-						<div className="bg-black border-2 border-black flex flex-col gap-[1.5px]">
+						<div className="bg-white border-2 border-black flex flex-col gap-[1.5px]">
 							<ul className="w-full flex flex-col">
-								<div className="text-white text-center p-2">
+								<div className="text-white text-center p-2 bg-black">
 									Places fetched using Google Map API
 								</div>
-								<div className="overflow-y-auto max-h-[40vh] flex flex-col gap-[1px]">
+								<div className="overflow-y-auto h-[40vh] flex flex-col">
 									{results.map((place, index) => (
 										<li key={index}>
 											<button
-												className={`flex flex-row justify-center  w-full p-2 ${
+												className={`flex flex-row justify-center border-b-2 border-black w-full p-2 ${
 													selectedPlace === place
 														? "bg-[#888888]"
 														: "hover:bg-[#cccccc] bg-white"
@@ -332,6 +371,11 @@ const AutocompleteSearchBox = ({
 											</button>
 										</li>
 									))}
+									{results.length === 0 && (
+										<div className="flex flex-row justify-center p-2 text-black">
+											No results found
+										</div>
+									)}
 								</div>
 							</ul>
 							<div className="flex flex-row gap-2 w-full bg-white">
@@ -382,18 +426,6 @@ export default function HybridSearch({
 						setSelectedPlacesMap,
 					}}
 				/>
-				{/* <form
-					className="flex flex-col items-center w-full"
-					onSubmit={handleSearch}
-				>
-					<input
-						type="text"
-						placeholder="Search for a place"
-						className="border border-black rounded-lg p-2 w-full"
-						value={search}
-						onChange={(e) => setSearch(e.target.value)}
-					/>
-				</form> */}
 			</div>
 		</div>
 	);

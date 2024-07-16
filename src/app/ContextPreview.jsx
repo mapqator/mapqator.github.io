@@ -131,7 +131,7 @@ export default function ContextPreview({
 					))
 				) : (
 					<p className="text-center my-auto text-xl text-zinc-400">
-						No context generated. Add information below.
+						No context generated. Add information first.
 					</p>
 				)}
 			</div>

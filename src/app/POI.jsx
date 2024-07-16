@@ -24,6 +24,7 @@ import { Add } from "@mui/icons-material";
 function POICard({
 	selectedPlacesMap,
 	savedPlacesMap,
+	setSavedPlacesMap,
 	poi,
 	poisMap,
 	setPoisMap,
@@ -32,15 +33,40 @@ function POICard({
 	setSelectedPlacesMap,
 }) {
 	const [expanded, setExpanded] = useState(false);
-	const handleAdd = (place_id) => {
+	const handleAddSave = async (place_id) => {
+		let details = selectedPlacesMap[place_id];
+		if (details === undefined) {
+			details = savedPlacesMap[place_id];
+			if (details === undefined) {
+				const res = await mapApi.getDetails(place_id);
+				if (res.success) {
+					details = res.data.result;
+					setSavedPlacesMap((prev) => ({
+						...prev,
+						[place_id]: details,
+					}));
+				} else {
+					console.error("Error fetching data: ", res.error);
+					return;
+				}
+			}
+			handleAdd(details);
+		} else {
+			console.log("Already saved: ", details);
+		}
+		return details;
+	};
+
+	const handleAdd = (details) => {
+		const place_id = details["place_id"];
 		if (place_id === "" || selectedPlacesMap[place_id]) return;
 		setSelectedPlacesMap((prev) => ({
 			...prev,
 			[place_id]: {
 				alias: "",
 				selectedAttributes: ["formatted_address"],
-				attributes: Object.keys(savedPlacesMap[place_id]).filter(
-					(key) => savedPlacesMap[place_id][key] !== null
+				attributes: Object.keys(details).filter(
+					(key) => details[key] !== null
 				),
 			},
 		}));
@@ -115,7 +141,7 @@ function POICard({
 								<IconButton
 									sx={{ height: "3rem", width: "3rem" }}
 									onClick={() => {
-										handleAdd(place.place_id);
+										handleAddSave(place.place_id);
 									}}
 								>
 									<FontAwesomeIcon icon={faAdd} />
@@ -176,24 +202,24 @@ export default function POI({
 
 				setPoisMap(newPoisMap);
 				setLoading(false);
-				const newSavedPlacesMap = { ...savedPlacesMap };
-				for (const place of results) {
-					if (newSavedPlacesMap[place.place_id] === undefined) {
-						try {
-							const res2 = await mapApi.getDetails(
-								place.place_id
-							);
-							if (res2.success) {
-								newSavedPlacesMap[place.place_id] =
-									res2.data[0];
-								console.log("saved: ", res.data[0].place_id);
-							}
-						} catch (error) {
-							console.error(error);
-						}
-					}
-				}
-				setSavedPlacesMap(newSavedPlacesMap);
+				// const newSavedPlacesMap = { ...savedPlacesMap };
+				// for (const place of results) {
+				// 	if (newSavedPlacesMap[place.place_id] === undefined) {
+				// 		try {
+				// 			const res2 = await mapApi.getDetails(
+				// 				place.place_id
+				// 			);
+				// 			if (res2.success) {
+				// 				newSavedPlacesMap[place.place_id] =
+				// 					res2.data[0];
+				// 				console.log("saved: ", res.data[0].place_id);
+				// 			}
+				// 		} catch (error) {
+				// 			console.error(error);
+				// 		}
+				// 	}
+				// }
+				// setSavedPlacesMap(newSavedPlacesMap);
 			}
 		} catch (error) {
 			// console.error("Error fetching data: ", error);
@@ -232,6 +258,7 @@ export default function POI({
 									key={index2}
 									selectedPlacesMap={selectedPlacesMap}
 									savedPlacesMap={savedPlacesMap}
+									setSavedPlacesMap={setSavedPlacesMap}
 									poi={poi}
 									poisMap={poisMap}
 									setPoisMap={setPoisMap}
@@ -326,56 +353,6 @@ export default function POI({
 							)}
 						/>
 					</div>
-
-					{/* <div className="w-[20%]">
-					<FormControl
-						fullWidth
-						className="input-field"
-						variant="outlined"
-						// style={{ width: "20rem" }}
-						size="small"
-					>
-						<InputLabel
-							htmlFor="outlined-adornment"
-							className="input-label"
-						>
-							Type
-						</InputLabel>
-						<Select
-							required
-							id="outlined-adornment"
-							className="outlined-input"
-							value={newPois.type}
-							onChange={(event) => {
-								setNewPois((prev) => ({
-									...prev,
-									type: event.target.value,
-								}));
-							}}
-							input={<OutlinedInput label={"Type"} />}
-							// MenuProps={MenuProps}
-						>
-							{placeTypes.map((type, index) => (
-								<MenuItem
-									key={index}
-									value={type}
-									// sx={{ width: "2rem" }}
-									// style={getStyles(name, personName, theme)}
-								>
-									{type
-										.replace(/_/g, " ") // Replace underscores with spaces
-										.split(" ") // Split the string into an array of words
-										.map(
-											(word) =>
-												word.charAt(0).toUpperCase() +
-												word.slice(1)
-										) // Capitalize the first letter of each word
-										.join(" ")}
-								</MenuItem>
-							))}
-						</Select>
-					</FormControl>
-				</div> */}
 
 					<div className="w-full">
 						<LoadingButton

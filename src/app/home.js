@@ -25,6 +25,7 @@ export const showMessage = (message, res) => {
 };
 
 export default function Home() {
+	const [savedPlacesMap, setSavedPlacesMap] = useState({});
 	const [contextJSON, setContextJSON] = useState({});
 	const [context, setContext] = useState([]);
 	const [distanceMatrix, setDistanceMatrix] = useState({});
@@ -65,6 +66,7 @@ export default function Home() {
 						contextJSON={contextJSON}
 						context={context}
 						{...{
+							setSavedPlacesMap,
 							setSelectedPlacesMap,
 							setDistanceMatrix,
 							setNearbyPlacesMap,
@@ -84,6 +86,8 @@ export default function Home() {
 					context={context}
 					setContext={setContext}
 					{...{
+						savedPlacesMap,
+						setSavedPlacesMap,
 						setDistanceMatrix,
 						distanceMatrix,
 						selectedPlacesMap,

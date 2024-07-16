@@ -26,6 +26,8 @@ import QueryFields from "./QueryFields";
 import GptApi from "@/api/gptApi";
 import dayjs from "dayjs";
 import { Clear, Save } from "@mui/icons-material";
+import MapApi from "@/api/mapApi";
+const mapApi = new MapApi();
 const queryApi = new QueryApi();
 const gptApi = new GptApi();
 
@@ -37,6 +39,7 @@ export default function QueryCard({
 	setNearbyPlacesMap,
 	setCurrentInformation,
 	setDirectionInformation,
+	setSavedPlacesMap,
 	setContext,
 	context,
 	setContextJSON,
@@ -50,7 +53,19 @@ export default function QueryCard({
 	const [flag, setFlag] = useState(false);
 	const [query, setQuery] = useState(initQuery);
 	const [contextExpanded, setContextExpanded] = useState(false);
-
+	const handleSave = async (place_id) => {
+		const res = await mapApi.getDetails(place_id);
+		if (res.success) {
+			const details = res.data.result;
+			setSavedPlacesMap((prev) => ({
+				...prev,
+				[place_id]: details,
+			}));
+		} else {
+			console.error("Error fetching data: ", res.error);
+			return;
+		}
+	};
 	useEffect(() => {
 		setQuery(initQuery);
 	}, [initQuery]);
@@ -476,6 +491,10 @@ export default function QueryCard({
 							color="primary"
 							startIcon={<FontAwesomeIcon icon={faPen} />}
 							onClick={async () => {
+								for (let place_id in query.context_json
+									.places) {
+									await handleSave(place_id);
+								}
 								setSelectedPlacesMap(
 									query.context_json.places ?? {}
 								);

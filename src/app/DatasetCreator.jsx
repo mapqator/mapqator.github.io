@@ -36,6 +36,7 @@ export default function DatasetCreator({
 	setContextJSON,
 	context,
 	setContext,
+	setSavedPlacesMap,
 	setSelectedPlacesMap,
 	setDistanceMatrix,
 	setNearbyPlacesMap,
@@ -195,6 +196,7 @@ export default function DatasetCreator({
 								index={(page - 1) * itemsPerPage + index}
 								initQuery={query}
 								{...{
+									setSavedPlacesMap,
 									setSelectedPlacesMap,
 									setDistanceMatrix,
 									setNearbyPlacesMap,

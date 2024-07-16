@@ -32,6 +32,7 @@ function NearbyCard({
 	index2,
 	selectedPlacesMap,
 	savedPlacesMap,
+	setSavedPlacesMap,
 	nearbyPlacesMap,
 	setNearbyPlacesMap,
 	setSelectedPlacesMap,
@@ -40,15 +41,40 @@ function NearbyCard({
 }) {
 	const [expanded, setExpanded] = useState(false);
 
-	const handleAdd = (place_id) => {
+	const handleAddSave = async (place_id) => {
+		let details = selectedPlacesMap[place_id];
+		if (details === undefined) {
+			details = savedPlacesMap[place_id];
+			if (details === undefined) {
+				const res = await mapApi.getDetails(place_id);
+				if (res.success) {
+					details = res.data.result;
+					setSavedPlacesMap((prev) => ({
+						...prev,
+						[place_id]: details,
+					}));
+				} else {
+					console.error("Error fetching data: ", res.error);
+					return;
+				}
+			}
+			handleAdd(details);
+		} else {
+			console.log("Already saved: ", details);
+		}
+		return details;
+	};
+
+	const handleAdd = (details) => {
+		const place_id = details["place_id"];
 		if (place_id === "" || selectedPlacesMap[place_id]) return;
 		setSelectedPlacesMap((prev) => ({
 			...prev,
 			[place_id]: {
 				alias: "",
 				selectedAttributes: ["formatted_address"],
-				attributes: Object.keys(savedPlacesMap[place_id]).filter(
-					(key) => savedPlacesMap[place_id][key] !== null
+				attributes: Object.keys(details).filter(
+					(key) => details[key] !== null
 				),
 			},
 		}));
@@ -131,7 +157,7 @@ function NearbyCard({
 								<IconButton
 									sx={{ height: "3rem", width: "3rem" }}
 									onClick={() => {
-										handleAdd(place.place_id);
+										handleAddSave(place.place_id);
 									}}
 								>
 									<FontAwesomeIcon icon={faAdd} />
@@ -179,64 +205,6 @@ export default function NearbyInformation({
 		});
 		setNearbyPlacesResults([]);
 	}, [selectedPlacesMap]);
-
-	const addNearbyPlaces = async () => {
-		const newSavedPlacesMap = { ...savedPlacesMap };
-		// const newSelectedPlacesMap = { ...selectedPlacesMap };
-		const newNearbyPlacesMap = { ...nearbyPlacesMap };
-		const selectedPlaces = nearbyPlacesResults.filter((e) => e.selected);
-
-		if (newNearbyPlacesMap[newNearbyPlaces.location] === undefined) {
-			newNearbyPlacesMap[newNearbyPlaces.location] = [];
-		}
-
-		newNearbyPlacesMap[newNearbyPlaces.location].push({
-			type: newNearbyPlaces.type,
-			places: selectedPlaces.map((e) => {
-				return {
-					place_id: e.place.place_id,
-					name: e.place.name,
-					formatted_address: e.place.vicinity,
-				};
-			}),
-			keyword: newNearbyPlaces.keyword,
-			radius: newNearbyPlaces.radius,
-			hasRadius: newNearbyPlaces.hasRadius,
-			rankBy: newNearbyPlaces.rankBy,
-		});
-
-		setNearbyPlacesMap(newNearbyPlacesMap);
-		setNearbyPlacesResults([]);
-
-		console.log("Need to save in database");
-		for (const e of selectedPlaces) {
-			if (newSavedPlacesMap[e.place.place_id] === undefined) {
-				try {
-					const res2 = await mapApi.getDetails(e.place.place_id);
-					if (res2.success) {
-						newSavedPlacesMap[e.place.place_id] = res2.data[0];
-						console.log("saved: ", res2.data[0].place_id);
-					}
-				} catch (error) {
-					console.error(error);
-				}
-			}
-
-			// if (newSelectedPlacesMap[e.place.place_id] === undefined) {
-			//   newSelectedPlacesMap[e.place.place_id] = {
-			//     alias: "",
-			//     selectedAttributes: ["formatted_address", "geometry"],
-			//     attributes: Object.keys(newSavedPlacesMap[e.place.place_id]).filter(
-			//       (key) => newSavedPlacesMap[e.place.place_id][key] !== null
-			//     ),
-			//   };
-			// }
-		}
-
-		// setSelectedPlacesMap(newSelectedPlacesMap);
-		setSavedPlacesMap(newSavedPlacesMap);
-		// setNewNearbyPlaces({ location: null, type: "", list: [] });
-	};
 
 	const searchNearbyPlaces = async () => {
 		console.log(newNearbyPlaces);
@@ -294,32 +262,32 @@ export default function NearbyInformation({
 				setNearbyPlacesMap(newNearbyPlacesMap);
 				setLoading(false);
 				setNearbyPlacesResults(placesWithSelection);
-				const newSavedPlacesMap = { ...savedPlacesMap };
-				for (const place of places) {
-					if (newSavedPlacesMap[place.place_id] === undefined) {
-						try {
-							const response = await mapApi.getDetails(
-								place.place_id
-							);
-							if (response.success) {
-								const res = await placeApi.createPlace(
-									response.data.result
-								);
-								if (res.success) {
-									newSavedPlacesMap[place.place_id] =
-										res.data[0];
-									console.log(
-										"saved: ",
-										res.data[0].place_id
-									);
-								}
-							}
-						} catch (error) {
-							console.error(error);
-						}
-					}
-				}
-				setSavedPlacesMap(newSavedPlacesMap);
+				// const newSavedPlacesMap = { ...savedPlacesMap };
+				// for (const place of places) {
+				// 	if (newSavedPlacesMap[place.place_id] === undefined) {
+				// 		try {
+				// 			const response = await mapApi.getDetails(
+				// 				place.place_id
+				// 			);
+				// 			if (response.success) {
+				// 				const res = await placeApi.createPlace(
+				// 					response.data.result
+				// 				);
+				// 				if (res.success) {
+				// 					newSavedPlacesMap[place.place_id] =
+				// 						res.data[0];
+				// 					console.log(
+				// 						"saved: ",
+				// 						res.data[0].place_id
+				// 					);
+				// 				}
+				// 			}
+				// 		} catch (error) {
+				// 			console.error(error);
+				// 		}
+				// 	}
+				// }
+				// setSavedPlacesMap(newSavedPlacesMap);
 			}
 		} catch (error) {
 			console.error("Error fetching data: ", error);
@@ -367,6 +335,7 @@ export default function NearbyInformation({
 										index2,
 										selectedPlacesMap,
 										savedPlacesMap,
+										setSavedPlacesMap,
 										nearbyPlacesMap,
 										setNearbyPlacesMap,
 										place_id,
