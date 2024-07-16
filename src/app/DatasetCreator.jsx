@@ -136,7 +136,7 @@ export default function DatasetCreator({
 		}
 	};
 	return (
-		<div className="w-full md:w-1/2 flex flex-col items-center p-5 bg-white gap-2">
+		<div className="w-full md:w-1/2 flex flex-col items-center p-5 bg-white gap-2 h-screen overflow-y-auto">
 			<div className="bg-white flex flex-col items-center w-full">
 				<h1 className="text-3xl">Map Dataset Creator</h1>
 				<p className="text-lg">

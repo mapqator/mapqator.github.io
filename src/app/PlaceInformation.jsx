@@ -6,13 +6,63 @@ const placeApi = new PlaceApi();
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import { Select, MenuItem, Button, TextField } from "@mui/material";
+import { Select, MenuItem, Button, TextField, IconButton } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default function PlaceInformation({
 	selectedPlacesMap,
 	setSelectedPlacesMap,
 	savedPlacesMap,
+	distanceMatrix,
+	setDistanceMatrix,
+	directionInformation,
+	setDirectionInformation,
+	nearbyPlacesMap,
+	setNearbyPlacesMap,
+	poisMap,
+	setPoisMap,
 }) {
+	const deletePlaceFromDistanceMatrix = (place_id) => {
+		const newDistanceMatrix = { ...distanceMatrix };
+		delete newDistanceMatrix[place_id];
+		Object.keys(newDistanceMatrix).forEach((key) => {
+			delete newDistanceMatrix[key][place_id];
+		});
+		setDistanceMatrix(newDistanceMatrix);
+	};
+
+	const deletePlaceFromDirections = (place_id) => {
+		const newDirectionInformation = { ...directionInformation };
+		delete newDirectionInformation[place_id];
+
+		Object.keys(newDirectionInformation).forEach((key) => {
+			delete newDirectionInformation[key][place_id];
+		});
+		setDirectionInformation(newDirectionInformation);
+	};
+
+	const deletePlaceFromNearbyPlaces = (place_id) => {
+		const newNearbyPlacesMap = { ...nearbyPlacesMap };
+		delete newNearbyPlacesMap[place_id];
+		setNearbyPlacesMap(newNearbyPlacesMap);
+	};
+
+	const deletePlaceFromPois = (place_id) => {
+		const newPoisMap = { ...poisMap };
+		delete newPoisMap[place_id];
+		setPoisMap(newPoisMap);
+	};
+
+	const deletePlace = (place_id) => {
+		deletePlaceFromDistanceMatrix(place_id);
+		deletePlaceFromDirections(place_id);
+		deletePlaceFromNearbyPlaces(place_id);
+		deletePlaceFromPois(place_id);
+		const newSelectedPlacesMap = { ...selectedPlacesMap };
+		delete newSelectedPlacesMap[place_id];
+		setSelectedPlacesMap(newSelectedPlacesMap);
+	};
 	return (
 		Object.keys(selectedPlacesMap).length > 0 && (
 			<div className="border-4 w-full border-black rounded-lg h-[30rem] overflow-y-auto">
@@ -74,7 +124,7 @@ export default function PlaceInformation({
 											);
 										}}
 									/> */}
-									<div className="w-full md:w-[40%]">
+									<div className="flex flex-row gap-2 items-center w-full md:w-[40%]">
 										<FormControl
 											fullWidth
 											className="input-field"
@@ -146,6 +196,22 @@ export default function PlaceInformation({
 													))}
 											</Select>
 										</FormControl>
+										<IconButton
+											sx={{
+												height: "3rem",
+												width: "3rem",
+											}}
+											onClick={() => {
+												deletePlace(place_id);
+											}}
+										>
+											<div className="text-2xl">
+												<FontAwesomeIcon
+													icon={faTrash}
+													color="red"
+												/>
+											</div>
+										</IconButton>
 									</div>
 								</div>
 							)

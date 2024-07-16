@@ -57,7 +57,8 @@ export default function DistanceInformation({
 				for (let j = 0; j < destination.length; j++) {
 					const d = destination[j];
 					if (o === d) {
-					} else if (matrix[i][j]) {
+					} else if (matrix[i][j].duration && matrix[i][j].distance) {
+						console.log(matrix[i][j]);
 						if (newDistanceMatrix[o])
 							newDistanceMatrix[o][d] = {
 								...newDistanceMatrix[o][d],
@@ -81,6 +82,11 @@ export default function DistanceInformation({
 			}
 			setDistanceMatrix(newDistanceMatrix);
 		}
+		setNewDistance((prev) => ({
+			from: [],
+			to: [],
+			travelMode: prev.travelMode,
+		}));
 		setLoading(false);
 	};
 

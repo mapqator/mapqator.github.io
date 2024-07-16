@@ -100,11 +100,11 @@ export default function Home() {
 				/>
 			</div>
 
-			<footer className="w-full h-20 text-white flex items-center justify-center">
+			{/* <footer className="w-full h-20 text-white flex items-center justify-center">
 				<a href="https://mahirlabibdihan.github.io/">
 					© Mahir Labib Dihan
 				</a>
-			</footer>
+			</footer> */}
 		</main>
 	);
 }
