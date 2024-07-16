@@ -292,140 +292,157 @@ export default function DirectionInformation({
 				</div>
 			)}
 
-			<div className="flex flex-col gap-2 w-full p-2">
-				<div className="flex flex-col md:flex-row gap-2">
-					<div className="w-full md:w-1/2">
-						<FormControl
-							fullWidth
-							className="input-field"
-							variant="outlined"
-							// style={{ width: "20rem" }}
-							size="small"
-						>
-							<InputLabel
-								htmlFor="outlined-adornment"
-								className="input-label"
+			{Object.keys(selectedPlacesMap).length > 0 ? (
+				<div className="flex flex-col gap-2 w-full p-2">
+					<div className="flex flex-col md:flex-row gap-2">
+						<div className="w-full md:w-1/2">
+							<FormControl
+								fullWidth
+								className="input-field"
+								variant="outlined"
+								// style={{ width: "20rem" }}
+								size="small"
 							>
-								From
-							</InputLabel>
-							<Select
-								required
-								id="outlined-adornment"
-								className="outlined-input"
-								value={newDirection.from}
-								onChange={(event) => {
-									setNewDirection((prev) => ({
-										...prev,
-										from: event.target.value,
-									}));
-								}}
-								input={<OutlinedInput label={"From"} />}
+								<InputLabel
+									htmlFor="outlined-adornment"
+									className="input-label"
+								>
+									From
+								</InputLabel>
+								<Select
+									required
+									id="outlined-adornment"
+									className="outlined-input"
+									value={newDirection.from}
+									onChange={(event) => {
+										setNewDirection((prev) => ({
+											...prev,
+											from: event.target.value,
+										}));
+									}}
+									input={<OutlinedInput label={"From"} />}
+								>
+									{Object.keys(selectedPlacesMap).map(
+										(place_id, index) => (
+											<MenuItem
+												key={index}
+												value={place_id}
+											>
+												{savedPlacesMap[place_id]
+													.name ||
+													selectedPlacesMap[place_id]
+														.alias}
+											</MenuItem>
+										)
+									)}
+								</Select>
+							</FormControl>
+						</div>
+						<div className="w-full md:w-1/2">
+							<FormControl
+								fullWidth
+								className="input-field"
+								variant="outlined"
+								// style={{ width: "20rem" }}
+								size="small"
 							>
-								{Object.keys(selectedPlacesMap).map(
-									(place_id, index) => (
-										<MenuItem key={index} value={place_id}>
-											{savedPlacesMap[place_id].name ||
-												selectedPlacesMap[place_id]
-													.alias}
-										</MenuItem>
-									)
-								)}
-							</Select>
-						</FormControl>
+								<InputLabel
+									htmlFor="outlined-adornment"
+									className="input-label"
+								>
+									To
+								</InputLabel>
+								<Select
+									required
+									id="outlined-adornment"
+									className="outlined-input"
+									value={newDirection.to}
+									onChange={(event) => {
+										setNewDirection((prev) => ({
+											...prev,
+											to: event.target.value,
+										}));
+									}}
+									input={<OutlinedInput label={"To"} />}
+								>
+									{Object.keys(selectedPlacesMap).map(
+										(place_id, index) => (
+											<MenuItem
+												key={index}
+												value={place_id}
+											>
+												{savedPlacesMap[place_id]
+													.name ||
+													selectedPlacesMap[place_id]
+														.alias}
+											</MenuItem>
+										)
+									)}
+								</Select>
+							</FormControl>
+						</div>
 					</div>
-					<div className="w-full md:w-1/2">
-						<FormControl
-							fullWidth
-							className="input-field"
-							variant="outlined"
-							// style={{ width: "20rem" }}
-							size="small"
-						>
-							<InputLabel
-								htmlFor="outlined-adornment"
-								className="input-label"
-							>
-								To
-							</InputLabel>
-							<Select
-								required
-								id="outlined-adornment"
-								className="outlined-input"
-								value={newDirection.to}
-								onChange={(event) => {
-									setNewDirection((prev) => ({
-										...prev,
-										to: event.target.value,
-									}));
-								}}
-								input={<OutlinedInput label={"To"} />}
-							>
-								{Object.keys(selectedPlacesMap).map(
-									(place_id, index) => (
-										<MenuItem key={index} value={place_id}>
-											{savedPlacesMap[place_id].name ||
-												selectedPlacesMap[place_id]
-													.alias}
-										</MenuItem>
-									)
-								)}
-							</Select>
-						</FormControl>
-					</div>
-				</div>
 
-				<div className="w-full">
-					<FormControl
-						fullWidth
-						className="input-field"
-						variant="outlined"
-						// style={{ width: "20rem" }}
-						size="small"
-					>
-						<InputLabel
-							htmlFor="outlined-adornment"
-							className="input-label"
+					<div className="w-full">
+						<FormControl
+							fullWidth
+							className="input-field"
+							variant="outlined"
+							// style={{ width: "20rem" }}
+							size="small"
 						>
-							Travel Mode
-						</InputLabel>
-						<Select
-							required
-							id="outlined-adornment"
-							className="outlined-input"
-							value={newDirection.travelMode}
-							onChange={(event) => {
-								setNewDirection((prev) => ({
-									...prev,
-									travelMode: event.target.value,
-								}));
-							}}
-							input={<OutlinedInput label={"Travel Mode"} />}
-						>
-							{["WALKING", "DRIVING", "BICYCLING", "TRANSIT"].map(
-								(mode, index) => (
+							<InputLabel
+								htmlFor="outlined-adornment"
+								className="input-label"
+							>
+								Travel Mode
+							</InputLabel>
+							<Select
+								required
+								id="outlined-adornment"
+								className="outlined-input"
+								value={newDirection.travelMode}
+								onChange={(event) => {
+									setNewDirection((prev) => ({
+										...prev,
+										travelMode: event.target.value,
+									}));
+								}}
+								input={<OutlinedInput label={"Travel Mode"} />}
+							>
+								{[
+									"WALKING",
+									"DRIVING",
+									"BICYCLING",
+									"TRANSIT",
+								].map((mode, index) => (
 									<MenuItem key={index} value={mode}>
 										{mode}
 									</MenuItem>
-								)
-							)}
-						</Select>
-					</FormControl>
-				</div>
+								))}
+							</Select>
+						</FormControl>
+					</div>
 
-				<div className="w-full">
-					<LoadingButton
-						variant="contained"
-						fullWidth
-						onClick={handleDirectionAdd}
-						sx={{ fontSize: "1rem" }}
-						loading={loading}
-						loadingPosition="start"
-						startIcon={<Add />}
-					>
-						Add ($)
-					</LoadingButton>
+					<div className="w-full">
+						<LoadingButton
+							variant="contained"
+							fullWidth
+							onClick={handleDirectionAdd}
+							sx={{ fontSize: "1rem" }}
+							loading={loading}
+							loadingPosition="start"
+							startIcon={<Add />}
+						>
+							Add ($)
+						</LoadingButton>
+					</div>
 				</div>
-			</div>
+			) : (
+				<p className="text-center my-auto text-xl text-zinc-400 min-h-16 flex items-center justify-center">
+					Add places in the context first.
+				</p>
+			)}
 		</div>
 	);
 }

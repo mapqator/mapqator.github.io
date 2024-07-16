@@ -380,86 +380,89 @@ export default function NearbyInformation({
 				</div>
 			)}
 
-			<div className="flex flex-col gap-2 w-full p-2">
-				<div className="w-full">
-					<FormControl
-						fullWidth
-						className="input-field"
-						variant="outlined"
-						// style={{ width: "20rem" }}
+			{Object.keys(selectedPlacesMap).length > 0 ? (
+				<div className="flex flex-col gap-2 w-full p-2">
+					<div className="w-full">
+						<FormControl
+							fullWidth
+							className="input-field"
+							variant="outlined"
+							// style={{ width: "20rem" }}
+							size="small"
+						>
+							<InputLabel
+								htmlFor="outlined-adornment"
+								className="input-label"
+							>
+								Location
+							</InputLabel>
+							<Select
+								required
+								id="outlined-adornment"
+								className="outlined-input"
+								value={newNearbyPlaces.location}
+								onChange={(event) => {
+									setNewNearbyPlaces((prev) => ({
+										...prev,
+										location: event.target.value,
+									}));
+								}}
+								input={<OutlinedInput label={"Location"} />}
+								// MenuProps={MenuProps}
+							>
+								{Object.keys(selectedPlacesMap).map(
+									(place_id, index) => (
+										<MenuItem key={index} value={place_id}>
+											{savedPlacesMap[place_id].name ||
+												selectedPlacesMap[place_id]
+													.alias}
+										</MenuItem>
+									)
+								)}
+							</Select>
+						</FormControl>
+					</div>
+					<Autocomplete
+						disablePortal
+						id="combo-box-demo"
 						size="small"
-					>
-						<InputLabel
-							htmlFor="outlined-adornment"
-							className="input-label"
-						>
-							Location
-						</InputLabel>
-						<Select
-							required
-							id="outlined-adornment"
-							className="outlined-input"
-							value={newNearbyPlaces.location}
-							onChange={(event) => {
-								setNewNearbyPlaces((prev) => ({
-									...prev,
-									location: event.target.value,
-								}));
-							}}
-							input={<OutlinedInput label={"Location"} />}
-							// MenuProps={MenuProps}
-						>
-							{Object.keys(selectedPlacesMap).map(
-								(place_id, index) => (
-									<MenuItem key={index} value={place_id}>
-										{savedPlacesMap[place_id].name ||
-											selectedPlacesMap[place_id].alias}
-									</MenuItem>
-								)
-							)}
-						</Select>
-					</FormControl>
-				</div>
-				<Autocomplete
-					disablePortal
-					id="combo-box-demo"
-					size="small"
-					options={placeTypes}
-					fullWidth
-					freeSolo
-					getOptionLabel={(option) =>
-						`${option
-							.replace(/_/g, " ") // Replace underscores with spaces
-							.split(" ") // Split the string into an array of words
-							.map(
-								(word) =>
-									word.charAt(0).toUpperCase() + word.slice(1)
-							) // Capitalize the first letter of each word
-							.join(" ")}`
-					}
-					onChange={(e, newValue) => {
-						// console.log("newValue: ", newValue);
-						setNewNearbyPlaces((prev) => ({
-							...prev,
-							type: newValue,
-						}));
-					}}
-					renderInput={(params) => (
-						<TextField
-							{...params}
-							label="Type"
-							value={newNearbyPlaces.type} // Step 3: Bind the value to state
-							onChange={(e) => {
-								// console.log("newValue: ", newValue);
-								setNewNearbyPlaces((prev) => ({
-									...prev,
-									type: e.target.value,
-								}));
-							}}
-						/>
-					)}
-				/>
-				{/* <div className="w-full">
+						options={placeTypes}
+						fullWidth
+						freeSolo
+						getOptionLabel={(option) =>
+							`${option
+								.replace(/_/g, " ") // Replace underscores with spaces
+								.split(" ") // Split the string into an array of words
+								.map(
+									(word) =>
+										word.charAt(0).toUpperCase() +
+										word.slice(1)
+								) // Capitalize the first letter of each word
+								.join(" ")}`
+						}
+						onChange={(e, newValue) => {
+							// console.log("newValue: ", newValue);
+							setNewNearbyPlaces((prev) => ({
+								...prev,
+								type: newValue,
+							}));
+						}}
+						renderInput={(params) => (
+							<TextField
+								{...params}
+								label="Type"
+								value={newNearbyPlaces.type} // Step 3: Bind the value to state
+								onChange={(e) => {
+									// console.log("newValue: ", newValue);
+									setNewNearbyPlaces((prev) => ({
+										...prev,
+										type: e.target.value,
+									}));
+								}}
+							/>
+						)}
+					/>
+					{/* <div className="w-full">
 						<FormControl
 							fullWidth
 							className="input-field"
@@ -510,7 +513,7 @@ export default function NearbyInformation({
 							</Select>
 						</FormControl>
 					</div> */}
-				{/* <div className="w-full">
+					{/* <div className="w-full">
 						<TextField
 							// required
 							fullWidth
@@ -530,55 +533,55 @@ export default function NearbyInformation({
 						/>
 					</div> */}
 
-				<div className="flex flex-row w-full gap-2">
-					<div className="flex flex-row w-1/2 gap-2 items-center">
-						<input
-							type="radio"
-							className="w-5 h-5 cursor-pointer"
-							checked={!newNearbyPlaces.hasRadius}
-							onClick={() =>
-								setNewNearbyPlaces((prev) => ({
-									...prev,
-									hasRadius: false,
-								}))
-							}
-						/>
-						<Typography>Rank By Distance</Typography>
-					</div>
+					<div className="flex flex-row w-full gap-2">
+						<div className="flex flex-row w-1/2 gap-2 items-center">
+							<input
+								type="radio"
+								className="w-5 h-5 cursor-pointer"
+								checked={!newNearbyPlaces.hasRadius}
+								onClick={() =>
+									setNewNearbyPlaces((prev) => ({
+										...prev,
+										hasRadius: false,
+									}))
+								}
+							/>
+							<Typography>Rank By Distance</Typography>
+						</div>
 
-					<div className="flex flex-row w-1/2 gap-2 items-center">
-						<input
-							type="radio"
-							className="w-5 h-5 cursor-pointer"
-							checked={newNearbyPlaces.hasRadius}
-							onClick={() =>
-								setNewNearbyPlaces((prev) => ({
-									...prev,
-									hasRadius: true,
-								}))
-							}
-						/>
-						<TextField
-							// required
-							fullWidth
-							id="outlined-adornment"
-							className="outlined-input"
-							size="small"
-							label="Radius (m)"
-							value={newNearbyPlaces.radius}
-							onChange={(event) => {
-								setNewNearbyPlaces((prev) => ({
-									...prev,
-									radius: event.target.value,
-								}));
-							}}
-							type="number"
-							// input={<OutlinedInput label={"Radius"} />}
-							// MenuProps={MenuProps}
-						/>
+						<div className="flex flex-row w-1/2 gap-2 items-center">
+							<input
+								type="radio"
+								className="w-5 h-5 cursor-pointer"
+								checked={newNearbyPlaces.hasRadius}
+								onClick={() =>
+									setNewNearbyPlaces((prev) => ({
+										...prev,
+										hasRadius: true,
+									}))
+								}
+							/>
+							<TextField
+								// required
+								fullWidth
+								id="outlined-adornment"
+								className="outlined-input"
+								size="small"
+								label="Radius (m)"
+								value={newNearbyPlaces.radius}
+								onChange={(event) => {
+									setNewNearbyPlaces((prev) => ({
+										...prev,
+										radius: event.target.value,
+									}));
+								}}
+								type="number"
+								// input={<OutlinedInput label={"Radius"} />}
+								// MenuProps={MenuProps}
+							/>
+						</div>
 					</div>
-				</div>
-				{/* <div className="flex flex-row w-full gap-2">
+					{/* <div className="flex flex-row w-full gap-2">
 					<div className="w-full">
 						<FormControl
 							fullWidth
@@ -676,20 +679,26 @@ export default function NearbyInformation({
 						)}
 					</div>
 				</div> */}
-				<div className="w-full">
-					<LoadingButton
-						variant="contained"
-						fullWidth
-						onClick={searchNearbyPlaces}
-						sx={{ fontSize: "1rem" }}
-						startIcon={<Add />}
-						loading={loading}
-						loadingPosition="start"
-					>
-						Add ($)
-					</LoadingButton>
+					<div className="w-full">
+						<LoadingButton
+							variant="contained"
+							fullWidth
+							onClick={searchNearbyPlaces}
+							sx={{ fontSize: "1rem" }}
+							startIcon={<Add />}
+							loading={loading}
+							loadingPosition="start"
+						>
+							Add ($)
+						</LoadingButton>
+					</div>
 				</div>
-			</div>
+			) : (
+				<p className="text-center my-auto text-xl text-zinc-400 min-h-16 flex items-center justify-center">
+					Add places in the context first.
+				</p>
+			)}
+
 			{/* {nearbyPlacesResults.length > 0 && (
 					<div className="flex flex-col gap-2 p-2">
 						{nearbyPlacesResults.map((e, index) => (

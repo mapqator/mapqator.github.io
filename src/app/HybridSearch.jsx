@@ -364,7 +364,9 @@ export default function HybridSearch({
 	return (
 		<div className="w-full flex flex-col items-center bg-white border-4 rounded-lg border-black gap-1">
 			<div className="flex flex-col bg-black w-full items-center p-1">
-				<h1 className="text-3xl text-white">Search for a place</h1>
+				<h1 className="text-3xl text-white">
+					Add places in the Context
+				</h1>
 				<p className="text-base text-center text-white">
 					Search for a place from google map or our database
 				</p>

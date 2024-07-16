@@ -244,89 +244,90 @@ export default function POI({
 					))}
 				</div>
 			)}
-
-			<div className="flex flex-col gap-2 w-full p-2">
-				<div className="w-full">
-					<FormControl
-						fullWidth
-						className="input-field"
-						variant="outlined"
-						// style={{ width: "20rem" }}
-						size="small"
-					>
-						<InputLabel
-							htmlFor="outlined-adornment"
-							className="input-label"
+			{Object.keys(selectedPlacesMap).length > 0 ? (
+				<div className="flex flex-col gap-2 w-full p-2">
+					<div className="w-full">
+						<FormControl
+							fullWidth
+							className="input-field"
+							variant="outlined"
+							// style={{ width: "20rem" }}
+							size="small"
 						>
-							Location
-						</InputLabel>
-						<Select
-							required
-							id="outlined-adornment"
-							className="outlined-input"
-							value={newPois.location}
-							onChange={(event) => {
-								setNewPois((prev) => ({
-									...prev,
-									location: event.target.value,
-								}));
-							}}
-							input={<OutlinedInput label={"Location"} />}
-							// MenuProps={MenuProps}
-						>
-							{Object.keys(selectedPlacesMap).map(
-								(place_id, index) => (
-									<MenuItem key={index} value={place_id}>
-										{savedPlacesMap[place_id].name ||
-											selectedPlacesMap[place_id].alias}
-									</MenuItem>
-								)
-							)}
-						</Select>
-					</FormControl>
-				</div>
-				<div className="w-full">
-					<Autocomplete
-						disablePortal
-						id="combo-box-demo"
-						size="small"
-						options={placeTypes}
-						fullWidth
-						freeSolo
-						getOptionLabel={(option) =>
-							`${option
-								.replace(/_/g, " ") // Replace underscores with spaces
-								.split(" ") // Split the string into an array of words
-								.map(
-									(word) =>
-										word.charAt(0).toUpperCase() +
-										word.slice(1)
-								) // Capitalize the first letter of each word
-								.join(" ")}`
-						}
-						onChange={(e, newValue) => {
-							setNewPois((prev) => ({
-								...prev,
-								type: newValue,
-							}));
-						}}
-						renderInput={(params) => (
-							<TextField
-								{...params}
-								label="Type"
-								value={newPois.type} // Step 3: Bind the value to state
-								onChange={(e) => {
+							<InputLabel
+								htmlFor="outlined-adornment"
+								className="input-label"
+							>
+								Location
+							</InputLabel>
+							<Select
+								required
+								id="outlined-adornment"
+								className="outlined-input"
+								value={newPois.location}
+								onChange={(event) => {
 									setNewPois((prev) => ({
 										...prev,
-										type: e.target.value,
+										location: event.target.value,
 									}));
 								}}
-							/>
-						)}
-					/>
-				</div>
+								input={<OutlinedInput label={"Location"} />}
+								// MenuProps={MenuProps}
+							>
+								{Object.keys(selectedPlacesMap).map(
+									(place_id, index) => (
+										<MenuItem key={index} value={place_id}>
+											{savedPlacesMap[place_id].name ||
+												selectedPlacesMap[place_id]
+													.alias}
+										</MenuItem>
+									)
+								)}
+							</Select>
+						</FormControl>
+					</div>
+					<div className="w-full">
+						<Autocomplete
+							disablePortal
+							id="combo-box-demo"
+							size="small"
+							options={placeTypes}
+							fullWidth
+							freeSolo
+							getOptionLabel={(option) =>
+								`${option
+									.replace(/_/g, " ") // Replace underscores with spaces
+									.split(" ") // Split the string into an array of words
+									.map(
+										(word) =>
+											word.charAt(0).toUpperCase() +
+											word.slice(1)
+									) // Capitalize the first letter of each word
+									.join(" ")}`
+							}
+							onChange={(e, newValue) => {
+								setNewPois((prev) => ({
+									...prev,
+									type: newValue,
+								}));
+							}}
+							renderInput={(params) => (
+								<TextField
+									{...params}
+									label="Type"
+									value={newPois.type} // Step 3: Bind the value to state
+									onChange={(e) => {
+										setNewPois((prev) => ({
+											...prev,
+											type: e.target.value,
+										}));
+									}}
+								/>
+							)}
+						/>
+					</div>
 
-				{/* <div className="w-[20%]">
+					{/* <div className="w-[20%]">
 					<FormControl
 						fullWidth
 						className="input-field"
@@ -376,20 +377,25 @@ export default function POI({
 					</FormControl>
 				</div> */}
 
-				<div className="w-full">
-					<LoadingButton
-						variant="contained"
-						fullWidth
-						onClick={searchInsidePlaces}
-						sx={{ fontSize: "1rem" }}
-						startIcon={<Add />}
-						loading={loading}
-						loadingPosition="start"
-					>
-						Add ($)
-					</LoadingButton>
+					<div className="w-full">
+						<LoadingButton
+							variant="contained"
+							fullWidth
+							onClick={searchInsidePlaces}
+							sx={{ fontSize: "1rem" }}
+							startIcon={<Add />}
+							loading={loading}
+							loadingPosition="start"
+						>
+							Add ($)
+						</LoadingButton>
+					</div>
 				</div>
-			</div>
+			) : (
+				<p className="text-center my-auto text-xl text-zinc-400 min-h-16 flex items-center justify-center">
+					Add places in the context first.
+				</p>
+			)}
 		</div>
 	);
 }
