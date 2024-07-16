@@ -20,5 +20,8 @@ class QueryApi extends Api {
 		console.log(context);
 		return await this.post("/queries/gpt/context", { content: context });
 	};
+	annotate = async (query_id, human) => {
+		return await this.post("/queries/annotate/" + query_id, human);
+	};
 }
 export default QueryApi;

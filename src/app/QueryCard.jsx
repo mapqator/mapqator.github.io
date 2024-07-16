@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
 	IconButton,
 	Button,
@@ -10,6 +10,8 @@ import {
 	OutlinedInput,
 	MenuItem,
 	Radio,
+	TextField,
+	Divider,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -23,7 +25,7 @@ import QueryApi from "@/api/queryApi";
 import QueryFields from "./QueryFields";
 import GptApi from "@/api/gptApi";
 import dayjs from "dayjs";
-import { Save } from "@mui/icons-material";
+import { Clear, Save } from "@mui/icons-material";
 const queryApi = new QueryApi();
 const gptApi = new GptApi();
 
@@ -61,8 +63,11 @@ export default function QueryCard({
 				e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
 				e.verdict === "invalid"
 		);
+		console.log(query.human);
 		if (invalid) {
 			setFlag(true);
+		} else {
+			setFlag(query.human.answer === 0);
 		}
 	}, [query]);
 	return (
@@ -251,7 +256,7 @@ export default function QueryCard({
 									option !== "" && (
 										<div
 											key={index}
-											className="flex flex-row gap-2"
+											className="flex flex-row gap-2 items-center"
 										>
 											<Radio
 												checked={
@@ -308,9 +313,135 @@ export default function QueryCard({
 							</div>
 						</div>
 					)}
+					<div className="flex flex-col gap-2 p-2 border-2 border-black rounded-md">
+						<div className="flex flex-row justify-between">
+							<h1 className="text-lg font-bold underline">
+								Human Annotation
+							</h1>
+							<h2 className="text-lg font-semibold text-black px-1 flex flex-row gap-1 items-center">
+								<FontAwesomeIcon icon={faUser} />
+								{query.human.username}
+							</h2>
+						</div>
+						<div className="flex flex-col gap-1">
+							<div key={index} className="flex flex-col gap-2">
+								<FormControl
+									fullWidth
+									className="input-field"
+									variant="outlined"
+									size="small"
+								>
+									<InputLabel
+										htmlFor="outlined-adornment"
+										className="input-label"
+									>
+										Correct Answer
+									</InputLabel>
+									<Select
+										// multiple
+										id="outlined-adornment"
+										className="outlined-input"
+										value={query.human.answer}
+										onChange={(e) => {
+											setQuery((prev) => ({
+												...prev,
+												human: {
+													...prev.human,
+													answer: e.target.value,
+												},
+											}));
+										}}
+										input={
+											<OutlinedInput
+												label={"Correct Answer"}
+											/>
+										}
+									>
+										<MenuItem value={0}>No answer</MenuItem>
+										{query.answer.options.map(
+											(value, index) => (
+												<MenuItem
+													key={index}
+													value={index + 1}
+												>
+													{value}
+												</MenuItem>
+											)
+										)}
+									</Select>
+								</FormControl>
+								<TextField
+									value={query.human.explanation}
+									onChange={(e) => {
+										setQuery((prev) => ({
+											...prev,
+											human: {
+												...prev.human,
+												explanation: e.target.value,
+											},
+										}));
+									}}
+									fullWidth
+									label="Explanation"
+									size="small"
+									multiline
+								/>
+								<div className="flex flex-row gap-2">
+									<Button
+										variant="contained"
+										color="error"
+										onClick={async () => {
+											setQuery((prev) => ({
+												...prev,
+												human: {
+													answer: null,
+													explanation: "",
+													username:
+														prev.human.username,
+												},
+											}));
+										}}
+										startIcon={<Clear />}
+									>
+										Clear
+									</Button>
+									<Button
+										variant="contained"
+										color="primary"
+										onClick={async () => {
+											console.log(query.id);
+											const res = await queryApi.annotate(
+												query.id,
+												{
+													answer: query.human.answer,
+													explanation:
+														query.human.explanation,
+												}
+											);
+											console.log(res);
+											if (res.success)
+												setQuery((prev) => ({
+													...prev,
+													human: {
+														...prev.human,
+														username:
+															res.data[0]
+																.username,
+													},
+												}));
+										}}
+										startIcon={<Save />}
+									>
+										Annotate
+									</Button>
+								</div>
+							</div>
+						</div>
+					</div>
 
-					<div className="flex flex-row gap-2 mx-auto">
-						<Button
+					{/* <div className="w-full h-[0.2rem] bg-black" /> */}
+					<div className="flex flex-row gap-2 mx-auto justify-end w-full">
+						{/* <Button
 							variant="contained"
 							color="primary"
 							onClick={() => {
@@ -321,8 +452,8 @@ export default function QueryCard({
 							}}
 						>
 							Copy
-						</Button>
-						<Button
+						</Button> */}
+						{/* <Button
 							variant="contained"
 							color="primary"
 							onClick={async () => {
@@ -339,7 +470,7 @@ export default function QueryCard({
 							}}
 						>
 							Ask GPT
-						</Button>
+						</Button> */}
 						<Button
 							variant="contained"
 							color="primary"
