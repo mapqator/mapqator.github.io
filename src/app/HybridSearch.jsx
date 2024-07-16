@@ -57,6 +57,10 @@ const AutocompleteSearchBox = ({
 		setButtonLoading(false);
 	};
 
+	useEffect(() => {
+		fetchPlaces();
+	}, []);
+
 	const handleSearch = async (event) => {
 		event.preventDefault();
 		if (search === "") return;
@@ -94,16 +98,46 @@ const AutocompleteSearchBox = ({
 			// const filteredPlaces = result.map((item) => item.item);
 			// setFilteredPlaces(filteredPlaces);
 
-			setFilteredPlaces(
-				Object.values(savedPlacesMap).filter(
-					(place) =>
-						place.name.toLowerCase().startsWith(query.toLowerCase())
-					// ||
-					// place.formatted_address
-					// 	.toLowerCase()
-					// 	.includes(search.toLowerCase())
-				)
-			);
+			setFilteredPlaces(() => {
+				const startsWithQuery = [];
+				const nameIncludesQuery = [];
+				const addressIncludesQuery = [];
+
+				Object.values(savedPlacesMap).forEach((place) => {
+					const lowerCaseName = place.name.toLowerCase();
+					const lowerCaseAddress =
+						place.formatted_address.toLowerCase();
+					const lowerCaseQuery = query.toLowerCase();
+
+					if (lowerCaseName.startsWith(lowerCaseQuery)) {
+						startsWithQuery.push(place);
+					} else if (lowerCaseName.includes(lowerCaseQuery)) {
+						nameIncludesQuery.push(place);
+					} else if (lowerCaseAddress.includes(lowerCaseQuery)) {
+						addressIncludesQuery.push(place);
+					}
+				});
+
+				console.log("Starts With Query:", startsWithQuery);
+				console.log("Name Includes Query:", nameIncludesQuery);
+				console.log("Address Includes Query:", addressIncludesQuery);
+
+				return [
+					...startsWithQuery,
+					...nameIncludesQuery,
+					...addressIncludesQuery,
+				];
+			});
+			// setFilteredPlaces(
+			// 	Object.values(savedPlacesMap).filter(
+			// 		(place) =>
+			// 			place.name.toLowerCase().startsWith(query.toLowerCase())
+			// 		// ||
+			// 		// place.formatted_address
+			// 		// 	.toLowerCase()
+			// 		// 	.includes(search.toLowerCase())
+			// 	)
+			// );
 		}, 300),
 		[savedPlacesMap]
 	); // Adjust debounce time as needed
@@ -257,15 +291,22 @@ const AutocompleteSearchBox = ({
 							<div className="overflow-y-auto h-[40vh] flex flex-col">
 								{filteredPlaces
 									.sort((a, b) => {
-										// Place null values at the end
-										if (a.last_updated === null) return 1;
-										if (b.last_updated === null) return -1;
+										// Only sort if search is an empty string
+										if (search === "") {
+											// Place null values at the end
+											if (a.last_updated === null)
+												return 1;
+											if (b.last_updated === null)
+												return -1;
 
-										// Sort in descending order
-										return (
-											new Date(b.last_updated) -
-											new Date(a.last_updated)
-										);
+											// Sort in descending order
+											return (
+												new Date(b.last_updated) -
+												new Date(a.last_updated)
+											);
+										}
+										// If search is not empty, do not sort
+										return 0;
 									})
 									.map((place, index) => (
 										<li key={index}>
