@@ -492,22 +492,26 @@ export default function ContextGenerator({
 						<h1 className="bg-black h-1 w-full mt-2"></h1>
 					</div>
 
-					<div className="flex flex-row gap-4">
-						{/* <OfflineSearch
-						savedPlacesMap={savedPlacesMap}
-						selectedPlacesMap={selectedPlacesMap}
-						setSelectedPlacesMap={setSelectedPlacesMap}
-					/> */}
-						<HybridSearch
-							{...{
-								savedPlacesMap,
-								setSavedPlacesMap,
-								selectedPlacesMap,
-								setSelectedPlacesMap,
-								setPoisMap,
-							}}
-						/>
-					</div>
+					<ContextPreview
+						{...{
+							setContextJSON,
+							context,
+							setContext,
+							savedPlacesMap,
+							selectedPlacesMap,
+							distanceMatrix,
+							nearbyPlacesMap,
+						}}
+					/>
+					<HybridSearch
+						{...{
+							savedPlacesMap,
+							setSavedPlacesMap,
+							selectedPlacesMap,
+							setSelectedPlacesMap,
+							setPoisMap,
+						}}
+					/>
 
 					<PlaceInformation
 						{...{
@@ -569,17 +573,6 @@ export default function ContextGenerator({
 							currentInformation,
 							setCurrentInformation,
 							savedPlacesMap,
-						}}
-					/>
-					<ContextPreview
-						{...{
-							setContextJSON,
-							context,
-							setContext,
-							savedPlacesMap,
-							selectedPlacesMap,
-							distanceMatrix,
-							nearbyPlacesMap,
 						}}
 					/>
 				</div>

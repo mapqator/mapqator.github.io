@@ -93,7 +93,6 @@ function NearbyCard({
 						<FontAwesomeIcon icon={faTrashCan} color="red" />
 					</div>
 				</IconButton>
-w
 				<IconButton
 					sx={{ height: "3rem", width: "3rem" }}
 					onClick={() => setExpanded((prev) => !prev)}

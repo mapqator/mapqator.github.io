@@ -63,9 +63,13 @@ export default function PlaceInformation({
 		delete newSelectedPlacesMap[place_id];
 		setSelectedPlacesMap(newSelectedPlacesMap);
 	};
+
+	useEffect(() => {
+		console.log("Selected Places Map: ", selectedPlacesMap);
+	}, [selectedPlacesMap]);
 	return (
 		Object.keys(selectedPlacesMap).length > 0 && (
-			<div className="border-4 w-full border-black rounded-lg h-[30rem] overflow-y-auto">
+			<div className="border-4 w-full border-black rounded-lg">
 				<div className="flex flex-col items-center bg-black text-center pb-2">
 					<h1 className="text-xl md:text-3xl text-white">
 						Places Information
