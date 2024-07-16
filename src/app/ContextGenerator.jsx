@@ -372,7 +372,7 @@ export default function ContextGenerator({
 			text += `- Reviews: \n${place.reviews
 				.map((review, index) => {
 					console.log(review.text);
-					return `   ${index + 1}. ${review.author_name} ("Rating": ${
+					return `   ${index + 1}. ${review.author_name} (Rating: ${
 						review.rating
 					}): ${review.text}\n`;
 				})
