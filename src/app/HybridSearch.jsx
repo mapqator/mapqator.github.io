@@ -388,50 +388,48 @@ const AutocompleteSearchBox = ({
 
 				{/* Column 2 */}
 				<div className="w-full md:w-1/2">
-					{results.length > 0 && (
-						<div className="bg-white border-2 border-black flex flex-col gap-[1.5px]">
-							<ul className="w-full flex flex-col">
-								<div className="text-white text-center p-2 bg-black">
-									Places fetched using Google Map API
-								</div>
-								<div className="overflow-y-auto h-[40vh] flex flex-col">
-									{results.map((place, index) => (
-										<li key={index}>
-											<button
-												className={`flex flex-row justify-center border-b-2 border-black w-full p-2 ${
-													selectedPlace === place
-														? "bg-[#888888]"
-														: "hover:bg-[#cccccc] bg-white"
-												}`}
-												onClick={() =>
-													handleSelectPlace(place)
-												}
-											>
-												{place.name} -{" "}
-												{place.formatted_address}
-											</button>
-										</li>
-									))}
-									{results.length === 0 && (
-										<div className="flex flex-row justify-center p-2 text-black">
-											No results found
-										</div>
-									)}
-								</div>
-							</ul>
-							<div className="flex flex-row gap-2 w-full bg-white">
-								<Button
-									fullWidth
-									onClick={handleAddSave}
-									variant="contained"
-									sx={{ fontSize: "1rem" }}
-									disabled={selectedPlace === null}
-								>
-									+ Add ($)
-								</Button>
+					<div className="bg-white border-2 border-black flex flex-col gap-[1.5px]">
+						<ul className="w-full flex flex-col">
+							<div className="text-white text-center p-2 bg-black">
+								Places fetched using Google Map API
 							</div>
+							<div className="overflow-y-auto h-[40vh] flex flex-col">
+								{results.map((place, index) => (
+									<li key={index}>
+										<button
+											className={`flex flex-row justify-center border-b-2 border-black w-full p-2 ${
+												selectedPlace === place
+													? "bg-[#888888]"
+													: "hover:bg-[#cccccc] bg-white"
+											}`}
+											onClick={() =>
+												handleSelectPlace(place)
+											}
+										>
+											{place.name} -{" "}
+											{place.formatted_address}
+										</button>
+									</li>
+								))}
+								{results.length === 0 && (
+									<div className="flex flex-row justify-center p-2 text-zinc-400 my-auto text-xl">
+										No places found
+									</div>
+								)}
+							</div>
+						</ul>
+						<div className="flex flex-row gap-2 w-full bg-white">
+							<Button
+								fullWidth
+								onClick={handleAddSave}
+								variant="contained"
+								sx={{ fontSize: "1rem" }}
+								disabled={selectedPlace === null}
+							>
+								+ Add ($)
+							</Button>
 						</div>
-					)}
+					</div>
 				</div>
 			</div>
 		</div>
