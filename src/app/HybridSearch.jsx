@@ -58,7 +58,7 @@ const AutocompleteSearchBox = ({
 	};
 
 	useEffect(() => {
-		fetchPlaces();
+		// fetchPlaces();
 	}, []);
 
 	const handleSearch = async (event) => {

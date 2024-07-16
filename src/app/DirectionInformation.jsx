@@ -292,7 +292,7 @@ export default function DirectionInformation({
 				</div>
 			)}
 
-			{Object.keys(selectedPlacesMap).length > 0 ? (
+			{Object.keys(selectedPlacesMap).length > 1 ? (
 				<div className="flex flex-col gap-2 w-full p-2">
 					<div className="flex flex-col md:flex-row gap-2">
 						<div className="w-full md:w-1/2">
@@ -440,7 +440,7 @@ export default function DirectionInformation({
 				</div>
 			) : (
 				<p className="text-center my-auto text-xl text-zinc-400 min-h-16 flex items-center justify-center">
-					Add places in the context first.
+					Add at least 2 places in the context first.
 				</p>
 			)}
 		</div>
