@@ -9,6 +9,7 @@ import {
 	InputLabel,
 	OutlinedInput,
 	MenuItem,
+	Radio,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -244,7 +245,7 @@ export default function QueryCard({
 
 					<h1 className="text-lg font-bold underline">Options</h1>
 					{query.answer.type === "mcq" ? (
-						<div className="flex flex-col gap-1">
+						<div className="flex flex-col gap-3">
 							{query.answer.options.map(
 								(option, index) =>
 									option !== "" && (
@@ -252,12 +253,14 @@ export default function QueryCard({
 											key={index}
 											className="flex flex-row gap-2"
 										>
-											<input
-												type="radio"
+											<Radio
 												checked={
 													query.answer.correct ===
 													index
 												}
+												value={index}
+												name="radio-buttons"
+												disabled={true}
 											/>
 											<h1 className="text-lg">
 												{option}
