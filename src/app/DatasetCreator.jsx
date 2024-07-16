@@ -70,8 +70,9 @@ export default function DatasetCreator({
 	const [pageCount, setPageCount] = useState(0);
 
 	useEffect(() => {
-		// fetchQueries();
-		// setLoading(false);
+		if (process.env.NODE_ENV === "production") {
+			fetchQueries();
+		}
 	}, []);
 
 	useEffect(() => {
@@ -152,7 +153,6 @@ export default function DatasetCreator({
 				<>
 					<DatasetInformation {...{ queries }} />
 					<Evaluation {...{ queries }} />
-
 					<div className="flex flex-col gap-2 mt-1 w-full">
 						<div className="flex justify-center bottom-0 left-0 right-0 pt-4">
 							<Pagination
