@@ -13,13 +13,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { LoadingButton } from "@mui/lab";
 import { Add } from "@mui/icons-material";
-export default function DistanceInformation({
+
+export function CalculateDistance({
 	selectedPlacesMap,
 	savedPlacesMap,
 	distanceMatrix,
 	setDistanceMatrix,
 }) {
-	//   const [distanceMatrix, setDistanceMatrix] = useState({});
 	const [newDistance, setNewDistance] = useState({
 		from: [],
 		to: [],
@@ -91,16 +91,7 @@ export default function DistanceInformation({
 	};
 
 	return (
-		// Object.keys(selectedPlacesMap).length > 0 &&
-		<div className="flex flex-col border-4 w-full border-black rounded-lg">
-			<div className="flex flex-col items-center bg-black text-center pb-2">
-				<h1 className="text-xl md:text-3xl text-white">
-					Distance Information
-				</h1>
-				<p className="text-sm md:text-lg text-zinc-300">
-					Distance and Duration from one place to another
-				</p>
-			</div>
+		<>
 			{Object.keys(distanceMatrix).length > 0 && (
 				<div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
 					<div className="flex flex-row">
@@ -397,6 +388,34 @@ export default function DistanceInformation({
 					Add at least 2 places in the context first.
 				</p>
 			)}
+		</>
+	);
+}
+export default function DistanceInformation({
+	selectedPlacesMap,
+	savedPlacesMap,
+	distanceMatrix,
+	setDistanceMatrix,
+}) {
+	return (
+		// Object.keys(selectedPlacesMap).length > 0 &&
+		<div className="flex flex-col border-4 w-full border-black rounded-lg">
+			<div className="flex flex-col items-center bg-black text-center pb-2">
+				<h1 className="text-xl md:text-3xl text-white">
+					Distance Information
+				</h1>
+				<p className="text-sm md:text-lg text-zinc-300">
+					Distance and Duration from one place to another
+				</p>
+			</div>
+			<CalculateDistance
+				{...{
+					selectedPlacesMap,
+					savedPlacesMap,
+					distanceMatrix,
+					setDistanceMatrix,
+				}}
+			/>
 		</div>
 	);
 }

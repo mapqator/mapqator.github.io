@@ -25,6 +25,9 @@ import DatasetPage from "./dataset";
 import EvaluationResultsPage from "./evaluation";
 
 function Navbar({ selected, setSelected }) {
+	const [baseUrl, setBaseUrl] = useState(
+		process.env.REACT_APP_BASE_URL ?? ""
+	);
 	const handleButtonClick = (buttonName) => {
 		setSelected(buttonName);
 	};
@@ -40,9 +43,7 @@ function Navbar({ selected, setSelected }) {
 			<Toolbar sx={{ justifyContent: "space-between" }}>
 				<Box display="flex" alignItems="center">
 					<Image
-						src={`${
-							process.env.REACT_APP_BASE_URL ?? ""
-						}/images/logo.png`}
+						src={`${baseUrl}/images/logo.png`}
 						alt="MapQuest Logo"
 						width={30}
 						height={30}

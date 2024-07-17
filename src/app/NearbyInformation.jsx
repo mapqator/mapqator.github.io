@@ -173,7 +173,8 @@ function NearbyCard({
 		</div>
 	);
 }
-export default function NearbyInformation({
+
+export function NearbyInfo({
 	savedPlacesMap,
 	setSavedPlacesMap,
 	selectedPlacesMap,
@@ -294,18 +295,8 @@ export default function NearbyInformation({
 		}
 		setLoading(false);
 	};
-
 	return (
-		// Object.keys(selectedPlacesMap).length > 0 &&
-		<div className="flex flex-col border-4 w-full border-black rounded-lg">
-			<div className="flex flex-col items-center bg-black text-center pb-2">
-				<h1 className="text-xl md:text-3xl text-white">
-					Nearby Places
-				</h1>
-				<p className="text-sm md:text-lg text-zinc-300">
-					Nearby POIs of a given location
-				</p>
-			</div>
+		<>
 			{Object.keys(nearbyPlacesMap).length > 0 && (
 				<div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
 					<div className="flex flex-row">
@@ -667,40 +658,38 @@ export default function NearbyInformation({
 					Add places in the context first.
 				</p>
 			)}
-
-			{/* {nearbyPlacesResults.length > 0 && (
-					<div className="flex flex-col gap-2 p-2">
-						{nearbyPlacesResults.map((e, index) => (
-							<div key={index} className="flex flex-row gap-2">
-								<input
-									type="checkbox"
-									checked={e.selected}
-									onChange={(event) => {
-										const newNearbyPlacesResults = [
-											...nearbyPlacesResults,
-										];
-										newNearbyPlacesResults[index].selected =
-											event.target.checked;
-										setNearbyPlacesResults(
-											newNearbyPlacesResults
-										);
-									}}
-								/>
-								<h1 className="overflow-hidden whitespace-nowrap overflow-ellipsis w-[95%]">
-									{e.place.name} | {e.place.vicinity}
-								</h1>
-							</div>
-						))}
-						<Button
-							variant="contained"
-							fullWidth
-							sx={{ fontSize: "1rem" }}
-							onClick={addNearbyPlaces}
-						>
-							+ Add ($)
-						</Button>
-					</div>
-				)} */}
+		</>
+	);
+}
+export default function NearbyInformation({
+	savedPlacesMap,
+	setSavedPlacesMap,
+	selectedPlacesMap,
+	setSelectedPlacesMap,
+	nearbyPlacesMap,
+	setNearbyPlacesMap,
+}) {
+	return (
+		// Object.keys(selectedPlacesMap).length > 0 &&
+		<div className="flex flex-col border-4 w-full border-black rounded-lg">
+			<div className="flex flex-col items-center bg-black text-center pb-2">
+				<h1 className="text-xl md:text-3xl text-white">
+					Nearby Places
+				</h1>
+				<p className="text-sm md:text-lg text-zinc-300">
+					Nearby POIs of a given location
+				</p>
+			</div>
+			<NearbyInfo
+				{...{
+					savedPlacesMap,
+					setSavedPlacesMap,
+					selectedPlacesMap,
+					setSelectedPlacesMap,
+					nearbyPlacesMap,
+					setNearbyPlacesMap,
+				}}
+			/>
 		</div>
 	);
 }

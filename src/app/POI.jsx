@@ -158,7 +158,7 @@ function POICard({
 	);
 }
 
-export default function POI({
+export function DiscoverArea({
 	savedPlacesMap,
 	setSavedPlacesMap,
 	selectedPlacesMap,
@@ -226,17 +226,9 @@ export default function POI({
 		}
 		setLoading(false);
 	};
+
 	return (
-		// Object.keys(selectedPlacesMap).length > 0 &&
-		<div className="flex flex-col border-4 w-full border-black rounded-lg">
-			<div className="flex flex-col items-center bg-black text-center pb-2">
-				<h1 className="text-xl md:text-3xl text-white">
-					Places in an Area
-				</h1>
-				<p className="text-sm md:text-lg text-zinc-300">
-					Results of the Points of Interest search
-				</p>
-			</div>
+		<>
 			{Object.keys(poisMap).length > 0 && (
 				<div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
 					<div className="flex flex-row">
@@ -373,6 +365,38 @@ export default function POI({
 					Add places in the context first.
 				</p>
 			)}
+		</>
+	);
+}
+export default function POI({
+	savedPlacesMap,
+	setSavedPlacesMap,
+	selectedPlacesMap,
+	poisMap,
+	setSelectedPlacesMap,
+	setPoisMap,
+}) {
+	return (
+		// Object.keys(selectedPlacesMap).length > 0 &&
+		<div className="flex flex-col border-4 w-full border-black rounded-lg">
+			<div className="flex flex-col items-center bg-black text-center pb-2">
+				<h1 className="text-xl md:text-3xl text-white">
+					Places in an Area
+				</h1>
+				<p className="text-sm md:text-lg text-zinc-300">
+					Results of the Points of Interest search
+				</p>
+			</div>
+			<DiscoverArea
+				{...{
+					savedPlacesMap,
+					setSavedPlacesMap,
+					selectedPlacesMap,
+					poisMap,
+					setSelectedPlacesMap,
+					setPoisMap,
+				}}
+			/>
 		</div>
 	);
 }

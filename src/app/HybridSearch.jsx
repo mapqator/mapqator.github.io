@@ -22,14 +22,13 @@ import _ from "lodash";
 import { LoadingButton } from "@mui/lab";
 import { Add, Clear, Download, Search, Start } from "@mui/icons-material";
 import Fuse from "fuse.js";
-const AutocompleteSearchBox = ({
+export const AutocompleteSearchBox = ({
 	savedPlacesMap,
-	addPlace,
-	setAddPlace,
 	setSavedPlacesMap,
 	selectedPlacesMap,
 	setSelectedPlacesMap,
 }) => {
+	const [addPlace, setAddPlace] = useState("");
 	const [search, setSearch] = useState("");
 	const [results, setResults] = useState([]);
 	const [selectedPlace, setSelectedPlace] = useState(null);
@@ -293,7 +292,7 @@ const AutocompleteSearchBox = ({
 					<div className="bg-white border-2 border-black flex flex-col gap-[1.5px]">
 						<div className="w-full flex flex-col ">
 							<div className="text-white text-center p-2 bg-black">
-								Places saved in our database
+								Places found in the Database
 							</div>
 							<div className="overflow-y-auto h-[40vh] flex flex-col">
 								{filteredPlaces
@@ -449,7 +448,7 @@ export default function HybridSearch({
 	selectedPlacesMap,
 	setSelectedPlacesMap,
 }) {
-	const [search, setSearch] = useState("");
+	// const [search, setSearch] = useState("");
 
 	return (
 		<div className="w-full flex flex-col items-center bg-white border-4 rounded-lg border-black gap-1">
@@ -464,8 +463,8 @@ export default function HybridSearch({
 			<div className="p-2 w-full flex flex-col gap-2">
 				<AutocompleteSearchBox
 					savedPlacesMap={savedPlacesMap}
-					addPlace={search}
-					setAddPlace={setSearch}
+					// addPlace={search}
+					// setAddPlace={setSearch}
 					{...{
 						setSavedPlacesMap,
 						selectedPlacesMap,

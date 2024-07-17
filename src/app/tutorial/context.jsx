@@ -10,6 +10,7 @@ import {
 	StepContent,
 	Button,
 	Paper,
+	Card,
 } from "@mui/material";
 import MapIcon from "@mui/icons-material/Map";
 import SearchIcon from "@mui/icons-material/Search";
@@ -19,12 +20,12 @@ import Image from "next/image";
 // import { AreaIcon } from "@material-ui/icons";
 
 import { AppBar, Toolbar } from "@mui/material";
-import HybridSearch from "../HybridSearch";
+import HybridSearch, { AutocompleteSearchBox } from "../HybridSearch";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import PlaceInformation from "../PlaceInformation";
-import NearbyInformation from "../NearbyInformation";
-import POI from "../POI";
-import DistanceInformation from "../DistanceInformation";
+import NearbyInformation, { NearbyInfo } from "../NearbyInformation";
+import POI, { DiscoverArea } from "../POI";
+import DistanceInformation, { CalculateDistance } from "../DistanceInformation";
 import DirectionInformation from "../DirectionInformation";
 import ContextPreview from "../ContextPreview";
 import { Flag } from "@mui/icons-material";
@@ -65,20 +66,23 @@ export default function ContextGenerator({ onFinish }) {
 			icon: <Flag />,
 		},
 		{
-			label: "Select a Location",
+			label: "Add Places",
 			description: `Start by searching for a location using the Places API. Type in a place name or address in the search bar below.`,
 			icon: <SearchIcon />,
 			component: (
 				<div className="flex flex-col gap-2">
-					<HybridSearch
-						{...{
-							savedPlacesMap,
-							setSavedPlacesMap,
-							selectedPlacesMap,
-							setSelectedPlacesMap,
-							setPoisMap,
-						}}
-					/>
+					<Card className="p-3">
+						<AutocompleteSearchBox
+							{...{
+								savedPlacesMap,
+								setSavedPlacesMap,
+								selectedPlacesMap,
+								setSelectedPlacesMap,
+								setPoisMap,
+							}}
+						/>
+					</Card>
+
 					<PlaceInformation
 						{...{
 							selectedPlacesMap,
@@ -102,16 +106,18 @@ export default function ContextGenerator({ onFinish }) {
 			description: `Use the Nearby Search API to discover points of interest around your selected location. Click on the "Nearby" button and choose a category.`,
 			icon: <PlaceIcon />,
 			component: (
-				<NearbyInformation
-					{...{
-						savedPlacesMap,
-						setSavedPlacesMap,
-						selectedPlacesMap,
-						nearbyPlacesMap,
-						setNearbyPlacesMap,
-						setSelectedPlacesMap,
-					}}
-				/>
+				<Card className="p-3">
+					<NearbyInfo
+						{...{
+							savedPlacesMap,
+							setSavedPlacesMap,
+							selectedPlacesMap,
+							nearbyPlacesMap,
+							setNearbyPlacesMap,
+							setSelectedPlacesMap,
+						}}
+					/>
+				</Card>
 			),
 		},
 		{
@@ -119,16 +125,18 @@ export default function ContextGenerator({ onFinish }) {
 			description: `Explore various Points of Interest (POIs) within a larger area using the Places API. Select a region like a city or neighborhood, then choose a category (e.g., restaurants, museums, parks) to see POIs within that area.`,
 			icon: <ExploreIcon />,
 			component: (
-				<POI
-					{...{
-						savedPlacesMap,
-						setSavedPlacesMap,
-						selectedPlacesMap,
-						poisMap,
-						setPoisMap,
-						setSelectedPlacesMap,
-					}}
-				/>
+				<Card className="p-3">
+					<DiscoverArea
+						{...{
+							savedPlacesMap,
+							setSavedPlacesMap,
+							selectedPlacesMap,
+							poisMap,
+							setPoisMap,
+							setSelectedPlacesMap,
+						}}
+					/>
+				</Card>
 			),
 		},
 		{
@@ -151,14 +159,16 @@ export default function ContextGenerator({ onFinish }) {
 			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Select several places and click "Calculate Distances".`,
 			icon: <MapIcon />,
 			component: (
-				<DistanceInformation
-					{...{
-						selectedPlacesMap,
-						savedPlacesMap,
-						distanceMatrix,
-						setDistanceMatrix,
-					}}
-				/>
+				<Card className="p-3">
+					<CalculateDistance
+						{...{
+							selectedPlacesMap,
+							savedPlacesMap,
+							distanceMatrix,
+							setDistanceMatrix,
+						}}
+					/>
+				</Card>
 			),
 		},
 		{
@@ -208,7 +218,10 @@ export default function ContextGenerator({ onFinish }) {
 								) : null
 							}
 							icon={step.icon}
-							onClick={() => setActiveStep(index)}
+							onClick={() => {
+								if (index !== activeStep) setActiveStep(index);
+								else setActiveStep(-1);
+							}}
 							className="!cursor-pointer hover:!text-blue-500"
 						>
 							{step.label}
@@ -220,7 +233,7 @@ export default function ContextGenerator({ onFinish }) {
 										whiteSpace: "pre-line", // This CSS property will make newlines render as expected
 									}}
 								>
-									{steps[activeStep].description}
+									{steps[activeStep]?.description}
 								</Typography>
 								{step.component}
 								<Box sx={{ mb: 2 }}>
@@ -266,9 +279,9 @@ export default function ContextGenerator({ onFinish }) {
 					<Button onClick={onFinish} sx={{ mt: 1, mr: 1 }}>
 						Create Question
 					</Button>
-					<Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
+					{/* <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
 						Edit
-					</Button>
+					</Button> */}
 				</Paper>
 			)}
 		</>

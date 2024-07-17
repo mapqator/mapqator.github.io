@@ -142,7 +142,8 @@ function DirectionCard({
 		</div>
 	);
 }
-export default function DirectionInformation({
+
+export function GetDirections({
 	selectedPlacesMap,
 	savedPlacesMap,
 	directionInformation,
@@ -212,18 +213,8 @@ export default function DirectionInformation({
 		}
 		setLoading(false);
 	};
-
 	return (
-		// Object.keys(selectedPlacesMap).length > 0 &&
-		<div className="flex flex-col border-4 w-full border-black rounded-lg">
-			<div className="flex flex-col items-center bg-black text-center pb-2">
-				<h1 className="text-xl md:text-3xl text-white">
-					Direction Information
-				</h1>
-				<p className="text-sm md:text-lg text-zinc-300">
-					Routes from one place to another
-				</p>
-			</div>
+		<>
 			{Object.keys(directionInformation).length > 0 && (
 				<div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
 					<div className="flex flex-row">
@@ -443,6 +434,34 @@ export default function DirectionInformation({
 					Add at least 2 places in the context first.
 				</p>
 			)}
+		</>
+	);
+}
+export default function DirectionInformation({
+	selectedPlacesMap,
+	savedPlacesMap,
+	directionInformation,
+	setDirectionInformation,
+}) {
+	return (
+		// Object.keys(selectedPlacesMap).length > 0 &&
+		<div className="flex flex-col border-4 w-full border-black rounded-lg">
+			<div className="flex flex-col items-center bg-black text-center pb-2">
+				<h1 className="text-xl md:text-3xl text-white">
+					Direction Information
+				</h1>
+				<p className="text-sm md:text-lg text-zinc-300">
+					Routes from one place to another
+				</p>
+			</div>
+			<GetDirections
+				{...{
+					selectedPlacesMap,
+					savedPlacesMap,
+					directionInformation,
+					setDirectionInformation,
+				}}
+			/>
 		</div>
 	);
 }
