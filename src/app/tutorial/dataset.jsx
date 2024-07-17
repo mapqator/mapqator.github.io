@@ -22,6 +22,8 @@ import {
 	TableContainer,
 	TableHead,
 	TableRow,
+	Button,
+	Collapse,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
@@ -35,16 +37,26 @@ const mockDataset = [
 		options: ["300 meters", "324 meters", "350 meters", "400 meters"],
 		correctAnswer: "324 meters",
 		category: "Landmarks",
+		llmAnswers: [
+			{ llm: "Phi-3", answer: "324 meters" },
+			{ llm: "Mistral", answer: "324 meters" },
+			{ llm: "Qwen2", answer: "300 meters" },
+		],
 	},
 	{
 		id: 2,
 		context:
-			"The Amazon rainforest, spanning across several South American countries, is the world's largest tropical rainforest. It covers approximately 5.5 million square kilometers and is home to an estimated 390 billion individual trees.",
+			"The Amazon rainforest, spanning across several South American countries, is the world's largest tropical rainforest. It covers approximately 5.5 million square kilometers and is home to an estimated 390 billion individual trees.The Amazon rainforest, spanning across several South American countries, is the world's largest tropical rainforest. It covers approximately 5.5 million square kilometers and is home to an estimated 390 billion individual trees.The Amazon rainforest, spanning across several South American countries, is the world's largest tropical rainforest. It covers approximately 5.5 million square kilometers and is home to an estimated 390 billion individual trees.The Amazon rainforest, spanning across several South American countries, is the world's largest tropical rainforest. It covers approximately 5.5 million square kilometers and is home to an estimated 390 billion individual trees.The Amazon rainforest, spanning across several South American countries, is the world's largest tropical rainforest. It covers approximately 5.5 million square kilometers and is home to an estimated 390 billion individual trees.",
 		question:
 			"Approximately how many individual trees are estimated to be in the Amazon rainforest?",
 		options: ["100 billion", "250 billion", "390 billion", "500 billion"],
 		correctAnswer: "390 billion",
 		category: "Geography",
+		llmAnswers: [
+			{ llm: "Phi-3", answer: "324 meters" },
+			{ llm: "Mistral", answer: "324 meters" },
+			{ llm: "Qwen2", answer: "300 meters" },
+		],
 	},
 	// Add more mock data as needed
 ];
@@ -54,6 +66,17 @@ export default function DatasetPage() {
 	const [filteredDataset, setFilteredDataset] = useState([]);
 	const [selectedCategory, setSelectedCategory] = useState("All");
 	const [datasetSummary, setDatasetSummary] = useState({});
+
+	const [expanded, setExpanded] = useState({});
+
+	const toggleExpanded = (id) => {
+		setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
+	};
+
+	const truncateText = (text, maxLength) => {
+		if (text.length <= maxLength) return text;
+		return text.substr(0, maxLength) + "...";
+	};
 
 	useEffect(() => {
 		// In a real application, you would fetch data here
@@ -197,8 +220,28 @@ export default function DatasetPage() {
 								sx={{ p: 2, bgcolor: "grey.100" }}
 							>
 								<Typography variant="body2">
-									{entry.context}
+									{
+										expanded[entry.id]
+											? entry.context
+											: truncateText(entry.context, 200) // Adjust 200 to your preferred initial length
+									}
 								</Typography>
+								{/* <Collapse
+									in={expanded[entry.id]}
+									collapsedSize={100}
+								>
+									<Typography variant="body2">
+										{entry.context}
+									</Typography>
+								</Collapse> */}
+								<Button
+									onClick={() => toggleExpanded(entry.id)}
+									sx={{ mt: 1, textTransform: "none" }}
+								>
+									{expanded[entry.id]
+										? "Show Less"
+										: "Read More"}
+								</Button>
 							</Paper>
 						</Box>
 						<Box sx={{ mb: 2 }}>
@@ -235,6 +278,52 @@ export default function DatasetPage() {
 									</ListItem>
 								))}
 							</List>
+						</Box>
+						<Box sx={{ mb: 2 }}>
+							<Typography variant="h6" gutterBottom>
+								LLM Answers:
+							</Typography>
+							<TableContainer component={Paper}>
+								<Table size="small">
+									<TableHead>
+										<TableRow>
+											<TableCell>LLM</TableCell>
+											<TableCell>Answer</TableCell>
+											<TableCell>Correct?</TableCell>
+										</TableRow>
+									</TableHead>
+									<TableBody>
+										{entry.llmAnswers.map(
+											(llmAnswer, index) => (
+												<TableRow key={index}>
+													<TableCell>
+														{llmAnswer.llm}
+													</TableCell>
+													<TableCell>
+														{llmAnswer.answer}
+													</TableCell>
+													<TableCell>
+														{llmAnswer.answer ===
+														entry.correctAnswer ? (
+															<Chip
+																label="Correct"
+																color="success"
+																size="small"
+															/>
+														) : (
+															<Chip
+																label="Incorrect"
+																color="error"
+																size="small"
+															/>
+														)}
+													</TableCell>
+												</TableRow>
+											)
+										)}
+									</TableBody>
+								</Table>
+							</TableContainer>
 						</Box>
 						<Box>
 							<Chip label={entry.category} color="primary" />

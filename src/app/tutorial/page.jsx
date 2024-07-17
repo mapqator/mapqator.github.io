@@ -44,8 +44,8 @@ function Navbar({ selected, setSelected }) {
 							process.env.REACT_APP_BASE_URL ?? ""
 						}/images/logo.png`}
 						alt="MapQuest Logo"
-						width={35}
-						height={35}
+						width={30}
+						height={30}
 					/>
 					<Typography
 						variant="h6"
