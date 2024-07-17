@@ -28,6 +28,7 @@ import DistanceInformation from "../DistanceInformation";
 import DirectionInformation from "../DirectionInformation";
 import ContextPreview from "../ContextPreview";
 import { Flag } from "@mui/icons-material";
+import ExploreIcon from "@mui/icons-material/Explore";
 
 export default function ContextGenerator({ onFinish }) {
 	const [activeStep, setActiveStep] = useState(0);
@@ -52,7 +53,15 @@ export default function ContextGenerator({ onFinish }) {
 	const steps = [
 		{
 			label: "Guidelines",
-			description: `This tutorial will guide you through the process of generating a context using Google Maps APIs. Users first need to add some places in the context. Then nearby pois, distance between places and alternative routes can be added. At each step, press "Continue" to move to the next step. Alternatively, click on the step icons to navigate to a specific step.`,
+			description: `Welcome to the Context Generator! This tool helps you create rich, place-related contexts using Google Maps APIs. Here's how it works:
+
+    		1. Add Places: Start by searching for and adding key locations to your context.
+			2. Explore Nearby Places: Discover nearby places and points of interest around your selected locations.
+			3. Discover Area POIs: Find points of interest within a larger area, like a city or neighborhood.
+			3. Get Directions & Distances: Find routes between places and calculate distances.
+			4. Generate Context: Review and finalize your place-related information.
+
+			Use the "Continue" button to move through each step, or click on the step icons to jump to a specific step. Let's begin!`,
 			icon: <Flag />,
 		},
 		{
@@ -106,9 +115,9 @@ export default function ContextGenerator({ onFinish }) {
 			),
 		},
 		{
-			label: "Explore POIs in Area",
-			description: `Leverage the Places API to find Points of Interest (POIs) within a specific area. Draw or select an area on the map to see POIs within that area.`,
-			icon: <PlaceIcon />,
+			label: "Discover Area POIs",
+			description: `Explore various Points of Interest (POIs) within a larger area using the Places API. Select a region like a city or neighborhood, then choose a category (e.g., restaurants, museums, parks) to see POIs within that area.`,
+			icon: <ExploreIcon />,
 			component: (
 				<POI
 					{...{
@@ -206,7 +215,13 @@ export default function ContextGenerator({ onFinish }) {
 						</StepLabel>
 						<StepContent>
 							<div className="flex flex-col gap-2">
-								<Typography>{step.description}</Typography>
+								<Typography
+									sx={{
+										whiteSpace: "pre-line", // This CSS property will make newlines render as expected
+									}}
+								>
+									{steps[activeStep].description}
+								</Typography>
 								{step.component}
 								<Box sx={{ mb: 2 }}>
 									<div>
