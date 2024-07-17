@@ -254,31 +254,36 @@ const AutocompleteSearchBox = ({
 					/>
 				</div>
 				<div className="w-full md:w-1/2 flex flex-row gap-1">
-					<LoadingButton
-						variant="contained"
-						type="submit"
-						fullWidth
-						// sx={{ height: "100%" }}
-						// className="!h-10"
-						loading={loading}
-						startIcon={<Search />}
-						loadingPosition="start"
-					>
-						Search ($)
-					</LoadingButton>
-					<Button
-						onClick={() => {
-							setResults([]);
-							setSearch("");
-						}}
-						variant="contained"
-						fullWidth
-						// sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
-						color="error"
-						startIcon={<Clear />}
-					>
-						Clear
-					</Button>
+					<div className="w-[60%]">
+						<LoadingButton
+							variant="contained"
+							type="submit"
+							fullWidth
+							// sx={{ height: "100%" }}
+							// className="!h-10"
+							loading={loading}
+							startIcon={<Search />}
+							loadingPosition="start"
+						>
+							Search ($)
+						</LoadingButton>
+					</div>
+
+					<div className="w-[40%]">
+						<Button
+							onClick={() => {
+								setResults([]);
+								setSearch("");
+							}}
+							variant="contained"
+							fullWidth
+							// sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
+							color="error"
+							startIcon={<Clear />}
+						>
+							Clear
+						</Button>
+					</div>
 				</div>
 			</form>
 
@@ -382,7 +387,7 @@ const AutocompleteSearchBox = ({
 								loadingPosition="end"
 								size="large"
 							>
-								Fetch Previous Places
+								Previous Places
 							</LoadingButton>
 						</div>
 					)}
@@ -393,7 +398,7 @@ const AutocompleteSearchBox = ({
 					<div className="bg-white border-2 border-black flex flex-col gap-[1.5px]">
 						<ul className="w-full flex flex-col">
 							<div className="text-white text-center p-2 bg-black">
-								Places fetched using Google Map API
+								Places fetched from Google Map
 							</div>
 							<div className="overflow-y-auto h-[40vh] flex flex-col">
 								{results.map((place, index) => (
