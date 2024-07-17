@@ -21,67 +21,67 @@ import Image from "next/image";
 import { AppBar, Toolbar } from "@mui/material";
 import ContextGenerator from "./context";
 import QuestionCreationPage from "./question";
+import DatasetPage from "./dataset";
+import EvaluationResultsPage from "./evaluation";
 
 function Navbar({ selected, setSelected }) {
 	const handleButtonClick = (buttonName) => {
 		setSelected(buttonName);
 	};
+	const navItems = [
+		{ name: "Context", key: "context-generator" },
+		{ name: "Question", key: "question-creator" },
+		{ name: "Dataset", key: "dataset" },
+		{ name: "Evaluation", key: "evaluation" },
+	];
 
 	return (
 		<AppBar position="static" sx={{ background: "white", mb: 4 }}>
-			<Toolbar>
-				<Typography
-					variant="h6"
-					component="div"
-					sx={{ flexGrow: 1, color: "black" }}
-					className="flex flex-row gap-2 items-center"
-				>
+			<Toolbar sx={{ justifyContent: "space-between" }}>
+				<Box display="flex" alignItems="center">
 					<Image
 						src={`${
 							process.env.REACT_APP_BASE_URL ?? ""
 						}/images/logo.png`}
-						alt="Google Maps Logo"
-						width={30}
-						height={30}
+						alt="MapQuest Logo"
+						width={35}
+						height={35}
 					/>
-					MapQuest
-				</Typography>
-				<Button
-					style={{
-						color:
-							selected === "context-generator" ? "blue" : "black",
-					}}
-					onClick={() => handleButtonClick("context-generator")}
-					href="#context-generator"
-				>
-					Context
-				</Button>
-				<Button
-					style={{
-						color:
-							selected === "question-creator" ? "blue" : "black",
-					}}
-					onClick={() => handleButtonClick("question-creator")}
-					href="#question-creator"
-				>
-					QnA
-				</Button>
-				<Button
-					style={{ color: selected === "dataset" ? "blue" : "black" }}
-					onClick={() => handleButtonClick("dataset")}
-					href="#dataset"
-				>
-					Dataset
-				</Button>
-				<Button
-					style={{
-						color: selected === "evaluation" ? "blue" : "black",
-					}}
-					onClick={() => handleButtonClick("evaluation")}
-					href="#evaluation"
-				>
-					Evaluation
-				</Button>
+					<Typography
+						variant="h6"
+						component="div"
+						sx={{ ml: 2, color: "#333", fontWeight: "bold" }}
+					>
+						MapQuest
+					</Typography>
+				</Box>
+				<Box>
+					{navItems.map((item) => (
+						<Button
+							key={item.key}
+							onClick={() => setSelected(item.key)}
+							sx={{
+								mx: 1,
+								color:
+									selected === item.key ? "#1976d2" : "#666",
+								fontWeight:
+									selected === item.key ? "bold" : "normal",
+								"&:hover": {
+									backgroundColor: "rgba(25, 118, 210, 0.04)",
+								},
+								transition: "all 0.3s",
+								borderBottom:
+									selected === item.key
+										? "2px solid #1976d2"
+										: "none",
+								borderRadius: 0,
+								paddingBottom: "6px",
+							}}
+						>
+							{item.name}
+						</Button>
+					))}
+				</Box>
 			</Toolbar>
 		</AppBar>
 	);
@@ -146,10 +146,14 @@ export default function PageComponent() {
 				<ContextGenerator
 					onFinish={() => setSelected("question-creator")}
 				/>
-			) : (
+			) : selected === "question-creator" ? (
 				<QuestionCreationPage
 					handleContextEdit={() => setSelected("context-generator")}
 				/>
+			) : selected === "dataset" ? (
+				<DatasetPage />
+			) : (
+				<EvaluationResultsPage />
 			)}
 		</Container>
 	);
