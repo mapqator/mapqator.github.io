@@ -2,14 +2,15 @@
 import { Button, Typography, Box, Fade } from "@mui/material";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function PageComponent() {
 	const [showContent, setShowContent] = useState(false);
-
+	const router = useRouter();
 	useEffect(() => {
 		setShowContent(true);
 	}, []);
-
+	console.log("url", `${process.env.REACT_APP_BASE_URL}/images/logo.png`);
 	return (
 		<Box
 			className="bg-gradient-to-r from-blue-100 to-green-100 w-full min-h-screen flex flex-col items-center justify-center"
@@ -18,7 +19,9 @@ export default function PageComponent() {
 			<Fade in={showContent} timeout={1000}>
 				<Box className="text-center">
 					<motion.img
-						src={`${process.env.REACT_APP_BASE_URL}/images/logo.png`}
+						src={`${
+							process.env.REACT_APP_BASE_URL ?? ""
+						}/images/logo.png`}
 						alt="Google Maps Logo"
 						style={{
 							width: "160px",
@@ -63,7 +66,6 @@ export default function PageComponent() {
 					>
 						<Button
 							variant="contained"
-							href="/features"
 							size="large"
 							sx={{
 								fontWeight: "bold",
@@ -78,6 +80,7 @@ export default function PageComponent() {
 									backgroundColor: "#2E8B57", // Darker shade of green
 								},
 							}}
+							onClick={() => router.push("/features")}
 						>
 							Start Your Adventure
 						</Button>

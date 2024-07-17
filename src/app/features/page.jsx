@@ -13,8 +13,10 @@ import MapIcon from "@mui/icons-material/Map";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import DatasetIcon from "@mui/icons-material/Dataset";
 import AssessmentIcon from "@mui/icons-material/Assessment";
+import { useRouter } from "next/navigation";
 
 export default function HomePage() {
+	const router = useRouter();
 	const features = [
 		{
 			icon: <MapIcon fontSize="large" />,
@@ -113,7 +115,7 @@ export default function HomePage() {
 					<Button
 						variant="contained"
 						size="large"
-						href="/tutorial"
+						// href="/tutorial"
 						sx={{
 							px: 4,
 							py: 1.5,
@@ -123,6 +125,7 @@ export default function HomePage() {
 								backgroundColor: "#3367D6",
 							},
 						}}
+						onClick={() => router.push("/tutorial")}
 					>
 						Get Started
 					</Button>
