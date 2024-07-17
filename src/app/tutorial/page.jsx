@@ -23,6 +23,7 @@ import ContextGenerator from "./context";
 import QuestionCreationPage from "./question";
 import DatasetPage from "./dataset";
 import EvaluationResultsPage from "./evaluation";
+import { useRouter } from "next/navigation";
 
 function Navbar({ selected, setSelected }) {
 	const [baseUrl, setBaseUrl] = useState(
@@ -41,24 +42,40 @@ function Navbar({ selected, setSelected }) {
 		{ name: "Dataset", key: "dataset" },
 		{ name: "Evaluation", key: "evaluation" },
 	];
+	const router = useRouter();
 
 	return (
 		<AppBar position="static" sx={{ background: "white", mb: 4 }}>
 			<Toolbar sx={{ justifyContent: "space-between" }}>
-				<Box display="flex" alignItems="center">
+				<Box
+					onClick={() => router.push("landing")}
+					className="cursor-pointer flex flex-row items-center"
+				>
 					<Image
 						src={`${baseUrl}/images/logo.png`}
 						alt="MapQuest Logo"
 						width={30}
 						height={30}
 					/>
-					<Typography
-						variant="h6"
-						component="div"
-						sx={{ ml: 2, color: "#333", fontWeight: "bold" }}
-					>
-						MapQuest
-					</Typography>
+					<div className="flex flex-col justify-center">
+						<Typography
+							variant="h6"
+							component="div"
+							sx={{ ml: 2, color: "#333", fontWeight: "bold" }}
+						>
+							MapQuest
+						</Typography>
+						<h6
+							// sx={{ ml: 2, color: "#333", fontWeight: "bold" }}
+							className="text-xs text-gray-500 ml-8 h-3"
+							style={{
+								fontSize: "0.6rem",
+								transform: "translateY(-5px)",
+							}}
+						>
+							by Mahir Labib Dihan
+						</h6>
+					</div>
 				</Box>
 				<Box>
 					{navItems.map((item) => (
