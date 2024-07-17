@@ -27,7 +27,7 @@ import NearbyInformation, { NearbyInfo } from "../NearbyInformation";
 import POI, { DiscoverArea } from "../POI";
 import DistanceInformation, { CalculateDistance } from "../DistanceInformation";
 import DirectionInformation from "../DirectionInformation";
-import ContextPreview from "../ContextPreview";
+import ContextPreview, { ContextViewer } from "../ContextPreview";
 import { Flag } from "@mui/icons-material";
 import ExploreIcon from "@mui/icons-material/Explore";
 
@@ -176,17 +176,13 @@ export default function ContextGenerator({ onFinish }) {
 			description: `Review the information gathered and click "Generate Context" to create a rich, location-based context for your QnA dataset.`,
 			icon: <SearchIcon />,
 			component: (
-				<ContextPreview
-					{...{
-						setContextJSON,
-						context,
-						setContext,
-						savedPlacesMap,
-						selectedPlacesMap,
-						distanceMatrix,
-						nearbyPlacesMap,
-					}}
-				/>
+				<Card className="p-3">
+					<ContextViewer
+						{...{
+							context,
+						}}
+					/>
+				</Card>
 			),
 		},
 	];
