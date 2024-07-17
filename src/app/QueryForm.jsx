@@ -25,7 +25,7 @@ export default function QueryForm({ contextJSON, context, handleSave }) {
 				<h1 className="text-3xl text-white">Create new query</h1>
 				<p className="text-base text-white">Context+Question+Answer</p>
 			</div>
-			<QuerwwyFields {...{ contextJSON, context }} onSave={handleSave} />
+			<QueryFields {...{ contextJSON, context }} onSave={handleSave} />
 		</div>
 	);
 }
