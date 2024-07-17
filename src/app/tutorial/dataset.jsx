@@ -118,37 +118,37 @@ export default function DatasetPage() {
 		setFilteredQueries(queries);
 	}, []);
 
-	useEffect(() => {
-		const tmp = {};
-		let valid_questions = 0;
-		let total_questions = 0;
-		let questions_without_context = 0;
-		let questions_with_answer = 0;
+	// useEffect(() => {
+	// 	const tmp = {};
+	// 	let valid_questions = 0;
+	// 	let total_questions = 0;
+	// 	let questions_without_context = 0;
+	// 	let questions_with_answer = 0;
 
-		queries.forEach((query) => {
-			total_questions++;
-			if (query.context === "") {
-				questions_without_context++;
-			}
-			if (query.answer.correct !== -1) {
-				questions_with_answer++;
-			}
-			if (query.context !== "" && query.answer.correct !== -1) {
-				const invalid = query.evaluation?.find(
-					(e) =>
-						e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
-						e.verdict === "invalid"
-				);
-				if (!invalid) valid_questions++;
-			}
-		});
-		tmp["totalQuestions"] = total_questions;
-		tmp["questionsWithoutContext"] = questions_without_context;
-		tmp["questionsWithoutCorrectAnswer"] =
-			total_questions - questions_with_answer;
-		tmp["validQuestions"] = valid_questions;
-		setDatasetSummary(tmp);
-	}, [queries]);
+	// 	queries.forEach((query) => {
+	// 		total_questions++;
+	// 		if (query.context === "") {
+	// 			questions_without_context++;
+	// 		}
+	// 		if (query.answer.correct !== -1) {
+	// 			questions_with_answer++;
+	// 		}
+	// 		if (query.context !== "" && query.answer.correct !== -1) {
+	// 			const invalid = query.evaluation?.find(
+	// 				(e) =>
+	// 					e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
+	// 					e.verdict === "invalid"
+	// 			);
+	// 			if (!invalid) valid_questions++;
+	// 		}
+	// 	});
+	// 	tmp["totalQuestions"] = total_questions;
+	// 	tmp["questionsWithoutContext"] = questions_without_context;
+	// 	tmp["questionsWithoutCorrectAnswer"] =
+	// 		total_questions - questions_with_answer;
+	// 	tmp["validQuestions"] = valid_questions;
+	// 	setDatasetSummary(tmp);
+	// }, [queries]);
 
 	const categories = [
 		"All",
