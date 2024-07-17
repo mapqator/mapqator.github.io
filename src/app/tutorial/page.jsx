@@ -64,7 +64,7 @@ function Navbar({ selected, setSelected }) {
 					onClick={() => handleButtonClick("question-creator")}
 					href="#question-creator"
 				>
-					Question
+					QnA
 				</Button>
 				<Button
 					style={{ color: selected === "dataset" ? "blue" : "black" }}
