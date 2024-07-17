@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
 	Box,
 	Container,
@@ -15,46 +15,92 @@ import {
 	MenuItem,
 	IconButton,
 	Paper,
+	OutlinedInput,
+	InputLabel,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import { GlobalContext } from "@/contexts/GlobalContext";
+import QueryApi from "@/api/queryApi";
+const queryApi = new QueryApi();
 
 export default function QuestionCreationPage({ handleContextEdit }) {
+	const { context, contextJSON, query, setQuery, queries, setQueries } =
+		useContext(GlobalContext);
 	const [question, setQuestion] = useState("");
 	const [options, setOptions] = useState(["", "", "", ""]);
 	const [correctAnswer, setCorrectAnswer] = useState("");
 	const [category, setCategory] = useState("");
 
+	useEffect(() => {
+		console.log("Context updated", context);
+		setQuery((prev) => ({
+			...prev,
+			context: context.reduce((acc, e) => acc + e + "\n", ""),
+			context_json: contextJSON,
+		}));
+	}, [context]);
 	// Assume this context is passed from the previous page
-	const context = "This is the generated context based on the map data...";
+	// const context = "This is the generated context based on the map data...";
 
 	const handleOptionChange = (index, value) => {
-		const newOptions = [...options];
-		newOptions[index] = value;
-		setOptions(newOptions);
+		setQuery((prev) => {
+			const options = [...prev.answer.options];
+			options[index] = value;
+			return {
+				...prev,
+				answer: {
+					...prev.answer,
+					options,
+				},
+			};
+		});
 	};
 
 	const addOption = () => {
-		setOptions([...options, ""]);
+		setQuery((prev) => ({
+			...prev,
+			answer: {
+				...prev.answer,
+				options: [...prev.answer.options, ""],
+			},
+		}));
 	};
 
 	const removeOption = (index) => {
-		const newOptions = options.filter((_, i) => i !== index);
-		setOptions(newOptions);
+		setQuery((prev) => {
+			const options = [...prev.answer.options];
+			options.splice(index, 1);
+			return {
+				...prev,
+				answer: {
+					...prev.answer,
+					options,
+				},
+			};
+		});
 	};
 
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
-		// Here you would typically send the question data to your backend
-		console.log({ question, options, correctAnswer, category });
-		// Reset form or navigate to next step
+		const res = await queryApi.createQuery(query);
+		if (res.success) {
+			// update the queries
+			const newQueries = [...queries];
+			// push front
+			newQueries.unshift(res.data[0]);
+			setQueries(newQueries);
+			// showSuccess("Query saved successfully", res);
+		} else {
+			// showToast("Can't save this query", "error");
+		}
 	};
 
 	return (
 		<>
 			<Typography variant="h4" gutterBottom component="h1">
-				Create MCQ Question
+				Create MCQ Question based on Context
 			</Typography>
 			<Paper elevation={3} sx={{ p: 3, mb: 4 }}>
 				<Box
@@ -73,7 +119,21 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 						Edit Context
 					</Button>
 				</Box>
-				<Typography variant="body1">{context}</Typography>
+				<Typography variant="body1">
+					{query.context.split("\n").map((line, index) => (
+						<React.Fragment key={index}>
+							{/* {line} */}
+							<p
+								key={index}
+								className="w-full text-left"
+								dangerouslySetInnerHTML={{
+									__html: line,
+								}}
+							/>
+							{/* <br /> */}
+						</React.Fragment>
+					))}
+				</Typography>
 			</Paper>
 			<form onSubmit={handleSubmit}>
 				<Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
@@ -81,19 +141,72 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 				</Typography>
 				<TextField
 					fullWidth
-					label="Question"
-					value={question}
-					onChange={(e) => setQuestion(e.target.value)}
+					// label="Question"
+					value={query.question}
+					onChange={(e) =>
+						setQuery((prev) => ({
+							...prev,
+							question: e.target.value,
+						}))
+					}
 					multiline
 					required
+					minRows={4}
 				/>
+				<Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+					Category:
+				</Typography>
+				<FormControl
+					fullWidth
+					variant="outlined"
+					// size="small"
+					sx={{ mb: 2 }}
+				>
+					{/* <FormLabel
+						htmlFor="outlined-adornment"
+						className="input-label"
+					>
+						Category
+					</FormLabel> */}
+					<Select
+						multiple
+						id="outlined-adornment"
+						className="outlined-input"
+						value={query.classification.split(",").filter(Boolean)}
+						onChange={(e) => {
+							setQuery((prev) => ({
+								...prev,
+								classification: e.target.value.join(","),
+							}));
+						}}
+						// input={<OutlinedInput label={"Category"} />}
+					>
+						{[
+							"nearby_poi",
+							"planning",
+							"time_calculation",
+							"routing",
+							"location_finding",
+							"opinion",
+							"navigation",
+						].map((value, index) => (
+							<MenuItem key={index} value={value}>
+								{value}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
 				<Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
 					Options:
 				</Typography>
-				{options.map((option, index) => (
+				{query.answer.options.map((option, index) => (
 					<Box
 						key={index}
-						sx={{ display: "flex", alignItems: "center", mb: 2 }}
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							mb: 2,
+						}}
 					>
 						<TextField
 							fullWidth
@@ -119,39 +232,38 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 				>
 					Add Option
 				</Button>
+
+				<Typography variant="h6" sx={{ mt: 2 }}>
+					Correct Answer:
+				</Typography>
 				<FormControl
 					component="fieldset"
 					sx={{ display: "block", mb: 2 }}
 				>
-					<FormLabel component="legend">Correct Answer</FormLabel>
+					{/* <FormLabel component="legend">Correct Answer</FormLabel> */}
 					<RadioGroup
-						value={correctAnswer}
-						onChange={(e) => setCorrectAnswer(e.target.value)}
+						value={query.answer.correct}
+						onChange={(e) =>
+							setQuery((prev) => ({
+								...prev,
+								answer: {
+									...prev.answer,
+									correct: e.target.value,
+								},
+							}))
+						}
 					>
 						{options.map((option, index) => (
 							<FormControlLabel
 								key={index}
-								value={option}
+								value={index}
 								control={<Radio />}
 								label={`Option ${index + 1}`}
 							/>
 						))}
 					</RadioGroup>
 				</FormControl>
-				<FormControl fullWidth sx={{ mb: 2 }}>
-					<FormLabel>Category</FormLabel>
-					<Select
-						value={category}
-						onChange={(e) => setCategory(e.target.value)}
-						required
-					>
-						<MenuItem value="geography">Geography</MenuItem>
-						<MenuItem value="history">History</MenuItem>
-						<MenuItem value="culture">Culture</MenuItem>
-						<MenuItem value="landmarks">Landmarks</MenuItem>
-						{/* Add more categories as needed */}
-					</Select>
-				</FormControl>
+
 				<Button type="submit" variant="contained" color="primary">
 					Submit Question
 				</Button>

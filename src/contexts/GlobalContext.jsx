@@ -15,6 +15,19 @@ export default function GlobalContextProvider({ children }) {
 	});
 	const [directionInformation, setDirectionInformation] = useState({});
 	const [poisMap, setPoisMap] = useState({});
+	const [query, setQuery] = useState({
+		question: "",
+		answer: {
+			type: "mcq",
+			options: ["", "", "", ""],
+			correct: -1,
+		},
+		context: "",
+		context_json: {},
+		context_gpt: "",
+		classification: "",
+	});
+	const [queries, setQueries] = useState([]);
 
 	return (
 		<GlobalContext.Provider
@@ -37,6 +50,8 @@ export default function GlobalContextProvider({ children }) {
 				setDirectionInformation,
 				poisMap,
 				setPoisMap,
+				query,
+				setQuery,
 			}}
 		>
 			{children}
