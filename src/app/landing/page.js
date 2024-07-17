@@ -18,7 +18,7 @@ export default function PageComponent() {
 			<Fade in={showContent} timeout={1000}>
 				<Box className="text-center">
 					<motion.img
-						src="/images/logo.png"
+						src={`${process.env.REACT_APP_BASE_URL}/images/logo.png`}
 						alt="Google Maps Logo"
 						style={{
 							width: "160px",
