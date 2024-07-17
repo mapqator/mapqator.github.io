@@ -32,6 +32,7 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 	const [options, setOptions] = useState(["", "", "", ""]);
 	const [correctAnswer, setCorrectAnswer] = useState("");
 	const [category, setCategory] = useState("");
+	const [expanded, setExpanded] = useState(false);
 
 	useEffect(() => {
 		console.log("Context updated", context);
@@ -84,16 +85,29 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		const res = await queryApi.createQuery(query);
-		if (res.success) {
-			// update the queries
-			const newQueries = [...queries];
-			// push front
-			newQueries.unshift(res.data[0]);
-			setQueries(newQueries);
-			// showSuccess("Query saved successfully", res);
+		if (query.id === undefined) {
+			const res = await queryApi.createQuery(query);
+			if (res.success) {
+				// update the queries
+				const newQueries = [...queries];
+				// push front
+				newQueries.unshift(res.data[0]);
+				setQueries(newQueries);
+				// showSuccess("Query saved successfully", res);
+			} else {
+				// showToast("Can't save this query", "error");
+			}
 		} else {
-			// showToast("Can't save this query", "error");
+			const res = await queryApi.updateQuery(query.id, query);
+			if (res.success) {
+				// update the queries
+				setQueries((prevQueries) =>
+					prevQueries.map((q) =>
+						q.id === res.data[0].id ? res.data[0] : q
+					)
+				);
+				// showSuccess("Query edited successfully", res);
+			}
 		}
 	};
 
@@ -119,21 +133,32 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 						Edit Context
 					</Button>
 				</Box>
-				<Typography variant="body1">
-					{query.context.split("\n").map((line, index) => (
-						<React.Fragment key={index}>
-							{/* {line} */}
-							<p
-								key={index}
-								className="w-full text-left"
-								dangerouslySetInnerHTML={{
-									__html: line,
-								}}
-							/>
-							{/* <br /> */}
-						</React.Fragment>
-					))}
-				</Typography>
+				<Box>
+					{query.context.split("\n").map(
+						(line, index) =>
+							(expanded || index < 5) && (
+								<React.Fragment key={index}>
+									{/* {line} */}
+									<p
+										key={index}
+										className="w-full text-left"
+										dangerouslySetInnerHTML={{
+											__html: line,
+										}}
+									/>
+									{/* <br /> */}
+								</React.Fragment>
+							)
+					)}
+					{query.context.split("\n").length > 5 && (
+						<Button
+							onClick={() => setExpanded((prev) => !prev)}
+							sx={{ mt: 1, textTransform: "none" }}
+						>
+							{expanded ? "Show Less" : "Read More"}
+						</Button>
+					)}
+				</Box>
 			</Paper>
 			<form onSubmit={handleSubmit}>
 				<Typography variant="h6" gutterBottom sx={{ mt: 2 }}>

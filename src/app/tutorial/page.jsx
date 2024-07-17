@@ -166,14 +166,25 @@ export default function PageComponent() {
 			<Navbar {...{ selected, setSelected }} />
 			{selected === "context-generator" ? (
 				<ContextGenerator
-					onFinish={() => setSelected("question-creator")}
+					onFinish={() => {
+						setSelected("question-creator");
+						window.scrollTo(0, 0);
+					}}
 				/>
 			) : selected === "question-creator" ? (
 				<QuestionCreationPage
-					handleContextEdit={() => setSelected("context-generator")}
+					handleContextEdit={() => {
+						setSelected("context-generator");
+						window.scrollTo(0, 0);
+					}}
 				/>
 			) : selected === "dataset" ? (
-				<DatasetPage />
+				<DatasetPage
+					onEdit={() => {
+						setSelected("question-creator");
+						window.scrollTo(0, 0);
+					}}
+				/>
 			) : (
 				<EvaluationResultsPage />
 			)}

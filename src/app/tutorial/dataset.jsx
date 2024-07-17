@@ -30,7 +30,11 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 import QueryApi from "@/api/queryApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { Edit } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
+import MapApi from "@/api/mapApi";
 const queryApi = new QueryApi();
+const mapApi = new MapApi();
 // Mock data - replace this with actual data fetching logic
 const mockDataset = [
 	{
@@ -65,9 +69,26 @@ const mockDataset = [
 	// Add more mock data as needed
 ];
 
-export default function DatasetPage() {
+export default function DatasetPage({ onEdit }) {
 	const [dataset, setDataset] = useState([]);
-	const { queries, setQueries } = useContext(GlobalContext);
+	const {
+		queries,
+		setQueries,
+		setSelectedPlacesMap,
+		setDistanceMatrix,
+		setNearbyPlacesMap,
+		setCurrentInformation,
+		setDirectionInformation,
+		savedPlacesMap,
+		setSavedPlacesMap,
+		setContext,
+		context,
+		setContextJSON,
+		contextJSON,
+		query,
+		setQuery,
+		setPoisMap,
+	} = useContext(GlobalContext);
 	const [filteredQueries, setFilteredQueries] = useState([]);
 	const [filteredDataset, setFilteredDataset] = useState([]);
 	const [selectedCategory, setSelectedCategory] = useState("All");
@@ -83,6 +104,23 @@ export default function DatasetPage() {
 		if (text.length <= maxLength) return text;
 		return text.substr(0, maxLength) + "...";
 	};
+
+	const handleSave = async (place_id) => {
+		if (savedPlacesMap[place_id]) return;
+		const res = await mapApi.getDetails(place_id);
+		if (res.success) {
+			const details = res.data.result;
+			setSavedPlacesMap((prev) => ({
+				...prev,
+				[place_id]: details,
+			}));
+		} else {
+			console.error("Error fetching data: ", res.error);
+			return;
+		}
+	};
+
+	const router = useRouter();
 
 	// useEffect(() => {
 	// 	// In a real application, you would fetch data here
@@ -333,29 +371,16 @@ export default function DatasetPage() {
 											</React.Fragment>
 										)
 								)}
-								{/* <Typography variant="body2">
-									{
-										expanded[entry.id]
-											? entry.context
-											: truncateText(entry.context, 200) // Adjust 200 to your preferred initial length
-									}
-								</Typography> */}
-								{/* <Collapse
-									in={expanded[entry.id]}
-									collapsedSize={100}
-								>
-									<Typography variant="body2">
-										{entry.context}
-									</Typography>
-								</Collapse> */}
-								<Button
-									onClick={() => toggleExpanded(entry.id)}
-									sx={{ mt: 1, textTransform: "none" }}
-								>
-									{expanded[entry.id]
-										? "Show Less"
-										: "Read More"}
-								</Button>
+								{entry.context.split("\n").length > 5 && (
+									<Button
+										onClick={() => toggleExpanded(entry.id)}
+										sx={{ mt: 1, textTransform: "none" }}
+									>
+										{expanded[entry.id]
+											? "Show Less"
+											: "Read More"}
+									</Button>
+								)}
 							</Paper>
 						</Box>
 						<Box sx={{ mb: 2 }}>
@@ -456,12 +481,70 @@ export default function DatasetPage() {
 							</Box>
 						)}
 
-						{/* <Box>
-							<Chip
-								label={entry.classification}
+						<Box className="w-full flex justify-end">
+							<Button
+								variant="contained"
 								color="primary"
-							/>
-						</Box> */}
+								startIcon={<Edit />}
+								onClick={async () => {
+									for (let place_id in entry.context_json
+										.places) {
+										await handleSave(place_id);
+									}
+									setSelectedPlacesMap(
+										entry.context_json.places ?? {}
+									);
+									setDistanceMatrix(
+										entry.context_json.distance_matrix ?? {}
+									);
+									setDirectionInformation(
+										entry.context_json.directions ?? {}
+									);
+
+									setNearbyPlacesMap(
+										entry.context_json.nearby_places ?? {}
+									);
+									setCurrentInformation(
+										entry.context_json.current_information
+											? {
+													time: entry.context_json
+														.current_information
+														.time
+														? dayjs(
+																entry
+																	.context_json
+																	.current_information
+																	.time
+														  )
+														: null,
+													day: entry.context_json
+														.current_information
+														.day,
+													location:
+														entry.context_json
+															.current_information
+															.location,
+											  }
+											: {
+													time: null,
+													day: "",
+													location: "",
+											  }
+									);
+									setPoisMap(
+										query.context_json.pois?.length > 0
+											? query.context_json.pois
+											: {}
+									);
+									setContext([]);
+									setContextJSON({});
+									setQuery(entry);
+									onEdit();
+								}}
+							>
+								Edit
+							</Button>
+						</Box>
 					</AccordionDetails>
 				</Accordion>
 			))}
