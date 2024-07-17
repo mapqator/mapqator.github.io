@@ -112,6 +112,38 @@ export default function DatasetPage() {
 		setDatasetSummary(summary);
 	}, []);
 
+	useEffect(() => {
+		const tmp = {};
+		let valid_questions = 0;
+		let total_questions = 0;
+		let questions_without_context = 0;
+		let questions_with_answer = 0;
+
+		queries.forEach((query) => {
+			total_questions++;
+			if (query.context === "") {
+				questions_without_context++;
+			}
+			if (query.answer.correct !== -1) {
+				questions_with_answer++;
+			}
+			if (query.context !== "" && query.answer.correct !== -1) {
+				const invalid = query.evaluation?.find(
+					(e) =>
+						e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
+						e.verdict === "invalid"
+				);
+				if (!invalid) valid_questions++;
+			}
+		});
+		tmp["totalQuestions"] = total_questions;
+		tmp["questionsWithoutContext"] = questions_without_context;
+		tmp["questionsWithoutCorrectAnswer"] =
+			total_questions - questions_with_answer;
+		tmp["validQuestions"] = valid_questions;
+		setDatasetSummary(tmp);
+	}, [queries]);
+
 	const categories = [
 		"All",
 		...new Set(dataset.map((item) => item.category)),
@@ -170,12 +202,7 @@ export default function DatasetPage() {
 								{datasetSummary.totalQuestions}
 							</TableCell>
 						</TableRow>
-						<TableRow>
-							<TableCell>Valid Questions</TableCell>
-							<TableCell align="right">
-								{datasetSummary.validQuestions}
-							</TableCell>
-						</TableRow>
+
 						<TableRow>
 							<TableCell>Questions Without Context</TableCell>
 							<TableCell align="right">
@@ -191,9 +218,9 @@ export default function DatasetPage() {
 							</TableCell>
 						</TableRow>
 						<TableRow>
-							<TableCell>Invalid Questions</TableCell>
+							<TableCell>Valid Questions</TableCell>
 							<TableCell align="right">
-								{datasetSummary.invalidQuestions}
+								{datasetSummary.validQuestions}
 							</TableCell>
 						</TableRow>
 					</TableBody>
@@ -274,39 +301,44 @@ export default function DatasetPage() {
 								Options:
 							</Typography>
 							<List dense>
-								{entry.answer.options.map((option, index) => (
-									<ListItem key={index}>
-										<ListItemText
-											primary={
-												"Option " +
-												(index + 1) +
-												": " +
-												option
-											}
-											sx={{
-												"& .MuiListItemText-primary": {
-													fontWeight:
-														option ===
-														entry.correctAnswer
-															? "bold"
-															: "normal",
-													color:
-														option ===
-														entry.correctAnswer
-															? "success.main"
-															: "inherit",
-												},
-											}}
-										/>
-										{index === entry.answer.correct && (
-											<Chip
-												label="Correct"
-												color="success"
-												size="small"
-											/>
-										)}
-									</ListItem>
-								))}
+								{entry.answer.options.map(
+									(option, index) =>
+										option !== "" && (
+											<ListItem key={index}>
+												<ListItemText
+													primary={
+														"Option " +
+														(index + 1) +
+														": " +
+														option
+													}
+													sx={{
+														"& .MuiListItemText-primary":
+															{
+																fontWeight:
+																	option ===
+																	entry.correctAnswer
+																		? "bold"
+																		: "normal",
+																color:
+																	option ===
+																	entry.correctAnswer
+																		? "success.main"
+																		: "inherit",
+															},
+													}}
+												/>
+												{index ===
+													entry.answer.correct && (
+													<Chip
+														label="Correct"
+														color="success"
+														size="small"
+													/>
+												)}
+											</ListItem>
+										)
+								)}
 							</List>
 						</Box>
 						<Box sx={{ mb: 2 }}>
