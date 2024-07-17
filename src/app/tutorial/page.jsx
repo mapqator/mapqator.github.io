@@ -37,7 +37,9 @@ function Navbar({ selected, setSelected }) {
 					className="flex flex-row gap-2 items-center"
 				>
 					<Image
-						src="/images/logo.png"
+						src={`${
+							process.env.REACT_APP_BASE_URL ?? ""
+						}/images/logo.png`}
 						alt="Google Maps Logo"
 						width={30}
 						height={30}
