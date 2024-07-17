@@ -26,7 +26,11 @@ import EvaluationResultsPage from "./evaluation";
 
 function Navbar({ selected, setSelected }) {
 	const [baseUrl, setBaseUrl] = useState(
-		process.env.REACT_APP_BASE_URL ?? ""
+		process.env.REACT_APP_BASE_URL
+			? process.env.REACT_APP_BASE_URL
+			: process.env.NODE_ENV === "development"
+			? ""
+			: "https://mahirlabibdihan.github.io/mapquest"
 	);
 	const handleButtonClick = (buttonName) => {
 		setSelected(buttonName);

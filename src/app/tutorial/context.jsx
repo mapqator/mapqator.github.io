@@ -28,8 +28,10 @@ import POI, { DiscoverArea } from "../POI";
 import DistanceInformation, { CalculateDistance } from "../DistanceInformation";
 import DirectionInformation from "../DirectionInformation";
 import ContextPreview, { ContextViewer } from "../ContextPreview";
-import { Flag } from "@mui/icons-material";
+import { Flag, Preview } from "@mui/icons-material";
 import ExploreIcon from "@mui/icons-material/Explore";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 
 export default function ContextGenerator({ onFinish }) {
 	const [activeStep, setActiveStep] = useState(0);
@@ -172,9 +174,9 @@ export default function ContextGenerator({ onFinish }) {
 			),
 		},
 		{
-			label: "Generate Context",
+			label: "Generated Context",
 			description: `Review the information gathered and click "Generate Context" to create a rich, location-based context for your QnA dataset.`,
-			icon: <SearchIcon />,
+			icon: <FontAwesomeIcon icon={faEye} />,
 			component: (
 				<Card className="p-3">
 					<ContextViewer
@@ -206,13 +208,13 @@ export default function ContextGenerator({ onFinish }) {
 				{steps.map((step, index) => (
 					<Step key={step.label}>
 						<StepLabel
-							optional={
-								index === steps.length - 1 ? (
-									<Typography variant="caption">
-										Last step
-									</Typography>
-								) : null
-							}
+							// optional={
+							// 	index === steps.length - 1 ? (
+							// 		<Typography variant="caption">
+							// 			Last step
+							// 		</Typography>
+							// 	) : null
+							// }
 							icon={step.icon}
 							onClick={() => {
 								if (index !== activeStep) setActiveStep(index);
