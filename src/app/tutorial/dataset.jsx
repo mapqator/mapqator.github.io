@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
 	Container,
 	Typography,
@@ -26,7 +26,9 @@ import {
 	Collapse,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
+import { GlobalContext } from "@/contexts/GlobalContext";
+import QueryApi from "@/api/queryApi";
+const queryApi = new QueryApi();
 // Mock data - replace this with actual data fetching logic
 const mockDataset = [
 	{
@@ -63,6 +65,8 @@ const mockDataset = [
 
 export default function DatasetPage() {
 	const [dataset, setDataset] = useState([]);
+	const { queries, setQueries } = useContext(GlobalContext);
+	const [filteredQueries, setFilteredQueries] = useState([]);
 	const [filteredDataset, setFilteredDataset] = useState([]);
 	const [selectedCategory, setSelectedCategory] = useState("All");
 	const [datasetSummary, setDatasetSummary] = useState({});
@@ -117,14 +121,35 @@ export default function DatasetPage() {
 		const category = event.target.value;
 		setSelectedCategory(category);
 		if (category === "All") {
-			setFilteredDataset(dataset);
+			setFilteredQueries(queries);
 		} else {
-			setFilteredDataset(
-				dataset.filter((item) => item.category === category)
+			setFilteredQueries(
+				queries.filter((item) => item.classification.includes(category))
 			);
 		}
 	};
 
+	const fetchQueries = async () => {
+		// setLoading(true);
+		try {
+			const res = await queryApi.getQueries();
+			if (res.success) {
+				console.log("Data: ", res.data);
+				setQueries(res.data);
+				setFilteredQueries(res.data);
+				// setFetched(true);
+				// setLoading(false);
+			}
+		} catch (error) {
+			console.error("Error fetching data: ", error);
+		}
+	};
+	useEffect(() => {
+		// if (process.env.NODE_ENV === "production")
+		{
+			fetchQueries();
+		}
+	}, []);
 	return (
 		<>
 			<Typography variant="h4" gutterBottom component="h1">
@@ -196,7 +221,7 @@ export default function DatasetPage() {
 				</FormControl>
 			</Box>
 
-			{filteredDataset.map((entry) => (
+			{filteredQueries.map((entry) => (
 				<Accordion key={entry.id} sx={{ mb: 2 }}>
 					<AccordionSummary
 						expandIcon={<ExpandMoreIcon />}
@@ -204,7 +229,7 @@ export default function DatasetPage() {
 						id={`panel${entry.id}-header`}
 					>
 						<Typography sx={{ width: "33%", flexShrink: 0 }}>
-							Question {entry.id}
+							Question #{entry.id}
 						</Typography>
 						<Typography sx={{ color: "text.secondary" }}>
 							{entry.question}
@@ -249,10 +274,15 @@ export default function DatasetPage() {
 								Options:
 							</Typography>
 							<List dense>
-								{entry.options.map((option, index) => (
+								{entry.answer.options.map((option, index) => (
 									<ListItem key={index}>
 										<ListItemText
-											primary={option}
+											primary={
+												"Option " +
+												(index + 1) +
+												": " +
+												option
+											}
 											sx={{
 												"& .MuiListItemText-primary": {
 													fontWeight:
@@ -268,7 +298,7 @@ export default function DatasetPage() {
 												},
 											}}
 										/>
-										{option === entry.correctAnswer && (
+										{index === entry.answer.correct && (
 											<Chip
 												label="Correct"
 												color="success"
@@ -287,24 +317,28 @@ export default function DatasetPage() {
 								<Table size="small">
 									<TableHead>
 										<TableRow>
-											<TableCell>LLM</TableCell>
-											<TableCell>Answer</TableCell>
-											<TableCell>Correct?</TableCell>
+											<TableCell>Model</TableCell>
+											<TableCell align="center">
+												Answer
+											</TableCell>
+											<TableCell align="center">
+												Correct?
+											</TableCell>
 										</TableRow>
 									</TableHead>
 									<TableBody>
-										{entry.llmAnswers.map(
+										{entry.evaluation.map(
 											(llmAnswer, index) => (
 												<TableRow key={index}>
 													<TableCell>
-														{llmAnswer.llm}
+														{llmAnswer.model}
 													</TableCell>
-													<TableCell>
+													<TableCell align="center">
 														{llmAnswer.answer}
 													</TableCell>
-													<TableCell>
-														{llmAnswer.answer ===
-														entry.correctAnswer ? (
+													<TableCell align="center">
+														{llmAnswer.verdict ===
+														"right" ? (
 															<Chip
 																label="Correct"
 																color="success"
@@ -326,7 +360,10 @@ export default function DatasetPage() {
 							</TableContainer>
 						</Box>
 						<Box>
-							<Chip label={entry.category} color="primary" />
+							<Chip
+								label={entry.classification}
+								color="primary"
+							/>
 						</Box>
 					</AccordionDetails>
 				</Accordion>

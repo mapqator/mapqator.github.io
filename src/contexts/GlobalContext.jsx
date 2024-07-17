@@ -52,6 +52,8 @@ export default function GlobalContextProvider({ children }) {
 				setPoisMap,
 				query,
 				setQuery,
+				queries,
+				setQueries,
 			}}
 		>
 			{children}
