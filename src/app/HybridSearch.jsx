@@ -397,7 +397,7 @@ const AutocompleteSearchBox = ({
 				<div className="w-full md:w-1/2">
 					<div className="bg-white border-2 border-black flex flex-col gap-[1.5px]">
 						<ul className="w-full flex flex-col">
-							<div className="text-white text-center p-2 bg-black">
+							<div className="text-white text-center p-2 px-1 bg-black">
 								Places fetched from Google Map
 							</div>
 							<div className="overflow-y-auto h-[40vh] flex flex-col">

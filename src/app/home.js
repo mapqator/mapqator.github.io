@@ -59,28 +59,6 @@ export default function Home() {
 	return (
 		<main className="flex min-h-screen flex-col bg-black">
 			<div className="flex flex-col md:flex-row gap-1">
-				{isAuthenticated == null ? (
-					<div className="w-1/2 bg-white h-screen"> </div>
-				) : isAuthenticated ? (
-					<DatasetCreator
-						contextJSON={contextJSON}
-						context={context}
-						{...{
-							setSavedPlacesMap,
-							setSelectedPlacesMap,
-							setDistanceMatrix,
-							setNearbyPlacesMap,
-							setCurrentInformation,
-							setDirectionInformation,
-							setContext,
-							setContextJSON,
-							setPoisMap,
-						}}
-					/>
-				) : (
-					<Login />
-				)}
-
 				<ContextGenerator
 					setContextJSON={setContextJSON}
 					context={context}
@@ -102,6 +80,27 @@ export default function Home() {
 						setPoisMap,
 					}}
 				/>
+				{isAuthenticated == null ? (
+					<div className="w-1/2 bg-white h-screen"> </div>
+				) : isAuthenticated ? (
+					<DatasetCreator
+						contextJSON={contextJSON}
+						context={context}
+						{...{
+							setSavedPlacesMap,
+							setSelectedPlacesMap,
+							setDistanceMatrix,
+							setNearbyPlacesMap,
+							setCurrentInformation,
+							setDirectionInformation,
+							setContext,
+							setContextJSON,
+							setPoisMap,
+						}}
+					/>
+				) : (
+					<Login />
+				)}
 			</div>
 
 			{/* <footer className="w-full h-20 text-white flex items-center justify-center">

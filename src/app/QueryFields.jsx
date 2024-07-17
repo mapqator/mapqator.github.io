@@ -60,33 +60,44 @@ export default function QueryFields({
 			setQuery(initialQuery);
 		}
 	}, [initialQuery]);
+
+	useEffect(() => {
+		setQuery((prev) => ({
+			...prev,
+			context: context.reduce((acc, e) => acc + e + "\n", ""),
+			context_json: contextJSON,
+		}));
+	}, [context]);
 	return (
 		<div className="p-2 flex flex-col w-full gap-5">
-			<div className="flex flex-col w-full border-2 border-blue-500">
-				<div className="flex justify-center bg-blue-500">
-					<h1 className="text-sm font-bold text-white p-2">
-						{expanded ? "Hide Context" : "Show Context"}
-					</h1>
-					<IconButton
-						sx={{ height: "2rem", width: "2rem" }}
-						onClick={() => setExpanded((prev) => !prev)}
-					>
-						<div className="text-base">
-							<FontAwesomeIcon
-								icon={expanded ? faChevronUp : faChevronDown}
-								color="white"
-							/>
-						</div>
-					</IconButton>
-				</div>
-				{expanded && (
-					<div className="p-2 flex flex-col gap-2">
-						<div className="flex flex-row gap-2 w-full justify-between items-center">
-							<label className="text-lg text-left font-bold">
-								Generated Context
-							</label>
-							<div className="flex flex-row gap-2">
-								{/* {query.context !== "" && (
+			{context.length > 0 && (
+				<div className="flex flex-col w-full border-2 border-blue-500">
+					<div className="flex justify-center bg-blue-500">
+						<h1 className="text-sm font-bold text-white p-2">
+							{expanded ? "Hide Context" : "Show Context"}
+						</h1>
+						<IconButton
+							sx={{ height: "2rem", width: "2rem" }}
+							onClick={() => setExpanded((prev) => !prev)}
+						>
+							<div className="text-base">
+								<FontAwesomeIcon
+									icon={
+										expanded ? faChevronUp : faChevronDown
+									}
+									color="white"
+								/>
+							</div>
+						</IconButton>
+					</div>
+					{expanded && (
+						<div className="p-2 flex flex-col gap-2">
+							<div className="flex flex-row gap-2 w-full justify-between items-center">
+								<label className="text-lg text-left font-bold">
+									Generated Context
+								</label>
+								<div className="flex flex-row gap-2">
+									{/* {query.context !== "" && (
 									<LoadingButton
 										// className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
 										variant="contained"
@@ -118,7 +129,7 @@ export default function QueryFields({
 									</LoadingButton>
 								)} */}
 
-								<Button
+									{/* <Button
 									className="bg-green-500 rounded-lg p-2"
 									onClick={() => {
 										setQuery((prev) => ({
@@ -134,49 +145,49 @@ export default function QueryFields({
 									color="success"
 									disabled={context.length === 0}
 								>
-									{Object.keys(contextJSON).length === 0
+									{context.length === 0
 										? "Generate context first"
 										: "Use generated context"}
-								</Button>
+								</Button> */}
+								</div>
 							</div>
-						</div>
-						{query.context !== "" && (
-							<div className="flex flex-col gap-2">
-								<Card
-									value={query.context}
-									onChange={(e) =>
-										setQuery((prev) => ({
-											...prev,
-											context: e.target.value,
-										}))
-									}
-									// sx={{
-									// 	borderColor: "black",
-									// 	borderWidth: "1px",
-									// 	borderRadius: "3px",
-									// 	// padding: "2px 5px",
-									// }}
-									className="p-3 w-full !bg-slate-100"
-								>
-									<h1 className="text-base">
-										{query.context
-											.split("\n")
-											.map((line, index) => (
-												<React.Fragment key={index}>
-													{/* {line} */}
-													<p
-														key={index}
-														className="w-full text-left"
-														dangerouslySetInnerHTML={{
-															__html: line,
-														}}
-													/>
-													{/* <br /> */}
-												</React.Fragment>
-											))}
-									</h1>
-								</Card>
-								{/* <textarea
+							{query.context !== "" && (
+								<div className="flex flex-col gap-2">
+									<Card
+										value={query.context}
+										onChange={(e) =>
+											setQuery((prev) => ({
+												...prev,
+												context: e.target.value,
+											}))
+										}
+										// sx={{
+										// 	borderColor: "black",
+										// 	borderWidth: "1px",
+										// 	borderRadius: "3px",
+										// 	// padding: "2px 5px",
+										// }}
+										className="p-3 w-full !bg-slate-100"
+									>
+										<h1 className="text-base">
+											{query.context
+												.split("\n")
+												.map((line, index) => (
+													<React.Fragment key={index}>
+														{/* {line} */}
+														<p
+															key={index}
+															className="w-full text-left"
+															dangerouslySetInnerHTML={{
+																__html: line,
+															}}
+														/>
+														{/* <br /> */}
+													</React.Fragment>
+												))}
+										</h1>
+									</Card>
+									{/* <textarea
 						className="border border-black w-full"
 						value={query.context}
 						onChange={(e) =>
@@ -186,65 +197,68 @@ export default function QueryFields({
 							}))
 						}
 					/> */}
-								<div className="flex flex-row gap-2 w-full justify-between items-center">
-									<label className="text-lg text-left font-bold">
-										Custom Context
-									</label>
-									<Button
-										// className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
-										variant="contained"
-										onClick={async () => {
-											console.log(query.context);
-											setQuery((prev) => ({
-												...prev,
-												context_gpt:
-													"Generating context. Please wait. It may take 20-30 seconds.",
-											}));
-											const res =
-												await queryApi.getGPTContext(
-													query.context
-												);
-											if (res.success) {
-												console.log(
-													"Context generated successfully"
-												);
+									<div className="flex flex-row gap-2 w-full justify-between items-center">
+										<label className="text-lg text-left font-bold">
+											Custom Context
+										</label>
+										<Button
+											// className="bg-blue-500 rounded-lg p-2 mt-2 w-full"
+											variant="contained"
+											onClick={async () => {
+												console.log(query.context);
 												setQuery((prev) => ({
 													...prev,
-													context_gpt: res.data,
+													context_gpt:
+														"Generating context. Please wait. It may take 20-30 seconds.",
 												}));
-											} else {
-												console.error(
-													"Error generating context"
-												);
+												const res =
+													await queryApi.getGPTContext(
+														query.context
+													);
+												if (res.success) {
+													console.log(
+														"Context generated successfully"
+													);
+													setQuery((prev) => ({
+														...prev,
+														context_gpt: res.data,
+													}));
+												} else {
+													console.error(
+														"Error generating context"
+													);
+												}
+											}}
+											className="flex flex-row gap-2 items-center"
+										>
+											<FontAwesomeIcon
+												icon={faRobot}
+												className="text-xl"
+											/>
+											Take help from GPT
+										</Button>
+									</div>
+									{query.context_gpt !== "" && (
+										<TextField
+											value={query.context_gpt}
+											onChange={(e) =>
+												setQuery((prev) => ({
+													...prev,
+													context_gpt: e.target.value,
+												}))
 											}
-										}}
-										className="flex flex-row gap-2 items-center"
-									>
-										<FontAwesomeIcon
-											icon={faRobot}
-											className="text-xl"
+											style={{
+												borderColor: "black",
+												borderWidth: "1px",
+												borderRadius: "3px",
+												// padding: "2px 5px",
+											}}
+											size="small"
+											multiline
 										/>
-										Take help from GPT
-									</Button>
-								</div>
-								<TextField
-									value={query.context_gpt}
-									onChange={(e) =>
-										setQuery((prev) => ({
-											...prev,
-											context_gpt: e.target.value,
-										}))
-									}
-									style={{
-										borderColor: "black",
-										borderWidth: "1px",
-										borderRadius: "3px",
-										// padding: "2px 5px",
-									}}
-									size="small"
-									multiline
-								/>
-								{/* <textarea
+									)}
+
+									{/* <textarea
 						className="border border-black w-full"
 						value={query.context_gpt}
 						onChange={(e) =>
@@ -254,11 +268,12 @@ export default function QueryFields({
 							}))
 						}
 					/> */}
-							</div>
-						)}
-					</div>
-				)}
-			</div>
+								</div>
+							)}
+						</div>
+					)}
+				</div>
+			)}
 
 			{/* <div className="border-t-4 border-black w-full mt-2"></div> */}
 

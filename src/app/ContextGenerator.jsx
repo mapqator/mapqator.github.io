@@ -434,7 +434,7 @@ export default function ContextGenerator({
 
 	return (
 		<div className="flex flex-col w-full md:w-1/2 bg-white gap-4 p-5 h-screen overflow-y-auto relative">
-			<div className="absolute top-5 right-5">
+			<div className="absolute top-5 left-5">
 				<IconButton
 					onClick={() => {
 						setPoisMap({});
@@ -533,7 +533,7 @@ export default function ContextGenerator({
 				}}
 			/>
 
-			<ContextPreview
+			{/* <ContextPreview
 				{...{
 					setContextJSON,
 					context,
@@ -543,7 +543,7 @@ export default function ContextGenerator({
 					distanceMatrix,
 					nearbyPlacesMap,
 				}}
-			/>
+			/> */}
 		</div>
 	);
 }
