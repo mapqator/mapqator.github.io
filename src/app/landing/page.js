@@ -63,7 +63,7 @@ export default function PageComponent() {
 					>
 						<Button
 							variant="contained"
-							href="/home"
+							href="/features"
 							size="large"
 							sx={{
 								fontWeight: "bold",
