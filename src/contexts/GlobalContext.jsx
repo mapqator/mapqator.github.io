@@ -1,5 +1,6 @@
+import QueryApi from "@/api/queryApi";
 import React, { createContext, useState, useContext, useEffect } from "react";
-
+const queryApi = new QueryApi();
 export const GlobalContext = createContext();
 export default function GlobalContextProvider({ children }) {
 	const [savedPlacesMap, setSavedPlacesMap] = useState({});
@@ -28,6 +29,26 @@ export default function GlobalContextProvider({ children }) {
 		classification: "",
 	});
 	const [queries, setQueries] = useState([]);
+
+	const fetchQueries = async () => {
+		// setLoading(true);
+		try {
+			const res = await queryApi.getQueries();
+			if (res.success) {
+				console.log("Data: ", res.data);
+				setQueries(res.data);
+			}
+		} catch (error) {
+			console.error("Error fetching data: ", error);
+		}
+	};
+	useEffect(() => {
+		// if (process.env.NODE_ENV === "production")
+		{
+			console.log("Fetching queries");
+			fetchQueries();
+		}
+	}, []);
 
 	return (
 		<GlobalContext.Provider

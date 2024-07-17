@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
 	Container,
 	Typography,
@@ -28,6 +28,8 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import QueryApi from "@/api/queryApi";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 const queryApi = new QueryApi();
 // Mock data - replace this with actual data fetching logic
 const mockDataset = [
@@ -113,6 +115,10 @@ export default function DatasetPage() {
 	}, []);
 
 	useEffect(() => {
+		setFilteredQueries(queries);
+	}, []);
+
+	useEffect(() => {
 		const tmp = {};
 		let valid_questions = 0;
 		let total_questions = 0;
@@ -146,7 +152,15 @@ export default function DatasetPage() {
 
 	const categories = [
 		"All",
-		...new Set(dataset.map((item) => item.category)),
+		...[
+			"nearby_poi",
+			"planning",
+			"time_calculation",
+			"routing",
+			"location_finding",
+			"opinion",
+			"navigation",
+		],
 	];
 
 	const handleCategoryChange = (event) => {
@@ -161,33 +175,35 @@ export default function DatasetPage() {
 		}
 	};
 
-	const fetchQueries = async () => {
-		// setLoading(true);
-		try {
-			const res = await queryApi.getQueries();
-			if (res.success) {
-				console.log("Data: ", res.data);
-				setQueries(res.data);
-				setFilteredQueries(res.data);
-				// setFetched(true);
-				// setLoading(false);
-			}
-		} catch (error) {
-			console.error("Error fetching data: ", error);
-		}
-	};
-	useEffect(() => {
-		// if (process.env.NODE_ENV === "production")
-		{
-			fetchQueries();
-		}
-	}, []);
 	return (
 		<>
-			<Typography variant="h4" gutterBottom component="h1">
-				Dataset Overview
-			</Typography>
-			<TableContainer component={Paper} sx={{ mb: 4 }}>
+			<div className="flex flex-row justify-between items-center">
+				<Typography variant="h4" gutterBottom component="h1">
+					Dataset Overview
+				</Typography>
+				<Box sx={{ mb: 3 }}>
+					<FormControl sx={{ minWidth: 200 }} size="small">
+						<InputLabel id="category-select-label">
+							Filter by Category
+						</InputLabel>
+						<Select
+							labelId="category-select-label"
+							id="category-select"
+							value={selectedCategory}
+							label="Filter by Category"
+							onChange={handleCategoryChange}
+						>
+							{categories.map((category) => (
+								<MenuItem key={category} value={category}>
+									{category}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				</Box>
+			</div>
+
+			{/* <TableContainer component={Paper} sx={{ mb: 4 }}>
 				<Table>
 					<TableHead>
 						<TableRow>
@@ -225,28 +241,7 @@ export default function DatasetPage() {
 						</TableRow>
 					</TableBody>
 				</Table>
-			</TableContainer>
-
-			<Box sx={{ mb: 3 }}>
-				<FormControl sx={{ minWidth: 200 }}>
-					<InputLabel id="category-select-label">
-						Filter by Category
-					</InputLabel>
-					<Select
-						labelId="category-select-label"
-						id="category-select"
-						value={selectedCategory}
-						label="Filter by Category"
-						onChange={handleCategoryChange}
-					>
-						{categories.map((category) => (
-							<MenuItem key={category} value={category}>
-								{category}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-			</Box>
+			</TableContainer> */}
 
 			{filteredQueries.map((entry) => (
 				<Accordion key={entry.id} sx={{ mb: 2 }}>
@@ -255,12 +250,63 @@ export default function DatasetPage() {
 						aria-controls={`panel${entry.id}-content`}
 						id={`panel${entry.id}-header`}
 					>
-						<Typography sx={{ width: "33%", flexShrink: 0 }}>
-							Question #{entry.id}
-						</Typography>
-						<Typography sx={{ color: "text.secondary" }}>
-							{entry.question}
-						</Typography>
+						<Box
+							sx={{
+								display: "flex",
+								flexDirection: "column",
+								width: "100%",
+							}}
+						>
+							<Box
+								sx={{
+									display: "flex",
+									justifyContent: "space-between",
+									width: "99%",
+								}}
+							>
+								<Box
+									sx={{
+										display: "flex",
+										justifyContent: "flex-start",
+										width: "50%",
+									}}
+								>
+									<Typography sx={{ width: "40%" }}>
+										Question #{entry.id}
+									</Typography>
+									<Box>
+										<Chip
+											label={entry.classification}
+											color="primary"
+										/>
+									</Box>
+								</Box>
+
+								{/* <Typography
+									sx={{
+										color: "text.secondary",
+										fontSize: "0.875rem",
+									}}
+								>
+									Category: {entry.classification}
+								</Typography> */}
+								{/* <Typography
+									sx={{
+										color: "text.secondary",
+										fontSize: "0.875rem",
+									}}
+								>
+									Author: {entry.username || "Unknown"}
+								</Typography> */}
+								<h2 className="text-base font-semibold px-1 flex flex-row gap-1 items-center">
+									<FontAwesomeIcon icon={faUser} />
+									{entry.username}
+								</h2>
+							</Box>
+							<Typography sx={{ color: "text.primary", mt: 1 }}>
+								{entry.question}
+							</Typography>
+						</Box>
 					</AccordionSummary>
 					<AccordionDetails>
 						<Box sx={{ mb: 2 }}>
@@ -271,13 +317,29 @@ export default function DatasetPage() {
 								elevation={1}
 								sx={{ p: 2, bgcolor: "grey.100" }}
 							>
-								<Typography variant="body2">
+								{entry.context.split("\n").map(
+									(line, index) =>
+										(expanded[entry.id] || index < 5) && (
+											<React.Fragment key={index}>
+												{/* {line} */}
+												<p
+													key={index}
+													className="w-full text-left"
+													dangerouslySetInnerHTML={{
+														__html: line,
+													}}
+												/>
+												{/* <br /> */}
+											</React.Fragment>
+										)
+								)}
+								{/* <Typography variant="body2">
 									{
 										expanded[entry.id]
 											? entry.context
 											: truncateText(entry.context, 200) // Adjust 200 to your preferred initial length
 									}
-								</Typography>
+								</Typography> */}
 								{/* <Collapse
 									in={expanded[entry.id]}
 									collapsedSize={100}
@@ -341,62 +403,65 @@ export default function DatasetPage() {
 								)}
 							</List>
 						</Box>
-						<Box sx={{ mb: 2 }}>
-							<Typography variant="h6" gutterBottom>
-								LLM Answers:
-							</Typography>
-							<TableContainer component={Paper}>
-								<Table size="small">
-									<TableHead>
-										<TableRow>
-											<TableCell>Model</TableCell>
-											<TableCell align="center">
-												Answer
-											</TableCell>
-											<TableCell align="center">
-												Correct?
-											</TableCell>
-										</TableRow>
-									</TableHead>
-									<TableBody>
-										{entry.evaluation.map(
-											(llmAnswer, index) => (
-												<TableRow key={index}>
-													<TableCell>
-														{llmAnswer.model}
-													</TableCell>
-													<TableCell align="center">
-														{llmAnswer.answer}
-													</TableCell>
-													<TableCell align="center">
-														{llmAnswer.verdict ===
-														"right" ? (
-															<Chip
-																label="Correct"
-																color="success"
-																size="small"
-															/>
-														) : (
-															<Chip
-																label="Incorrect"
-																color="error"
-																size="small"
-															/>
-														)}
-													</TableCell>
-												</TableRow>
-											)
-										)}
-									</TableBody>
-								</Table>
-							</TableContainer>
-						</Box>
-						<Box>
+						{entry.evaluation.length > 0 && (
+							<Box sx={{ mb: 2 }}>
+								<Typography variant="h6" gutterBottom>
+									LLM Answers:
+								</Typography>
+								<TableContainer component={Paper}>
+									<Table size="small">
+										<TableHead>
+											<TableRow>
+												<TableCell>Model</TableCell>
+												<TableCell align="center">
+													Answer
+												</TableCell>
+												<TableCell align="center">
+													Correct?
+												</TableCell>
+											</TableRow>
+										</TableHead>
+										<TableBody>
+											{entry.evaluation.map(
+												(llmAnswer, index) => (
+													<TableRow key={index}>
+														<TableCell>
+															{llmAnswer.model}
+														</TableCell>
+														<TableCell align="center">
+															{llmAnswer.answer}
+														</TableCell>
+														<TableCell align="center">
+															{llmAnswer.verdict ===
+															"right" ? (
+																<Chip
+																	label="Correct"
+																	color="success"
+																	size="small"
+																/>
+															) : (
+																<Chip
+																	label="Incorrect"
+																	color="error"
+																	size="small"
+																/>
+															)}
+														</TableCell>
+													</TableRow>
+												)
+											)}
+										</TableBody>
+									</Table>
+								</TableContainer>
+							</Box>
+						)}
+
+						{/* <Box>
 							<Chip
 								label={entry.classification}
 								color="primary"
 							/>
-						</Box>
+						</Box> */}
 					</AccordionDetails>
 				</Accordion>
 			))}
