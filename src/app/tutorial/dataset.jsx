@@ -84,35 +84,35 @@ export default function DatasetPage() {
 		return text.substr(0, maxLength) + "...";
 	};
 
-	useEffect(() => {
-		// In a real application, you would fetch data here
-		setDataset(mockDataset);
-		setFilteredDataset(mockDataset);
-		// Calculate dataset summary
-		const summary = {
-			totalQuestions: mockDataset.length,
-			validQuestions: mockDataset.filter(
-				(item) =>
-					item.context &&
-					item.question &&
-					item.options &&
-					item.correctAnswer
-			).length,
-			questionsWithoutContext: mockDataset.filter((item) => !item.context)
-				.length,
-			questionsWithoutCorrectAnswer: mockDataset.filter(
-				(item) => !item.correctAnswer
-			).length,
-			invalidQuestions: mockDataset.filter(
-				(item) =>
-					!item.context ||
-					!item.question ||
-					!item.options ||
-					!item.correctAnswer
-			).length,
-		};
-		setDatasetSummary(summary);
-	}, []);
+	// useEffect(() => {
+	// 	// In a real application, you would fetch data here
+	// 	setDataset(mockDataset);
+	// 	setFilteredDataset(mockDataset);
+	// 	// Calculate dataset summary
+	// 	const summary = {
+	// 		totalQuestions: mockDataset.length,
+	// 		validQuestions: mockDataset.filter(
+	// 			(item) =>
+	// 				item.context &&
+	// 				item.question &&
+	// 				item.options &&
+	// 				item.correctAnswer
+	// 		).length,
+	// 		questionsWithoutContext: mockDataset.filter((item) => !item.context)
+	// 			.length,
+	// 		questionsWithoutCorrectAnswer: mockDataset.filter(
+	// 			(item) => !item.correctAnswer
+	// 		).length,
+	// 		invalidQuestions: mockDataset.filter(
+	// 			(item) =>
+	// 				!item.context ||
+	// 				!item.question ||
+	// 				!item.options ||
+	// 				!item.correctAnswer
+	// 		).length,
+	// 	};
+	// 	setDatasetSummary(summary);
+	// }, []);
 
 	useEffect(() => {
 		setFilteredQueries(queries);
