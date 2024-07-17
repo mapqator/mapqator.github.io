@@ -53,9 +53,8 @@ export default function ContextGenerator({ onFinish }) {
 		context,
 		setContext,
 		currentInformation,
+		setCurrentInformation,
 	} = useContext(GlobalContext);
-
-	
 
 	const steps = [
 		{
@@ -204,6 +203,18 @@ export default function ContextGenerator({ onFinish }) {
 
 	const handleReset = () => {
 		setActiveStep(0);
+		setPoisMap({});
+		setDistanceMatrix({});
+		setNearbyPlacesMap({});
+		setContext([]);
+		setContextJSON({});
+		setCurrentInformation({
+			time: null,
+			day: "",
+			location: "",
+		});
+		setDirectionInformation({});
+		setSelectedPlacesMap({});
 	};
 	return (
 		<>
@@ -283,9 +294,9 @@ export default function ContextGenerator({ onFinish }) {
 					<Button onClick={onFinish} sx={{ mt: 1, mr: 1 }}>
 						Create Question
 					</Button>
-					{/* <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-						Edit
-					</Button> */}
+					<Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
+						Reset
+					</Button>
 				</Paper>
 			)}
 		</>

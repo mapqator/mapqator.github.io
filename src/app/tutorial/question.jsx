@@ -109,6 +109,19 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 				// showSuccess("Query edited successfully", res);
 			}
 		}
+
+		setQuery({
+			question: "",
+			answer: {
+				type: "mcq",
+				options: ["", "", "", ""],
+				correct: -1,
+			},
+			context: "",
+			context_json: {},
+			context_gpt: "",
+			classification: "",
+		});
 	};
 
 	return (
