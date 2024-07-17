@@ -5,6 +5,13 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
 export default function PageComponent() {
+	const [baseUrl, setBaseUrl] = useState(
+		process.env.REACT_APP_BASE_URL
+			? process.env.REACT_APP_BASE_URL
+			: process.env.NODE_ENV === "development"
+			? ""
+			: "https://mahirlabibdihan.github.io/mapquest"
+	);
 	const [showContent, setShowContent] = useState(false);
 	const router = useRouter();
 	useEffect(() => {
@@ -19,9 +26,7 @@ export default function PageComponent() {
 			<Fade in={showContent} timeout={1000}>
 				<Box className="text-center">
 					<motion.img
-						src={`${
-							process.env.REACT_APP_BASE_URL ?? ""
-						}/images/logo.png`}
+						src={`${baseUrl}/images/logo.png`}
 						alt="Google Maps Logo"
 						style={{
 							width: "160px",
