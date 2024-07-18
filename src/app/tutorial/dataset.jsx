@@ -24,53 +24,428 @@ import {
 	TableRow,
 	Button,
 	Collapse,
+	OutlinedInput,
+	TextField,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import QueryApi from "@/api/queryApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { Edit } from "@mui/icons-material";
+import { Clear, Edit, Save } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import MapApi from "@/api/mapApi";
 const queryApi = new QueryApi();
 const mapApi = new MapApi();
-// Mock data - replace this with actual data fetching logic
-const mockDataset = [
-	{
-		id: 1,
-		context:
-			"Paris, the capital of France, is known for its iconic Eiffel Tower, which stands at 324 meters tall. The city is also home to world-renowned museums like the Louvre, which houses the Mona Lisa.",
-		question: "What is the height of the Eiffel Tower?",
-		options: ["300 meters", "324 meters", "350 meters", "400 meters"],
-		correctAnswer: "324 meters",
-		category: "Landmarks",
-		llmAnswers: [
-			{ llm: "Phi-3", answer: "324 meters" },
-			{ llm: "Mistral", answer: "324 meters" },
-			{ llm: "Qwen2", answer: "300 meters" },
-		],
-	},
-	{
-		id: 2,
-		context:
-			"The Amazon rainforest, spanning across several South American countries, is the world's largest tropical rainforest. It covers approximately 5.5 million square kilometers and is home to an estimated 390 billion individual trees.The Amazon rainforest, spanning across several South American countries, is the world's largest tropical rainforest. It covers approximately 5.5 million square kilometers and is home to an estimated 390 billion individual trees.The Amazon rainforest, spanning across several South American countries, is the world's largest tropical rainforest. It covers approximately 5.5 million square kilometers and is home to an estimated 390 billion individual trees.The Amazon rainforest, spanning across several South American countries, is the world's largest tropical rainforest. It covers approximately 5.5 million square kilometers and is home to an estimated 390 billion individual trees.The Amazon rainforest, spanning across several South American countries, is the world's largest tropical rainforest. It covers approximately 5.5 million square kilometers and is home to an estimated 390 billion individual trees.",
-		question:
-			"Approximately how many individual trees are estimated to be in the Amazon rainforest?",
-		options: ["100 billion", "250 billion", "390 billion", "500 billion"],
-		correctAnswer: "390 billion",
-		category: "Geography",
-		llmAnswers: [
-			{ llm: "Phi-3", answer: "324 meters" },
-			{ llm: "Mistral", answer: "324 meters" },
-			{ llm: "Qwen2", answer: "300 meters" },
-		],
-	},
-	// Add more mock data as needed
-];
 
+const QueryCard = ({ entry }) => {
+	const {
+		queries,
+		setQueries,
+		setSelectedPlacesMap,
+		setDistanceMatrix,
+		setNearbyPlacesMap,
+		setCurrentInformation,
+		setDirectionInformation,
+		savedPlacesMap,
+		setSavedPlacesMap,
+		setContext,
+		context,
+		setContextJSON,
+		contextJSON,
+		query,
+		setQuery,
+		setPoisMap,
+	} = useContext(GlobalContext);
+
+	const [expanded, setExpanded] = useState(false);
+
+	const toggleExpanded = (id) => {
+		setExpanded((prev) => !prev);
+	};
+
+	return (
+		<Accordion key={entry.id} sx={{ mb: 2 }}>
+			<AccordionSummary
+				expandIcon={<ExpandMoreIcon />}
+				aria-controls={`panel${entry.id}-content`}
+				id={`panel${entry.id}-header`}
+			>
+				<Box
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						width: "100%",
+					}}
+				>
+					<Box
+						sx={{
+							display: "flex",
+							justifyContent: "space-between",
+							width: "99%",
+						}}
+					>
+						<Box
+							sx={{
+								display: "flex",
+								justifyContent: "flex-start",
+								width: "50%",
+							}}
+						>
+							<Typography sx={{ width: "40%" }}>
+								Question #{entry.id}
+							</Typography>
+							<Box>
+								<Chip
+									label={entry.classification}
+									color="primary"
+								/>
+							</Box>
+						</Box>
+
+						{/* <Typography
+									sx={{
+										color: "text.secondary",
+										fontSize: "0.875rem",
+									}}
+								>
+									Category: {entry.classification}
+								</Typography> */}
+						{/* <Typography
+									sx={{
+										color: "text.secondary",
+										fontSize: "0.875rem",
+									}}
+								>
+									Author: {entry.username || "Unknown"}
+								</Typography> */}
+						<h2 className="text-base font-semibold px-1 flex flex-row gap-1 items-center">
+							<FontAwesomeIcon icon={faUser} />
+							{entry.username}
+						</h2>
+					</Box>
+					<Typography sx={{ color: "text.primary", mt: 1 }}>
+						{entry.question}
+					</Typography>
+				</Box>
+			</AccordionSummary>
+			<AccordionDetails>
+				<Box sx={{ mb: 2 }}>
+					<Typography variant="h6" gutterBottom>
+						Context:
+					</Typography>
+					<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
+						{entry.context.split("\n").map(
+							(line, index) =>
+								(expanded[entry.id] || index < 5) && (
+									<React.Fragment key={index}>
+										{/* {line} */}
+										<p
+											key={index}
+											className="w-full text-left"
+											dangerouslySetInnerHTML={{
+												__html: line,
+											}}
+										/>
+										{/* <br /> */}
+									</React.Fragment>
+								)
+						)}
+						{entry.context.split("\n").length > 5 && (
+							<Button
+								onClick={() => toggleExpanded(entry.id)}
+								sx={{ mt: 1, textTransform: "none" }}
+							>
+								{expanded[entry.id] ? "Show Less" : "Read More"}
+							</Button>
+						)}
+					</Paper>
+				</Box>
+				<Box sx={{ mb: 2 }}>
+					<Typography variant="h6" gutterBottom>
+						Options:
+					</Typography>
+					<List dense>
+						{entry.answer.options.map(
+							(option, index) =>
+								option !== "" && (
+									<ListItem key={index}>
+										<ListItemText
+											primary={
+												"Option " +
+												(index + 1) +
+												": " +
+												option
+											}
+											sx={{
+												"& .MuiListItemText-primary": {
+													fontWeight:
+														option ===
+														entry.correctAnswer
+															? "bold"
+															: "normal",
+													color:
+														option ===
+														entry.correctAnswer
+															? "success.main"
+															: "inherit",
+												},
+											}}
+										/>
+										{index === entry.answer.correct && (
+											<Chip
+												label="Correct"
+												color="success"
+												size="small"
+											/>
+										)}
+									</ListItem>
+								)
+						)}
+					</List>
+				</Box>
+				{entry.evaluation.length > 0 && (
+					<Box sx={{ mb: 2 }}>
+						<Typography variant="h6" gutterBottom>
+							LLM Answers:
+						</Typography>
+						<TableContainer component={Paper}>
+							<Table size="small">
+								<TableHead>
+									<TableRow>
+										<TableCell>Model</TableCell>
+										<TableCell align="center">
+											Answer
+										</TableCell>
+										<TableCell align="center">
+											Correct?
+										</TableCell>
+									</TableRow>
+								</TableHead>
+								<TableBody>
+									{entry.evaluation.map(
+										(llmAnswer, index) => (
+											<TableRow key={index}>
+												<TableCell>
+													{llmAnswer.model}
+												</TableCell>
+												<TableCell align="center">
+													{llmAnswer.answer}
+												</TableCell>
+												<TableCell align="center">
+													{llmAnswer.verdict ===
+													"right" ? (
+														<Chip
+															label="Correct"
+															color="success"
+															size="small"
+														/>
+													) : (
+														<Chip
+															label="Incorrect"
+															color="error"
+															size="small"
+														/>
+													)}
+												</TableCell>
+											</TableRow>
+										)
+									)}
+								</TableBody>
+							</Table>
+						</TableContainer>
+					</Box>
+				)}
+
+				<div className="flex flex-col gap-2 p-2 border-2 border-black rounded-md">
+					<div className="flex flex-row justify-between">
+						<h1 className="text-lg font-bold underline">
+							Human Annotation
+						</h1>
+						<h2 className="text-lg font-semibold text-black px-1 flex flex-row gap-1 items-center">
+							<FontAwesomeIcon icon={faUser} />
+							{query.human.username}
+						</h2>
+					</div>
+					<div className="flex flex-col gap-1">
+						<div key={index} className="flex flex-col gap-2">
+							<FormControl
+								fullWidth
+								className="input-field"
+								variant="outlined"
+								size="small"
+							>
+								<InputLabel
+									htmlFor="outlined-adornment"
+									className="input-label"
+								>
+									Correct Answer
+								</InputLabel>
+								<Select
+									// multiple
+									id="outlined-adornment"
+									className="outlined-input"
+									value={query.human.answer}
+									onChange={(e) => {
+										setQuery((prev) => ({
+											...prev,
+											human: {
+												...prev.human,
+												answer: e.target.value,
+											},
+										}));
+									}}
+									input={
+										<OutlinedInput
+											label={"Correct Answer"}
+										/>
+									}
+								>
+									<MenuItem value={0}>No answer</MenuItem>
+									{query.answer.options.map(
+										(value, index) => (
+											<MenuItem
+												key={index}
+												value={index + 1}
+											>
+												{value}
+											</MenuItem>
+										)
+									)}
+								</Select>
+							</FormControl>
+							<TextField
+								value={query.human.explanation}
+								onChange={(e) => {
+									setQuery((prev) => ({
+										...prev,
+										human: {
+											...prev.human,
+											explanation: e.target.value,
+										},
+									}));
+								}}
+								fullWidth
+								label="Explanation"
+								size="small"
+								multiline
+							/>
+							<div className="flex flex-row gap-2">
+								<Button
+									variant="contained"
+									color="error"
+									onClick={async () => {
+										setQuery((prev) => ({
+											...prev,
+											human: {
+												answer: null,
+												explanation: "",
+												username: prev.human.username,
+											},
+										}));
+									}}
+									startIcon={<Clear />}
+								>
+									Clear
+								</Button>
+								<Button
+									variant="contained"
+									color="primary"
+									onClick={async () => {
+										console.log(query.id);
+										const res = await queryApi.annotate(
+											query.id,
+											{
+												answer: query.human.answer,
+												explanation:
+													query.human.explanation,
+											}
+										);
+										console.log(res);
+										if (res.success)
+											setQuery((prev) => ({
+												...prev,
+												human: {
+													...prev.human,
+													username:
+														res.data[0].username,
+												},
+											}));
+									}}
+									startIcon={<Save />}
+								>
+									Annotate
+								</Button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<Box className="w-full flex justify-end">
+					<Button
+						variant="contained"
+						color="primary"
+						startIcon={<Edit />}
+						onClick={async () => {
+							for (let place_id in entry.context_json.places) {
+								await handleSave(place_id);
+							}
+							setSelectedPlacesMap(
+								entry.context_json.places ?? {}
+							);
+							setDistanceMatrix(
+								entry.context_json.distance_matrix ?? {}
+							);
+							setDirectionInformation(
+								entry.context_json.directions ?? {}
+							);
+
+							setNearbyPlacesMap(
+								entry.context_json.nearby_places ?? {}
+							);
+							setCurrentInformation(
+								entry.context_json.current_information
+									? {
+											time: entry.context_json
+												.current_information.time
+												? dayjs(
+														entry.context_json
+															.current_information
+															.time
+												  )
+												: null,
+											day: entry.context_json
+												.current_information.day,
+											location:
+												entry.context_json
+													.current_information
+													.location,
+									  }
+									: {
+											time: null,
+											day: "",
+											location: "",
+									  }
+							);
+							setPoisMap(
+								query.context_json.pois?.length > 0
+									? query.context_json.pois
+									: {}
+							);
+							setContext([]);
+							setContextJSON({});
+							setQuery(entry);
+							onEdit();
+						}}
+					>
+						Edit
+					</Button>
+				</Box>
+			</AccordionDetails>
+		</Accordion>
+	);
+};
 export default function DatasetPage({ onEdit }) {
-	const [dataset, setDataset] = useState([]);
 	const {
 		queries,
 		setQueries,
@@ -90,10 +465,7 @@ export default function DatasetPage({ onEdit }) {
 		setPoisMap,
 	} = useContext(GlobalContext);
 	const [filteredQueries, setFilteredQueries] = useState([]);
-	const [filteredDataset, setFilteredDataset] = useState([]);
 	const [selectedCategory, setSelectedCategory] = useState("All");
-	const [datasetSummary, setDatasetSummary] = useState({});
-
 	const [expanded, setExpanded] = useState({});
 
 	const toggleExpanded = (id) => {
@@ -122,71 +494,9 @@ export default function DatasetPage({ onEdit }) {
 
 	const router = useRouter();
 
-	// useEffect(() => {
-	// 	// In a real application, you would fetch data here
-	// 	setDataset(mockDataset);
-	// 	setFilteredDataset(mockDataset);
-	// 	// Calculate dataset summary
-	// 	const summary = {
-	// 		totalQuestions: mockDataset.length,
-	// 		validQuestions: mockDataset.filter(
-	// 			(item) =>
-	// 				item.context &&
-	// 				item.question &&
-	// 				item.options &&
-	// 				item.correctAnswer
-	// 		).length,
-	// 		questionsWithoutContext: mockDataset.filter((item) => !item.context)
-	// 			.length,
-	// 		questionsWithoutCorrectAnswer: mockDataset.filter(
-	// 			(item) => !item.correctAnswer
-	// 		).length,
-	// 		invalidQuestions: mockDataset.filter(
-	// 			(item) =>
-	// 				!item.context ||
-	// 				!item.question ||
-	// 				!item.options ||
-	// 				!item.correctAnswer
-	// 		).length,
-	// 	};
-	// 	setDatasetSummary(summary);
-	// }, []);
-
 	useEffect(() => {
 		setFilteredQueries(queries);
 	}, []);
-
-	// useEffect(() => {
-	// 	const tmp = {};
-	// 	let valid_questions = 0;
-	// 	let total_questions = 0;
-	// 	let questions_without_context = 0;
-	// 	let questions_with_answer = 0;
-
-	// 	queries.forEach((query) => {
-	// 		total_questions++;
-	// 		if (query.context === "") {
-	// 			questions_without_context++;
-	// 		}
-	// 		if (query.answer.correct !== -1) {
-	// 			questions_with_answer++;
-	// 		}
-	// 		if (query.context !== "" && query.answer.correct !== -1) {
-	// 			const invalid = query.evaluation?.find(
-	// 				(e) =>
-	// 					e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
-	// 					e.verdict === "invalid"
-	// 			);
-	// 			if (!invalid) valid_questions++;
-	// 		}
-	// 	});
-	// 	tmp["totalQuestions"] = total_questions;
-	// 	tmp["questionsWithoutContext"] = questions_without_context;
-	// 	tmp["questionsWithoutCorrectAnswer"] =
-	// 		total_questions - questions_with_answer;
-	// 	tmp["validQuestions"] = valid_questions;
-	// 	setDatasetSummary(tmp);
-	// }, [queries]);
 
 	const categories = [
 		"All",
@@ -241,47 +551,7 @@ export default function DatasetPage({ onEdit }) {
 				</Box>
 			</div>
 
-			{/* <TableContainer component={Paper} sx={{ mb: 4 }}>
-				<Table>
-					<TableHead>
-						<TableRow>
-							<TableCell>Dataset Summary</TableCell>
-							<TableCell align="right">Count</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						<TableRow>
-							<TableCell>Total Questions</TableCell>
-							<TableCell align="right">
-								{datasetSummary.totalQuestions}
-							</TableCell>
-						</TableRow>
-
-						<TableRow>
-							<TableCell>Questions Without Context</TableCell>
-							<TableCell align="right">
-								{datasetSummary.questionsWithoutContext}
-							</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell>
-								Questions Without Correct Answer
-							</TableCell>
-							<TableCell align="right">
-								{datasetSummary.questionsWithoutCorrectAnswer}
-							</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell>Valid Questions</TableCell>
-							<TableCell align="right">
-								{datasetSummary.validQuestions}
-							</TableCell>
-						</TableRow>
-					</TableBody>
-				</Table>
-			</TableContainer> */}
-
-			{filteredQueries.map((entry) => (
+			{filteredQueries.map((entry, index) => (
 				<Accordion key={entry.id} sx={{ mb: 2 }}>
 					<AccordionSummary
 						expandIcon={<ExpandMoreIcon />}
@@ -481,7 +751,175 @@ export default function DatasetPage({ onEdit }) {
 							</Box>
 						)}
 
-						<Box className="w-full flex justify-end">
+						<div className="flex flex-col gap-2 p-2 border-2 border-black rounded-md">
+							<div className="flex flex-row justify-between">
+								<h1 className="text-lg font-bold underline">
+									Human Annotation
+								</h1>
+								<h2 className="text-lg font-semibold text-black px-1 flex flex-row gap-1 items-center">
+									<FontAwesomeIcon icon={faUser} />
+									{entry.human.username}
+								</h2>
+							</div>
+							<div className="flex flex-col gap-1">
+								<div
+									key={index}
+									className="flex flex-col gap-2"
+								>
+									<FormControl
+										fullWidth
+										className="input-field"
+										variant="outlined"
+										size="small"
+									>
+										<InputLabel
+											htmlFor="outlined-adornment"
+											className="input-label"
+										>
+											Correct Answer
+										</InputLabel>
+										<Select
+											// multiple
+											id="outlined-adornment"
+											className="outlined-input"
+											value={entry.human.answer}
+											onChange={(e) => {
+												setQueries((prev) =>
+													prev.map((query) =>
+														query.id === entry.id
+															? {
+																	...query,
+																	human: {
+																		...query.human,
+																		answer: e
+																			.target
+																			.value,
+																	},
+															  }
+															: query
+													)
+												);
+											}}
+											input={
+												<OutlinedInput
+													label={"Correct Answer"}
+												/>
+											}
+										>
+											<MenuItem value={0}>
+												No answer
+											</MenuItem>
+											{entry.answer.options.map(
+												(value, index) => (
+													<MenuItem
+														key={index}
+														value={index + 1}
+													>
+														{value}
+													</MenuItem>
+												)
+											)}
+										</Select>
+									</FormControl>
+									<TextField
+										value={entry.human.explanation}
+										onChange={(e) => {
+											setQueries((prev) =>
+												prev.map((query) =>
+													query.id === entry.id
+														? {
+																...query,
+																human: {
+																	...query.human,
+																	explanation:
+																		e.target
+																			.value,
+																},
+														  }
+														: query
+												)
+											);
+										}}
+										fullWidth
+										label="Explanation"
+										size="small"
+										multiline
+									/>
+									<div className="flex flex-row gap-2">
+										<Button
+											variant="contained"
+											color="error"
+											onClick={async () => {
+												setQueries((prev) =>
+													prev.map((query) =>
+														query.id === entry.id
+															? {
+																	...query,
+																	human: {
+																		answer: null,
+																		explanation:
+																			"",
+																		username:
+																			query
+																				.human
+																				.username,
+																	},
+															  }
+															: query
+													)
+												);
+											}}
+											startIcon={<Clear />}
+										>
+											Clear
+										</Button>
+										<Button
+											variant="contained"
+											color="primary"
+											onClick={async () => {
+												console.log(entry.id);
+												const res =
+													await queryApi.annotate(
+														entry.id,
+														{
+															answer: entry.human
+																.answer,
+															explanation:
+																entry.human
+																	.explanation,
+														}
+													);
+												console.log(res);
+												if (res.success) {
+													setQueries((prev) =>
+														prev.map((query) =>
+															query.id ===
+															entry.id
+																? {
+																		...query,
+																		human: {
+																			...query.human,
+																			username:
+																				res
+																					.data[0]
+																					.username,
+																		},
+																  }
+																: query
+														)
+													);
+												}
+											}}
+											startIcon={<Save />}
+										>
+											Annotate
+										</Button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<Box className="w-full flex justify-end mt-2">
 							<Button
 								variant="contained"
 								color="primary"
