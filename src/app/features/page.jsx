@@ -102,7 +102,7 @@ export default function HomePage() {
 								>
 									{feature.description}
 								</Typography>
-							</Paper>	
+							</Paper>
 						</Grid>
 					))}
 				</Grid>
@@ -121,7 +121,7 @@ export default function HomePage() {
 								backgroundColor: "#3367D6",
 							},
 						}}
-						onClick={() => router.push("/tutorial")}
+						onClick={() => router.push("/tutorial#onboard")}
 					>
 						Get Started
 					</Button>

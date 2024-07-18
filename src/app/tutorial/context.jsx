@@ -73,7 +73,9 @@ const MapComponent = ({ locations }) => {
 };
 
 export default function ContextGenerator({ onFinish }) {
-	const [activeStep, setActiveStep] = useState(0);
+	const [activeStep, setActiveStep] = useState(
+		window.location.hash.substring(1) === "onboard" ? 0 : 1
+	);
 	const {
 		savedPlacesMap,
 		setSavedPlacesMap,

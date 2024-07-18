@@ -83,7 +83,9 @@ function Navbar({ selected, setSelected }) {
 							key={item.key}
 							onClick={() => setSelected(item.key)}
 							sx={{
-								mx: 1,
+								mx: {
+									md: 1,
+								},
 								color:
 									selected === item.key ? "#1976d2" : "#666",
 								fontWeight:
@@ -99,6 +101,7 @@ function Navbar({ selected, setSelected }) {
 								borderRadius: 0,
 								paddingBottom: "6px",
 							}}
+							className="!text-xs md:!text-base"
 						>
 							{item.name}
 						</Button>
@@ -116,8 +119,11 @@ export default function PageComponent() {
 
 	useEffect(() => {
 		const page = window.location.hash.substring(1);
-		setSelected(page === "" ? "context" : page);
-	}, [window.location.hash]);
+		console.log(
+			"Hi" + (page === "" || page === "onboard" ? "context" : page)
+		);
+		setSelected(page === "" || page === "onboard" ? "context" : page);
+	}, []);
 
 	return (
 		<Container
@@ -127,7 +133,7 @@ export default function PageComponent() {
 		>
 			<Navbar {...{ selected, setSelected }} />
 			<Toolbar />
-			{selected === "context" || selected === "" ? (
+			{selected === "context" ? (
 				<ContextGenerator
 					onFinish={() => {
 						setSelected("question");

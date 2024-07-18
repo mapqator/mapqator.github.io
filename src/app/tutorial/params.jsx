@@ -33,7 +33,7 @@ export function Parameters({
 }) {
 	return (
 		<CardContent>
-			<Box className="flex flex-col gap-4">
+			<Box className="flex flex-col gap-4 w-full">
 				<div className="flex flex-row items-center w-full gap-2">
 					<div className="w-full">
 						<LocalizationProvider dateAdapter={AdapterDayjs}>

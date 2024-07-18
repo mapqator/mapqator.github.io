@@ -17,6 +17,7 @@ import {
 	Paper,
 	OutlinedInput,
 	InputLabel,
+	InputAdornment,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -253,13 +254,25 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 								handleOptionChange(index, e.target.value)
 							}
 							required
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position="end">
+										<IconButton
+											onClick={() => removeOption(index)}
+											sx={{ ml: 1 }}
+										>
+											<DeleteIcon />
+										</IconButton>
+									</InputAdornment>
+								),
+							}}
 						/>
-						<IconButton
+						{/* <IconButton
 							onClick={() => removeOption(index)}
 							sx={{ ml: 1 }}
 						>
 							<DeleteIcon />
-						</IconButton>
+						</IconButton> */}
 					</Box>
 				))}
 				<Button

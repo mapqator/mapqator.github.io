@@ -31,6 +31,7 @@ export default function PageComponent() {
 						style={{
 							width: "160px",
 							marginBottom: "30px",
+							marginLeft: "16px",
 						}}
 						initial={{ y: -50, opacity: 0 }}
 						animate={{ y: 0, opacity: 1 }}
