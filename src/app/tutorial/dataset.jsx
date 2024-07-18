@@ -530,9 +530,9 @@ export default function DatasetPage({ onEdit }) {
 
 	const router = useRouter();
 
-	useEffect(() => {
-		setFilteredQueries(queries);
-	}, []);
+	// useEffect(() => {
+	// 	setFilteredQueries(queries);
+	// }, []);
 
 	useEffect(() => {
 		handleCategoryChange({ target: { value: selectedCategory } });
@@ -547,11 +547,10 @@ export default function DatasetPage({ onEdit }) {
 			"routing",
 			"location_finding",
 			"opinion",
-			"navigation",
 		],
 	];
 
-	const handleCategoryChange = (event) => {
+	const handleCategoryChange = async (event) => {
 		const category = event.target.value;
 		setSelectedCategory(category);
 		if (category === "All") {
