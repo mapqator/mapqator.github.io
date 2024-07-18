@@ -104,7 +104,7 @@ function Navbar({ selected, setSelected }) {
 						</Button>
 					))}
 				</Box>
-				<Box className="w-1/6"></Box>
+				<Box className="w-1/6 hidden md:flex"></Box>
 			</Toolbar>
 		</AppBar>
 	);
