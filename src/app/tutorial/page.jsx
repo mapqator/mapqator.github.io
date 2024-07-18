@@ -45,11 +45,11 @@ function Navbar({ selected, setSelected }) {
 	const router = useRouter();
 
 	return (
-		<AppBar position="static" sx={{ background: "white", mb: 4 }}>
+		<AppBar position="fixed" sx={{ background: "white", mb: 4 }}>
 			<Toolbar sx={{ justifyContent: "space-between" }}>
 				<Box
 					onClick={() => router.push("landing")}
-					className="cursor-pointer flex-row items-center flex"
+					className="cursor-pointer flex-row items-center flex w-1/6"
 				>
 					<Image
 						src={`${baseUrl}/images/logo.png`}
@@ -104,6 +104,7 @@ function Navbar({ selected, setSelected }) {
 						</Button>
 					))}
 				</Box>
+				<Box className="w-1/6"></Box>
 			</Toolbar>
 		</AppBar>
 	);
@@ -164,6 +165,7 @@ export default function PageComponent() {
 			// className="gap-5 flex flex-col"
 		>
 			<Navbar {...{ selected, setSelected }} />
+			<Toolbar />
 			{selected === "context-generator" ? (
 				<ContextGenerator
 					onFinish={() => {
