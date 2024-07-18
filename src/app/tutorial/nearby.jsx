@@ -230,6 +230,10 @@ export function NearbyInfo({
 		}));
 	}, [selectedPlacesMap]);
 
+	// useEffect(() => {
+	// 	console.log("Type: ", newNearbyPlaces.type);
+	// }, [newNearbyPlaces]);
+
 	const searchNearbyPlaces = async () => {
 		if (newNearbyPlaces.location === "" || newNearbyPlaces.type === "")
 			return;
@@ -283,6 +287,17 @@ export function NearbyInfo({
 				});
 
 				setNearbyPlacesMap(newNearbyPlacesMap);
+				console.log("Update Nearby Places: ", {
+					...newNearbyPlaces,
+					type: "",
+					keyword: "",
+				});
+				setNewNearbyPlaces((prev) => ({
+					...prev,
+					type: "",
+					keyword: "",
+				}));
+
 				setLoading(false);
 			}
 		} catch (error) {
@@ -354,6 +369,7 @@ export function NearbyInfo({
 							options={placeTypes}
 							fullWidth
 							freeSolo
+							value={newNearbyPlaces.type}
 							getOptionLabel={(option) =>
 								`${option
 									.replace(/_/g, " ") // Replace underscores with spaces
