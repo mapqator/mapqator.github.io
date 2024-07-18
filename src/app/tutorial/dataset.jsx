@@ -26,6 +26,7 @@ import {
 	Collapse,
 	OutlinedInput,
 	TextField,
+	Pagination,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { GlobalContext } from "@/contexts/GlobalContext";
@@ -81,6 +82,26 @@ const QueryCard = ({ entry, index, onEdit }) => {
 			setFlag(state.human.answer === 0);
 		}
 	}, [entry]);
+
+	const truncateText = (text, maxLength) => {
+		if (text.length <= maxLength) return text;
+		return text.substr(0, maxLength) + "...";
+	};
+
+	const handleSave = async (place_id) => {
+		if (savedPlacesMap[place_id]) return;
+		const res = await mapApi.getDetails(place_id);
+		if (res.success) {
+			const details = res.data.result;
+			setSavedPlacesMap((prev) => ({
+				...prev,
+				[place_id]: details,
+			}));
+		} else {
+			console.error("Error fetching data: ", res.error);
+			return;
+		}
+	};
 
 	return (
 		<Accordion key={state.id} sx={{ mb: 2 }}>
@@ -481,58 +502,18 @@ const QueryCard = ({ entry, index, onEdit }) => {
 		</Accordion>
 	);
 };
+
+const itemsPerPage = 10;
 export default function DatasetPage({ onEdit }) {
-	const {
-		queries,
-		setQueries,
-		setSelectedPlacesMap,
-		setDistanceMatrix,
-		setNearbyPlacesMap,
-		setCurrentInformation,
-		setDirectionInformation,
-		savedPlacesMap,
-		setSavedPlacesMap,
-		setContext,
-		context,
-		setContextJSON,
-		contextJSON,
-		query,
-		setQuery,
-		setPoisMap,
-	} = useContext(GlobalContext);
+	const { queries, savedPlacesMap, setSavedPlacesMap } =
+		useContext(GlobalContext);
 	const [filteredQueries, setFilteredQueries] = useState([]);
 	const [selectedCategory, setSelectedCategory] = useState("All");
 	const [expanded, setExpanded] = useState({});
 
-	const toggleExpanded = (id) => {
-		setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
+	const handlePagination = (event, value) => {
+		setPage(value);
 	};
-
-	const truncateText = (text, maxLength) => {
-		if (text.length <= maxLength) return text;
-		return text.substr(0, maxLength) + "...";
-	};
-
-	const handleSave = async (place_id) => {
-		if (savedPlacesMap[place_id]) return;
-		const res = await mapApi.getDetails(place_id);
-		if (res.success) {
-			const details = res.data.result;
-			setSavedPlacesMap((prev) => ({
-				...prev,
-				[place_id]: details,
-			}));
-		} else {
-			console.error("Error fetching data: ", res.error);
-			return;
-		}
-	};
-
-	const router = useRouter();
-
-	// useEffect(() => {
-	// 	setFilteredQueries(queries);
-	// }, []);
 
 	useEffect(() => {
 		handleCategoryChange({ target: { value: selectedCategory } });
@@ -549,6 +530,26 @@ export default function DatasetPage({ onEdit }) {
 			"opinion",
 		],
 	];
+
+	const [data, setData] = useState([]);
+	const [page, setPage] = useState(1);
+	const [pageCount, setPageCount] = useState(0);
+
+	useEffect(() => {
+		const start = (page - 1) * itemsPerPage;
+		const end = start + itemsPerPage;
+		let newQueries;
+		if (selectedCategory === "All") {
+			newQueries = queries;
+		} else {
+			newQueries = queries.filter((item) =>
+				item.classification.includes(selectedCategory)
+			);
+		}
+		setFilteredQueries(newQueries);
+		setPageCount(Math.ceil(newQueries.length / itemsPerPage));
+		setData(newQueries.slice(start, end));
+	}, [page, queries, selectedCategory]);
 
 	const handleCategoryChange = async (event) => {
 		const category = event.target.value;
@@ -578,7 +579,7 @@ export default function DatasetPage({ onEdit }) {
 							id="category-select"
 							value={selectedCategory}
 							label="Filter by Category"
-							onChange={handleCategoryChange}
+							onChange={() => setSelectedCategory(category)}
 						>
 							{categories.map((category) => (
 								<MenuItem key={category} value={category}>
@@ -590,14 +591,24 @@ export default function DatasetPage({ onEdit }) {
 				</Box>
 			</div>
 
-			{filteredQueries.map((entry, index) => (
+			{data.map((entry, index) => (
 				<QueryCard
 					key={entry.id}
 					entry={entry}
-					index={index}
+					index={(page - 1) * itemsPerPage + index}
 					onEdit={onEdit}
 				/>
 			))}
+			<div className="flex justify-center bottom-0 left-0 right-0 pt-4">
+				<Pagination
+					size="medium"
+					count={pageCount}
+					color="primary"
+					onChange={handlePagination}
+					siblingCount={1}
+					page={page}
+				/>
+			</div>
 		</>
 	);
 }
