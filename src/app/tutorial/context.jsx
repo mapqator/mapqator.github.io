@@ -128,7 +128,7 @@ export default function ContextGenerator({ onFinish }) {
 			description: `Explore various Points of Interest (POIs) within a larger area using the Places API. Select a region like a city or neighborhood, then choose a category (e.g., restaurants, museums, parks) to see POIs within that area.`,
 			icon: <ExploreIcon />,
 			component: (
-				<Card className="p-3">
+				<Card className="p-3" raised>
 					<DiscoverArea
 						{...{
 							savedPlacesMap,
@@ -147,7 +147,7 @@ export default function ContextGenerator({ onFinish }) {
 			description: `Utilize the Directions API to find routes between two points. Click on two places on the map to set start and end points.`,
 			icon: <DirectionsIcon />,
 			component: (
-				<Card className="p-3">
+				<Card className="p-3" raised>
 					<GetDirections
 						{...{
 							selectedPlacesMap,
@@ -164,7 +164,7 @@ export default function ContextGenerator({ onFinish }) {
 			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Select several places and click "Calculate Distances".`,
 			icon: <MapIcon />,
 			component: (
-				<Card className="p-3">
+				<Card className="p-3" raised>
 					<CalculateDistance
 						{...{
 							selectedPlacesMap,
@@ -181,7 +181,7 @@ export default function ContextGenerator({ onFinish }) {
 			description: `Review the information gathered and click "Generate Context" to create a rich, location-based context for your QnA dataset.`,
 			icon: <FontAwesomeIcon icon={faEye} />,
 			component: (
-				<Card className="p-3">
+				<Card className="p-3" raised>
 					<ContextViewer
 						{...{
 							context,
