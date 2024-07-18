@@ -38,7 +38,7 @@ import MapApi from "@/api/mapApi";
 const queryApi = new QueryApi();
 const mapApi = new MapApi();
 
-const QueryCard = ({ entry }) => {
+const QueryCard = ({ entry, index, onEdit }) => {
 	const {
 		queries,
 		setQueries,
@@ -57,19 +57,37 @@ const QueryCard = ({ entry }) => {
 		setQuery,
 		setPoisMap,
 	} = useContext(GlobalContext);
-
+	const [flag, setFlag] = useState(false);
 	const [expanded, setExpanded] = useState(false);
-
+	const [state, setState] = useState(entry);
+	const [contextExpanded, setContextExpanded] = useState(false);
 	const toggleExpanded = (id) => {
 		setExpanded((prev) => !prev);
 	};
+	useEffect(() => {
+		setState(entry);
+	}, [entry]);
+
+	useEffect(() => {
+		const invalid = state.evaluation?.find(
+			(e) =>
+				e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
+				e.verdict === "invalid"
+		);
+		console.log(state.human);
+		if (invalid) {
+			setFlag(true);
+		} else {
+			setFlag(state.human.answer === 0);
+		}
+	}, [entry]);
 
 	return (
-		<Accordion key={entry.id} sx={{ mb: 2 }}>
+		<Accordion key={state.id} sx={{ mb: 2 }}>
 			<AccordionSummary
 				expandIcon={<ExpandMoreIcon />}
-				aria-controls={`panel${entry.id}-content`}
-				id={`panel${entry.id}-header`}
+				aria-controls={`panel${state.id}-content`}
+				id={`panel${state.id}-header`}
 			>
 				<Box
 					sx={{
@@ -90,14 +108,16 @@ const QueryCard = ({ entry }) => {
 								display: "flex",
 								justifyContent: "flex-start",
 								width: "50%",
+								flexGap: "1rem",
 							}}
 						>
 							<Typography sx={{ width: "40%" }}>
-								Question #{entry.id}
+								Question #{state.id}
 							</Typography>
+
 							<Box>
 								<Chip
-									label={entry.classification}
+									label={state.classification}
 									color="primary"
 								/>
 							</Box>
@@ -109,7 +129,7 @@ const QueryCard = ({ entry }) => {
 										fontSize: "0.875rem",
 									}}
 								>
-									Category: {entry.classification}
+									Category: {state.classification}
 								</Typography> */}
 						{/* <Typography
 									sx={{
@@ -117,15 +137,22 @@ const QueryCard = ({ entry }) => {
 										fontSize: "0.875rem",
 									}}
 								>
-									Author: {entry.username || "Unknown"}
+									Author: {state.username || "Unknown"}
 								</Typography> */}
-						<h2 className="text-base font-semibold px-1 flex flex-row gap-1 items-center">
-							<FontAwesomeIcon icon={faUser} />
-							{entry.username}
-						</h2>
+						<div className="flex flex-row gap-2 w-[50%] justify-end">
+							{flag && (
+								<Box sx={{ width: "20%" }}>
+									<Chip label={"Invalid"} color="error" />
+								</Box>
+							)}
+							<h2 className="text-base font-semibold px-1 flex flex-row gap-1 items-center">
+								<FontAwesomeIcon icon={faUser} />
+								{state.username}
+							</h2>
+						</div>
 					</Box>
 					<Typography sx={{ color: "text.primary", mt: 1 }}>
-						{entry.question}
+						{state.question}
 					</Typography>
 				</Box>
 			</AccordionSummary>
@@ -135,11 +162,10 @@ const QueryCard = ({ entry }) => {
 						Context:
 					</Typography>
 					<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
-						{entry.context.split("\n").map(
+						{state.context.split("\n").map(
 							(line, index) =>
-								(expanded[entry.id] || index < 5) && (
+								(contextExpanded || index < 5) && (
 									<React.Fragment key={index}>
-										{/* {line} */}
 										<p
 											key={index}
 											className="w-full text-left"
@@ -147,16 +173,17 @@ const QueryCard = ({ entry }) => {
 												__html: line,
 											}}
 										/>
-										{/* <br /> */}
 									</React.Fragment>
 								)
 						)}
-						{entry.context.split("\n").length > 5 && (
+						{state.context.split("\n").length > 5 && (
 							<Button
-								onClick={() => toggleExpanded(entry.id)}
+								onClick={() =>
+									setContextExpanded((prev) => !prev)
+								}
 								sx={{ mt: 1, textTransform: "none" }}
 							>
-								{expanded[entry.id] ? "Show Less" : "Read More"}
+								{expanded[state.id] ? "Show Less" : "Read More"}
 							</Button>
 						)}
 					</Paper>
@@ -166,7 +193,7 @@ const QueryCard = ({ entry }) => {
 						Options:
 					</Typography>
 					<List dense>
-						{entry.answer.options.map(
+						{state.answer.options.map(
 							(option, index) =>
 								option !== "" && (
 									<ListItem key={index}>
@@ -181,18 +208,18 @@ const QueryCard = ({ entry }) => {
 												"& .MuiListItemText-primary": {
 													fontWeight:
 														option ===
-														entry.correctAnswer
+														state.correctAnswer
 															? "bold"
 															: "normal",
 													color:
 														option ===
-														entry.correctAnswer
+														state.correctAnswer
 															? "success.main"
 															: "inherit",
 												},
 											}}
 										/>
-										{index === entry.answer.correct && (
+										{index === state.answer.correct && (
 											<Chip
 												label="Correct"
 												color="success"
@@ -204,7 +231,7 @@ const QueryCard = ({ entry }) => {
 						)}
 					</List>
 				</Box>
-				{entry.evaluation.length > 0 && (
+				{state.evaluation.length > 0 && (
 					<Box sx={{ mb: 2 }}>
 						<Typography variant="h6" gutterBottom>
 							LLM Answers:
@@ -213,17 +240,25 @@ const QueryCard = ({ entry }) => {
 							<Table size="small">
 								<TableHead>
 									<TableRow>
-										<TableCell>Model</TableCell>
-										<TableCell align="center">
+										<TableCell sx={{ width: "30%" }}>
+											Model
+										</TableCell>
+										<TableCell
+											align="center"
+											sx={{ width: "60%" }}
+										>
 											Answer
 										</TableCell>
-										<TableCell align="center">
+										<TableCell
+											align="center"
+											sx={{ width: "10%" }}
+										>
 											Correct?
 										</TableCell>
 									</TableRow>
 								</TableHead>
 								<TableBody>
-									{entry.evaluation.map(
+									{state.evaluation.map(
 										(llmAnswer, index) => (
 											<TableRow key={index}>
 												<TableCell>
@@ -264,7 +299,7 @@ const QueryCard = ({ entry }) => {
 						</h1>
 						<h2 className="text-lg font-semibold text-black px-1 flex flex-row gap-1 items-center">
 							<FontAwesomeIcon icon={faUser} />
-							{query.human.username}
+							{state.human.username}
 						</h2>
 					</div>
 					<div className="flex flex-col gap-1">
@@ -285,9 +320,9 @@ const QueryCard = ({ entry }) => {
 									// multiple
 									id="outlined-adornment"
 									className="outlined-input"
-									value={query.human.answer}
+									value={state.human.answer}
 									onChange={(e) => {
-										setQuery((prev) => ({
+										setState((prev) => ({
 											...prev,
 											human: {
 												...prev.human,
@@ -302,7 +337,7 @@ const QueryCard = ({ entry }) => {
 									}
 								>
 									<MenuItem value={0}>No answer</MenuItem>
-									{query.answer.options.map(
+									{state.answer.options.map(
 										(value, index) => (
 											<MenuItem
 												key={index}
@@ -315,9 +350,9 @@ const QueryCard = ({ entry }) => {
 								</Select>
 							</FormControl>
 							<TextField
-								value={query.human.explanation}
+								value={state.human.explanation}
 								onChange={(e) => {
-									setQuery((prev) => ({
+									setState((prev) => ({
 										...prev,
 										human: {
 											...prev.human,
@@ -335,7 +370,7 @@ const QueryCard = ({ entry }) => {
 									variant="contained"
 									color="error"
 									onClick={async () => {
-										setQuery((prev) => ({
+										setState((prev) => ({
 											...prev,
 											human: {
 												answer: null,
@@ -352,18 +387,18 @@ const QueryCard = ({ entry }) => {
 									variant="contained"
 									color="primary"
 									onClick={async () => {
-										console.log(query.id);
+										console.log(state.id);
 										const res = await queryApi.annotate(
-											query.id,
+											state.id,
 											{
-												answer: query.human.answer,
+												answer: state.human.answer,
 												explanation:
-													query.human.explanation,
+													state.human.explanation,
 											}
 										);
 										console.log(res);
-										if (res.success)
-											setQuery((prev) => ({
+										if (res.success) {
+											setState((prev) => ({
 												...prev,
 												human: {
 													...prev.human,
@@ -371,6 +406,7 @@ const QueryCard = ({ entry }) => {
 														res.data[0].username,
 												},
 											}));
+										}
 									}}
 									startIcon={<Save />}
 								>
@@ -381,43 +417,43 @@ const QueryCard = ({ entry }) => {
 					</div>
 				</div>
 
-				<Box className="w-full flex justify-end">
+				<Box className="w-full flex justify-end mt-2">
 					<Button
 						variant="contained"
 						color="primary"
 						startIcon={<Edit />}
 						onClick={async () => {
-							for (let place_id in entry.context_json.places) {
+							for (let place_id in state.context_json.places) {
 								await handleSave(place_id);
 							}
 							setSelectedPlacesMap(
-								entry.context_json.places ?? {}
+								state.context_json.places ?? {}
 							);
 							setDistanceMatrix(
-								entry.context_json.distance_matrix ?? {}
+								state.context_json.distance_matrix ?? {}
 							);
 							setDirectionInformation(
-								entry.context_json.directions ?? {}
+								state.context_json.directions ?? {}
 							);
 
 							setNearbyPlacesMap(
-								entry.context_json.nearby_places ?? {}
+								state.context_json.nearby_places ?? {}
 							);
 							setCurrentInformation(
-								entry.context_json.current_information
+								state.context_json.current_information
 									? {
-											time: entry.context_json
+											time: state.context_json
 												.current_information.time
 												? dayjs(
-														entry.context_json
+														state.context_json
 															.current_information
 															.time
 												  )
 												: null,
-											day: entry.context_json
+											day: state.context_json
 												.current_information.day,
 											location:
-												entry.context_json
+												state.context_json
 													.current_information
 													.location,
 									  }
@@ -434,7 +470,7 @@ const QueryCard = ({ entry }) => {
 							);
 							setContext([]);
 							setContextJSON({});
-							setQuery(entry);
+							setQuery(state);
 							onEdit();
 						}}
 					>
@@ -498,6 +534,10 @@ export default function DatasetPage({ onEdit }) {
 		setFilteredQueries(queries);
 	}, []);
 
+	useEffect(() => {
+		handleCategoryChange({ target: { value: selectedCategory } });
+	}, [queries]);
+
 	const categories = [
 		"All",
 		...[
@@ -552,439 +592,12 @@ export default function DatasetPage({ onEdit }) {
 			</div>
 
 			{filteredQueries.map((entry, index) => (
-				<Accordion key={entry.id} sx={{ mb: 2 }}>
-					<AccordionSummary
-						expandIcon={<ExpandMoreIcon />}
-						aria-controls={`panel${entry.id}-content`}
-						id={`panel${entry.id}-header`}
-					>
-						<Box
-							sx={{
-								display: "flex",
-								flexDirection: "column",
-								width: "100%",
-							}}
-						>
-							<Box
-								sx={{
-									display: "flex",
-									justifyContent: "space-between",
-									width: "99%",
-								}}
-							>
-								<Box
-									sx={{
-										display: "flex",
-										justifyContent: "flex-start",
-										width: "50%",
-									}}
-								>
-									<Typography sx={{ width: "40%" }}>
-										Question #{entry.id}
-									</Typography>
-									<Box>
-										<Chip
-											label={entry.classification}
-											color="primary"
-										/>
-									</Box>
-								</Box>
-
-								{/* <Typography
-									sx={{
-										color: "text.secondary",
-										fontSize: "0.875rem",
-									}}
-								>
-									Category: {entry.classification}
-								</Typography> */}
-								{/* <Typography
-									sx={{
-										color: "text.secondary",
-										fontSize: "0.875rem",
-									}}
-								>
-									Author: {entry.username || "Unknown"}
-								</Typography> */}
-								<h2 className="text-base font-semibold px-1 flex flex-row gap-1 items-center">
-									<FontAwesomeIcon icon={faUser} />
-									{entry.username}
-								</h2>
-							</Box>
-							<Typography sx={{ color: "text.primary", mt: 1 }}>
-								{entry.question}
-							</Typography>
-						</Box>
-					</AccordionSummary>
-					<AccordionDetails>
-						<Box sx={{ mb: 2 }}>
-							<Typography variant="h6" gutterBottom>
-								Context:
-							</Typography>
-							<Paper
-								elevation={1}
-								sx={{ p: 2, bgcolor: "grey.100" }}
-							>
-								{entry.context.split("\n").map(
-									(line, index) =>
-										(expanded[entry.id] || index < 5) && (
-											<React.Fragment key={index}>
-												{/* {line} */}
-												<p
-													key={index}
-													className="w-full text-left"
-													dangerouslySetInnerHTML={{
-														__html: line,
-													}}
-												/>
-												{/* <br /> */}
-											</React.Fragment>
-										)
-								)}
-								{entry.context.split("\n").length > 5 && (
-									<Button
-										onClick={() => toggleExpanded(entry.id)}
-										sx={{ mt: 1, textTransform: "none" }}
-									>
-										{expanded[entry.id]
-											? "Show Less"
-											: "Read More"}
-									</Button>
-								)}
-							</Paper>
-						</Box>
-						<Box sx={{ mb: 2 }}>
-							<Typography variant="h6" gutterBottom>
-								Options:
-							</Typography>
-							<List dense>
-								{entry.answer.options.map(
-									(option, index) =>
-										option !== "" && (
-											<ListItem key={index}>
-												<ListItemText
-													primary={
-														"Option " +
-														(index + 1) +
-														": " +
-														option
-													}
-													sx={{
-														"& .MuiListItemText-primary":
-															{
-																fontWeight:
-																	option ===
-																	entry.correctAnswer
-																		? "bold"
-																		: "normal",
-																color:
-																	option ===
-																	entry.correctAnswer
-																		? "success.main"
-																		: "inherit",
-															},
-													}}
-												/>
-												{index ===
-													entry.answer.correct && (
-													<Chip
-														label="Correct"
-														color="success"
-														size="small"
-													/>
-												)}
-											</ListItem>
-										)
-								)}
-							</List>
-						</Box>
-						{entry.evaluation.length > 0 && (
-							<Box sx={{ mb: 2 }}>
-								<Typography variant="h6" gutterBottom>
-									LLM Answers:
-								</Typography>
-								<TableContainer component={Paper}>
-									<Table size="small">
-										<TableHead>
-											<TableRow>
-												<TableCell>Model</TableCell>
-												<TableCell align="center">
-													Answer
-												</TableCell>
-												<TableCell align="center">
-													Correct?
-												</TableCell>
-											</TableRow>
-										</TableHead>
-										<TableBody>
-											{entry.evaluation.map(
-												(llmAnswer, index) => (
-													<TableRow key={index}>
-														<TableCell>
-															{llmAnswer.model}
-														</TableCell>
-														<TableCell align="center">
-															{llmAnswer.answer}
-														</TableCell>
-														<TableCell align="center">
-															{llmAnswer.verdict ===
-															"right" ? (
-																<Chip
-																	label="Correct"
-																	color="success"
-																	size="small"
-																/>
-															) : (
-																<Chip
-																	label="Incorrect"
-																	color="error"
-																	size="small"
-																/>
-															)}
-														</TableCell>
-													</TableRow>
-												)
-											)}
-										</TableBody>
-									</Table>
-								</TableContainer>
-							</Box>
-						)}
-
-						<div className="flex flex-col gap-2 p-2 border-2 border-black rounded-md">
-							<div className="flex flex-row justify-between">
-								<h1 className="text-lg font-bold underline">
-									Human Annotation
-								</h1>
-								<h2 className="text-lg font-semibold text-black px-1 flex flex-row gap-1 items-center">
-									<FontAwesomeIcon icon={faUser} />
-									{entry.human.username}
-								</h2>
-							</div>
-							<div className="flex flex-col gap-1">
-								<div
-									key={index}
-									className="flex flex-col gap-2"
-								>
-									<FormControl
-										fullWidth
-										className="input-field"
-										variant="outlined"
-										size="small"
-									>
-										<InputLabel
-											htmlFor="outlined-adornment"
-											className="input-label"
-										>
-											Correct Answer
-										</InputLabel>
-										<Select
-											// multiple
-											id="outlined-adornment"
-											className="outlined-input"
-											value={entry.human.answer}
-											onChange={(e) => {
-												setQueries((prev) =>
-													prev.map((query) =>
-														query.id === entry.id
-															? {
-																	...query,
-																	human: {
-																		...query.human,
-																		answer: e
-																			.target
-																			.value,
-																	},
-															  }
-															: query
-													)
-												);
-											}}
-											input={
-												<OutlinedInput
-													label={"Correct Answer"}
-												/>
-											}
-										>
-											<MenuItem value={0}>
-												No answer
-											</MenuItem>
-											{entry.answer.options.map(
-												(value, index) => (
-													<MenuItem
-														key={index}
-														value={index + 1}
-													>
-														{value}
-													</MenuItem>
-												)
-											)}
-										</Select>
-									</FormControl>
-									<TextField
-										value={entry.human.explanation}
-										onChange={(e) => {
-											setQueries((prev) =>
-												prev.map((query) =>
-													query.id === entry.id
-														? {
-																...query,
-																human: {
-																	...query.human,
-																	explanation:
-																		e.target
-																			.value,
-																},
-														  }
-														: query
-												)
-											);
-										}}
-										fullWidth
-										label="Explanation"
-										size="small"
-										multiline
-									/>
-									<div className="flex flex-row gap-2">
-										<Button
-											variant="contained"
-											color="error"
-											onClick={async () => {
-												setQueries((prev) =>
-													prev.map((query) =>
-														query.id === entry.id
-															? {
-																	...query,
-																	human: {
-																		answer: null,
-																		explanation:
-																			"",
-																		username:
-																			query
-																				.human
-																				.username,
-																	},
-															  }
-															: query
-													)
-												);
-											}}
-											startIcon={<Clear />}
-										>
-											Clear
-										</Button>
-										<Button
-											variant="contained"
-											color="primary"
-											onClick={async () => {
-												console.log(entry.id);
-												const res =
-													await queryApi.annotate(
-														entry.id,
-														{
-															answer: entry.human
-																.answer,
-															explanation:
-																entry.human
-																	.explanation,
-														}
-													);
-												console.log(res);
-												if (res.success) {
-													setQueries((prev) =>
-														prev.map((query) =>
-															query.id ===
-															entry.id
-																? {
-																		...query,
-																		human: {
-																			...query.human,
-																			username:
-																				res
-																					.data[0]
-																					.username,
-																		},
-																  }
-																: query
-														)
-													);
-												}
-											}}
-											startIcon={<Save />}
-										>
-											Annotate
-										</Button>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<Box className="w-full flex justify-end mt-2">
-							<Button
-								variant="contained"
-								color="primary"
-								startIcon={<Edit />}
-								onClick={async () => {
-									for (let place_id in entry.context_json
-										.places) {
-										await handleSave(place_id);
-									}
-									setSelectedPlacesMap(
-										entry.context_json.places ?? {}
-									);
-									setDistanceMatrix(
-										entry.context_json.distance_matrix ?? {}
-									);
-									setDirectionInformation(
-										entry.context_json.directions ?? {}
-									);
-
-									setNearbyPlacesMap(
-										entry.context_json.nearby_places ?? {}
-									);
-									setCurrentInformation(
-										entry.context_json.current_information
-											? {
-													time: entry.context_json
-														.current_information
-														.time
-														? dayjs(
-																entry
-																	.context_json
-																	.current_information
-																	.time
-														  )
-														: null,
-													day: entry.context_json
-														.current_information
-														.day,
-													location:
-														entry.context_json
-															.current_information
-															.location,
-											  }
-											: {
-													time: null,
-													day: "",
-													location: "",
-											  }
-									);
-									setPoisMap(
-										query.context_json.pois?.length > 0
-											? query.context_json.pois
-											: {}
-									);
-									setContext([]);
-									setContextJSON({});
-									setQuery(entry);
-									onEdit();
-								}}
-							>
-								Edit
-							</Button>
-						</Box>
-					</AccordionDetails>
-				</Accordion>
+				<QueryCard
+					key={entry.id}
+					entry={entry}
+					index={index}
+					onEdit={onEdit}
+				/>
 			))}
 		</>
 	);

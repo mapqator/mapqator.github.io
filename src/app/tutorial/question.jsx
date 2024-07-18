@@ -226,7 +226,6 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 							"routing",
 							"location_finding",
 							"opinion",
-							"navigation",
 						].map((value, index) => (
 							<MenuItem key={index} value={value}>
 								{value}
