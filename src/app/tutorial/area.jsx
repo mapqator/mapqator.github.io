@@ -8,7 +8,25 @@ const mapApi = new MapApi();
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import { Select, MenuItem, Button, TextField, IconButton } from "@mui/material";
+import {
+	Select,
+	MenuItem,
+	Button,
+	TextField,
+	IconButton,
+	CardContent,
+	Grid,
+	ListItem,
+	List,
+	Collapse,
+	ListItemIcon,
+	ListItemText,
+	Typography,
+	Box,
+	Card,
+	Chip,
+	Divider,
+} from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faChevronDown,
@@ -19,7 +37,7 @@ import {
 import placeTypes from "@/app/types.json";
 import Autocomplete from "@mui/material/Autocomplete";
 import { LoadingButton } from "@mui/lab";
-import { Add } from "@mui/icons-material";
+import { Add, CheckBox, Delete, ExpandMore, Search } from "@mui/icons-material";
 
 function POICard({
 	selectedPlacesMap,
@@ -72,89 +90,113 @@ function POICard({
 		}));
 	};
 	return (
-		<div className="bg-white">
-			<div className="flex flex-row gap-1 w-full items-center p-2">
-				<h1 className={`w-[50%] text-center`}>
-					{savedPlacesMap[place_id].name ||
-						selectedPlacesMap[place_id].alias}
-				</h1>
-				<h1 className={`w-[18%] text-center`}>{poi.type}</h1>
-				<h1 className={`w-[18%] text-center`}>
-					{
-						poisMap[place_id][index2].places.filter(
-							(place) => place.selected
-						).length
-					}
-				</h1>
-				<IconButton
-					sx={{
-						height: "3rem",
-						width: "3rem",
-					}}
-					onClick={() => {
-						const newPoisMap = {
-							...poisMap,
-						};
-						newPoisMap[place_id].splice(index2, 1);
-						if (newPoisMap[place_id].length === 0)
-							delete newPoisMap[place_id];
-						setPoisMap(newPoisMap);
-					}}
+		<Card variant="outlined" sx={{ mb: 2 }}>
+			<CardContent>
+				<Box
+					display="flex"
+					justifyContent="space-between"
+					alignItems="center"
 				>
-					<div className="text-sm md:text-2xl">
-						<FontAwesomeIcon icon={faTrashCan} color="red" />
-					</div>
-				</IconButton>
-				<IconButton
-					sx={{ height: "3rem", width: "3rem" }}
-					onClick={() => setExpanded((prev) => !prev)}
-				>
-					<div className="text-sm md:text-2xl">
-						<FontAwesomeIcon
-							icon={expanded ? faChevronUp : faChevronDown}
-							color="black"
-						/>
-					</div>
-				</IconButton>
-			</div>
+					<Typography variant="h6" component="div">
+						{savedPlacesMap[place_id]?.name}
+					</Typography>
 
-			{expanded && (
-				<div className="px-2 py-1 border-t-2 border-black">
-					{poi.places.map((place, index3) => (
-						<div className="flex flex-col w-full" key={index3}>
-							<div className="flex flex-row gap-2 items-center">
-								<input
-									type="checkbox"
-									className="w-5 h-5"
-									checked={place.selected}
-									onChange={(event) => {
-										const newPoisMap = { ...poisMap };
-										newPoisMap[place_id][index2].places[
-											index3
-										].selected = event.target.checked;
-										setPoisMap(newPoisMap);
+					<Box>
+						<IconButton
+							onClick={() => {
+								const newPoisMap = {
+									...poisMap,
+								};
+								newPoisMap[place_id].splice(index2, 1);
+								if (newPoisMap[place_id].length === 0)
+									delete newPoisMap[place_id];
+								setPoisMap(newPoisMap);
+							}}
+							size="small"
+						>
+							<Delete color="error" />
+						</IconButton>
+						<IconButton
+							onClick={() => setExpanded((prev) => !prev)}
+							size="small"
+							sx={{
+								transform: expanded
+									? "rotate(180deg)"
+									: "rotate(0deg)",
+								transition: "0.3s",
+							}}
+						>
+							<ExpandMore />
+						</IconButton>
+					</Box>
+				</Box>
+				<Box display="flex" flexWrap="wrap" gap={1} mt={1}>
+					<Chip label={poi.type} color="primary" size="small" />
+					<Chip
+						label={
+							poisMap[place_id]
+								? poisMap[place_id][index2].places.filter(
+										(place) => place.selected
+								  ).length
+								: 0
+						}
+						color="secondary"
+						size="small"
+					/>
+				</Box>
+			</CardContent>
+			<Collapse in={expanded} timeout="auto" unmountOnExit>
+				<Divider />
+				<List dense>
+					{poi.places?.map((place, index3) => (
+						<React.Fragment key={index3}>
+							<ListItem
+								secondaryAction={
+									<IconButton
+										edge="end"
+										onClick={() =>
+											handleAddSave(place.place_id)
+										}
+										size="small"
+									>
+										<Add />
+									</IconButton>
+								}
+							>
+								<ListItemIcon>
+									<CheckBox
+										edge="start"
+										checked={place.selected}
+										onChange={(event) => {
+											const newPoisMap = {
+												...poisMap,
+											};
+											newPoisMap[place_id][index2].places[
+												index3
+											].selected = event.target.checked;
+											setPoisMap(newPoisMap);
+										}}
+									/>
+								</ListItemIcon>
+								<ListItemText
+									primary={place.name}
+									secondary={place.formatted_address}
+									primaryTypographyProps={{
+										noWrap: true,
+									}}
+									secondaryTypographyProps={{
+										noWrap: true,
 									}}
 								/>
-								<h1 className="overflow-hidden whitespace-nowrap overflow-ellipsis w-[95%]">
-									{place.name} - {place.formatted_address}
-								</h1>
-								<IconButton
-									sx={{ height: "3rem", width: "3rem" }}
-									onClick={() => {
-										handleAddSave(place.place_id);
-									}}
-								>
-									<FontAwesomeIcon icon={faAdd} />
-								</IconButton>
-							</div>
+							</ListItem>
 							{index3 < poi.places.length - 1 && (
-								<div className="border-b-2 border-black w-full"></div>
+								<Divider variant="inset" component="li" />
 							)}
-						</div>
+						</React.Fragment>
 					))}
-				</div>
-			)}
-		</div>
+				</List>
+			</Collapse>
+		</Card>
 	);
 }
 
@@ -228,21 +270,9 @@ export function DiscoverArea({
 	};
 
 	return (
-		<>
+		<CardContent>
 			{Object.keys(poisMap).length > 0 && (
-				<div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
-					<div className="flex flex-row">
-						<h1 className="text-lg w-[50%] text-center font-bold">
-							Location
-						</h1>
-						<h1 className="text-lg w-[18%] text-center font-bold">
-							Type
-						</h1>
-
-						<h1 className="text-lg w-[18%] text-center font-bold">
-							Count
-						</h1>
-					</div>
+				<div key={index1} className="flex flex-col gap-1 ">
 					{Object.keys(poisMap).map((place_id, index1) => (
 						<div key={index1} className="flex flex-col gap-1 ">
 							{poisMap[place_id].map((poi, index2) => (
@@ -263,8 +293,31 @@ export function DiscoverArea({
 					))}
 				</div>
 			)}
-			<div className="flex flex-col gap-2 w-full p-2">
-				<div className="w-full">
+
+			{/* <POICard
+				selectedPlacesMap={selectedPlacesMap}
+				savedPlacesMap={savedPlacesMap}
+				setSavedPlacesMap={setSavedPlacesMap}
+				poi={{
+					type: "atm",
+					places: [
+						{
+							place_id: 1,
+							name: "Demo Name",
+							formatted_address: "Demo Address",
+							selected: true,
+						},
+					],
+				}}
+				poisMap={poisMap}
+				setPoisMap={setPoisMap}
+				index2={1}
+				place_id={1}
+				setSelectedPlacesMap={setSelectedPlacesMap}
+			/> */}
+
+			<Grid container spacing={2}>
+				<Grid item xs={12}>
 					<FormControl
 						fullWidth
 						className="input-field"
@@ -302,14 +355,15 @@ export function DiscoverArea({
 							)}
 						</Select>
 					</FormControl>
-				</div>
-				<div className="w-full">
+				</Grid>
+				<Grid item xs={12}>
 					<Autocomplete
 						disablePortal
 						id="combo-box-demo"
 						size="small"
 						options={placeTypes}
 						fullWidth
+						value={newPois.type}
 						freeSolo
 						getOptionLabel={(option) =>
 							`${option
@@ -342,54 +396,21 @@ export function DiscoverArea({
 							/>
 						)}
 					/>
-				</div>
+				</Grid>
 
-				<div className="w-full">
+				<Grid item xs={12}>
 					<LoadingButton
 						variant="contained"
 						fullWidth
 						onClick={searchInsidePlaces}
-						sx={{ fontSize: "1rem" }}
-						startIcon={<Add />}
+						startIcon={<Search />}
 						loading={loading}
 						loadingPosition="start"
 					>
-						Add ($)
+						Search Places in Area
 					</LoadingButton>
-				</div>
-			</div>
-		</>
-	);
-}
-export default function POI({
-	savedPlacesMap,
-	setSavedPlacesMap,
-	selectedPlacesMap,
-	poisMap,
-	setSelectedPlacesMap,
-	setPoisMap,
-}) {
-	return (
-		// Object.keys(selectedPlacesMap).length > 0 &&
-		<div className="flex flex-col border-4 w-full border-black rounded-lg">
-			<div className="flex flex-col items-center bg-black text-center pb-2">
-				<h1 className="text-xl md:text-3xl text-white">
-					Places in an Area
-				</h1>
-				<p className="text-sm md:text-lg text-zinc-300">
-					Results of the Points of Interest search
-				</p>
-			</div>
-			<DiscoverArea
-				{...{
-					savedPlacesMap,
-					setSavedPlacesMap,
-					selectedPlacesMap,
-					poisMap,
-					setSelectedPlacesMap,
-					setPoisMap,
-				}}
-			/>
-		</div>
+				</Grid>
+			</Grid>
+		</CardContent>
 	);
 }

@@ -92,7 +92,7 @@ export default function PageComponent() {
 					</motion.div>
 				</Box>
 			</Fade>
-			<div style={{ position: "absolute", bottom: 10 }}>
+			{/* <div style={{ position: "absolute", bottom: 10 }}>
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
@@ -108,7 +108,7 @@ export default function PageComponent() {
 						Developed by Mahir Labib Dihan
 					</Typography>
 				</motion.div>
-			</div>
+			</div> */}
 		</Box>
 	);
 }

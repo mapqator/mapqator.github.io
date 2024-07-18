@@ -307,157 +307,151 @@ export function NearbyInfo({
 	};
 
 	return (
-		<Card raised>
-			<CardContent>
-				{Object.keys(nearbyPlacesMap).map((place_id, index1) => (
-					<div key={index1} className="flex flex-col gap-1 ">
-						{nearbyPlacesMap[place_id].map((e, index2) => (
-							<NearbyCard
-								key={index2}
-								{...{
-									index2,
-									selectedPlacesMap,
-									savedPlacesMap,
-									setSavedPlacesMap,
-									nearbyPlacesMap,
-									setNearbyPlacesMap,
-									place_id,
-									setSelectedPlacesMap,
-									e,
-								}}
-							/>
-						))}
-					</div>
-				))}
-				<Typography variant="h5" gutterBottom>
-					Search Nearby Places
-				</Typography>
-				<Grid container spacing={2}>
-					<Grid item xs={12}>
-						<FormControl fullWidth size="small">
-							<InputLabel>Location</InputLabel>
-							<Select
-								value={newNearbyPlaces.location}
-								onChange={(e) =>
-									setNewNearbyPlaces((prev) => ({
-										...prev,
-										location: e.target.value,
-									}))
-								}
-								label="Location"
-							>
-								{Object.keys(selectedPlacesMap).map(
-									(place_id) => (
-										<MenuItem
-											key={place_id}
-											value={place_id}
-										>
-											{savedPlacesMap[place_id].name ||
-												selectedPlacesMap[place_id]
-													.alias}
-										</MenuItem>
-									)
-								)}
-							</Select>
-						</FormControl>
-					</Grid>
-					<Grid item xs={12}>
-						<Autocomplete
-							disablePortal
-							id="combo-box-demo"
-							size="small"
-							options={placeTypes}
-							fullWidth
-							freeSolo
-							value={newNearbyPlaces.type}
-							getOptionLabel={(option) =>
-								`${option
-									.replace(/_/g, " ") // Replace underscores with spaces
-									.split(" ") // Split the string into an array of words
-									.map(
-										(word) =>
-											word.charAt(0).toUpperCase() +
-											word.slice(1)
-									) // Capitalize the first letter of each word
-									.join(" ")}`
-							}
-							onChange={(e, newValue) => {
-								// console.log("newValue: ", newValue);
-								setNewNearbyPlaces((prev) => ({
-									...prev,
-									type: newValue,
-								}));
+		// <Card raised>
+		<CardContent>
+			{Object.keys(nearbyPlacesMap).map((place_id, index1) => (
+				<div key={index1} className="flex flex-col gap-1 ">
+					{nearbyPlacesMap[place_id].map((e, index2) => (
+						<NearbyCard
+							key={index2}
+							{...{
+								index2,
+								selectedPlacesMap,
+								savedPlacesMap,
+								setSavedPlacesMap,
+								nearbyPlacesMap,
+								setNearbyPlacesMap,
+								place_id,
+								setSelectedPlacesMap,
+								e,
 							}}
-							renderInput={(params) => (
-								<TextField
-									{...params}
-									label="Type"
-									value={newNearbyPlaces.type} // Step 3: Bind the value to state
-									onChange={(e) => {
-										// console.log("newValue: ", newValue);
-										setNewNearbyPlaces((prev) => ({
-											...prev,
-											type: e.target.value,
-										}));
-									}}
-								/>
-							)}
 						/>
-					</Grid>
-					<Grid item xs={12}>
-						<RadioGroup
-							row
-							value={newNearbyPlaces.rankBy}
+					))}
+				</div>
+			))}
+			{/* <Typography variant="h5" gutterBottom>
+					Search Nearby Places
+				</Typography> */}
+			<Grid container spacing={2}>
+				<Grid item xs={12}>
+					<FormControl fullWidth size="small">
+						<InputLabel>Location</InputLabel>
+						<Select
+							value={newNearbyPlaces.location}
 							onChange={(e) =>
 								setNewNearbyPlaces((prev) => ({
 									...prev,
-									rankBy: e.target.value,
+									location: e.target.value,
 								}))
 							}
+							label="Location"
 						>
-							<FormControlLabel
-								value="distance"
-								control={<Radio />}
-								label="Rank by Distance"
-							/>
-							<FormControlLabel
-								value="prominence"
-								control={<Radio />}
-								label="Rank by Prominence"
-							/>
-						</RadioGroup>
-					</Grid>
-					{newNearbyPlaces.rankBy === "prominence" && (
-						<Grid item xs={12}>
+							{Object.keys(selectedPlacesMap).map((place_id) => (
+								<MenuItem key={place_id} value={place_id}>
+									{savedPlacesMap[place_id].name ||
+										selectedPlacesMap[place_id].alias}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				</Grid>
+				<Grid item xs={12}>
+					<Autocomplete
+						disablePortal
+						id="combo-box-demo"
+						size="small"
+						options={placeTypes}
+						fullWidth
+						freeSolo
+						value={newNearbyPlaces.type}
+						getOptionLabel={(option) =>
+							`${option
+								.replace(/_/g, " ") // Replace underscores with spaces
+								.split(" ") // Split the string into an array of words
+								.map(
+									(word) =>
+										word.charAt(0).toUpperCase() +
+										word.slice(1)
+								) // Capitalize the first letter of each word
+								.join(" ")}`
+						}
+						onChange={(e, newValue) => {
+							// console.log("newValue: ", newValue);
+							setNewNearbyPlaces((prev) => ({
+								...prev,
+								type: newValue,
+							}));
+						}}
+						renderInput={(params) => (
 							<TextField
-								fullWidth
-								size="small"
-								label="Radius (meters)"
-								type="number"
-								value={newNearbyPlaces.radius}
-								onChange={(e) =>
+								{...params}
+								label="Type"
+								value={newNearbyPlaces.type} // Step 3: Bind the value to state
+								onChange={(e) => {
+									// console.log("newValue: ", newValue);
 									setNewNearbyPlaces((prev) => ({
 										...prev,
-										radius: e.target.value,
-									}))
-								}
+										type: e.target.value,
+									}));
+								}}
 							/>
-						</Grid>
-					)}
-					<Grid item xs={12}>
-						<LoadingButton
-							variant="contained"
-							fullWidth
-							onClick={searchNearbyPlaces}
-							startIcon={<Search />}
-							loading={loading}
-							loadingPosition="start"
-						>
-							Search Nearby Places
-						</LoadingButton>
-					</Grid>
+						)}
+					/>
 				</Grid>
-			</CardContent>
-		</Card>
+				<Grid item xs={12}>
+					<RadioGroup
+						row
+						value={newNearbyPlaces.rankBy}
+						onChange={(e) =>
+							setNewNearbyPlaces((prev) => ({
+								...prev,
+								rankBy: e.target.value,
+							}))
+						}
+					>
+						<FormControlLabel
+							value="distance"
+							control={<Radio />}
+							label="Rank by Distance"
+						/>
+						<FormControlLabel
+							value="prominence"
+							control={<Radio />}
+							label="Rank by Prominence"
+						/>
+					</RadioGroup>
+				</Grid>
+				{newNearbyPlaces.rankBy === "prominence" && (
+					<Grid item xs={12}>
+						<TextField
+							fullWidth
+							size="small"
+							label="Radius (meters)"
+							type="number"
+							value={newNearbyPlaces.radius}
+							onChange={(e) =>
+								setNewNearbyPlaces((prev) => ({
+									...prev,
+									radius: e.target.value,
+								}))
+							}
+						/>
+					</Grid>
+				)}
+				<Grid item xs={12}>
+					<LoadingButton
+						variant="contained"
+						fullWidth
+						onClick={searchNearbyPlaces}
+						startIcon={<Search />}
+						loading={loading}
+						loadingPosition="start"
+					>
+						Search Nearby Places
+					</LoadingButton>
+				</Grid>
+			</Grid>
+		</CardContent>
+		// </Card>
 	);
 }

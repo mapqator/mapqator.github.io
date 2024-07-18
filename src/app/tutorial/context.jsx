@@ -11,6 +11,7 @@ import {
 	Button,
 	Paper,
 	Card,
+	Divider,
 } from "@mui/material";
 import MapIcon from "@mui/icons-material/Map";
 import SearchIcon from "@mui/icons-material/Search";
@@ -26,16 +27,19 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 import PlaceInformation from "./places";
 import NearbyInformation from "../NearbyInformation";
 import { NearbyInfo } from "./nearby";
-import POI, { DiscoverArea } from "../POI";
-import DistanceInformation, { CalculateDistance } from "../DistanceInformation";
-import DirectionInformation, { GetDirections } from "../DirectionInformation";
+import POI from "../POI";
+import { DiscoverArea } from "./area";
+import DistanceInformation from "../DistanceInformation";
+import { CalculateDistance } from "./distance";
+import DirectionInformation from "../DirectionInformation";
+import { GetDirections } from "./direction";
 import ContextPreview, { ContextViewer } from "../ContextPreview";
 import { Flag, Preview, Settings } from "@mui/icons-material";
 import ExploreIcon from "@mui/icons-material/Explore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import { Parameters } from "../CurrentInformation";
+import { Parameters } from "./params";
 
 const MapComponent = ({ locations }) => {
 	const mapStyles = {
@@ -126,7 +130,10 @@ export default function ContextGenerator({ onFinish }) {
 							setPoisMap,
 						}}
 					/>
-					<MapComponent locations={locations} />
+					{Object.keys(selectedPlacesMap).length > 0 && (
+						<MapComponent locations={locations} />
+					)}
+
 					<PlaceInformation
 						{...{
 							selectedPlacesMap,
@@ -147,19 +154,26 @@ export default function ContextGenerator({ onFinish }) {
 		},
 		{
 			label: "Explore Nearby Places",
-			description: `Use the Nearby Search API to discover points of interest around your selected location. Click on the "Nearby" button and choose a category.`,
+			description: `Use the Nearby Search API to discover points of interest around your selected location. Click on the "Nearby" button and choose a category.
+			You can choose a type from the given list or a custom type. Custom type's results are unpredictable.`,
 			icon: <PlaceIcon />,
 			component: (
-				<NearbyInfo
-					{...{
-						savedPlacesMap,
-						setSavedPlacesMap,
-						selectedPlacesMap,
-						nearbyPlacesMap,
-						setNearbyPlacesMap,
-						setSelectedPlacesMap,
-					}}
-				/>
+				<>
+					<Divider />
+					<Box className="max-w-[30rem] md:w-[30rem] mx-auto">
+						<NearbyInfo
+							{...{
+								savedPlacesMap,
+								setSavedPlacesMap,
+								selectedPlacesMap,
+								nearbyPlacesMap,
+								setNearbyPlacesMap,
+								setSelectedPlacesMap,
+							}}
+						/>
+					</Box>
+					<Divider />
+				</>
 			),
 		},
 		{
@@ -167,18 +181,47 @@ export default function ContextGenerator({ onFinish }) {
 			description: `Explore various Points of Interest (POIs) within a larger area using the Places API. Select a region like a city or neighborhood, then choose a category (e.g., restaurants, museums, parks) to see POIs within that area.`,
 			icon: <ExploreIcon />,
 			component: (
-				<Card className="p-3" raised>
-					<DiscoverArea
-						{...{
-							savedPlacesMap,
-							setSavedPlacesMap,
-							selectedPlacesMap,
-							poisMap,
-							setPoisMap,
-							setSelectedPlacesMap,
-						}}
-					/>
-				</Card>
+				// <Card className="p-3" raised>
+				<>
+					<Divider />
+					<Box className="max-w-[30rem] md:w-[30rem] mx-auto">
+						<DiscoverArea
+							{...{
+								savedPlacesMap,
+								setSavedPlacesMap,
+								selectedPlacesMap,
+								poisMap,
+								setPoisMap,
+								setSelectedPlacesMap,
+							}}
+						/>
+					</Box>
+					<Divider />
+				</>
+
+				// </Card>
+			),
+		},
+
+		{
+			label: "Calculate Distances",
+			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Select several places and click "Calculate Distances".`,
+			icon: <MapIcon />,
+			component: (
+				<>
+					<Divider />
+					<Box className="max-w-[30rem] md:w-[30rem] mx-auto">
+						<CalculateDistance
+							{...{
+								selectedPlacesMap,
+								savedPlacesMap,
+								distanceMatrix,
+								setDistanceMatrix,
+							}}
+						/>
+					</Box>
+					<Divider />
+				</>
 			),
 		},
 		{
@@ -186,33 +229,20 @@ export default function ContextGenerator({ onFinish }) {
 			description: `Utilize the Directions API to find routes between two points. Click on two places on the map to set start and end points.`,
 			icon: <DirectionsIcon />,
 			component: (
-				<Card className="p-3" raised>
-					<GetDirections
-						{...{
-							selectedPlacesMap,
-							savedPlacesMap,
-							directionInformation,
-							setDirectionInformation,
-						}}
-					/>
-				</Card>
-			),
-		},
-		{
-			label: "Calculate Distances",
-			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Select several places and click "Calculate Distances".`,
-			icon: <MapIcon />,
-			component: (
-				<Card className="p-3" raised>
-					<CalculateDistance
-						{...{
-							selectedPlacesMap,
-							savedPlacesMap,
-							distanceMatrix,
-							setDistanceMatrix,
-						}}
-					/>
-				</Card>
+				<>
+					<Divider />
+					<Box className="max-w-[30rem] md:w-[30rem] mx-auto">
+						<GetDirections
+							{...{
+								selectedPlacesMap,
+								savedPlacesMap,
+								directionInformation,
+								setDirectionInformation,
+							}}
+						/>
+					</Box>
+					<Divider />
+				</>
 			),
 		},
 		{
@@ -220,16 +250,20 @@ export default function ContextGenerator({ onFinish }) {
 			description: `Set the time, day, and location that should be used as a basis for answering questions. This will help provide more accurate and context-specific responses.`,
 			icon: <Settings />,
 			component: (
-				<Card className="p-3" raised>
-					<Parameters
-						{...{
-							selectedPlacesMap,
-							currentInformation,
-							setCurrentInformation,
-							savedPlacesMap,
-						}}
-					/>
-				</Card>
+				<>
+					<Divider />
+					<Box className="max-w-[30rem] md:w-[30rem] mx-auto">
+						<Parameters
+							{...{
+								selectedPlacesMap,
+								currentInformation,
+								setCurrentInformation,
+								savedPlacesMap,
+							}}
+						/>
+					</Box>
+					<Divider />
+				</>
 			),
 		},
 		{
@@ -237,13 +271,15 @@ export default function ContextGenerator({ onFinish }) {
 			description: `Review the information gathered and click "Generate Context" to create a rich, location-based context for your QnA dataset.`,
 			icon: <FontAwesomeIcon icon={faEye} />,
 			component: (
-				<Card className="p-3" raised>
+				<>
+					<Divider />
 					<ContextViewer
 						{...{
 							context,
 						}}
 					/>
-				</Card>
+					<Divider />
+				</>
 			),
 		},
 	];
@@ -289,7 +325,7 @@ export default function ContextGenerator({ onFinish }) {
 							icon={step.icon}
 							onClick={() => {
 								if (index !== activeStep) setActiveStep(index);
-								else setActiveStep(-1);
+								// else setActiveStep(-1);
 							}}
 							className="!cursor-pointer hover:!text-blue-500"
 						>
@@ -304,7 +340,9 @@ export default function ContextGenerator({ onFinish }) {
 								>
 									{steps[activeStep]?.description}
 								</Typography>
+
 								{step.component}
+
 								<Box sx={{ mb: 2 }}>
 									<div>
 										<Button

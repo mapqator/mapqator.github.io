@@ -193,12 +193,13 @@ export const AutocompleteSearchBox = ({
 			)} */}
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<div className="border rounded-lg overflow-hidden">
-					<h3 className="bg-gray-200 p-2 font-bold">Saved Places</h3>
-					<ul className="max-h-60 overflow-y-auto">
-						{results
-							.filter((place) => savedPlacesMap[place.place_id])
-							.map((place, index) => (
+				{results.length > 0 && (
+					<div className="border rounded-lg overflow-hidden">
+						<h3 className="bg-gray-200 p-2 font-bold">
+							Saved Places
+						</h3>
+						<ul className="max-h-60 overflow-y-auto">
+							{results.map((place, index) => (
 								<li
 									key={index}
 									className="p-2 hover:bg-gray-100 flex justify-between items-center"
@@ -217,32 +218,38 @@ export const AutocompleteSearchBox = ({
 									</Button>
 								</li>
 							))}
-					</ul>
-				</div>
-				<div className="border rounded-lg overflow-hidden">
-					<h3 className="bg-gray-200 p-2 font-bold">
-						Google Places Results
-					</h3>
-					<ul className="max-h-60 overflow-y-auto">
-						{mapResults.map((place, index) => (
-							<li
-								key={index}
-								className="p-2 hover:bg-gray-100 flex justify-between items-center"
-							>
-								<span>
-									{place.name} - {place.formatted_address}
-								</span>
-								<Button
-									startIcon={<Add />}
-									onClick={() => handleAddPlace(place)}
-									disabled={selectedPlacesMap[place.place_id]}
+						</ul>
+					</div>
+				)}
+
+				{mapResults.length > 0 && (
+					<div className="border rounded-lg overflow-hidden">
+						<h3 className="bg-gray-200 p-2 font-bold">
+							Google Places Results
+						</h3>
+						<ul className="max-h-60 overflow-y-auto">
+							{mapResults.map((place, index) => (
+								<li
+									key={index}
+									className="p-2 hover:bg-gray-100 flex justify-between items-center"
 								>
-									Add
-								</Button>
-							</li>
-						))}
-					</ul>
-				</div>
+									<span>
+										{place.name} - {place.formatted_address}
+									</span>
+									<Button
+										startIcon={<Add />}
+										onClick={() => handleAddPlace(place)}
+										disabled={
+											selectedPlacesMap[place.place_id]
+										}
+									>
+										Add
+									</Button>
+								</li>
+							))}
+						</ul>
+					</div>
+				)}
 			</div>
 		</div>
 	);

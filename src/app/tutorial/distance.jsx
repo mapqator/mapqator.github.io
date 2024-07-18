@@ -8,7 +8,15 @@ const mapApi = new MapApi();
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import { Select, MenuItem, Button, TextField, IconButton } from "@mui/material";
+import {
+	Select,
+	MenuItem,
+	Button,
+	TextField,
+	IconButton,
+	CardContent,
+	Grid,
+} from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { LoadingButton } from "@mui/lab";
@@ -91,7 +99,7 @@ export function CalculateDistance({
 	};
 
 	return (
-		<>
+		<CardContent>
 			{Object.keys(distanceMatrix).length > 0 && (
 				<div className="flex flex-col m-3 p-1 bg-blue-500 gap-1">
 					<div className="flex flex-row">
@@ -235,91 +243,88 @@ export function CalculateDistance({
 				</div>
 			)}
 
-			<div className="flex flex-col gap-2 w-full p-2">
-				<div className="flex flex-col md:flex-row gap-2">
-					<div className="w-full md:w-1/2">
-						<FormControl
-							fullWidth
-							className="input-field"
-							variant="outlined"
-							// style={{ width: "20rem" }}
-							size="small"
+			<Grid container spacing={2}>
+				<Grid item xs={12}>
+					<FormControl
+						fullWidth
+						className="input-field"
+						variant="outlined"
+						// style={{ width: "20rem" }}
+						size="small"
+					>
+						<InputLabel
+							htmlFor="outlined-adornment"
+							className="input-label"
 						>
-							<InputLabel
-								htmlFor="outlined-adornment"
-								className="input-label"
-							>
-								From
-							</InputLabel>
-							<Select
-								required
-								multiple
-								id="outlined-adornment"
-								className="outlined-input"
-								value={newDistance.from}
-								onChange={(event) => {
-									setNewDistance((prev) => ({
-										...prev,
-										from: event.target.value,
-									}));
-								}}
-								input={<OutlinedInput label={"From"} />}
-							>
-								{Object.keys(selectedPlacesMap).map(
-									(place_id, index) => (
-										<MenuItem key={index} value={place_id}>
-											{savedPlacesMap[place_id].name ||
-												selectedPlacesMap[place_id]
-													.alias}
-										</MenuItem>
-									)
-								)}
-							</Select>
-						</FormControl>
-					</div>
-					<div className="w-full md:w-1/2">
-						<FormControl
-							fullWidth
-							className="input-field"
-							variant="outlined"
-							// style={{ width: "20rem" }}
-							size="small"
+							From
+						</InputLabel>
+						<Select
+							required
+							multiple
+							id="outlined-adornment"
+							className="outlined-input"
+							value={newDistance.from}
+							onChange={(event) => {
+								setNewDistance((prev) => ({
+									...prev,
+									from: event.target.value,
+								}));
+							}}
+							input={<OutlinedInput label={"From"} />}
 						>
-							<InputLabel
-								htmlFor="outlined-adornment"
-								className="input-label"
-							>
-								To
-							</InputLabel>
-							<Select
-								required
-								multiple
-								id="outlined-adornment"
-								className="outlined-input"
-								value={newDistance.to}
-								onChange={(event) => {
-									setNewDistance((prev) => ({
-										...prev,
-										to: event.target.value,
-									}));
-								}}
-								input={<OutlinedInput label={"To"} />}
-							>
-								{Object.keys(selectedPlacesMap).map(
-									(place_id, index) => (
-										<MenuItem key={index} value={place_id}>
-											{savedPlacesMap[place_id].name ||
-												selectedPlacesMap[place_id]
-													.alias}
-										</MenuItem>
-									)
-								)}
-							</Select>
-						</FormControl>
-					</div>
-				</div>
+							{Object.keys(selectedPlacesMap).map(
+								(place_id, index) => (
+									<MenuItem key={index} value={place_id}>
+										{savedPlacesMap[place_id].name ||
+											selectedPlacesMap[place_id].alias}
+									</MenuItem>
+								)
+							)}
+						</Select>
+					</FormControl>
+				</Grid>
 
-				<div className="w-full">
+				<Grid item xs={12}>
+					<FormControl
+						fullWidth
+						className="input-field"
+						variant="outlined"
+						// style={{ width: "20rem" }}
+						size="small"
+					>
+						<InputLabel
+							htmlFor="outlined-adornment"
+							className="input-label"
+						>
+							To
+						</InputLabel>
+						<Select
+							required
+							multiple
+							id="outlined-adornment"
+							className="outlined-input"
+							value={newDistance.to}
+							onChange={(event) => {
+								setNewDistance((prev) => ({
+									...prev,
+									to: event.target.value,
+								}));
+							}}
+							input={<OutlinedInput label={"To"} />}
+						>
+							{Object.keys(selectedPlacesMap).map(
+								(place_id, index) => (
+									<MenuItem key={index} value={place_id}>
+										{savedPlacesMap[place_id].name ||
+											selectedPlacesMap[place_id].alias}
+									</MenuItem>
+								)
+							)}
+						</Select>
+					</FormControl>
+				</Grid>
+
+				<Grid item xs={12}>
 					<FormControl
 						fullWidth
 						className="input-field"
@@ -355,50 +360,21 @@ export function CalculateDistance({
 							)}
 						</Select>
 					</FormControl>
-				</div>
+				</Grid>
 
-				<div className="w-full">
+				<Grid item xs={12}>
 					<LoadingButton
 						variant="contained"
 						fullWidth
 						onClick={handleDistanceAdd}
-						sx={{ fontSize: "1rem" }}
 						startIcon={<Add />}
 						loading={loading}
 						loadingPosition="start"
 					>
-						Add ($)
+						Calculate Distance and Duration
 					</LoadingButton>
-				</div>
-			</div>
-		</>
-	);
-}
-export default function DistanceInformation({
-	selectedPlacesMap,
-	savedPlacesMap,
-	distanceMatrix,
-	setDistanceMatrix,
-}) {
-	return (
-		// Object.keys(selectedPlacesMap).length > 0 &&
-		<div className="flex flex-col border-4 w-full border-black rounded-lg">
-			<div className="flex flex-col items-center bg-black text-center pb-2">
-				<h1 className="text-xl md:text-3xl text-white">
-					Distance Information
-				</h1>
-				<p className="text-sm md:text-lg text-zinc-300">
-					Distance and Duration from one place to another
-				</p>
-			</div>
-			<CalculateDistance
-				{...{
-					selectedPlacesMap,
-					savedPlacesMap,
-					distanceMatrix,
-					setDistanceMatrix,
-				}}
-			/>
-		</div>
+				</Grid>
+			</Grid>
+		</CardContent>
 	);
 }

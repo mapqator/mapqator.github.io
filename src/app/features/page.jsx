@@ -20,13 +20,13 @@ export default function HomePage() {
 	const features = [
 		{
 			icon: <MapIcon fontSize="large" />,
-			title: "Map-Based Context Creation",
+			title: "Context Generation",
 			description:
-				"Generate rich, location-based contexts using our intuitive interface with Google Maps API.",
+				"Generate rich, place-related contexts using our intuitive interface with Google Maps API.",
 		},
 		{
 			icon: <QuestionAnswerIcon fontSize="large" />,
-			title: "Question Generation",
+			title: "Question Creation",
 			description:
 				"Easily create relevant questions based on the map contexts you've generated.",
 		},
@@ -38,28 +38,29 @@ export default function HomePage() {
 		},
 		{
 			icon: <AssessmentIcon fontSize="large" />,
-			title: "Evaluation Results Showcase",
+			title: "Evaluation Results",
 			description:
-				"Share and compare your model's performance with the research community using our built-in visualization tools.",
+				"Showcase your model's performance using our built-in visualization tools.",
 		},
 	];
 
 	return (
 		<Box
-			sx={{ flexGrow: 1, bgcolor: "#f5f5f5", minHeight: "100vh", py: 8 }}
+			sx={{ flexGrow: 1, bgcolor: "#f5f5f5", minHeight: "100vh", py: 4 }}
+			className="flex flex-row items-center"
 		>
 			<Container maxWidth="lg">
 				<Typography
-					variant="h2"
-					component="h1"
+					variant="h3"
+					component="h2"
 					gutterBottom
 					align="center"
-					sx={{ mb: 2, fontWeight: "bold", color: "#333" }}
+					sx={{ mb: 1, fontWeight: "bold", color: "#333" }}
 				>
 					MapQuest for NLP Researchers
 				</Typography>
 				<Typography
-					variant="h5"
+					variant="h6"
 					align="center"
 					sx={{ mb: 6, color: "#666" }}
 				>
@@ -70,43 +71,38 @@ export default function HomePage() {
 				<Grid container spacing={4}>
 					{features.map((feature, index) => (
 						<Grid item xs={12} sm={6} md={3} key={index}>
-							<motion.div
-								whileHover={{ scale: 1.05 }}
-								whileTap={{ scale: 0.95 }}
+							<Paper
+								elevation={3}
+								sx={{
+									p: 3,
+									height: "100%",
+									display: "flex",
+									flexDirection: "column",
+									alignItems: "center",
+									textAlign: "center",
+								}}
 							>
-								<Paper
-									elevation={3}
-									sx={{
-										p: 3,
-										height: "100%",
-										display: "flex",
-										flexDirection: "column",
-										alignItems: "center",
-										textAlign: "center",
-									}}
+								<Icon
+									color="primary"
+									sx={{ fontSize: 40, mb: 2 }}
 								>
-									<Icon
-										color="primary"
-										sx={{ fontSize: 40, mb: 2 }}
-									>
-										{feature.icon}
-									</Icon>
-									<Typography
-										variant="h6"
-										component="h3"
-										gutterBottom
-										sx={{ fontWeight: "bold" }}
-									>
-										{feature.title}
-									</Typography>
-									<Typography
-										variant="body2"
-										color="text.secondary"
-									>
-										{feature.description}
-									</Typography>
-								</Paper>
-							</motion.div>
+									{feature.icon}
+								</Icon>
+								<Typography
+									variant="h6"
+									component="h3"
+									gutterBottom
+									sx={{ fontWeight: "bold" }}
+								>
+									{feature.title}
+								</Typography>
+								<Typography
+									variant="body2"
+									color="text.secondary"
+								>
+									{feature.description}
+								</Typography>
+							</Paper>	
 						</Grid>
 					))}
 				</Grid>
