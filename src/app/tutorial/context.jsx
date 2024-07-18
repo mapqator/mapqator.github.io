@@ -20,10 +20,12 @@ import Image from "next/image";
 // import { AreaIcon } from "@material-ui/icons";
 
 import { AppBar, Toolbar } from "@mui/material";
-import HybridSearch, { AutocompleteSearchBox } from "../HybridSearch";
+import HybridSearch from "../HybridSearch";
+import { AutocompleteSearchBox } from "./search";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import PlaceInformation from "../PlaceInformation";
-import NearbyInformation, { NearbyInfo } from "../NearbyInformation";
+import PlaceInformation from "./places";
+import NearbyInformation from "../NearbyInformation";
+import { NearbyInfo } from "./nearby";
 import POI, { DiscoverArea } from "../POI";
 import DistanceInformation, { CalculateDistance } from "../DistanceInformation";
 import DirectionInformation, { GetDirections } from "../DirectionInformation";
@@ -72,21 +74,19 @@ export default function ContextGenerator({ onFinish }) {
 		},
 		{
 			label: "Add Places",
-			description: `Start by searching for a location using the Places API. Type in a place name or address in the search bar below.`,
+			description: `Start by searching for a location using the Places API. Type in a place name or address in the search bar below. While typing, saved places matching the search query will be shown. On pressing enter, google places API will be queried and the results will be shown.`,
 			icon: <SearchIcon />,
 			component: (
 				<div className="flex flex-col gap-2">
-					<Card className="p-3">
-						<AutocompleteSearchBox
-							{...{
-								savedPlacesMap,
-								setSavedPlacesMap,
-								selectedPlacesMap,
-								setSelectedPlacesMap,
-								setPoisMap,
-							}}
-						/>
-					</Card>
+					<AutocompleteSearchBox
+						{...{
+							savedPlacesMap,
+							setSavedPlacesMap,
+							selectedPlacesMap,
+							setSelectedPlacesMap,
+							setPoisMap,
+						}}
+					/>
 
 					<PlaceInformation
 						{...{
@@ -111,18 +111,16 @@ export default function ContextGenerator({ onFinish }) {
 			description: `Use the Nearby Search API to discover points of interest around your selected location. Click on the "Nearby" button and choose a category.`,
 			icon: <PlaceIcon />,
 			component: (
-				<Card className="p-3">
-					<NearbyInfo
-						{...{
-							savedPlacesMap,
-							setSavedPlacesMap,
-							selectedPlacesMap,
-							nearbyPlacesMap,
-							setNearbyPlacesMap,
-							setSelectedPlacesMap,
-						}}
-					/>
-				</Card>
+				<NearbyInfo
+					{...{
+						savedPlacesMap,
+						setSavedPlacesMap,
+						selectedPlacesMap,
+						nearbyPlacesMap,
+						setNearbyPlacesMap,
+						setSelectedPlacesMap,
+					}}
+				/>
 			),
 		},
 		{

@@ -1,6 +1,8 @@
 import QueryApi from "@/api/queryApi";
+import PlaceApi from "@/api/placeApi";
 import React, { createContext, useState, useContext, useEffect } from "react";
 const queryApi = new QueryApi();
+const placeApi = new PlaceApi();
 export const GlobalContext = createContext();
 export default function GlobalContextProvider({ children }) {
 	const [savedPlacesMap, setSavedPlacesMap] = useState({});
@@ -42,11 +44,33 @@ export default function GlobalContextProvider({ children }) {
 			console.error("Error fetching data: ", error);
 		}
 	};
+
+	const fetchPlaces = async () => {
+		console.log("Fetching places");
+		// setButtonLoading(true);
+		try {
+			const res = await placeApi.getPlaces();
+			if (res.success) {
+				// create a map for easy access
+				const newSavedPlacesMap = {};
+				res.data.forEach((e) => {
+					newSavedPlacesMap[e.place_id] = e;
+				});
+				setSavedPlacesMap(newSavedPlacesMap);
+				// setFetched(true);
+			}
+		} catch (error) {
+			console.error("Error fetching data: ", error);
+		}
+		// setButtonLoading(false);
+	};
+
 	useEffect(() => {
 		// if (process.env.NODE_ENV === "production")
 		{
 			console.log("Fetching queries");
 			fetchQueries();
+			fetchPlaces();
 		}
 	}, []);
 
