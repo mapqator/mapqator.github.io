@@ -25,18 +25,34 @@ export default function PageComponent() {
 		>
 			<Fade in={showContent} timeout={1000}>
 				<Box className="text-center">
-					<motion.img
-						src={`${baseUrl}/images/logo.png`}
-						alt="Google Maps Logo"
-						style={{
-							width: "160px",
-							marginBottom: "30px",
-							marginLeft: "16px",
-						}}
-						initial={{ y: -50, opacity: 0 }}
-						animate={{ y: 0, opacity: 1 }}
-						transition={{ duration: 0.5 }}
-					/>
+					<Box className="flex  items-end">
+						<motion.img
+							src={`${baseUrl}/images/logo.png`}
+							alt="Google Maps Logo"
+							style={{
+								width: "160px",
+								marginBottom: "30px",
+								marginLeft: "16px",
+							}}
+							initial={{ y: -50, opacity: 0 }}
+							animate={{ y: 0, opacity: 1 }}
+							transition={{ duration: 0.5 }}
+						/>
+						{/* <Typography
+							variant="h2"
+							component="h1"
+							gutterBottom
+							sx={{
+								fontWeight: "bold",
+								color: "#333",
+								mb: 5,
+								textShadow: "2px 2px 4px rgba(0,0,0,0.1)",
+							}}
+						>
+							MapQuest
+						</Typography> */}
+					</Box>
+
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}

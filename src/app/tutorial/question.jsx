@@ -18,12 +18,14 @@ import {
 	OutlinedInput,
 	InputLabel,
 	InputAdornment,
+	Divider,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import QueryApi from "@/api/queryApi";
+import MyQuestions from "./myquestions";
 const queryApi = new QueryApi();
 
 export default function QuestionCreationPage({ handleContextEdit }) {
@@ -199,7 +201,7 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 					fullWidth
 					variant="outlined"
 					// size="small"
-					sx={{ mb: 2 }}
+					// sx={{ mb: 2 }}
 				>
 					{/* <FormLabel
 						htmlFor="outlined-adornment"
@@ -318,6 +320,13 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 					Submit Question
 				</Button>
 			</form>
+
+			{queries.length > 0 && (
+				<>
+					<Divider sx={{ my: 4 }} />
+					<MyQuestions />
+				</>
+			)}
 		</>
 	);
 }
