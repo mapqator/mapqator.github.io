@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	Box,
 	Container,
@@ -37,8 +37,8 @@ function Navbar({ selected, setSelected }) {
 		setSelected(buttonName);
 	};
 	const navItems = [
-		{ name: "Context", key: "context-generator" },
-		{ name: "Question", key: "question-creator" },
+		{ name: "Context", key: "context" },
+		{ name: "Question", key: "question" },
 		{ name: "Dataset", key: "dataset" },
 		{ name: "Evaluation", key: "evaluation" },
 	];
@@ -113,50 +113,11 @@ function Navbar({ selected, setSelected }) {
 export default function PageComponent() {
 	const [activeStep, setActiveStep] = useState(0);
 	const [selected, setSelected] = useState("context-generator");
-	const steps = [
-		{
-			label: "Select a Location",
-			description: `Start by searching for a location using the Places API. Type in a place name or address in the search bar above the map.`,
-			icon: <SearchIcon />,
-		},
-		{
-			label: "Explore Nearby Places",
-			description: `Use the Nearby Search API to discover points of interest around your selected location. Click on the "Nearby" button and choose a category.`,
-			icon: <PlaceIcon />,
-		},
-		{
-			label: "Explore POIs in Area",
-			description: `Leverage the Places API to find Points of Interest (POIs) within a specific area. Draw or select an area on the map to see POIs within that area.`,
-			icon: <PlaceIcon />,
-		},
-		{
-			label: "Get Directions",
-			description: `Utilize the Directions API to find routes between two points. Click on two places on the map to set start and end points.`,
-			icon: <DirectionsIcon />,
-		},
-		{
-			label: "Calculate Distances",
-			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Select several places and click "Calculate Distances".`,
-			icon: <MapIcon />,
-		},
-		{
-			label: "Generate Context",
-			description: `Review the information gathered and click "Generate Context" to create a rich, location-based context for your QnA dataset.`,
-			icon: <SearchIcon />,
-		},
-	];
 
-	const handleNext = () => {
-		setActiveStep((prevActiveStep) => prevActiveStep + 1);
-	};
-
-	const handleBack = () => {
-		setActiveStep((prevActiveStep) => prevActiveStep - 1);
-	};
-
-	const handleReset = () => {
-		setActiveStep(0);
-	};
+	useEffect(() => {
+		const page = window.location.hash.substring(1);
+		setSelected(page === "" ? "context" : page);
+	}, [window.location.hash]);
 
 	return (
 		<Container
@@ -166,29 +127,31 @@ export default function PageComponent() {
 		>
 			<Navbar {...{ selected, setSelected }} />
 			<Toolbar />
-			{selected === "context-generator" ? (
+			{selected === "context" || selected === "" ? (
 				<ContextGenerator
 					onFinish={() => {
-						setSelected("question-creator");
+						setSelected("question");
 						window.scrollTo(0, 0);
 					}}
 				/>
-			) : selected === "question-creator" ? (
+			) : selected === "question" ? (
 				<QuestionCreationPage
 					handleContextEdit={() => {
-						setSelected("context-generator");
+						setSelected("context");
 						window.scrollTo(0, 0);
 					}}
 				/>
 			) : selected === "dataset" ? (
 				<DatasetPage
 					onEdit={() => {
-						setSelected("question-creator");
+						setSelected("question");
 						window.scrollTo(0, 0);
 					}}
 				/>
-			) : (
+			) : selected === "evaluation" ? (
 				<EvaluationResultsPage />
+			) : (
+				<></>
 			)}
 		</Container>
 	);
