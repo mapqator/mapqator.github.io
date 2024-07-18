@@ -23,6 +23,7 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { Clear } from "@mui/icons-material";
 
 export function Parameters({
 	selectedPlacesMap,
@@ -33,7 +34,7 @@ export function Parameters({
 	return (
 		<CardContent>
 			<Box className="flex flex-col gap-4">
-				<div className="flex flex-row items-center w-full gap-4">
+				<div className="flex flex-row items-center w-full gap-2">
 					<div className="w-full">
 						<LocalizationProvider dateAdapter={AdapterDayjs}>
 							<DemoContainer components={["TimePicker"]}>
@@ -66,11 +67,11 @@ export function Parameters({
 						}}
 						sx={{ height: "2rem", width: "2rem" }}
 					>
-						<FontAwesomeIcon icon={faTrash} color="red" size="sm" />
+						<Clear />
 					</IconButton>
 				</div>
 
-				<div className="flex flex-row items-center w-full gap-4">
+				<div className="flex flex-row items-center w-full gap-2">
 					<FormControl
 						fullWidth
 						className="input-field"
@@ -122,11 +123,11 @@ export function Parameters({
 						}}
 						sx={{ height: "2rem", width: "2rem" }}
 					>
-						<FontAwesomeIcon icon={faTrash} color="red" size="sm" />
+						<Clear />
 					</IconButton>
 				</div>
 
-				<div className="flex flex-row items-center w-full gap-4">
+				<div className="flex flex-row items-center w-full gap-2">
 					<FormControl
 						fullWidth
 						className="input-field"
@@ -173,7 +174,7 @@ export function Parameters({
 						}}
 						sx={{ height: "2rem", width: "2rem" }}
 					>
-						<FontAwesomeIcon icon={faTrash} color="red" size="sm" />
+						<Clear />
 					</IconButton>
 				</div>
 			</Box>
