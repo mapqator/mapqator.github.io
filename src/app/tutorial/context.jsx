@@ -30,10 +30,43 @@ import POI, { DiscoverArea } from "../POI";
 import DistanceInformation, { CalculateDistance } from "../DistanceInformation";
 import DirectionInformation, { GetDirections } from "../DirectionInformation";
 import ContextPreview, { ContextViewer } from "../ContextPreview";
-import { Flag, Preview } from "@mui/icons-material";
+import { Flag, Preview, Settings } from "@mui/icons-material";
 import ExploreIcon from "@mui/icons-material/Explore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { Parameters } from "../CurrentInformation";
+
+const MapComponent = ({ locations }) => {
+	const mapStyles = {
+		height: "400px",
+		width: "100%",
+	};
+
+	const defaultCenter = {
+		lat: 0,
+		lng: 0,
+	};
+
+	return (
+		<LoadScript
+			googleMapsApiKey={"AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs"}
+		>
+			<GoogleMap
+				mapContainerStyle={mapStyles}
+				zoom={2}
+				center={defaultCenter}
+			>
+				{locations.map((location, index) => (
+					<Marker
+						key={index}
+						position={{ lat: location[0], lng: location[1] }}
+					/>
+				))}
+			</GoogleMap>
+		</LoadScript>
+	);
+};
 
 export default function ContextGenerator({ onFinish }) {
 	const [activeStep, setActiveStep] = useState(0);
@@ -58,6 +91,12 @@ export default function ContextGenerator({ onFinish }) {
 		setCurrentInformation,
 	} = useContext(GlobalContext);
 
+	const locations = [
+		[40.712776, -74.005974], // New York
+		[34.052235, -118.243683], // Los Angeles
+		[51.507351, -0.127758], // London
+		// Add more locations as needed
+	];
 	const steps = [
 		{
 			label: "Guidelines",
@@ -87,7 +126,7 @@ export default function ContextGenerator({ onFinish }) {
 							setPoisMap,
 						}}
 					/>
-
+					<MapComponent locations={locations} />
 					<PlaceInformation
 						{...{
 							selectedPlacesMap,
@@ -171,6 +210,23 @@ export default function ContextGenerator({ onFinish }) {
 							savedPlacesMap,
 							distanceMatrix,
 							setDistanceMatrix,
+						}}
+					/>
+				</Card>
+			),
+		},
+		{
+			label: "Set Context Parameters",
+			description: `Set the time, day, and location that should be used as a basis for answering questions. This will help provide more accurate and context-specific responses.`,
+			icon: <Settings />,
+			component: (
+				<Card className="p-3" raised>
+					<Parameters
+						{...{
+							selectedPlacesMap,
+							currentInformation,
+							setCurrentInformation,
+							savedPlacesMap,
 						}}
 					/>
 				</Card>
