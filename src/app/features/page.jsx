@@ -111,7 +111,7 @@ export default function HomePage() {
 					<Button
 						variant="contained"
 						size="large"
-						// href="/tutorial"
+						// href="/home"
 						sx={{
 							px: 4,
 							py: 1.5,
@@ -121,7 +121,7 @@ export default function HomePage() {
 								backgroundColor: "#3367D6",
 							},
 						}}
-						onClick={() => router.push("/tutorial#onboard")}
+						onClick={() => router.push("/home#onboard")}
 					>
 						Get Started
 					</Button>

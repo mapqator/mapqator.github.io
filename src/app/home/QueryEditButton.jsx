@@ -1,49 +1,12 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
-import {
-	Container,
-	Typography,
-	Paper,
-	Accordion,
-	AccordionSummary,
-	AccordionDetails,
-	Box,
-	Chip,
-	List,
-	ListItem,
-	ListItemText,
-	Select,
-	MenuItem,
-	FormControl,
-	InputLabel,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-	Button,
-	Collapse,
-	OutlinedInput,
-	TextField,
-	Pagination,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Box, Button } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import QueryApi from "@/api/queryApi";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { Clear, Edit, Save } from "@mui/icons-material";
-import { useRouter } from "next/navigation";
 import MapApi from "@/api/mapApi";
-
-const queryApi = new QueryApi();
 const mapApi = new MapApi();
 
 export default function QueryEditButton({ onEdit }) {
 	const {
-		queries,
-		setQueries,
 		setSelectedPlacesMap,
 		setDistanceMatrix,
 		setNearbyPlacesMap,
@@ -52,10 +15,7 @@ export default function QueryEditButton({ onEdit }) {
 		savedPlacesMap,
 		setSavedPlacesMap,
 		setContext,
-		context,
 		setContextJSON,
-		contextJSON,
-		query,
 		setQuery,
 		setPoisMap,
 	} = useContext(GlobalContext);
