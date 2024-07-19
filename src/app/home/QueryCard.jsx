@@ -17,7 +17,7 @@ import QueryEditButton from "./QueryEditButton";
 import CollapsedContext from "./CollapsedContext";
 import OptionsPreview from "./OptionsPreview";
 
-export default function QueryCard({ entry, index, onEdit }) {
+export default function QueryCard({ entry, onEdit }) {
 	const [flag, setFlag] = useState(false);
 	const [state, setState] = useState(entry);
 	useEffect(() => {
@@ -97,7 +97,7 @@ export default function QueryCard({ entry, index, onEdit }) {
 			<AccordionDetails>
 				<CollapsedContext context={state.context} />
 				<OptionsPreview answer={state.answer} />
-				<LLMAnswers {...{ state }} />
+				<LLMAnswers evaluation={state.evaluation} />
 				<Annotation {...{ state, setState }} />
 				<QueryEditButton {...{ onEdit }} />
 			</AccordionDetails>

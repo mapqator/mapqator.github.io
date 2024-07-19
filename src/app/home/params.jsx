@@ -1,18 +1,5 @@
 "use client";
-import {
-	FormLabel,
-	RadioGroup,
-	FormControlLabel,
-	Radio,
-	IconButton,
-	Button,
-	TextField,
-	Select,
-	MenuItem,
-	Grid,
-	CardContent,
-	Box,
-} from "@mui/material";
+import { IconButton, Select, MenuItem, CardContent, Box } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -20,10 +7,8 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Clear } from "@mui/icons-material";
+import PlaceSelectionField from "./PlaceSelectionField";
 
 export function Parameters({
 	selectedPlacesMap,
@@ -128,43 +113,16 @@ export function Parameters({
 				</div>
 
 				<div className="flex flex-row items-center w-full gap-2">
-					<FormControl
-						fullWidth
-						className="input-field"
-						variant="outlined"
-						// style={{ width: "20rem" }}
-						size="small"
-					>
-						<InputLabel
-							htmlFor="outlined-adornment"
-							className="input-label"
-						>
-							Current location
-						</InputLabel>
-						<Select
-							required
-							id="outlined-adornment"
-							className="outlined-input"
-							value={currentInformation.location}
-							onChange={(event) => {
-								setCurrentInformation((prev) => ({
-									...prev,
-									location: event.target.value,
-								}));
-							}}
-							input={<OutlinedInput label={"Current location"} />}
-							// MenuProps={MenuProps}
-						>
-							{Object.keys(selectedPlacesMap).map(
-								(place_id, index) => (
-									<MenuItem key={index} value={place_id}>
-										{savedPlacesMap[place_id].name ||
-											selectedPlacesMap[place_id].alias}
-									</MenuItem>
-								)
-							)}
-						</Select>
-					</FormControl>
+					<PlaceSelectionField
+						label="Current location"
+						value={currentInformation.location}
+						onChange={(event) => {
+							setCurrentInformation((prev) => ({
+								...prev,
+								location: event.target.value,
+							}));
+						}}
+					/>
 					<IconButton
 						onClick={() => {
 							setCurrentInformation((prev) => ({

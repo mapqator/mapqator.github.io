@@ -1,7 +1,7 @@
-export default function LLMAnswers({ state }) {
+export default function LLMAnswers({ evaluation }) {
 	return (
 		<>
-			{state.evaluation.length > 0 && (
+			{evaluation.length > 0 && (
 				<Box sx={{ mb: 2 }}>
 					<Typography variant="h6" gutterBottom>
 						LLM Answers:
@@ -28,7 +28,7 @@ export default function LLMAnswers({ state }) {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{state.evaluation.map((llmAnswer, index) => (
+								{evaluation.map((llmAnswer, index) => (
 									<TableRow key={index}>
 										<TableCell>{llmAnswer.model}</TableCell>
 										<TableCell align="center">

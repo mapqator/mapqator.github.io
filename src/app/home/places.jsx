@@ -1,8 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import PlaceApi from "@/api/placeApi";
-const placeApi = new PlaceApi();
+import React, { useEffect } from "react";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -18,12 +16,8 @@ import {
 	Select,
 	MenuItem,
 } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import SaveIcon from "@mui/icons-material/Save";
 
 export default function PlaceInformation({
 	selectedPlacesMap,
@@ -38,7 +32,6 @@ export default function PlaceInformation({
 	poisMap,
 	setPoisMap,
 }) {
-	const [editing, setEditing] = useState({});
 	const deletePlaceFromDistanceMatrix = (place_id) => {
 		const newDistanceMatrix = { ...distanceMatrix };
 		delete newDistanceMatrix[place_id];
@@ -51,10 +44,6 @@ export default function PlaceInformation({
 
 	const handleExpandClick = (placeId) => {
 		setExpanded({ ...expanded, [placeId]: !expanded[placeId] });
-	};
-
-	const handleEditClick = (placeId) => {
-		setEditing((prev) => ({ ...prev, [placeId]: !prev[placeId] }));
 	};
 
 	const handleAttributeChange = (placeId, newAttributes) => {

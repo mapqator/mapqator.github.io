@@ -1,26 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import PlaceApi from "@/api/placeApi";
-const placeApi = new PlaceApi();
 import MapApi from "@/api/mapApi";
 const mapApi = new MapApi();
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import {
-	Select,
-	MenuItem,
-	Button,
-	TextField,
-	IconButton,
-	CardContent,
-	Grid,
-} from "@mui/material";
+import { IconButton, CardContent } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { LoadingButton } from "@mui/lab";
-import { Add } from "@mui/icons-material";
+import DistanceForm from "./DistanceForm";
 
 export function CalculateDistance({
 	selectedPlacesMap,
@@ -31,7 +17,7 @@ export function CalculateDistance({
 	const [newDistance, setNewDistance] = useState({
 		from: [],
 		to: [],
-		travelMode: "WALKING",
+		travelMode: "walking",
 	});
 	const [loading, setLoading] = useState(false);
 
@@ -39,7 +25,7 @@ export function CalculateDistance({
 		setNewDistance({
 			from: [],
 			to: [],
-			travelMode: "WALKING",
+			travelMode: "walking",
 		});
 	}, [selectedPlacesMap]);
 
@@ -243,138 +229,7 @@ export function CalculateDistance({
 				</div>
 			)}
 
-			<Grid container spacing={2}>
-				<Grid item xs={12}>
-					<FormControl
-						fullWidth
-						className="input-field"
-						variant="outlined"
-						// style={{ width: "20rem" }}
-						size="small"
-					>
-						<InputLabel
-							htmlFor="outlined-adornment"
-							className="input-label"
-						>
-							From
-						</InputLabel>
-						<Select
-							required
-							multiple
-							id="outlined-adornment"
-							className="outlined-input"
-							value={newDistance.from}
-							onChange={(event) => {
-								setNewDistance((prev) => ({
-									...prev,
-									from: event.target.value,
-								}));
-							}}
-							input={<OutlinedInput label={"From"} />}
-						>
-							{Object.keys(selectedPlacesMap).map(
-								(place_id, index) => (
-									<MenuItem key={index} value={place_id}>
-										{savedPlacesMap[place_id].name ||
-											selectedPlacesMap[place_id].alias}
-									</MenuItem>
-								)
-							)}
-						</Select>
-					</FormControl>
-				</Grid>
-
-				<Grid item xs={12}>
-					<FormControl
-						fullWidth
-						className="input-field"
-						variant="outlined"
-						// style={{ width: "20rem" }}
-						size="small"
-					>
-						<InputLabel
-							htmlFor="outlined-adornment"
-							className="input-label"
-						>
-							To
-						</InputLabel>
-						<Select
-							required
-							multiple
-							id="outlined-adornment"
-							className="outlined-input"
-							value={newDistance.to}
-							onChange={(event) => {
-								setNewDistance((prev) => ({
-									...prev,
-									to: event.target.value,
-								}));
-							}}
-							input={<OutlinedInput label={"To"} />}
-						>
-							{Object.keys(selectedPlacesMap).map(
-								(place_id, index) => (
-									<MenuItem key={index} value={place_id}>
-										{savedPlacesMap[place_id].name ||
-											selectedPlacesMap[place_id].alias}
-									</MenuItem>
-								)
-							)}
-						</Select>
-					</FormControl>
-				</Grid>
-
-				<Grid item xs={12}>
-					<FormControl
-						fullWidth
-						className="input-field"
-						variant="outlined"
-						// style={{ width: "20rem" }}
-						size="small"
-					>
-						<InputLabel
-							htmlFor="outlined-adornment"
-							className="input-label"
-						>
-							Travel Mode
-						</InputLabel>
-						<Select
-							required
-							id="outlined-adornment"
-							className="outlined-input"
-							value={newDistance.travelMode}
-							onChange={(event) => {
-								setNewDistance((prev) => ({
-									...prev,
-									travelMode: event.target.value,
-								}));
-							}}
-							input={<OutlinedInput label={"Travel Mode"} />}
-						>
-							{["WALKING", "DRIVING", "BICYCLING", "TRANSIT"].map(
-								(mode, index) => (
-									<MenuItem key={index} value={mode}>
-										{mode}
-									</MenuItem>
-								)
-							)}
-						</Select>
-					</FormControl>
-				</Grid>
-
-				<Grid item xs={12}>
-					<LoadingButton
-						variant="contained"
-						fullWidth
-						onClick={handleDistanceAdd}
-						startIcon={<Add />}
-						loading={loading}
-						loadingPosition="start"
-					>
-						Calculate Distance and Duration
-					</LoadingButton>
-				</Grid>
-			</Grid>
+			<DistanceForm />
 		</CardContent>
 	);
 }

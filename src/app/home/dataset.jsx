@@ -37,36 +37,19 @@ import { Clear, Edit, Save } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import QueryCard from "./QueryCard";
 import MapApi from "@/api/mapApi";
+import categories from "./categories.json";
 const queryApi = new QueryApi();
 const mapApi = new MapApi();
 
 const itemsPerPage = 10;
 export default function DatasetPage({ onEdit }) {
-	const { queries, savedPlacesMap, setSavedPlacesMap } =
-		useContext(GlobalContext);
-	const [filteredQueries, setFilteredQueries] = useState([]);
+	const { queries } = useContext(GlobalContext);
 	const [selectedCategory, setSelectedCategory] = useState("All");
-	const [expanded, setExpanded] = useState({});
-
 	const handlePagination = (event, value) => {
 		setPage(value);
 	};
 
-	useEffect(() => {
-		handleCategoryChange({ target: { value: selectedCategory } });
-	}, [queries]);
-
-	const categories = [
-		"All",
-		...[
-			"nearby_poi",
-			"planning",
-			"time_calculation",
-			"routing",
-			"location_finding",
-			"opinion",
-		],
-	];
+	const allCategories = ["All", ...categories];
 
 	const [data, setData] = useState([]);
 	const [page, setPage] = useState(1);
@@ -83,22 +66,9 @@ export default function DatasetPage({ onEdit }) {
 				item.classification.includes(selectedCategory)
 			);
 		}
-		setFilteredQueries(newQueries);
 		setPageCount(Math.ceil(newQueries.length / itemsPerPage));
 		setData(newQueries.slice(start, end));
 	}, [page, queries, selectedCategory]);
-
-	const handleCategoryChange = async (event) => {
-		const category = event.target.value;
-		setSelectedCategory(category);
-		if (category === "All") {
-			setFilteredQueries(queries);
-		} else {
-			setFilteredQueries(
-				queries.filter((item) => item.classification.includes(category))
-			);
-		}
-	};
 
 	return (
 		<>
@@ -118,7 +88,7 @@ export default function DatasetPage({ onEdit }) {
 							label="Filter by Category"
 							onChange={() => setSelectedCategory(category)}
 						>
-							{categories.map((category) => (
+							{allCategories.map((category) => (
 								<MenuItem key={category} value={category}>
 									{category}
 								</MenuItem>

@@ -2,7 +2,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
 	Box,
-	Container,
 	Typography,
 	TextField,
 	Button,
@@ -10,13 +9,10 @@ import {
 	RadioGroup,
 	FormControlLabel,
 	FormControl,
-	FormLabel,
 	Select,
 	MenuItem,
 	IconButton,
 	Paper,
-	OutlinedInput,
-	InputLabel,
 	InputAdornment,
 	Divider,
 } from "@mui/material";
@@ -26,27 +22,21 @@ import EditIcon from "@mui/icons-material/Edit";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import QueryApi from "@/api/queryApi";
 import MyQuestions from "./myquestions";
+import categories from "./categories.json";
 const queryApi = new QueryApi();
 
 export default function QuestionCreationPage({ handleContextEdit }) {
 	const { context, contextJSON, query, setQuery, queries, setQueries } =
 		useContext(GlobalContext);
-	const [question, setQuestion] = useState("");
-	const [options, setOptions] = useState(["", "", "", ""]);
-	const [correctAnswer, setCorrectAnswer] = useState("");
-	const [category, setCategory] = useState("");
 	const [expanded, setExpanded] = useState(false);
 
 	useEffect(() => {
-		console.log("Context updated", context);
 		setQuery((prev) => ({
 			...prev,
 			context: context.reduce((acc, e) => acc + e + "\n", ""),
 			context_json: contextJSON,
 		}));
 	}, [context]);
-	// Assume this context is passed from the previous page
-	// const context = "This is the generated context based on the map data...";
 
 	const handleOptionChange = (index, value) => {
 		setQuery((prev) => {
@@ -154,7 +144,6 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 						(line, index) =>
 							(expanded || index < 5) && (
 								<React.Fragment key={index}>
-									{/* {line} */}
 									<p
 										key={index}
 										className="w-full text-left"
@@ -162,7 +151,6 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 											__html: line,
 										}}
 									/>
-									{/* <br /> */}
 								</React.Fragment>
 							)
 					)}
@@ -197,18 +185,7 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 				<Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
 					Category:
 				</Typography>
-				<FormControl
-					fullWidth
-					variant="outlined"
-					// size="small"
-					// sx={{ mb: 2 }}
-				>
-					{/* <FormLabel
-						htmlFor="outlined-adornment"
-						className="input-label"
-					>
-						Category
-					</FormLabel> */}
+				<FormControl fullWidth variant="outlined">
 					<Select
 						multiple
 						id="outlined-adornment"
@@ -220,16 +197,8 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 								classification: e.target.value.join(","),
 							}));
 						}}
-						// input={<OutlinedInput label={"Category"} />}
 					>
-						{[
-							"nearby_poi",
-							"planning",
-							"time_calculation",
-							"routing",
-							"location_finding",
-							"opinion",
-						].map((value, index) => (
+						{categories.map((value, index) => (
 							<MenuItem key={index} value={value}>
 								{value}
 							</MenuItem>
@@ -269,12 +238,6 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 								),
 							}}
 						/>
-						{/* <IconButton
-							onClick={() => removeOption(index)}
-							sx={{ ml: 1 }}
-						>
-							<DeleteIcon />
-						</IconButton> */}
 					</Box>
 				))}
 				<Button
@@ -292,7 +255,6 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 					component="fieldset"
 					sx={{ display: "block", mb: 2 }}
 				>
-					{/* <FormLabel component="legend">Correct Answer</FormLabel> */}
 					<RadioGroup
 						value={query.answer.correct}
 						onChange={(e) =>
@@ -305,7 +267,7 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 							}))
 						}
 					>
-						{options.map((option, index) => (
+						{query.answer.options.map((option, index) => (
 							<FormControlLabel
 								key={index}
 								value={index}
