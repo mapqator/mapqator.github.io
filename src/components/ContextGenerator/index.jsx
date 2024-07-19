@@ -59,6 +59,7 @@ export default function ContextGenerator({
 		setCurrentInformation,
 	} = useContext(GlobalContext);
 
+	// Parameters
 	const [paramsContext, setParamsContext] = useState([]);
 	const getParamsContext = () => {
 		const newContext = [];
@@ -89,6 +90,7 @@ export default function ContextGenerator({
 		setParamsContext(getParamsContext());
 	}, [currentInformation]);
 
+	// Area POIs
 	const [areaContext, setAreaContext] = useState([]);
 	const getAreaContext = () => {
 		const newContext = [];
@@ -125,6 +127,215 @@ export default function ContextGenerator({
 	useEffect(() => {
 		setAreaContext(getAreaContext());
 	}, [poisMap]);
+
+	// Nearby POIs
+	const [nearbyContext, setNearbyContext] = useState([]);
+	const getNearbyContext = () => {
+		const newContext = [];
+		Object.keys(nearbyPlacesMap).forEach((place_id, index) => {
+			nearbyPlacesMap[place_id].forEach((e) => {
+				newContext.push(
+					`Nearby places of ${
+						// selectedPlacesMap[place_id].alias ||
+						savedPlacesMap[place_id].name
+					} ${e.type === "any" ? "" : 'of type "' + e.type + '"'} ${
+						e.keyword !== ""
+							? 'with keyword "' + e.keyword + '"'
+							: ""
+					} are (${
+						e.hasRadius
+							? "in " + e.radius + " m radius"
+							: "sorted by distance in ascending order"
+					}):`
+				);
+				let counter = 1;
+				e.places.forEach((near_place) => {
+					if (near_place.selected) {
+						newContext.push(
+							`${counter}. <b>${
+								// selectedPlacesMap[near_place.place_id]?.alias ||
+								savedPlacesMap[near_place.place_id]?.name ||
+								near_place.name
+							}</b> (${
+								near_place.formatted_address ||
+								savedPlacesMap[near_place.place_id]?.vicinity
+							})`
+						);
+						counter++;
+					}
+				});
+
+				newContext.push("\n");
+			});
+		});
+		return newContext;
+	};
+	useEffect(() => {
+		setNearbyContext(getNearbyContext());
+	}, [nearbyPlacesMap]);
+
+	// Distance
+	const [distanceContext, setDistanceContext] = useState([]);
+	const getDistanceContext = () => {
+		const newContext = [];
+		Object.keys(distanceMatrix).forEach((from_id) => {
+			Object.keys(distanceMatrix[from_id]).forEach((to_id) => {
+				Object.keys(distanceMatrix[from_id][to_id]).forEach((mode) => {
+					if (mode === "transit") {
+						newContext.push(
+							`Distance from ${
+								// selectedPlacesMap[from_id].alias ||
+								savedPlacesMap[from_id].name
+							} to ${
+								// selectedPlacesMap[to_id].alias ||
+								savedPlacesMap[to_id].name
+							} by public transport is ${
+								distanceMatrix[from_id][to_id][mode].distance
+							} (${
+								distanceMatrix[from_id][to_id][mode].duration
+							}).`
+						);
+					} else if (mode === "driving") {
+						newContext.push(
+							`Distance from ${
+								// selectedPlacesMap[from_id].alias ||
+								savedPlacesMap[from_id].name
+							} to ${
+								// selectedPlacesMap[to_id].alias ||
+								savedPlacesMap[to_id].name
+							} by car is ${
+								distanceMatrix[from_id][to_id][mode].distance
+							} (${
+								distanceMatrix[from_id][to_id][mode].duration
+							}).`
+						);
+					} else if (mode === "bicycling") {
+						newContext.push(
+							`Distance from ${
+								// selectedPlacesMap[from_id].alias ||
+								savedPlacesMap[from_id].name
+							} to ${
+								// selectedPlacesMap[to_id].alias ||
+								savedPlacesMap[to_id].name
+							} by cycle is ${
+								distanceMatrix[from_id][to_id][mode].distance
+							} (${
+								distanceMatrix[from_id][to_id][mode].duration
+							}).`
+						);
+					} else if (mode === "walking") {
+						newContext.push(
+							`Distance from ${
+								// selectedPlacesMap[from_id].alias ||
+								savedPlacesMap[from_id].name
+							} to ${
+								// selectedPlacesMap[to_id].alias ||
+								savedPlacesMap[to_id].name
+							} on foot is ${
+								distanceMatrix[from_id][to_id][mode].distance
+							} (${
+								distanceMatrix[from_id][to_id][mode].duration
+							}).`
+						);
+					}
+				});
+			});
+		});
+		return newContext;
+	};
+	useEffect(() => {
+		setDistanceContext(getDistanceContext());
+	}, [distanceMatrix]);
+
+	const [directionContext, setDirectionContext] = useState([]);
+	const getDirectionContext = () => {
+		const newContext = [];
+		Object.keys(directionInformation).forEach((from_id) => {
+			Object.keys(directionInformation[from_id]).forEach((to_id) => {
+				Object.keys(directionInformation[from_id][to_id]).forEach(
+					(mode) => {
+						if (mode === "transit") {
+							newContext.push(
+								`There are ${
+									directionInformation[from_id][to_id][mode]
+										.routes.length
+								} routes from ${
+									// selectedPlacesMap[from_id].alias ||
+									savedPlacesMap[from_id].name
+								} to ${
+									// selectedPlacesMap[to_id].alias ||
+									savedPlacesMap[to_id].name
+								} by public transport. They are:`
+							);
+						} else if (mode === "driving") {
+							newContext.push(
+								`There are ${
+									directionInformation[from_id][to_id][mode]
+										.routes.length
+								} routes from ${
+									// selectedPlacesMap[from_id].alias ||
+									savedPlacesMap[from_id].name
+								} to ${
+									// selectedPlacesMap[to_id].alias ||
+									savedPlacesMap[to_id].name
+								} by car. They are:`
+							);
+						} else if (mode === "bicycling") {
+							newContext.push(
+								`There are ${
+									directionInformation[from_id][to_id][mode]
+										.routes.length
+								} routes from ${
+									// selectedPlacesMap[from_id].alias ||
+									savedPlacesMap[from_id].name
+								} to ${
+									// selectedPlacesMap[to_id].alias ||
+									savedPlacesMap[to_id].name
+								} by cycle. They are:`
+							);
+						} else if (mode === "walking") {
+							newContext.push(
+								`There are ${
+									directionInformation[from_id][to_id][mode]
+										.routes.length
+								} routes from ${
+									// selectedPlacesMap[from_id].alias ||
+									savedPlacesMap[from_id].name
+								} to ${
+									// selectedPlacesMap[to_id].alias ||
+									savedPlacesMap[to_id].name
+								} on foot. They are:`
+							);
+						}
+
+						directionInformation[from_id][to_id][
+							mode
+						].routes.forEach((route, index) => {
+							newContext.push(
+								`${index + 1}. Via ${route.label} | ${
+									route.duration
+								} | ${route.distance}`
+							);
+
+							if (
+								directionInformation[from_id][to_id][mode]
+									.showSteps
+							) {
+								route.steps.forEach((step, index) => {
+									newContext.push(` - ${step}`);
+								});
+							}
+						});
+					}
+				);
+			});
+		});
+		return newContext;
+	};
+	useEffect(() => {
+		setDirectionContext(getDirectionContext());
+	}, [directionInformation]);
+
 	const steps = [
 		{
 			label: "Guidelines",
@@ -168,6 +379,7 @@ export default function ContextGenerator({
 					<Divider />
 				</>
 			),
+			context: nearbyContext,
 		},
 		{
 			label: "Discover Area POIs",
@@ -217,6 +429,7 @@ export default function ContextGenerator({
 					<Divider />
 				</>
 			),
+			context: distanceContext,
 		},
 		{
 			label: "Get Directions",
@@ -238,6 +451,7 @@ export default function ContextGenerator({
 					<Divider />
 				</>
 			),
+			context: directionContext,
 		},
 		{
 			label: "Set Context Parameters",
@@ -335,7 +549,7 @@ export default function ContextGenerator({
 									}}
 								>
 									Based on the information you add, a context
-									will generate below.
+									will be generated below.
 								</Typography>
 
 								<Paper

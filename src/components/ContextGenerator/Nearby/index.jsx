@@ -56,47 +56,6 @@ export default function NearbyInfo({
 	setSavedPlacesMap,
 	setSelectedPlacesMap,
 }) {
-	const [context, setContext] = useState([]);
-	useEffect(() => {
-		const newContext = [];
-		Object.keys(nearbyPlacesMap).forEach((place_id, index) => {
-			nearbyPlacesMap[place_id].forEach((e) => {
-				newContext.push(
-					`Nearby places of ${
-						// selectedPlacesMap[place_id].alias ||
-						savedPlacesMap[place_id].name
-					} ${e.type === "any" ? "" : 'of type "' + e.type + '"'} ${
-						e.keyword !== ""
-							? 'with keyword "' + e.keyword + '"'
-							: ""
-					} are (${
-						e.hasRadius
-							? "in " + e.radius + " m radius"
-							: "sorted by distance in ascending order"
-					}):`
-				);
-				let counter = 1;
-				e.places.forEach((near_place) => {
-					if (near_place.selected) {
-						newContext.push(
-							`${counter}. <b>${
-								// selectedPlacesMap[near_place.place_id]?.alias ||
-								savedPlacesMap[near_place.place_id]?.name ||
-								near_place.name
-							}</b> (${
-								near_place.formatted_address ||
-								savedPlacesMap[near_place.place_id]?.vicinity
-							})`
-						);
-						counter++;
-					}
-				});
-
-				newContext.push("\n");
-			});
-		});
-		setContext(newContext);
-	}, [nearbyPlacesMap]);
 	return (
 		// <Card raised>
 		<CardContent>
@@ -121,8 +80,6 @@ export default function NearbyInfo({
 				</div>
 			))}
 			<NearbyForm />
-			<Divider sx={{ mt: 3 }} />
-			<ContextViewer context={context} />
 		</CardContent>
 		// </Card>
 	);

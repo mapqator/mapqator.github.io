@@ -15,74 +15,6 @@ export default function CalculateDistance({
 	distanceMatrix,
 	setDistanceMatrix,
 }) {
-	const [context, setContext] = useState([]);
-	useEffect(() => {
-		const newContext = [];
-		Object.keys(distanceMatrix).forEach((from_id) => {
-			Object.keys(distanceMatrix[from_id]).forEach((to_id) => {
-				Object.keys(distanceMatrix[from_id][to_id]).forEach((mode) => {
-					if (mode === "transit") {
-						newContext.push(
-							`Distance from ${
-								// selectedPlacesMap[from_id].alias ||
-								savedPlacesMap[from_id].name
-							} to ${
-								// selectedPlacesMap[to_id].alias ||
-								savedPlacesMap[to_id].name
-							} by public transport is ${
-								distanceMatrix[from_id][to_id][mode].distance
-							} (${
-								distanceMatrix[from_id][to_id][mode].duration
-							}).`
-						);
-					} else if (mode === "driving") {
-						newContext.push(
-							`Distance from ${
-								// selectedPlacesMap[from_id].alias ||
-								savedPlacesMap[from_id].name
-							} to ${
-								// selectedPlacesMap[to_id].alias ||
-								savedPlacesMap[to_id].name
-							} by car is ${
-								distanceMatrix[from_id][to_id][mode].distance
-							} (${
-								distanceMatrix[from_id][to_id][mode].duration
-							}).`
-						);
-					} else if (mode === "bicycling") {
-						newContext.push(
-							`Distance from ${
-								// selectedPlacesMap[from_id].alias ||
-								savedPlacesMap[from_id].name
-							} to ${
-								// selectedPlacesMap[to_id].alias ||
-								savedPlacesMap[to_id].name
-							} by cycle is ${
-								distanceMatrix[from_id][to_id][mode].distance
-							} (${
-								distanceMatrix[from_id][to_id][mode].duration
-							}).`
-						);
-					} else if (mode === "walking") {
-						newContext.push(
-							`Distance from ${
-								// selectedPlacesMap[from_id].alias ||
-								savedPlacesMap[from_id].name
-							} to ${
-								// selectedPlacesMap[to_id].alias ||
-								savedPlacesMap[to_id].name
-							} on foot is ${
-								distanceMatrix[from_id][to_id][mode].distance
-							} (${
-								distanceMatrix[from_id][to_id][mode].duration
-							}).`
-						);
-					}
-				});
-			});
-		});
-		setContext(newContext);
-	}, [distanceMatrix]);
 	return (
 		<CardContent>
 			{Object.keys(distanceMatrix).length > 0 && (
@@ -229,8 +161,6 @@ export default function CalculateDistance({
 			)}
 
 			<DistanceForm />
-			<Divider sx={{ mt: 3 }} />
-			<ContextViewer context={context} />
 		</CardContent>
 	);
 }
