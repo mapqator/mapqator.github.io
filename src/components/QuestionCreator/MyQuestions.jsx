@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { jwtDecode } from "jwt-decode";
-import { getTokenFromLocalStorage } from "@/api/base";
+import { getTokenFromLocalStorage, getUserName } from "@/api/base";
 import categories from "@/database/categories.json";
 import QueryCard from "@/components/Cards/QueryCard/MyQueryCard";
 
@@ -40,7 +40,7 @@ export default function MyQuestions() {
 				(item) =>
 					item.classification.includes(selectedCategory) &&
 					item.username ===
-						jwtDecode(getTokenFromLocalStorage()).email
+						getUserName()
 			);
 		}
 		setPageCount(Math.ceil(newQueries.length / itemsPerPage));
@@ -63,7 +63,9 @@ export default function MyQuestions() {
 							id="category-select"
 							value={selectedCategory}
 							label="Filter by Category"
-							onChange={() => setSelectedCategory(category)}
+							onChange={(e) => {
+								setSelectedCategory(e.target.value);
+							}}
 						>
 							{allCategories.map((category) => (
 								<MenuItem key={category} value={category}>

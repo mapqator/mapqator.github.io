@@ -1,6 +1,8 @@
 "use client";
 
-import React from "react";
+import { GlobalContext } from "@/contexts/GlobalContext";
+import ContextGeneratorService from "@/services/contextGeneratorService";
+import React, { useContext, useEffect } from "react";
 
 export default function ContextViewer({ context }) {
 	return (

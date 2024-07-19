@@ -67,7 +67,9 @@ export default function DatasetPage({ onEdit }) {
 							id="category-select"
 							value={selectedCategory}
 							label="Filter by Category"
-							onChange={() => setSelectedCategory(category)}
+							onChange={(e) =>
+								setSelectedCategory(e.target.value)
+							}
 						>
 							{allCategories.map((category) => (
 								<MenuItem key={category} value={category}>

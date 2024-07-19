@@ -1,61 +1,23 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import PlaceApi from "@/api/placeApi";
-const placeApi = new PlaceApi();
-import MapApi from "@/api/mapApi";
-const mapApi = new MapApi();
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import {
-	Select,
-	MenuItem,
-	Button,
-	TextField,
-	IconButton,
-	Typography,
-	Card,
-	CardActionArea,
-	Grid,
-	CardContent,
-	FormControlLabel,
-	RadioGroup,
-	Radio,
-	Box,
-	Collapse,
-	List,
-	ListItem,
-	ListItemText,
-	ListItemIcon,
-	Checkbox,
-	Chip,
-	Divider,
-} from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faChevronDown,
-	faChevronUp,
-	faTrashCan,
-	faAdd,
-} from "@fortawesome/free-solid-svg-icons";
-import placeTypes from "@/app/types.json";
-import Autocomplete from "@mui/material/Autocomplete";
-import { LoadingButton } from "@mui/lab";
-import { Add, Delete, ExpandMore, Search } from "@mui/icons-material";
+import React, { useContext, useEffect } from "react";
+import { CardContent } from "@mui/material";
 import NearbyCard from "./NearbyCard";
-import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
 import NearbyForm from "./NearbyForm";
-import ContextViewer from "../ContextPreview";
+import { GlobalContext } from "@/contexts/GlobalContext";
 
-export default function NearbyInfo({
-	savedPlacesMap,
-	selectedPlacesMap,
-	nearbyPlacesMap,
-	setNearbyPlacesMap,
-	setSavedPlacesMap,
-	setSelectedPlacesMap,
-}) {
+export default function NearbyInfo({}) {
+	const {
+		// Getters
+		savedPlacesMap,
+		selectedPlacesMap,
+		nearbyPlacesMap,
+		// Setters
+		setNearbyPlacesMap,
+		setSavedPlacesMap,
+		setSelectedPlacesMap,
+	} = useContext(GlobalContext);
+
 	return (
 		// <Card raised>
 		<CardContent>

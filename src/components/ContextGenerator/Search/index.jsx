@@ -3,8 +3,9 @@
 import AutocompleteSearchBox from "./AutocompleteSearchBox";
 import PlaceInformation from "./places";
 import MapComponent from "./MapComponent";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import ContextGeneratorService from "@/services/contextGeneratorService";
 export default function PlaceSearch() {
 	const { selectedPlacesMap } = useContext(GlobalContext);
 	const locations = [
@@ -13,6 +14,7 @@ export default function PlaceSearch() {
 		[51.507351, -0.127758], // London
 		// Add more locations as needed
 	];
+
 	return (
 		<div className="flex flex-col gap-2">
 			<AutocompleteSearchBox />

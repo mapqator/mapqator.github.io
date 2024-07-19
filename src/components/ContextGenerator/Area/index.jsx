@@ -1,58 +1,27 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import PlaceApi from "@/api/placeApi";
-const placeApi = new PlaceApi();
+import React, { useContext, useEffect, useState } from "react";
 import MapApi from "@/api/mapApi";
 const mapApi = new MapApi();
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import {
-	Select,
-	MenuItem,
-	Button,
-	TextField,
-	IconButton,
-	CardContent,
-	Grid,
-	ListItem,
-	List,
-	Collapse,
-	ListItemIcon,
-	ListItemText,
-	Typography,
-	Box,
-	Card,
-	Chip,
-	Divider,
-} from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faChevronDown,
-	faChevronUp,
-	faTrashCan,
-	faAdd,
-} from "@fortawesome/free-solid-svg-icons";
-import placeTypes from "@/app/types.json";
-import Autocomplete from "@mui/material/Autocomplete";
+import { CardContent, Grid } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { Add, CheckBox, Delete, ExpandMore, Search } from "@mui/icons-material";
+import { Search } from "@mui/icons-material";
 import AreaCard from "./AreaCard";
 import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
 import TypeSelectionField from "@/components/InputFields/TypeSelectionField";
-import ContextViewer from "../ContextPreview";
+import { GlobalContext } from "@/contexts/GlobalContext";
 
-export default function DiscoverArea({
-	savedPlacesMap,
-	setSavedPlacesMap,
-	selectedPlacesMap,
-	poisMap,
-	setSelectedPlacesMap,
-	setPoisMap,
-}) {
+export default function DiscoverArea() {
 	const [newPois, setNewPois] = useState({ location: "", type: "" });
 	const [loading, setLoading] = useState(false);
+	const {
+		savedPlacesMap,
+		setSavedPlacesMap,
+		selectedPlacesMap,
+		poisMap,
+		setSelectedPlacesMap,
+		setPoisMap,
+	} = useContext(GlobalContext);
 
 	const searchInsidePlaces = async () => {
 		if (newPois.location === "" || newPois.type === "") return;
@@ -115,29 +84,6 @@ export default function DiscoverArea({
 					))}
 				</div>
 			)}
-
-			{/* <AreaCard
-				selectedPlacesMap={selectedPlacesMap}
-				savedPlacesMap={savedPlacesMap}
-				setSavedPlacesMap={setSavedPlacesMap}
-				poi={{
-					type: "atm",
-					places: [
-						{
-							place_id: 1,
-							name: "Demo Name",
-							formatted_address: "Demo Address",
-							selected: true,
-						},
-					],
-				}}
-				poisMap={poisMap}
-				setPoisMap={setPoisMap}
-				index2={1}
-				place_id={1}
-				setSelectedPlacesMap={setSelectedPlacesMap}
-			/> */}
-
 			<Grid container spacing={2}>
 				<Grid item xs={12}>
 					<PlaceSelectionField

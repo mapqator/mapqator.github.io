@@ -32,6 +32,7 @@ import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { Parameters } from "./Parameters/params";
 import MapComponent from "./Search/MapComponent";
 import PlaceSearch from "./Search";
+import ContextGeneratorService from "@/services/contextGeneratorService";
 
 export default function ContextGenerator({
 	onFinish,
@@ -51,14 +52,48 @@ export default function ContextGenerator({
 		setNearbyPlacesMap,
 		poisMap,
 		setPoisMap,
-		setContextJSON,
 		context,
 		setContext,
 		currentInformation,
 		setCurrentInformation,
-		setQuery,
-		contextJSON,
 	} = useContext(GlobalContext);
+
+	useEffect(() => {
+		setContext({
+			places: ContextGeneratorService.getPlacesContext(
+				selectedPlacesMap,
+				savedPlacesMap
+			),
+			nearby: ContextGeneratorService.getNearbyContext(
+				nearbyPlacesMap,
+				savedPlacesMap
+			),
+			area: ContextGeneratorService.getAreaContext(
+				poisMap,
+				savedPlacesMap
+			),
+			distance: ContextGeneratorService.getDistanceContext(
+				distanceMatrix,
+				savedPlacesMap
+			),
+			direction: ContextGeneratorService.getDirectionContext(
+				directionInformation,
+				savedPlacesMap
+			),
+			params: ContextGeneratorService.getParamsContext(
+				currentInformation,
+				savedPlacesMap
+			),
+		});
+	}, [
+		savedPlacesMap,
+		selectedPlacesMap,
+		nearbyPlacesMap,
+		poisMap,
+		distanceMatrix,
+		directionInformation,
+		currentInformation,
+	]);
 
 	const steps = [
 		{
@@ -200,7 +235,7 @@ export default function ContextGenerator({
 			context: context.params,
 		},
 		{
-			label: "Generated Context",
+			label: "Preview Full Context",
 			description: `Review the information gathered and click on "Finish" when you are done.`,
 			icon: <RemoveRedEye />,
 			component: (
@@ -222,20 +257,6 @@ export default function ContextGenerator({
 		},
 	];
 	const handleNext = () => {
-		// if (activeStep === steps.length - 1) {
-		// 	setQuery((prev) => ({
-		// 		...prev,
-		// 		context: [
-		// 			...context.places,
-		// 			...context.nearby,
-		// 			...context.area,
-		// 			...context.distance,
-		// 			...context.direction,
-		// 			...context.params,
-		// 		].reduce((acc, e) => acc + e + "\n", ""),
-		// 		context_json: contextJSON,
-		// 	}));
-		// }
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
 	};
 
@@ -248,7 +269,6 @@ export default function ContextGenerator({
 		setDistanceMatrix({});
 		setNearbyPlacesMap({});
 		setContext([]);
-		setContextJSON({});
 		setCurrentInformation({
 			time: null,
 			day: "",

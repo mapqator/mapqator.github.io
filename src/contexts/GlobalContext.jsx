@@ -25,7 +25,7 @@ export default function GlobalContextProvider({ children }) {
 	});
 	const [directionInformation, setDirectionInformation] = useState({});
 	const [poisMap, setPoisMap] = useState({});
-	const [query, setQuery] = useState({
+	const initQuery = {
 		question: "",
 		answer: {
 			type: "mcq",
@@ -36,8 +36,24 @@ export default function GlobalContextProvider({ children }) {
 		context_json: {},
 		context_gpt: "",
 		classification: "",
-	});
-	const [queries, setQueries] = useState([]);
+	};
+	const [query, setQuery] = useState(initQuery);
+	const [queries, setQueries] = useState([
+		{
+			id: 152,
+			question: "Dummy Question",
+			answer: {
+				type: "mcq",
+				options: ["a", "b", "c", "d"],
+				correct: 1,
+			},
+			context: "",
+			context_json: {},
+			context_gpt: "",
+			classification: "planning",
+			username: "mahirlabibdihan",
+		},
+	]);
 
 	const fetchQueries = async () => {
 		// setLoading(true);
@@ -843,6 +859,7 @@ export default function GlobalContextProvider({ children }) {
 				setQuery,
 				queries,
 				setQueries,
+				initQuery,
 			}}
 		>
 			{children}

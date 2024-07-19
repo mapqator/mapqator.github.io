@@ -1,44 +1,20 @@
 "use client";
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 import {
-	Container,
-	Typography,
-	Paper,
-	Accordion,
-	AccordionSummary,
-	AccordionDetails,
-	Box,
-	Chip,
-	List,
-	ListItem,
-	ListItemText,
 	Select,
 	MenuItem,
 	FormControl,
 	InputLabel,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
 	Button,
-	Collapse,
 	OutlinedInput,
 	TextField,
-	Pagination,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { GlobalContext } from "@/contexts/GlobalContext";
 import QueryApi from "@/api/queryApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Clear, Edit, Save } from "@mui/icons-material";
-import { useRouter } from "next/navigation";
-import MapApi from "@/api/mapApi";
+import { getUserName } from "@/api/base";
 const queryApi = new QueryApi();
-const mapApi = new MapApi();
-
 export default function Annotation({ state, setState }) {
 	return (
 		<div className="flex flex-col gap-2 p-2 border-2 border-black rounded-md">
@@ -48,11 +24,11 @@ export default function Annotation({ state, setState }) {
 				</h1>
 				<h2 className="text-lg font-semibold text-black px-1 flex flex-row gap-1 items-center">
 					<FontAwesomeIcon icon={faUser} />
-					{state.human.username}
+					{state.human?.username}
 				</h2>
 			</div>
 			<div className="flex flex-col gap-1">
-				<div key={index} className="flex flex-col gap-2">
+				<div className="flex flex-col gap-2">
 					<FormControl
 						fullWidth
 						className="input-field"
@@ -69,7 +45,7 @@ export default function Annotation({ state, setState }) {
 							// multiple
 							id="outlined-adornment"
 							className="outlined-input"
-							value={state.human.answer}
+							value={state.human?.answer}
 							onChange={(e) => {
 								setState((prev) => ({
 									...prev,
@@ -90,7 +66,7 @@ export default function Annotation({ state, setState }) {
 						</Select>
 					</FormControl>
 					<TextField
-						value={state.human.explanation}
+						value={state.human?.explanation}
 						onChange={(e) => {
 							setState((prev) => ({
 								...prev,
@@ -101,7 +77,7 @@ export default function Annotation({ state, setState }) {
 							}));
 						}}
 						fullWidth
-						label="Explanation"
+						label="Comment"
 						size="small"
 						multiline
 					/>
@@ -128,19 +104,20 @@ export default function Annotation({ state, setState }) {
 							color="primary"
 							onClick={async () => {
 								console.log(state.id);
+								setState((prev) => ({
+									...prev,
+									human: {
+										...prev.human,
+										username: getUserName(),
+									},
+								}));
 								const res = await queryApi.annotate(state.id, {
-									answer: state.human.answer,
-									explanation: state.human.explanation,
+									answer: state.human?.answer,
+									explanation: state.human?.explanation,
 								});
 								console.log(res);
 								if (res.success) {
-									setState((prev) => ({
-										...prev,
-										human: {
-											...prev.human,
-											username: res.data[0].username,
-										},
-									}));
+									// Success
 								}
 							}}
 							startIcon={<Save />}

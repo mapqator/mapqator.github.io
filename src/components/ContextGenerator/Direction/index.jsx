@@ -1,17 +1,21 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CardContent, Divider } from "@mui/material";
 import DirectionCard from "./DirectionCard";
 import DirectionForm from "./DirectionForm";
 import ContextViewer from "../ContextPreview";
+import ContextGeneratorService from "@/services/contextGeneratorService";
+import { GlobalContext } from "@/contexts/GlobalContext";
 
-export default function GetDirections({
-	selectedPlacesMap,
-	savedPlacesMap,
-	directionInformation,
-	setDirectionInformation,
-}) {
+export default function GetDirections() {
+	const {
+		selectedPlacesMap,
+		savedPlacesMap,
+		directionInformation,
+		setDirectionInformation,
+	} = useContext(GlobalContext);
+
 	return (
 		<CardContent>
 			{Object.keys(directionInformation).length > 0 && (

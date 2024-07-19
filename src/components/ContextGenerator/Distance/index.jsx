@@ -1,20 +1,21 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from "react";
-import MapApi from "@/api/mapApi";
-const mapApi = new MapApi();
-import { IconButton, CardContent, Divider } from "@mui/material";
+import React, { useContext, useEffect } from "react";
+import { IconButton, CardContent } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import DistanceForm from "./DistanceForm";
-import ContextViewer from "../ContextPreview";
+import { GlobalContext } from "@/contexts/GlobalContext";
+import ContextGeneratorService from "@/services/contextGeneratorService";
 
-export default function CalculateDistance({
-	selectedPlacesMap,
-	savedPlacesMap,
-	distanceMatrix,
-	setDistanceMatrix,
-}) {
+export default function CalculateDistance() {
+	const {
+		selectedPlacesMap,
+		savedPlacesMap,
+		distanceMatrix,
+		setDistanceMatrix,
+	} = useContext(GlobalContext);
+
 	return (
 		<CardContent>
 			{Object.keys(distanceMatrix).length > 0 && (

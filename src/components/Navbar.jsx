@@ -88,14 +88,18 @@ export default function Navbar({ selected, setSelected }) {
 				</Box>
 				<Box className="w-1/6 hidden md:flex justify-end">
 					{getTokenFromLocalStorage() ? (
-						<Button variant="outlined" endIcon={<Logout />}>
+						<Button
+							variant="outlined"
+							endIcon={<Logout />}
+							onClick={() => router.push(config.logoutRedirect)}
+						>
 							Logout
 						</Button>
 					) : (
 						<Button
 							variant="contained"
 							endIcon={<Login />}
-							onClick={() => router.push(config.loginRedirect)}
+							onClick={() => router.push(config.logoutRedirect)}
 						>
 							Login
 						</Button>

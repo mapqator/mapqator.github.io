@@ -19,20 +19,24 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import ContextGeneratorService from "@/services/contextGeneratorService";
 
 export default function PlaceInformation() {
 	const {
+		// Getters
 		selectedPlacesMap,
-		setSelectedPlacesMap,
 		savedPlacesMap,
 		distanceMatrix,
-		setDistanceMatrix,
 		directionInformation,
-		setDirectionInformation,
 		nearbyPlacesMap,
-		setNearbyPlacesMap,
 		poisMap,
+		// Setters
+		setDistanceMatrix,
+		setDirectionInformation,
+		setNearbyPlacesMap,
+		setSelectedPlacesMap,
 		setPoisMap,
+		setContext,
 	} = useContext(GlobalContext);
 	const deletePlaceFromDistanceMatrix = (place_id) => {
 		const newDistanceMatrix = { ...distanceMatrix };
@@ -91,8 +95,55 @@ export default function PlaceInformation() {
 	};
 
 	useEffect(() => {
-		console.log("Selected Places Map: ", selectedPlacesMap);
-	}, [selectedPlacesMap]);
+		setContext((prev) => ({
+			...prev,
+			places: ContextGeneratorService.getPlacesContext(
+				selectedPlacesMap,
+				savedPlacesMap
+			),
+		}));
+	}, [selectedPlacesMap, savedPlacesMap]);
+
+	// useEffect(() => {
+	// 	setContext((prev) => ({
+	// 		...prev,
+	// 		nearby: ContextGeneratorService.getNearbyContext(
+	// 			nearbyPlacesMap,
+	// 			savedPlacesMap
+	// 		),
+	// 	}));
+	// }, [nearbyPlacesMap, savedPlacesMap]);
+
+	// useEffect(() => {
+	// 	setContext((prev) => ({
+	// 		...prev,
+	// 		area: ContextGeneratorService.getAreaContext(
+	// 			poisMap,
+	// 			savedPlacesMap
+	// 		),
+	// 	}));
+	// }, [poisMap, savedPlacesMap]);
+
+	// useEffect(() => {
+	// 	setContext((prev) => ({
+	// 		...prev,
+	// 		distance: ContextGeneratorService.getDistanceContext(
+	// 			distanceMatrix,
+	// 			savedPlacesMap
+	// 		),
+	// 	}));
+	// }, [distanceMatrix, savedPlacesMap]);
+
+	// useEffect(() => {
+	// 	setContext((prev) => ({
+	// 		...prev,
+	// 		direction: ContextGeneratorService.getDirectionContext(
+	// 			directionInformation,
+	// 			savedPlacesMap
+	// 		),
+	// 	}));
+	// }, [directionInformation, savedPlacesMap]);
+
 	return (
 		<Grid container spacing={2} sx={{ mt: 0 }}>
 			{Object.keys(selectedPlacesMap).map((placeId) => (

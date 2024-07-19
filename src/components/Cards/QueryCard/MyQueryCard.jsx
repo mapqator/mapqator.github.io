@@ -30,11 +30,10 @@ export default function QueryCard({ entry }) {
 				e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
 				e.verdict === "invalid"
 		);
-		console.log(state.human);
 		if (invalid) {
 			setFlag(true);
 		} else {
-			setFlag(state.human.answer === 0);
+			setFlag(state.human?.answer === 0);
 		}
 	}, [entry]);
 
@@ -93,7 +92,10 @@ export default function QueryCard({ entry }) {
 				<CollapsedContext context={state.context} />
 				<OptionsPreview answer={state.answer} />
 				<LLMAnswers evaluation={state.evaluation} />
-				<QueryEditButton onEdit={() => window.scrollTo(0, 0)} />
+				<QueryEditButton
+					onEdit={() => window.scrollTo(0, 0)}
+					state={state}
+				/>
 			</AccordionDetails>
 		</Accordion>
 	);

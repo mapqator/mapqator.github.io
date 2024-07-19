@@ -23,13 +23,33 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 import QueryApi from "@/api/queryApi";
 import MyQuestions from "./MyQuestions";
 import categories from "@/database/categories.json";
+import { jwtDecode } from "jwt-decode";
+import { getTokenFromLocalStorage } from "@/api/base";
+import { Clear, Save } from "@mui/icons-material";
 const queryApi = new QueryApi();
 
 export default function QuestionCreationPage({ handleContextEdit }) {
-	const { context, contextJSON, query, setQuery, queries, setQueries } =
-		useContext(GlobalContext);
+	const {
+		context,
+		query,
+		setQuery,
+		queries,
+		setQueries,
+		distanceMatrix,
+		selectedPlacesMap,
+		nearbyPlacesMap,
+		currentInformation,
+		poisMap,
+		directionInformation,
+		initQuery,
+	} = useContext(GlobalContext);
 	const [expanded, setExpanded] = useState(false);
 
+	const getUserName = () => {
+		const token = getTokenFromLocalStorage();
+		if (!token) return "Anonymous";
+		return jwtDecode(token).username;
+	};
 	useEffect(() => {
 		setQuery((prev) => ({
 			...prev,
@@ -41,7 +61,14 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 				...context.direction,
 				...context.params,
 			].reduce((acc, e) => acc + e + "\n", ""),
-			context_json: contextJSON,
+			context_json: {
+				distance_matrix: distanceMatrix,
+				places: selectedPlacesMap,
+				nearby_places: nearbyPlacesMap,
+				current_information: currentInformation,
+				pois: poisMap,
+				directions: directionInformation,
+			},
 		}));
 	}, [context]);
 
@@ -70,6 +97,15 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 	};
 
 	const removeOption = (index) => {
+		if (query.answer.correct === index) {
+			setQuery((prev) => ({
+				...prev,
+				answer: {
+					...prev.answer,
+					correct: -1,
+				},
+			}));
+		}
 		setQuery((prev) => {
 			const options = [...prev.answer.options];
 			options.splice(index, 1);
@@ -86,42 +122,31 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		if (query.id === undefined) {
+			const newQueries = [...queries];
+			newQueries.unshift({ ...query, id: 0, username: getUserName() });
+			setQueries(newQueries);
+
 			const res = await queryApi.createQuery(query);
 			if (res.success) {
 				// update the queries
-				const newQueries = [...queries];
-				// push front
-				newQueries.unshift(res.data[0]);
-				setQueries(newQueries);
 				// showSuccess("Query saved successfully", res);
 			} else {
 				// showToast("Can't save this query", "error");
 			}
 		} else {
+			setQueries((prev) =>
+				prev.map((q) => (q.id === query.id ? query : q))
+			);
+
 			const res = await queryApi.updateQuery(query.id, query);
 			if (res.success) {
 				// update the queries
-				setQueries((prevQueries) =>
-					prevQueries.map((q) =>
-						q.id === res.data[0].id ? res.data[0] : q
-					)
-				);
 				// showSuccess("Query edited successfully", res);
 			}
 		}
 
-		setQuery({
-			question: "",
-			answer: {
-				type: "mcq",
-				options: ["", "", "", ""],
-				correct: -1,
-			},
-			context: "",
-			context_json: {},
-			context_gpt: "",
-			classification: "",
-		});
+		console.log("Here comes reset");
+		setQuery(initQuery);
 	};
 
 	return (
@@ -226,6 +251,7 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 					>
 						<TextField
 							fullWidth
+							autoComplete="off"
 							label={`Option ${index + 1}`}
 							value={option}
 							onChange={(e) =>
@@ -264,15 +290,16 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 				>
 					<RadioGroup
 						value={query.answer.correct}
-						onChange={(e) =>
+						onChange={(e) => {
+							console.log(e.target.value, typeof e.target.value);
 							setQuery((prev) => ({
 								...prev,
 								answer: {
 									...prev.answer,
-									correct: e.target.value,
+									correct: parseInt(e.target.value),
 								},
-							}))
-						}
+							}));
+						}}
 					>
 						<FormControlLabel
 							key={-1}
@@ -291,9 +318,33 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 					</RadioGroup>
 				</FormControl>
 
-				<Button type="submit" variant="contained" color="primary">
-					Submit Question
-				</Button>
+				<Box className="flex flex-row gap-4">
+					<Button
+						type="submit"
+						variant="contained"
+						color="primary"
+						startIcon={<Save />}
+					>
+						{query.id === undefined
+							? "Submit Question"
+							: "Save #" + query.id}
+					</Button>
+					<Button
+						onClick={() =>
+							setQuery((prev) => ({
+								...initQuery,
+								context: prev.context,
+								context_json: prev.context_json,
+							}))
+						}
+						variant="outlined"
+						size="small"
+						startIcon={<Clear />}
+						color="error"
+					>
+						Clear
+					</Button>
+				</Box>
 			</form>
 
 			{queries.length > 0 && (

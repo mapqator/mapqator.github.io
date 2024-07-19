@@ -1,7 +1,7 @@
 export default function LLMAnswers({ evaluation }) {
 	return (
 		<>
-			{evaluation.length > 0 && (
+			{evaluation?.length > 0 && (
 				<Box sx={{ mb: 2 }}>
 					<Typography variant="h6" gutterBottom>
 						LLM Answers:

@@ -16,15 +16,15 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { Clear } from "@mui/icons-material";
 import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ContextViewer from "../ContextPreview";
+import { GlobalContext } from "@/contexts/GlobalContext";
+import ContextGeneratorService from "@/services/contextGeneratorService";
 
-export function Parameters({
-	selectedPlacesMap,
-	currentInformation,
-	setCurrentInformation,
-	savedPlacesMap,
-}) {
+export function Parameters() {
+	const { currentInformation, setCurrentInformation } =
+		useContext(GlobalContext);
+
 	return (
 		<CardContent>
 			<Box className="flex flex-col gap-4 w-full">

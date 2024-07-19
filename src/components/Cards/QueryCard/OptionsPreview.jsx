@@ -40,6 +40,9 @@ import MapApi from "@/api/mapApi";
 const queryApi = new QueryApi();
 const mapApi = new MapApi();
 export default function OptionsPreview({ answer }) {
+	useEffect(() => {
+		console.log(answer);
+	}, [answer]);
 	return (
 		<Box sx={{ mb: 2 }}>
 			<Typography variant="h6" gutterBottom>
@@ -57,11 +60,11 @@ export default function OptionsPreview({ answer }) {
 									sx={{
 										"& .MuiListItemText-primary": {
 											fontWeight:
-												option === answer.correct
+												index === answer.correct
 													? "bold"
 													: "normal",
 											color:
-												option === answer.correct
+												index === answer.correct
 													? "success.main"
 													: "inherit",
 										},
