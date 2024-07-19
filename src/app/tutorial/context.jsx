@@ -40,37 +40,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { Parameters } from "./params";
-
-const MapComponent = ({ locations }) => {
-	const mapStyles = {
-		height: "400px",
-		width: "100%",
-	};
-
-	const defaultCenter = {
-		lat: 0,
-		lng: 0,
-	};
-
-	return (
-		<LoadScript
-			googleMapsApiKey={"AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs"}
-		>
-			<GoogleMap
-				mapContainerStyle={mapStyles}
-				zoom={2}
-				center={defaultCenter}
-			>
-				{locations.map((location, index) => (
-					<Marker
-						key={index}
-						position={{ lat: location[0], lng: location[1] }}
-					/>
-				))}
-			</GoogleMap>
-		</LoadScript>
-	);
-};
+import MapComponent from "./MapComponent";
 
 export default function ContextGenerator({ onFinish }) {
 	const [activeStep, setActiveStep] = useState(
@@ -162,7 +132,7 @@ export default function ContextGenerator({ onFinish }) {
 			component: (
 				<>
 					<Divider />
-					<Box className="max-w-[30rem] md:w-[30rem] mx-auto">
+					<Box className="w-full md:w-[30rem] mx-auto">
 						<NearbyInfo
 							{...{
 								savedPlacesMap,
@@ -186,7 +156,7 @@ export default function ContextGenerator({ onFinish }) {
 				// <Card className="p-3" raised>
 				<>
 					<Divider />
-					<Box className="max-w-[30rem] md:w-[30rem] mx-auto">
+					<Box className="w-full md:w-[30rem] mx-auto">
 						<DiscoverArea
 							{...{
 								savedPlacesMap,
@@ -212,7 +182,7 @@ export default function ContextGenerator({ onFinish }) {
 			component: (
 				<>
 					<Divider />
-					<Box className="max-w-[30rem] md:w-[30rem] mx-auto">
+					<Box className="w-full md:w-[30rem] mx-auto">
 						<CalculateDistance
 							{...{
 								selectedPlacesMap,
@@ -233,7 +203,7 @@ export default function ContextGenerator({ onFinish }) {
 			component: (
 				<>
 					<Divider />
-					<Box className="max-w-[30rem] md:w-[30rem] mx-auto">
+					<Box className="w-full md:w-[30rem] mx-auto">
 						<GetDirections
 							{...{
 								selectedPlacesMap,
@@ -254,7 +224,7 @@ export default function ContextGenerator({ onFinish }) {
 			component: (
 				<>
 					<Divider />
-					<Box className="max-w-[30rem] md:w-[30rem] mx-auto">
+					<Box className="w-full md:w-[30rem] mx-auto">
 						<Parameters
 							{...{
 								selectedPlacesMap,
@@ -317,13 +287,6 @@ export default function ContextGenerator({ onFinish }) {
 				{steps.map((step, index) => (
 					<Step key={step.label}>
 						<StepLabel
-							// optional={
-							// 	index === steps.length - 1 ? (
-							// 		<Typography variant="caption">
-							// 			Last step
-							// 		</Typography>
-							// 	) : null
-							// }
 							icon={step.icon}
 							onClick={() => {
 								if (index !== activeStep) setActiveStep(index);
