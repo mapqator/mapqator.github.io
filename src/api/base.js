@@ -2,8 +2,59 @@ import axios from "axios";
 // import Cookies from "universal-cookie";
 // import { API_BASE_URL } from "../index";
 // const cookies = new Cookies();
-export const API_BASE_URL = "https://mapquest-app.onrender.com/api";
-// export const API_BASE_URL = "http://localhost:5000/api";
+// export const API_BASE_URL = "https://mapquest-app.onrender.com/api";
+export const API_BASE_URL = "http://localhost:5000/api";
+import { jwtDecode } from "jwt-decode";
+import config from "@/config.json";
+
+export const addTokenToLocalStorage = (access_token) => {
+	localStorage.setItem("token", access_token);
+	const event = new Event("storage");
+	// Dispatch the event
+	window.dispatchEvent(event);
+};
+
+export const isTokenValid = () => {
+	const token = localStorage.getItem("token");
+	if (token) {
+		const decoded_token = jwtDecode(token);
+		if (decoded_token) {
+			// JWT exp is in seconds
+			if (decoded_token.exp * 1000 > new Date().getTime()) {
+				return true;
+			}
+		}
+	}
+	return false;
+};
+export const getTokenFromLocalStorage = () => {
+	const token = localStorage.getItem("token");
+	if (token) {
+		const decoded_token = jwtDecode(token);
+		if (decoded_token) {
+			// JWT exp is in seconds
+			if (decoded_token.exp * 1000 > new Date().getTime()) {
+				return token;
+			}
+		}
+	}
+	// logout();
+	return null;
+};
+
+export const removeTokenFromLocalStorage = () => {
+	localStorage.removeItem("token");
+	const event = new Event("storage");
+	// Dispatch the event
+	window.dispatchEvent(event);
+};
+
+const logout = () => {
+	console.log("Redirect to login");
+	// showError("Session expired. Please login again.");
+	removeTokenFromLocalStorage();
+	window.location.href = config.logoutRedirect;
+};
 
 // axios.defaults.withCredentials = true;
 axios.interceptors.request.use(

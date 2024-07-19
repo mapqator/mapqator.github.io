@@ -1,7 +1,8 @@
-import React, { useContext, useState, useEffect } from "react";
-import AuthService from "../services/authService";
+
+import React, { useState, useEffect } from "react";
+import AuthService from "@/services/authService";
 import { FormControl, InputLabel, OutlinedInput, Button } from "@mui/material";
-import EyeIcon from "../components/Icons/EyeIcon";
+import EyeIcon from "@/components/Icons/EyeIcon";
 import { setLoading } from "./page";
 import { LoadingButton } from "@mui/lab";
 

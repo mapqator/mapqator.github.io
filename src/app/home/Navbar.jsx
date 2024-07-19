@@ -1,30 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
-import {
-	Box,
-	Container,
-	Typography,
-	Stepper,
-	Step,
-	StepLabel,
-	StepContent,
-	Button,
-	Paper,
-} from "@mui/material";
-import MapIcon from "@mui/icons-material/Map";
-import SearchIcon from "@mui/icons-material/Search";
-import DirectionsIcon from "@mui/icons-material/Directions";
-import PlaceIcon from "@mui/icons-material/Place";
+import { useState } from "react";
+import { Box, Typography, Button } from "@mui/material";
 import Image from "next/image";
-// import { AreaIcon } from "@material-ui/icons";
-
 import { AppBar, Toolbar } from "@mui/material";
-import ContextGenerator from "./context";
-import QuestionCreationPage from "./question";
-import DatasetPage from "./dataset";
-import EvaluationResultsPage from "./evaluation";
 import { useRouter } from "next/navigation";
-
+import { getTokenFromLocalStorage } from "@/api/base";
+import { Login, Logout } from "@mui/icons-material";
+import config from "@/config.json";
 export default function Navbar({ selected, setSelected }) {
 	const [baseUrl, setBaseUrl] = useState(
 		process.env.REACT_APP_BASE_URL
@@ -33,9 +15,6 @@ export default function Navbar({ selected, setSelected }) {
 			? ""
 			: "https://mahirlabibdihan.github.io/mapquest"
 	);
-	const handleButtonClick = (buttonName) => {
-		setSelected(buttonName);
-	};
 	const navItems = [
 		{ name: "Context", key: "context" },
 		{ name: "Question", key: "question" },
@@ -107,7 +86,21 @@ export default function Navbar({ selected, setSelected }) {
 						</Button>
 					))}
 				</Box>
-				<Box className="w-1/6 hidden md:flex"></Box>
+				<Box className="w-1/6 hidden md:flex justify-end">
+					{getTokenFromLocalStorage() ? (
+						<Button variant="outlined" endIcon={<Logout />}>
+							Logout
+						</Button>
+					) : (
+						<Button
+							variant="contained"
+							endIcon={<Login />}
+							onClick={() => router.push(config.loginRedirect)}
+						>
+							Login
+						</Button>
+					)}
+				</Box>
 			</Toolbar>
 		</AppBar>
 	);
