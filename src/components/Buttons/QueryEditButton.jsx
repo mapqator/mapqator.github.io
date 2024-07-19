@@ -79,7 +79,7 @@ export default function QueryEditButton({ onEdit }) {
 							? state.context_json.pois
 							: {}
 					);
-					setContext([]);
+					setContext({});
 					setContextJSON({});
 					setQuery(state);
 					onEdit();

@@ -33,7 +33,14 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 	useEffect(() => {
 		setQuery((prev) => ({
 			...prev,
-			context: context.reduce((acc, e) => acc + e + "\n", ""),
+			context: [
+				...context.places,
+				...context.nearby,
+				...context.area,
+				...context.distance,
+				...context.direction,
+				...context.params,
+			].reduce((acc, e) => acc + e + "\n", ""),
 			context_json: contextJSON,
 		}));
 	}, [context]);

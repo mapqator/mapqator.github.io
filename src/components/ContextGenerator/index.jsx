@@ -51,290 +51,14 @@ export default function ContextGenerator({
 		setNearbyPlacesMap,
 		poisMap,
 		setPoisMap,
-		contextJSON,
 		setContextJSON,
 		context,
 		setContext,
 		currentInformation,
 		setCurrentInformation,
+		setQuery,
+		contextJSON,
 	} = useContext(GlobalContext);
-
-	// Parameters
-	const [paramsContext, setParamsContext] = useState([]);
-	const getParamsContext = () => {
-		const newContext = [];
-		if (currentInformation.time && currentInformation.day !== "") {
-			newContext.push(
-				`Current time is ${currentInformation.time.format(
-					"h:mm a"
-				)} on ${currentInformation.day}.`
-			);
-		} else if (currentInformation.time) {
-			newContext.push(
-				`Current time is ${currentInformation.time.format("h:mm a")}.`
-			);
-		} else if (currentInformation.day !== "") {
-			newContext.push(`Today is ${currentInformation.day}.`);
-		}
-
-		if (currentInformation.location !== "") {
-			newContext.push(
-				`Current location of user is <b>${
-					savedPlacesMap[currentInformation.location]?.name
-				}</b>.`
-			);
-		}
-		return newContext;
-	};
-	useEffect(() => {
-		setParamsContext(getParamsContext());
-	}, [currentInformation]);
-
-	// Area POIs
-	const [areaContext, setAreaContext] = useState([]);
-	const getAreaContext = () => {
-		const newContext = [];
-		Object.keys(poisMap).forEach((place_id, index) => {
-			poisMap[place_id].forEach((poi) => {
-				newContext.push(
-					`Places in ${
-						// selectedPlacesMap[place_id].alias ||
-						savedPlacesMap[place_id].name
-					} of type \"${poi.type}\" are:`
-				);
-				let counter = 1;
-				poi.places.forEach((place) => {
-					if (place.selected) {
-						newContext.push(
-							`${counter}. <b>${
-								// selectedPlacesMap[place.place_id]?.alias ||
-								savedPlacesMap[place.place_id]?.name ||
-								place.name
-							}</b> (${
-								place.formatted_address ||
-								savedPlacesMap[place.place_id]?.vicinity
-							})`
-						);
-						counter++;
-					}
-				});
-
-				newContext.push("");
-			});
-		});
-		return newContext;
-	};
-	useEffect(() => {
-		setAreaContext(getAreaContext());
-	}, [poisMap]);
-
-	// Nearby POIs
-	const [nearbyContext, setNearbyContext] = useState([]);
-	const getNearbyContext = () => {
-		const newContext = [];
-		Object.keys(nearbyPlacesMap).forEach((place_id, index) => {
-			nearbyPlacesMap[place_id].forEach((e) => {
-				newContext.push(
-					`Nearby places of ${
-						// selectedPlacesMap[place_id].alias ||
-						savedPlacesMap[place_id].name
-					} ${e.type === "any" ? "" : 'of type "' + e.type + '"'} ${
-						e.keyword !== ""
-							? 'with keyword "' + e.keyword + '"'
-							: ""
-					} are (${
-						e.hasRadius
-							? "in " + e.radius + " m radius"
-							: "sorted by distance in ascending order"
-					}):`
-				);
-				let counter = 1;
-				e.places.forEach((near_place) => {
-					if (near_place.selected) {
-						newContext.push(
-							`${counter}. <b>${
-								// selectedPlacesMap[near_place.place_id]?.alias ||
-								savedPlacesMap[near_place.place_id]?.name ||
-								near_place.name
-							}</b> (${
-								near_place.formatted_address ||
-								savedPlacesMap[near_place.place_id]?.vicinity
-							})`
-						);
-						counter++;
-					}
-				});
-
-				newContext.push("\n");
-			});
-		});
-		return newContext;
-	};
-	useEffect(() => {
-		setNearbyContext(getNearbyContext());
-	}, [nearbyPlacesMap]);
-
-	// Distance
-	const [distanceContext, setDistanceContext] = useState([]);
-	const getDistanceContext = () => {
-		const newContext = [];
-		Object.keys(distanceMatrix).forEach((from_id) => {
-			Object.keys(distanceMatrix[from_id]).forEach((to_id) => {
-				Object.keys(distanceMatrix[from_id][to_id]).forEach((mode) => {
-					if (mode === "transit") {
-						newContext.push(
-							`Distance from ${
-								// selectedPlacesMap[from_id].alias ||
-								savedPlacesMap[from_id].name
-							} to ${
-								// selectedPlacesMap[to_id].alias ||
-								savedPlacesMap[to_id].name
-							} by public transport is ${
-								distanceMatrix[from_id][to_id][mode].distance
-							} (${
-								distanceMatrix[from_id][to_id][mode].duration
-							}).`
-						);
-					} else if (mode === "driving") {
-						newContext.push(
-							`Distance from ${
-								// selectedPlacesMap[from_id].alias ||
-								savedPlacesMap[from_id].name
-							} to ${
-								// selectedPlacesMap[to_id].alias ||
-								savedPlacesMap[to_id].name
-							} by car is ${
-								distanceMatrix[from_id][to_id][mode].distance
-							} (${
-								distanceMatrix[from_id][to_id][mode].duration
-							}).`
-						);
-					} else if (mode === "bicycling") {
-						newContext.push(
-							`Distance from ${
-								// selectedPlacesMap[from_id].alias ||
-								savedPlacesMap[from_id].name
-							} to ${
-								// selectedPlacesMap[to_id].alias ||
-								savedPlacesMap[to_id].name
-							} by cycle is ${
-								distanceMatrix[from_id][to_id][mode].distance
-							} (${
-								distanceMatrix[from_id][to_id][mode].duration
-							}).`
-						);
-					} else if (mode === "walking") {
-						newContext.push(
-							`Distance from ${
-								// selectedPlacesMap[from_id].alias ||
-								savedPlacesMap[from_id].name
-							} to ${
-								// selectedPlacesMap[to_id].alias ||
-								savedPlacesMap[to_id].name
-							} on foot is ${
-								distanceMatrix[from_id][to_id][mode].distance
-							} (${
-								distanceMatrix[from_id][to_id][mode].duration
-							}).`
-						);
-					}
-				});
-			});
-		});
-		return newContext;
-	};
-	useEffect(() => {
-		setDistanceContext(getDistanceContext());
-	}, [distanceMatrix]);
-
-	const [directionContext, setDirectionContext] = useState([]);
-	const getDirectionContext = () => {
-		const newContext = [];
-		Object.keys(directionInformation).forEach((from_id) => {
-			Object.keys(directionInformation[from_id]).forEach((to_id) => {
-				Object.keys(directionInformation[from_id][to_id]).forEach(
-					(mode) => {
-						if (mode === "transit") {
-							newContext.push(
-								`There are ${
-									directionInformation[from_id][to_id][mode]
-										.routes.length
-								} routes from ${
-									// selectedPlacesMap[from_id].alias ||
-									savedPlacesMap[from_id].name
-								} to ${
-									// selectedPlacesMap[to_id].alias ||
-									savedPlacesMap[to_id].name
-								} by public transport. They are:`
-							);
-						} else if (mode === "driving") {
-							newContext.push(
-								`There are ${
-									directionInformation[from_id][to_id][mode]
-										.routes.length
-								} routes from ${
-									// selectedPlacesMap[from_id].alias ||
-									savedPlacesMap[from_id].name
-								} to ${
-									// selectedPlacesMap[to_id].alias ||
-									savedPlacesMap[to_id].name
-								} by car. They are:`
-							);
-						} else if (mode === "bicycling") {
-							newContext.push(
-								`There are ${
-									directionInformation[from_id][to_id][mode]
-										.routes.length
-								} routes from ${
-									// selectedPlacesMap[from_id].alias ||
-									savedPlacesMap[from_id].name
-								} to ${
-									// selectedPlacesMap[to_id].alias ||
-									savedPlacesMap[to_id].name
-								} by cycle. They are:`
-							);
-						} else if (mode === "walking") {
-							newContext.push(
-								`There are ${
-									directionInformation[from_id][to_id][mode]
-										.routes.length
-								} routes from ${
-									// selectedPlacesMap[from_id].alias ||
-									savedPlacesMap[from_id].name
-								} to ${
-									// selectedPlacesMap[to_id].alias ||
-									savedPlacesMap[to_id].name
-								} on foot. They are:`
-							);
-						}
-
-						directionInformation[from_id][to_id][
-							mode
-						].routes.forEach((route, index) => {
-							newContext.push(
-								`${index + 1}. Via ${route.label} | ${
-									route.duration
-								} | ${route.distance}`
-							);
-
-							if (
-								directionInformation[from_id][to_id][mode]
-									.showSteps
-							) {
-								route.steps.forEach((step, index) => {
-									newContext.push(` - ${step}`);
-								});
-							}
-						});
-					}
-				);
-			});
-		});
-		return newContext;
-	};
-	useEffect(() => {
-		setDirectionContext(getDirectionContext());
-	}, [directionInformation]);
 
 	const steps = [
 		{
@@ -355,6 +79,7 @@ export default function ContextGenerator({
 			description: `Start by searching for a location using the Places API. Type in a place name or address in the search bar below. While typing, saved places matching the search query will be shown. On pressing enter, google places API will be queried and the results will be shown.`,
 			icon: <SearchIcon />,
 			component: <PlaceSearch />,
+			context: context.places,
 		},
 		{
 			label: "Explore Nearby Places",
@@ -379,7 +104,7 @@ export default function ContextGenerator({
 					<Divider />
 				</>
 			),
-			context: nearbyContext,
+			context: context.nearby,
 		},
 		{
 			label: "Discover Area POIs",
@@ -406,9 +131,8 @@ export default function ContextGenerator({
 
 				// </Card>
 			),
-			context: areaContext,
+			context: context.area,
 		},
-
 		{
 			label: "Calculate Distances",
 			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Select several places and click "Calculate Distances".`,
@@ -429,7 +153,7 @@ export default function ContextGenerator({
 					<Divider />
 				</>
 			),
-			context: distanceContext,
+			context: context.distance,
 		},
 		{
 			label: "Get Directions",
@@ -451,7 +175,7 @@ export default function ContextGenerator({
 					<Divider />
 				</>
 			),
-			context: directionContext,
+			context: context.direction,
 		},
 		{
 			label: "Set Context Parameters",
@@ -473,26 +197,45 @@ export default function ContextGenerator({
 					<Divider />
 				</>
 			),
-			context: paramsContext,
+			context: context.params,
 		},
 		{
 			label: "Generated Context",
-			description: `Review the information gathered and click "Generate Context" to create a rich, location-based context for your QnA dataset.`,
+			description: `Review the information gathered and click on "Finish" when you are done.`,
 			icon: <FontAwesomeIcon icon={faEye} />,
 			component: (
 				<>
-					<Divider />
-					<ContextViewer
-						{...{
-							context,
-						}}
-					/>
-					<Divider />
+					<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
+						<ContextViewer
+							context={[
+								...context.places,
+								...context.nearby,
+								...context.area,
+								...context.distance,
+								...context.direction,
+								...context.params,
+							]}
+						/>
+					</Paper>
 				</>
 			),
 		},
 	];
 	const handleNext = () => {
+		// if (activeStep === steps.length - 1) {
+		// 	setQuery((prev) => ({
+		// 		...prev,
+		// 		context: [
+		// 			...context.places,
+		// 			...context.nearby,
+		// 			...context.area,
+		// 			...context.distance,
+		// 			...context.direction,
+		// 			...context.params,
+		// 		].reduce((acc, e) => acc + e + "\n", ""),
+		// 		context_json: contextJSON,
+		// 	}));
+		// }
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
 	};
 
@@ -543,21 +286,27 @@ export default function ContextGenerator({
 									{steps[activeStep]?.description}
 								</Typography>
 								{step.component}
-								<Typography
-									sx={{
-										whiteSpace: "pre-line", // This CSS property will make newlines render as expected
-									}}
-								>
-									Based on the information you add, a context
-									will be generated below.
-								</Typography>
+								{step.context !== undefined && (
+									<>
+										<Typography
+											sx={{
+												whiteSpace: "pre-line", // This CSS property will make newlines render as expected
+											}}
+										>
+											Based on the information you add, a
+											context will be generated below.
+										</Typography>
 
-								<Paper
-									elevation={1}
-									sx={{ p: 2, bgcolor: "grey.100" }}
-								>
-									<ContextViewer context={step.context} />
-								</Paper>
+										<Paper
+											elevation={1}
+											sx={{ p: 2, bgcolor: "grey.100" }}
+										>
+											<ContextViewer
+												context={step.context}
+											/>
+										</Paper>
+									</>
+								)}
 
 								<Box sx={{ mb: 2 }}>
 									<div>

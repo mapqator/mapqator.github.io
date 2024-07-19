@@ -7,7 +7,14 @@ export const GlobalContext = createContext();
 export default function GlobalContextProvider({ children }) {
 	const [savedPlacesMap, setSavedPlacesMap] = useState({});
 	const [contextJSON, setContextJSON] = useState({});
-	const [context, setContext] = useState([]);
+	const [context, setContext] = useState({
+		places: [],
+		nearby: [],
+		area: [],
+		distance: [],
+		direction: [],
+		params: [],
+	});
 	const [distanceMatrix, setDistanceMatrix] = useState({});
 	const [selectedPlacesMap, setSelectedPlacesMap] = useState({});
 	const [nearbyPlacesMap, setNearbyPlacesMap] = useState({});
@@ -74,17 +81,365 @@ export default function GlobalContextProvider({ children }) {
 		}
 	}, []);
 
+	/***************** Places *******************/
+	const getPlacesContext = () => {
+		const newContext = [];
+		for (const place_id of Object.keys(selectedPlacesMap)) {
+			// if (!savedPlacesMap[place_id]) {
+			// 	await handleSave(place_id);
+			// }
+			const text = placeToContext(place_id);
+			if (text !== "") {
+				newContext.push(
+					`Information of <b>${
+						// selectedPlacesMap[place_id].alias ||
+						savedPlacesMap[place_id].name
+					}</b>:`
+				);
+				// Split the text into lines and add to context
+				text.split("\n").forEach((line) => {
+					newContext.push(line);
+				});
+			}
+		}
+		return newContext;
+	};
 	useEffect(() => {
-		generateContext();
-	}, [
-		distanceMatrix,
-		selectedPlacesMap,
-		nearbyPlacesMap,
-		savedPlacesMap,
-		currentInformation,
-		directionInformation,
-		poisMap,
-	]);
+		setContext((prev) => ({
+			...prev,
+			places: getPlacesContext(),
+		}));
+		setContextJSON((prev) => ({
+			...prev,
+			places: selectedPlacesMap,
+		}));
+	}, [selectedPlacesMap]);
+	/********************************************/
+
+	/*************** Parameters *****************/
+	const getParamsContext = () => {
+		const newContext = [];
+		if (currentInformation.time && currentInformation.day !== "") {
+			newContext.push(
+				`Current time is ${currentInformation.time.format(
+					"h:mm a"
+				)} on ${currentInformation.day}.`
+			);
+		} else if (currentInformation.time) {
+			newContext.push(
+				`Current time is ${currentInformation.time.format("h:mm a")}.`
+			);
+		} else if (currentInformation.day !== "") {
+			newContext.push(`Today is ${currentInformation.day}.`);
+		}
+
+		if (currentInformation.location !== "") {
+			newContext.push(
+				`Current location of user is <b>${
+					savedPlacesMap[currentInformation.location]?.name
+				}</b>.`
+			);
+		}
+		return newContext;
+	};
+	useEffect(() => {
+		setContext((prev) => ({
+			...prev,
+			params: getParamsContext(),
+		}));
+		setContextJSON((prev) => ({
+			...prev,
+			current_information: currentInformation,
+		}));
+	}, [currentInformation]);
+	/********************************************/
+
+	/*************** Area POIs ******************/
+	const getAreaContext = () => {
+		const newContext = [];
+		Object.keys(poisMap).forEach((place_id, index) => {
+			poisMap[place_id].forEach((poi) => {
+				newContext.push(
+					`Places in ${
+						// selectedPlacesMap[place_id].alias ||
+						savedPlacesMap[place_id].name
+					} of type \"${poi.type}\" are:`
+				);
+				let counter = 1;
+				poi.places.forEach((place) => {
+					if (place.selected) {
+						newContext.push(
+							`${counter}. <b>${
+								// selectedPlacesMap[place.place_id]?.alias ||
+								savedPlacesMap[place.place_id]?.name ||
+								place.name
+							}</b> (${
+								place.formatted_address ||
+								savedPlacesMap[place.place_id]?.vicinity
+							})`
+						);
+						counter++;
+					}
+				});
+
+				newContext.push("");
+			});
+		});
+		return newContext;
+	};
+	useEffect(() => {
+		setContext((prev) => ({
+			...prev,
+			area: getAreaContext(),
+		}));
+		setContextJSON((prev) => ({
+			...prev,
+			pois: poisMap,
+		}));
+	}, [poisMap]);
+	/********************************************/
+
+	/*************** Nearby POIs ****************/
+	const getNearbyContext = () => {
+		const newContext = [];
+		Object.keys(nearbyPlacesMap).forEach((place_id, index) => {
+			nearbyPlacesMap[place_id].forEach((e) => {
+				newContext.push(
+					`Nearby places of ${
+						// selectedPlacesMap[place_id].alias ||
+						savedPlacesMap[place_id].name
+					} ${e.type === "any" ? "" : 'of type "' + e.type + '"'} ${
+						e.keyword !== ""
+							? 'with keyword "' + e.keyword + '"'
+							: ""
+					} are (${
+						e.hasRadius
+							? "in " + e.radius + " m radius"
+							: "sorted by distance in ascending order"
+					}):`
+				);
+				let counter = 1;
+				e.places.forEach((near_place) => {
+					if (near_place.selected) {
+						newContext.push(
+							`${counter}. <b>${
+								// selectedPlacesMap[near_place.place_id]?.alias ||
+								savedPlacesMap[near_place.place_id]?.name ||
+								near_place.name
+							}</b> (${
+								near_place.formatted_address ||
+								savedPlacesMap[near_place.place_id]?.vicinity
+							})`
+						);
+						counter++;
+					}
+				});
+
+				newContext.push("\n");
+			});
+		});
+		return newContext;
+	};
+	useEffect(() => {
+		setContext((prev) => ({
+			...prev,
+			nearby: getNearbyContext(),
+		}));
+		setContextJSON((prev) => ({
+			...prev,
+			nearby_places: nearbyPlacesMap,
+		}));
+	}, [nearbyPlacesMap]);
+	/********************************************/
+
+	/***************** Distance *****************/
+	const getDistanceContext = () => {
+		const newContext = [];
+		Object.keys(distanceMatrix).forEach((from_id) => {
+			Object.keys(distanceMatrix[from_id]).forEach((to_id) => {
+				Object.keys(distanceMatrix[from_id][to_id]).forEach((mode) => {
+					if (mode === "transit") {
+						newContext.push(
+							`Distance from ${
+								// selectedPlacesMap[from_id].alias ||
+								savedPlacesMap[from_id].name
+							} to ${
+								// selectedPlacesMap[to_id].alias ||
+								savedPlacesMap[to_id].name
+							} by public transport is ${
+								distanceMatrix[from_id][to_id][mode].distance
+							} (${
+								distanceMatrix[from_id][to_id][mode].duration
+							}).`
+						);
+					} else if (mode === "driving") {
+						newContext.push(
+							`Distance from ${
+								// selectedPlacesMap[from_id].alias ||
+								savedPlacesMap[from_id].name
+							} to ${
+								// selectedPlacesMap[to_id].alias ||
+								savedPlacesMap[to_id].name
+							} by car is ${
+								distanceMatrix[from_id][to_id][mode].distance
+							} (${
+								distanceMatrix[from_id][to_id][mode].duration
+							}).`
+						);
+					} else if (mode === "bicycling") {
+						newContext.push(
+							`Distance from ${
+								// selectedPlacesMap[from_id].alias ||
+								savedPlacesMap[from_id].name
+							} to ${
+								// selectedPlacesMap[to_id].alias ||
+								savedPlacesMap[to_id].name
+							} by cycle is ${
+								distanceMatrix[from_id][to_id][mode].distance
+							} (${
+								distanceMatrix[from_id][to_id][mode].duration
+							}).`
+						);
+					} else if (mode === "walking") {
+						newContext.push(
+							`Distance from ${
+								// selectedPlacesMap[from_id].alias ||
+								savedPlacesMap[from_id].name
+							} to ${
+								// selectedPlacesMap[to_id].alias ||
+								savedPlacesMap[to_id].name
+							} on foot is ${
+								distanceMatrix[from_id][to_id][mode].distance
+							} (${
+								distanceMatrix[from_id][to_id][mode].duration
+							}).`
+						);
+					}
+				});
+			});
+		});
+		return newContext;
+	};
+	useEffect(() => {
+		setContext((prev) => ({
+			...prev,
+			distance: getDistanceContext(),
+		}));
+		setContextJSON((prev) => ({
+			...prev,
+			distance_matrix: distanceMatrix,
+		}));
+	}, [distanceMatrix]);
+	/********************************************/
+
+	/***************** Direction *****************/
+	const getDirectionContext = () => {
+		const newContext = [];
+		Object.keys(directionInformation).forEach((from_id) => {
+			Object.keys(directionInformation[from_id]).forEach((to_id) => {
+				Object.keys(directionInformation[from_id][to_id]).forEach(
+					(mode) => {
+						if (mode === "transit") {
+							newContext.push(
+								`There are ${
+									directionInformation[from_id][to_id][mode]
+										.routes.length
+								} routes from ${
+									// selectedPlacesMap[from_id].alias ||
+									savedPlacesMap[from_id].name
+								} to ${
+									// selectedPlacesMap[to_id].alias ||
+									savedPlacesMap[to_id].name
+								} by public transport. They are:`
+							);
+						} else if (mode === "driving") {
+							newContext.push(
+								`There are ${
+									directionInformation[from_id][to_id][mode]
+										.routes.length
+								} routes from ${
+									// selectedPlacesMap[from_id].alias ||
+									savedPlacesMap[from_id].name
+								} to ${
+									// selectedPlacesMap[to_id].alias ||
+									savedPlacesMap[to_id].name
+								} by car. They are:`
+							);
+						} else if (mode === "bicycling") {
+							newContext.push(
+								`There are ${
+									directionInformation[from_id][to_id][mode]
+										.routes.length
+								} routes from ${
+									// selectedPlacesMap[from_id].alias ||
+									savedPlacesMap[from_id].name
+								} to ${
+									// selectedPlacesMap[to_id].alias ||
+									savedPlacesMap[to_id].name
+								} by cycle. They are:`
+							);
+						} else if (mode === "walking") {
+							newContext.push(
+								`There are ${
+									directionInformation[from_id][to_id][mode]
+										.routes.length
+								} routes from ${
+									// selectedPlacesMap[from_id].alias ||
+									savedPlacesMap[from_id].name
+								} to ${
+									// selectedPlacesMap[to_id].alias ||
+									savedPlacesMap[to_id].name
+								} on foot. They are:`
+							);
+						}
+
+						directionInformation[from_id][to_id][
+							mode
+						].routes.forEach((route, index) => {
+							newContext.push(
+								`${index + 1}. Via ${route.label} | ${
+									route.duration
+								} | ${route.distance}`
+							);
+
+							if (
+								directionInformation[from_id][to_id][mode]
+									.showSteps
+							) {
+								route.steps.forEach((step, index) => {
+									newContext.push(` - ${step}`);
+								});
+							}
+						});
+					}
+				);
+			});
+		});
+		return newContext;
+	};
+	useEffect(() => {
+		setContext((prev) => ({
+			...prev,
+			direction: getDirectionContext(),
+		}));
+		setContextJSON((prev) => ({
+			...prev,
+			directions: directionInformation,
+		}));
+	}, [directionInformation]);
+	/********************************************/
+
+	// useEffect(() => {
+	// 	generateContext();
+	// }, [
+	// 	distanceMatrix,
+	// 	selectedPlacesMap,
+	// 	nearbyPlacesMap,
+	// 	savedPlacesMap,
+	// 	currentInformation,
+	// 	directionInformation,
+	// 	poisMap,
+	// ]);
 
 	const placeToContext = (place_id) => {
 		let place = savedPlacesMap[place_id];
