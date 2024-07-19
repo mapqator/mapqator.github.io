@@ -25,7 +25,7 @@ import DiscoverArea from "./Area";
 import CalculateDistance from "./Distance";
 import GetDirections from "./Direction";
 import ContextViewer from "./ContextPreview";
-import { Flag, Settings } from "@mui/icons-material";
+import { Flag, RemoveRedEye, Settings } from "@mui/icons-material";
 import ExploreIcon from "@mui/icons-material/Explore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
@@ -202,7 +202,7 @@ export default function ContextGenerator({
 		{
 			label: "Generated Context",
 			description: `Review the information gathered and click on "Finish" when you are done.`,
-			icon: <FontAwesomeIcon icon={faEye} />,
+			icon: <RemoveRedEye />,
 			component: (
 				<>
 					<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
