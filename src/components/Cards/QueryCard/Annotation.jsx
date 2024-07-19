@@ -8,6 +8,9 @@ import {
 	Button,
 	OutlinedInput,
 	TextField,
+	Card,
+	CardContent,
+	Divider,
 } from "@mui/material";
 import QueryApi from "@/api/queryApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,18 +20,19 @@ import { getUserName } from "@/api/base";
 const queryApi = new QueryApi();
 export default function Annotation({ state, setState }) {
 	return (
-		<div className="flex flex-col gap-2 p-2 border-2 border-black rounded-md">
-			<div className="flex flex-row justify-between">
-				<h1 className="text-lg font-bold underline">
-					Human Annotation
-				</h1>
-				<h2 className="text-lg font-semibold text-black px-1 flex flex-row gap-1 items-center">
-					<FontAwesomeIcon icon={faUser} />
-					{state.human?.username}
-				</h2>
-			</div>
-			<div className="flex flex-col gap-1">
-				<div className="flex flex-col gap-2">
+		<>
+			<Divider />
+			<CardContent className="flex flex-col gap-2">
+				<div className="flex flex-row justify-between">
+					<h1 className="text-lg font-bold underline">
+						Human Annotation
+					</h1>
+					<h2 className="text-lg font-semibold text-black px-1 flex flex-row gap-1 items-center">
+						<FontAwesomeIcon icon={faUser} />
+						{state.human?.username}
+					</h2>
+				</div>
+				<div className="flex flex-col gap-3">
 					<FormControl
 						fullWidth
 						className="input-field"
@@ -126,7 +130,8 @@ export default function Annotation({ state, setState }) {
 						</Button>
 					</div>
 				</div>
-			</div>
-		</div>
+			</CardContent>
+			<Divider />
+		</>
 	);
 }
