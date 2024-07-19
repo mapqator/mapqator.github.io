@@ -51,7 +51,18 @@ export default function GlobalContextProvider({ children }) {
 				type: "restaurant",
 				rankby: "distance",
 				keyword: "",
-				places: [],
+				places: [
+					{
+						name: "Dhanmondi",
+						formatted_address: "Dhanmondi 27 road",
+						selected: true,
+					},
+					{
+						name: "Farmgate",
+						formatted_address: "Indira road, Dhaka",
+						selected: true,
+					},
+				],
 			},
 		],
 	});
@@ -116,7 +127,25 @@ export default function GlobalContextProvider({ children }) {
 			},
 		},
 	});
-	const [poisMap, setPoisMap] = useState({});
+	const [poisMap, setPoisMap] = useState({
+		1: [
+			{
+				type: "restaurant",
+				places: [
+					{
+						name: "Dhanmondi",
+						formatted_address: "Dhanmondi 27 road",
+						selected: true,
+					},
+					{
+						name: "Farmgate",
+						formatted_address: "Indira road, Dhaka",
+						selected: true,
+					},
+				],
+			},
+		],
+	});
 	const initQuery = {
 		question: "",
 		answer: {

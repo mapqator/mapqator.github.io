@@ -16,8 +16,9 @@ import {
 	Card,
 	Chip,
 	Divider,
+	Checkbox,
 } from "@mui/material";
-import { Add, CheckBox, Delete, ExpandMore } from "@mui/icons-material";
+import { Add, Delete, ExpandMore } from "@mui/icons-material";
 
 export default function AreaCard({
 	selectedPlacesMap,
@@ -76,12 +77,13 @@ export default function AreaCard({
 					display="flex"
 					justifyContent="space-between"
 					alignItems="center"
+					className="gap-1"
 				>
 					<Typography variant="h6" component="div">
 						{savedPlacesMap[place_id]?.name}
 					</Typography>
 
-					<Box>
+					<Box className="flex flex-col items-end">
 						<IconButton
 							onClick={() => {
 								const newPoisMap = {
@@ -114,11 +116,11 @@ export default function AreaCard({
 					<Chip label={poi.type} color="primary" size="small" />
 					<Chip
 						label={
-							poisMap[place_id]
+							(poisMap[place_id]
 								? poisMap[place_id][index2].places.filter(
 										(place) => place.selected
 								  ).length
-								: 0
+								: 0) + " POIs"
 						}
 						color="secondary"
 						size="small"
@@ -144,7 +146,7 @@ export default function AreaCard({
 								}
 							>
 								<ListItemIcon>
-									<CheckBox
+									<Checkbox
 										edge="start"
 										checked={place.selected}
 										onChange={(event) => {

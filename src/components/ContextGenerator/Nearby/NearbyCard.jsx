@@ -94,12 +94,13 @@ export default function NearbyCard({
 					display="flex"
 					justifyContent="space-between"
 					alignItems="center"
+					className="gap-1"
 				>
 					<Typography variant="h6" component="div">
 						{savedPlacesMap[place_id].name ||
 							selectedPlacesMap[place_id].alias}
 					</Typography>
-					<Box>
+					<Box className="flex flex-col items-end">
 						<IconButton onClick={handleDelete} size="small">
 							<Delete color="error" />
 						</IconButton>

@@ -62,28 +62,26 @@ export default function DiscoverArea() {
 
 	return (
 		<CardContent>
-			{Object.keys(poisMap).length > 0 && (
-				<div key={index1} className="flex flex-col gap-1 ">
-					{Object.keys(poisMap).map((place_id, index1) => (
-						<div key={index1} className="flex flex-col gap-1 ">
-							{poisMap[place_id].map((poi, index2) => (
-								<AreaCard
-									key={index2}
-									selectedPlacesMap={selectedPlacesMap}
-									savedPlacesMap={savedPlacesMap}
-									setSavedPlacesMap={setSavedPlacesMap}
-									poi={poi}
-									poisMap={poisMap}
-									setPoisMap={setPoisMap}
-									index2={index2}
-									place_id={place_id}
-									setSelectedPlacesMap={setSelectedPlacesMap}
-								/>
-							))}
-						</div>
-					))}
-				</div>
-			)}
+			<div className="flex flex-col gap-1 ">
+				{Object.keys(poisMap).map((place_id, index1) => (
+					<div key={index1} className="flex flex-col gap-1 ">
+						{poisMap[place_id].map((poi, index2) => (
+							<AreaCard
+								key={index2}
+								selectedPlacesMap={selectedPlacesMap}
+								savedPlacesMap={savedPlacesMap}
+								setSavedPlacesMap={setSavedPlacesMap}
+								poi={poi}
+								poisMap={poisMap}
+								setPoisMap={setPoisMap}
+								index2={index2}
+								place_id={place_id}
+								setSelectedPlacesMap={setSelectedPlacesMap}
+							/>
+						))}
+					</div>
+				))}
+			</div>
 			<Grid container spacing={2}>
 				<Grid item xs={12}>
 					<PlaceSelectionField
