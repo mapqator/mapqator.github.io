@@ -6,8 +6,8 @@ const mapApi = new MapApi();
 import { Grid } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Add } from "@mui/icons-material";
-import PlaceSelectionField from "./PlaceSelectionField";
-import TravelSelectionField from "./TravelSelectionField.";
+import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
+import TravelSelectionField from "@/components/InputFields/TravelSelectionField.";
 import { GlobalContext } from "@/contexts/GlobalContext";
 
 export default function DistanceForm() {

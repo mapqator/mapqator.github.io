@@ -21,8 +21,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import QueryApi from "@/api/queryApi";
-import MyQuestions from "./myquestions";
-import categories from "./categories.json";
+import MyQuestions from "./MyQuestions";
+import categories from "@/database/categories.json";
 const queryApi = new QueryApi();
 
 export default function QuestionCreationPage({ handleContextEdit }) {
@@ -267,6 +267,12 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 							}))
 						}
 					>
+						<FormControlLabel
+							key={-1}
+							value={-1}
+							control={<Radio />}
+							label={`None`}
+						/>
 						{query.answer.options.map((option, index) => (
 							<FormControlLabel
 								key={index}

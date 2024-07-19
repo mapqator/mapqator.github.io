@@ -1,30 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import {
-	Box,
-	Container,
-	Typography,
-	Stepper,
-	Step,
-	StepLabel,
-	StepContent,
-	Button,
-	Paper,
-} from "@mui/material";
-import MapIcon from "@mui/icons-material/Map";
-import SearchIcon from "@mui/icons-material/Search";
-import DirectionsIcon from "@mui/icons-material/Directions";
-import PlaceIcon from "@mui/icons-material/Place";
-import Image from "next/image";
-// import { AreaIcon } from "@material-ui/icons";
+import { Box, Container } from "@mui/material";
 
 import { AppBar, Toolbar } from "@mui/material";
-import ContextGenerator from "./context";
-import QuestionCreationPage from "./question";
-import DatasetPage from "./dataset";
-import EvaluationResultsPage from "./evaluation";
-import { useRouter } from "next/navigation";
-import Navbar from "./Navbar";
+import ContextGenerator from "@/components/ContextGenerator";
+import QuestionCreationPage from "@/components/QuestionCreator";
+import DatasetPage from "@/components/Dataset";
+import EvaluationResultsPage from "@/components/Evaluation";
+import Navbar from "@/components/Navbar";
 
 export default function PageComponent() {
 	const [activeStep, setActiveStep] = useState(null);

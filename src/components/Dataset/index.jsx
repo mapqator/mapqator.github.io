@@ -1,31 +1,12 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
 import {
-	Container,
 	Typography,
-	Paper,
-	Accordion,
-	AccordionSummary,
-	AccordionDetails,
 	Box,
-	Chip,
-	List,
-	ListItem,
-	ListItemText,
 	Select,
 	MenuItem,
 	FormControl,
 	InputLabel,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-	Button,
-	Collapse,
-	OutlinedInput,
-	TextField,
 	Pagination,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -35,9 +16,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Clear, Edit, Save } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
-import QueryCard from "./QueryCard";
+import QueryCard from "@/components/Cards/QueryCard";
 import MapApi from "@/api/mapApi";
-import categories from "./categories.json";
+import categories from "@/database/categories.json";
 const queryApi = new QueryApi();
 const mapApi = new MapApi();
 

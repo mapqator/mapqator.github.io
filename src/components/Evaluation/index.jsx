@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect, useContext } from "react";
 import {
-	Container,
 	Typography,
 	Paper,
 	Table,
@@ -10,59 +9,11 @@ import {
 	TableContainer,
 	TableHead,
 	TableRow,
-	Accordion,
-	AccordionSummary,
-	AccordionDetails,
-	Box,
-	Chip,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { GlobalContext } from "@/contexts/GlobalContext";
-
-// Mock evaluation data - replace with actual data
-const mockEvaluationResults = [
-	{
-		model: "Phi-3",
-		accuracy: 0.85,
-		f1Score: 0.83,
-		precision: 0.86,
-		recall: 0.8,
-		exampleResults: [
-			{ questionId: 1, correctAnswer: true, modelAnswer: "324 meters" },
-			{ questionId: 2, correctAnswer: false, modelAnswer: "250 billion" },
-		],
-	},
-	{
-		model: "Mistral",
-		accuracy: 0.88,
-		f1Score: 0.87,
-		precision: 0.89,
-		recall: 0.85,
-		exampleResults: [
-			{ questionId: 1, correctAnswer: true, modelAnswer: "324 meters" },
-			{ questionId: 2, correctAnswer: true, modelAnswer: "390 billion" },
-		],
-	},
-	{
-		model: "Qwen2",
-		accuracy: 0.82,
-		f1Score: 0.81,
-		precision: 0.83,
-		recall: 0.79,
-		exampleResults: [
-			{ questionId: 1, correctAnswer: false, modelAnswer: "300 meters" },
-			{ questionId: 2, correctAnswer: true, modelAnswer: "390 billion" },
-		],
-	},
-];
 
 export default function EvaluationResultsPage() {
 	const [evaluationResults, setEvaluationResults] = useState([]);
-
-	useEffect(() => {
-		// In a real application, you would fetch evaluation results here
-		setEvaluationResults(mockEvaluationResults);
-	}, []);
 
 	const [datasetSummary, setDatasetSummary] = useState({});
 	const { queries, setQueries } = useContext(GlobalContext);
@@ -283,44 +234,6 @@ export default function EvaluationResultsPage() {
 					</TableBody>
 				</Table>
 			</TableContainer>
-
-			{/* <Typography variant="h5" gutterBottom>
-				Example Results
-			</Typography> */}
-
-			{/* {evaluationResults.map((result) => (
-				<Accordion key={result.model} sx={{ mb: 2 }}>
-					<AccordionSummary expandIcon={<ExpandMoreIcon />}>
-						<Typography>{result.model} Example Results</Typography>
-					</AccordionSummary>
-					<AccordionDetails>
-						{result.exampleResults.map((example) => (
-							<Box key={example.questionId} sx={{ mb: 2 }}>
-								<Typography variant="subtitle1">
-									Question {example.questionId}
-								</Typography>
-								<Typography>
-									Model Answer: {example.modelAnswer}
-								</Typography>
-								<Chip
-									label={
-										example.correctAnswer
-											? "Correct"
-											: "Incorrect"
-									}
-									color={
-										example.correctAnswer
-											? "success"
-											: "error"
-									}
-									size="small"
-									sx={{ mt: 1 }}
-								/>
-							</Box>
-						))}
-					</AccordionDetails>
-				</Accordion>
-			))} */}
 		</>
 	);
 }

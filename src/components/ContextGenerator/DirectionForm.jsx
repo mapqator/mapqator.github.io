@@ -6,8 +6,8 @@ const mapApi = new MapApi();
 import { Grid } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import TravelSelectionField from "./TravelSelectionField.";
-import PlaceSelectionField from "./PlaceSelectionField";
+import TravelSelectionField from "@/components/InputFields/TravelSelectionField.";
+import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
 import { GlobalContext } from "@/contexts/GlobalContext";
 
 export default function DirectionForm() {

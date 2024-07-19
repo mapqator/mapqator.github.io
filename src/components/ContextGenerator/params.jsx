@@ -8,7 +8,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { Clear } from "@mui/icons-material";
-import PlaceSelectionField from "./PlaceSelectionField";
+import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
 
 export function Parameters({
 	selectedPlacesMap,

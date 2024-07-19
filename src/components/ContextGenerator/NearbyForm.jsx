@@ -44,10 +44,10 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { LoadingButton } from "@mui/lab";
 import { Add, Delete, ExpandMore, Search } from "@mui/icons-material";
 import NearbyCard from "./NearbyCard";
-import PlaceSelectionField from "./PlaceSelectionField";
+import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { useContext } from "react";
-import TypeSelectionField from "./TypeSelectionField";
+import TypeSelectionField from "@/components/InputFields/TypeSelectionField";
 
 export default function NearbyForm() {
 	const {

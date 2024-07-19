@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import Annotation from "./Annotation";
 import LLMAnswers from "./LLMAnswers";
-import QueryEditButton from "./QueryEditButton";
+import QueryEditButton from "@/components/Buttons/QueryEditButton";
 import CollapsedContext from "./CollapsedContext";
 import OptionsPreview from "./OptionsPreview";
 

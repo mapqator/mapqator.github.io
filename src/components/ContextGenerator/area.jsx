@@ -39,8 +39,8 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { LoadingButton } from "@mui/lab";
 import { Add, CheckBox, Delete, ExpandMore, Search } from "@mui/icons-material";
 import AreaCard from "./AreaCard";
-import PlaceSelectionField from "./PlaceSelectionField";
-import TypeSelectionField from "./TypeSelectionField";
+import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
+import TypeSelectionField from "@/components/InputFields/TypeSelectionField";
 
 export function DiscoverArea({
 	savedPlacesMap,
