@@ -1,47 +1,161 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import PlaceApi from "@/api/placeApi";
-const placeApi = new PlaceApi();
-import MapApi from "@/api/mapApi";
-const mapApi = new MapApi();
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import OutlinedInput from "@mui/material/OutlinedInput";
+import React, { useContext, useEffect, useState } from "react";
 import {
-	Select,
-	MenuItem,
-	Button,
-	TextField,
-	IconButton,
-	Grid,
+	Box,
+	Card,
 	CardContent,
+	Chip,
+	Collapse,
+	Divider,
+	IconButton,
+	List,
+	ListItem,
+	ListItemIcon,
+	ListItemText,
+	Typography,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+	faArrowDown,
+	faBicycle,
+	faBus,
+	faCar,
 	faChevronDown,
 	faChevronUp,
 	faTrashCan,
+	faWalking,
 } from "@fortawesome/free-solid-svg-icons";
-import { Add, CheckBox, Radio } from "@mui/icons-material";
-import { LoadingButton } from "@mui/lab";
-export default function DirectionCard({
-	selectedPlacesMap,
-	savedPlacesMap,
-	directionInformation,
-	setDirectionInformation,
-	mode,
-	index2,
-	from_id,
-	to_id,
-}) {
+import { Delete, ExpandMore } from "@mui/icons-material";
+import { GlobalContext } from "@/contexts/GlobalContext";
+export default function DirectionCard({ from_id, to_id }) {
 	const [expanded, setExpanded] = useState(false);
+	const {
+		directionInformation,
+		setDirectionInformation,
+		selectedPlacesMap,
+		savedPlacesMap,
+	} = useContext(GlobalContext);
 	return (
-		<div className="flex flex-col">
-			<div key={index2} className="flex flex-row gap-1 items-center">
+		<Card variant="outlined" sx={{ mb: 2 }}>
+			<CardContent>
+				<Box
+					display="flex"
+					justifyContent="space-between"
+					alignItems="center"
+				>
+					<Box className="flex flex-col">
+						<Typography variant="h6" component="div" align="center">
+							{savedPlacesMap[from_id].name}
+						</Typography>
+
+						<FontAwesomeIcon icon={faArrowDown} />
+
+						<Typography variant="h6" component="div" align="center">
+							{savedPlacesMap[to_id].name}
+						</Typography>
+					</Box>
+					<Box>
+						{/* <IconButton onClick={handleFullDelete} size="small">
+							<Delete color="error" />
+						</IconButton> */}
+						<IconButton
+							onClick={() => setExpanded(!expanded)}
+							size="small"
+							sx={{
+								transform: expanded
+									? "rotate(180deg)"
+									: "rotate(0deg)",
+								transition: "0.3s",
+							}}
+						>
+							<ExpandMore />
+						</IconButton>
+					</Box>
+				</Box>
+				<Box
+					display="flex"
+					flexDirection={"row"}
+					justifyContent={"end"}
+					gap={1}
+					mt={1}
+				>
+					<Chip
+						label={
+							Object.keys(directionInformation[from_id][to_id])
+								.length + " travel modes"
+						}
+						color="primary"
+						size="small"
+					/>
+				</Box>
+			</CardContent>
+			<Collapse in={expanded} timeout="auto" unmountOnExit>
+				<Divider />
+				<List dense>
+					{Object.keys(directionInformation[from_id][to_id]).map(
+						(mode, index3) => (
+							<React.Fragment key={index3}>
+								<ListItem
+									secondaryAction={
+										<IconButton
+											edge="end"
+											onClick={() => handleDelete(mode)}
+											size="small"
+										>
+											<Delete />
+										</IconButton>
+									}
+								>
+									<ListItemIcon>
+										{mode === "walking" ? (
+											<FontAwesomeIcon icon={faWalking} />
+										) : mode === "driving" ? (
+											<FontAwesomeIcon icon={faCar} />
+										) : mode === "bicycling" ? (
+											<FontAwesomeIcon icon={faBicycle} />
+										) : (
+											<FontAwesomeIcon icon={faBus} />
+										)}
+									</ListItemIcon>
+									<ListItemText
+										primary={
+											mode === "walking"
+												? "On foot"
+												: mode === "driving"
+												? "By car"
+												: mode === "bicycling"
+												? "By cycle"
+												: "By public transport"
+										}
+										secondary={
+											directionInformation[from_id][
+												to_id
+											][mode].routes.length + " routes"
+										}
+										primaryTypographyProps={{
+											noWrap: true,
+										}}
+										secondaryTypographyProps={{
+											noWrap: true,
+										}}
+									/>
+								</ListItem>
+								{index3 <
+									Object.keys(
+										directionInformation[from_id][to_id]
+									).length -
+										1 && (
+									<Divider variant="inset" component="li" />
+								)}
+							</React.Fragment>
+						)
+					)}
+				</List>
+			</Collapse>
+			{/* <div key={index2} className="flex flex-row gap-1 items-center">
 				<h1 className={`text-center w-[30%]`}>
-					{savedPlacesMap[to_id].name ||
-						selectedPlacesMap[to_id].alias}
+					{savedPlacesMap[to_id].name}
 				</h1>
 				<h1 className={`text-center w-[20%]`}>{mode}</h1>
 				<h1 className={`text-center w-[15%]`}>
@@ -146,7 +260,7 @@ export default function DirectionCard({
 						)
 					)}
 				</div>
-			)}
-		</div>
+			)} */}
+		</Card>
 	);
 }

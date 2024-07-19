@@ -24,7 +24,7 @@ export default function PageComponent() {
 	useEffect(() => {
 		if (selected === "context" && activeStep === null) {
 			setActiveStep(
-				window.location.hash.substring(1) === "onboard" ? 0 : 4
+				window.location.hash.substring(1) === "onboard" ? 0 : 5
 			);
 		}
 	}, [selected]);

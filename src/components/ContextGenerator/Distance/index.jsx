@@ -47,15 +47,7 @@ function DistanceCard({ from_id, to_id }) {
 			delete newDistanceMatrix[from_id];
 		setDistanceMatrix(newDistanceMatrix);
 	};
-	const handleFullDelete = () => {
-		const newDistanceMatrix = {
-			...distanceMatrix,
-		};
-		delete newDistanceMatrix[from_id][to_id];
-		if (Object.keys(newDistanceMatrix[from_id]).length === 0)
-			delete newDistanceMatrix[from_id];
-		setDistanceMatrix(newDistanceMatrix);
-	};
+
 	return (
 		<Card variant="outlined" sx={{ mb: 2 }}>
 			<CardContent>

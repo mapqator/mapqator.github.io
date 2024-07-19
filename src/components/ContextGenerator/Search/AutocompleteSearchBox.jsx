@@ -47,7 +47,9 @@ export default function AutocompleteSearchBox() {
 		threshold: 0.3,
 		ignoreLocation: true,
 	};
-	const [fuse, setFuse] = useState(null);
+	const [fuse, setFuse] = useState(
+		new Fuse(Object.values(savedPlacesMap), fuseOptions)
+	);
 	// Update fuse object whenever savedPlacesMap changes
 	useEffect(() => {
 		const newFuse = new Fuse(Object.values(savedPlacesMap), fuseOptions);

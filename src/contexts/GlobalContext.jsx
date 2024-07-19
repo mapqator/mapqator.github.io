@@ -60,7 +60,56 @@ export default function GlobalContextProvider({ children }) {
 		day: "",
 		location: "",
 	});
-	const [directionInformation, setDirectionInformation] = useState({});
+	const [directionInformation, setDirectionInformation] = useState({
+		1: {
+			2: {
+				walking: {
+					routes: [
+						{
+							distance: "5 km",
+							duration: "6 mins",
+							label: "Via Mirpur",
+							steps: [],
+						},
+					],
+					showSteps: true,
+				},
+				driving: {
+					routes: [
+						{
+							distance: "5 km",
+							duration: "6 mins",
+							label: "Via Uttara",
+							steps: [],
+						},
+					],
+					showSteps: true,
+				},
+				bicycling: {
+					routes: [
+						{
+							distance: "5 km",
+							duration: "6 mins",
+							label: "Via Jhigatola",
+							steps: [],
+						},
+					],
+					showSteps: true,
+				},
+				transit: {
+					routes: [
+						{
+							distance: "5 km",
+							duration: "6 mins",
+							label: "Via Uttara",
+							steps: [],
+						},
+					],
+					showSteps: true,
+				},
+			},
+		},
+	});
 	const [poisMap, setPoisMap] = useState({});
 	const initQuery = {
 		question: "",
