@@ -27,7 +27,6 @@ import DatasetInformation from "./DatasetInformation";
 import { showSuccess, showToast } from "./home";
 import { LoadingButton } from "@mui/lab";
 import { Refresh } from "@mui/icons-material";
-// import { setLoading } from "./page";
 import categories from "./categories.json";
 const itemsPerPage = 5;
 

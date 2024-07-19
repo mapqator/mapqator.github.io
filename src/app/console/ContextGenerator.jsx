@@ -18,7 +18,6 @@ import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 import CurrentInformation from "./CurrentInformation";
 import { format } from "date-fns";
 import POI from "./POI";
-import { setLoading } from "./page";
 import DirectionInformation from "./DirectionInformation";
 import HybridSearch from "./HybridSearch";
 import { LoadingButton } from "@mui/lab";

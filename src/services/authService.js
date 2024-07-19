@@ -1,5 +1,5 @@
 import authApi from "@/api/authApi";
-import { showSuccess, showToast } from "@/app/home";
+import { showSuccess, showToast } from "@/app/console/home";
 
 const AuthService = {
 	/**

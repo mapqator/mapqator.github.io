@@ -1,8 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import Home from "./home";
-import Login from "./Login";
-import { jwtDecode } from "jwt-decode";
+import Home from "./console/home";
 
 export var setLoading;
 export default function PageComponent() {

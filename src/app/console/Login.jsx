@@ -1,9 +1,7 @@
-
 import React, { useState, useEffect } from "react";
 import AuthService from "@/services/authService";
 import { FormControl, InputLabel, OutlinedInput, Button } from "@mui/material";
 import EyeIcon from "@/components/Icons/EyeIcon";
-import { setLoading } from "./page";
 import { LoadingButton } from "@mui/lab";
 
 const MuiTextField = (props) => {
@@ -126,7 +124,7 @@ const Login = () => {
 
 	const handleSubmit = async () => {
 		if (!loggingIn) {
-			setLoading(true);
+			// setLoading(true);
 			setLoggingIn(true);
 
 			const res = await AuthService.login({
@@ -136,13 +134,13 @@ const Login = () => {
 			if (res.success) {
 				// navigate("/");
 			} else {
-				setLoading(false);
+				// setLoading(false);
 			}
 		}
 	};
 
 	useEffect(() => {
-		setLoading(false);
+		// setLoading(false);
 	}, []);
 	return (
 		<>
