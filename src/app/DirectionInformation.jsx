@@ -153,7 +153,7 @@ export function GetDirections({
 	const [newDirection, setNewDirection] = useState({
 		from: "",
 		to: "",
-		travelMode: "WALKING",
+		travelMode: "walking",
 	});
 	const [loading, setLoading] = useState(false);
 	// { from, to, mode, routes: [{label, duration, distance, steps:[]}]}
@@ -161,7 +161,7 @@ export function GetDirections({
 		setNewDirection({
 			from: "",
 			to: "",
-			travelMode: "WALKING",
+			travelMode: "walking",
 		});
 	}, [selectedPlacesMap]);
 	const handleDirectionAdd = async () => {
@@ -402,10 +402,10 @@ export function GetDirections({
 								input={<OutlinedInput label={"Travel Mode"} />}
 							>
 								{[
-									"WALKING",
-									"DRIVING",
-									"BICYCLING",
-									"TRANSIT",
+									"walking",
+									"driving",
+									"bicycling",
+									"transit",
 								].map((mode, index) => (
 									<MenuItem key={index} value={mode}>
 										{mode}

@@ -80,7 +80,7 @@ export default function ContextGenerator({
 		Object.keys(distanceMatrix).forEach((from_id) => {
 			Object.keys(distanceMatrix[from_id]).forEach((to_id) => {
 				Object.keys(distanceMatrix[from_id][to_id]).forEach((mode) => {
-					if (mode === "TRANSIT") {
+					if (mode === "transit") {
 						newContext.push(
 							`Distance from ${
 								// selectedPlacesMap[from_id].alias ||
@@ -94,7 +94,7 @@ export default function ContextGenerator({
 								distanceMatrix[from_id][to_id][mode].duration
 							}).`
 						);
-					} else if (mode === "DRIVING") {
+					} else if (mode === "driving") {
 						newContext.push(
 							`Distance from ${
 								// selectedPlacesMap[from_id].alias ||
@@ -108,7 +108,7 @@ export default function ContextGenerator({
 								distanceMatrix[from_id][to_id][mode].duration
 							}).`
 						);
-					} else if (mode === "BICYCLING") {
+					} else if (mode === "bicycling") {
 						newContext.push(
 							`Distance from ${
 								// selectedPlacesMap[from_id].alias ||
@@ -122,7 +122,7 @@ export default function ContextGenerator({
 								distanceMatrix[from_id][to_id][mode].duration
 							}).`
 						);
-					} else if (mode === "WALKING") {
+					} else if (mode === "walking") {
 						newContext.push(
 							`Distance from ${
 								// selectedPlacesMap[from_id].alias ||
@@ -145,7 +145,7 @@ export default function ContextGenerator({
 			Object.keys(directionInformation[from_id]).forEach((to_id) => {
 				Object.keys(directionInformation[from_id][to_id]).forEach(
 					(mode) => {
-						if (mode === "TRANSIT") {
+						if (mode === "transit") {
 							newContext.push(
 								`There are ${
 									directionInformation[from_id][to_id][mode]
@@ -158,7 +158,7 @@ export default function ContextGenerator({
 									savedPlacesMap[to_id].name
 								} by public transport. They are:`
 							);
-						} else if (mode === "DRIVING") {
+						} else if (mode === "driving") {
 							newContext.push(
 								`There are ${
 									directionInformation[from_id][to_id][mode]
@@ -171,7 +171,7 @@ export default function ContextGenerator({
 									savedPlacesMap[to_id].name
 								} by car. They are:`
 							);
-						} else if (mode === "BICYCLING") {
+						} else if (mode === "bicycling") {
 							newContext.push(
 								`There are ${
 									directionInformation[from_id][to_id][mode]
@@ -184,7 +184,7 @@ export default function ContextGenerator({
 									savedPlacesMap[to_id].name
 								} by cycle. They are:`
 							);
-						} else if (mode === "WALKING") {
+						} else if (mode === "walking") {
 							newContext.push(
 								`There are ${
 									directionInformation[from_id][to_id][mode]

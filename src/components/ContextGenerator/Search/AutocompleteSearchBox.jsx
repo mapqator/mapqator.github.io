@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PlaceApi from "@/api/placeApi";
 const placeApi = new PlaceApi();
 import MapApi from "@/api/mapApi";
@@ -25,13 +25,9 @@ import Fuse from "fuse.js";
 import { useCallback } from "react";
 import { Chip, CircularProgress, InputAdornment } from "@mui/material";
 import debounce from "lodash/debounce";
+import { GlobalContext } from "@/contexts/GlobalContext";
 
-export const AutocompleteSearchBox = ({
-	savedPlacesMap,
-	setSavedPlacesMap,
-	selectedPlacesMap,
-	setSelectedPlacesMap,
-}) => {
+export default function AutocompleteSearchBox() {
 	const [search, setSearch] = useState("");
 	const [results, setResults] = useState([]);
 	const [mapResults, setMapResults] = useState([]);
@@ -39,6 +35,12 @@ export const AutocompleteSearchBox = ({
 	const [recentSearches, setRecentSearches] = useState([]);
 	const [shouldFetchFromAPI, setShouldFetchFromAPI] = useState(false);
 	const [cache, setCache] = useState({});
+	const {
+		savedPlacesMap,
+		setSavedPlacesMap,
+		selectedPlacesMap,
+		setSelectedPlacesMap,
+	} = useContext(GlobalContext);
 
 	const fuseOptions = {
 		keys: ["name", "formatted_address"],
@@ -253,4 +255,4 @@ export const AutocompleteSearchBox = ({
 			</div>
 		</div>
 	);
-};
+}

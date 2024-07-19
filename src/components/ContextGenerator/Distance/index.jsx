@@ -1,89 +1,88 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import MapApi from "@/api/mapApi";
 const mapApi = new MapApi();
-import { IconButton, CardContent } from "@mui/material";
+import { IconButton, CardContent, Divider } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import DistanceForm from "./DistanceForm";
+import ContextViewer from "../ContextPreview";
 
-export function CalculateDistance({
+export default function CalculateDistance({
 	selectedPlacesMap,
 	savedPlacesMap,
 	distanceMatrix,
 	setDistanceMatrix,
 }) {
-	const [newDistance, setNewDistance] = useState({
-		from: [],
-		to: [],
-		travelMode: "walking",
-	});
-	const [loading, setLoading] = useState(false);
-
+	const [context, setContext] = useState([]);
 	useEffect(() => {
-		setNewDistance({
-			from: [],
-			to: [],
-			travelMode: "walking",
-		});
-	}, [selectedPlacesMap]);
-
-	const handleDistanceAdd = async () => {
-		console.log(newDistance);
-		if (newDistance.from.length === 0 || newDistance.to.length === 0)
-			return;
-		setLoading(true);
-		// Fetch the distance between the two places from google maps
-		const response = await mapApi.getDistance(
-			newDistance.from,
-			newDistance.to,
-			newDistance.travelMode
-		);
-		if (response.success) {
-			console.log(response.data.matrix);
-			const origin = newDistance.from;
-			const destination = newDistance.to;
-			const matrix = response.data.matrix;
-			const newDistanceMatrix = { ...distanceMatrix };
-			for (let i = 0; i < origin.length; i++) {
-				const o = origin[i];
-				for (let j = 0; j < destination.length; j++) {
-					const d = destination[j];
-					if (o === d) {
-					} else if (matrix[i][j].duration && matrix[i][j].distance) {
-						console.log(matrix[i][j]);
-						if (newDistanceMatrix[o])
-							newDistanceMatrix[o][d] = {
-								...newDistanceMatrix[o][d],
-								[newDistance.travelMode]: {
-									duration: matrix[i][j].duration.text,
-									distance: matrix[i][j].distance.text,
-								},
-							};
-						else {
-							newDistanceMatrix[o] = {
-								[d]: {
-									[newDistance.travelMode]: {
-										duration: matrix[i][j].duration.text,
-										distance: matrix[i][j].distance.text,
-									},
-								},
-							};
-						}
+		const newContext = [];
+		Object.keys(distanceMatrix).forEach((from_id) => {
+			Object.keys(distanceMatrix[from_id]).forEach((to_id) => {
+				Object.keys(distanceMatrix[from_id][to_id]).forEach((mode) => {
+					if (mode === "transit") {
+						newContext.push(
+							`Distance from ${
+								// selectedPlacesMap[from_id].alias ||
+								savedPlacesMap[from_id].name
+							} to ${
+								// selectedPlacesMap[to_id].alias ||
+								savedPlacesMap[to_id].name
+							} by public transport is ${
+								distanceMatrix[from_id][to_id][mode].distance
+							} (${
+								distanceMatrix[from_id][to_id][mode].duration
+							}).`
+						);
+					} else if (mode === "driving") {
+						newContext.push(
+							`Distance from ${
+								// selectedPlacesMap[from_id].alias ||
+								savedPlacesMap[from_id].name
+							} to ${
+								// selectedPlacesMap[to_id].alias ||
+								savedPlacesMap[to_id].name
+							} by car is ${
+								distanceMatrix[from_id][to_id][mode].distance
+							} (${
+								distanceMatrix[from_id][to_id][mode].duration
+							}).`
+						);
+					} else if (mode === "bicycling") {
+						newContext.push(
+							`Distance from ${
+								// selectedPlacesMap[from_id].alias ||
+								savedPlacesMap[from_id].name
+							} to ${
+								// selectedPlacesMap[to_id].alias ||
+								savedPlacesMap[to_id].name
+							} by cycle is ${
+								distanceMatrix[from_id][to_id][mode].distance
+							} (${
+								distanceMatrix[from_id][to_id][mode].duration
+							}).`
+						);
+					} else if (mode === "walking") {
+						newContext.push(
+							`Distance from ${
+								// selectedPlacesMap[from_id].alias ||
+								savedPlacesMap[from_id].name
+							} to ${
+								// selectedPlacesMap[to_id].alias ||
+								savedPlacesMap[to_id].name
+							} on foot is ${
+								distanceMatrix[from_id][to_id][mode].distance
+							} (${
+								distanceMatrix[from_id][to_id][mode].duration
+							}).`
+						);
 					}
-				}
-			}
-			setDistanceMatrix(newDistanceMatrix);
-		}
-		setNewDistance((prev) => ({
-			from: [],
-			to: [],
-			travelMode: prev.travelMode,
-		}));
-		setLoading(false);
-	};
-
+				});
+			});
+		});
+		setContext(newContext);
+	}, [distanceMatrix]);
 	return (
 		<CardContent>
 			{Object.keys(distanceMatrix).length > 0 && (
@@ -230,6 +229,8 @@ export function CalculateDistance({
 			)}
 
 			<DistanceForm />
+			<Divider sx={{ mt: 3 }} />
+			<ContextViewer context={context} />
 		</CardContent>
 	);
 }

@@ -1,5 +1,12 @@
 "use client";
-import { IconButton, Select, MenuItem, CardContent, Box } from "@mui/material";
+import {
+	IconButton,
+	Select,
+	MenuItem,
+	CardContent,
+	Box,
+	Divider,
+} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -9,6 +16,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { Clear } from "@mui/icons-material";
 import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
+import { useEffect, useState } from "react";
+import ContextViewer from "../ContextPreview";
 
 export function Parameters({
 	selectedPlacesMap,

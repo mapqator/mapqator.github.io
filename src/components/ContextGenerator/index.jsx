@@ -17,20 +17,21 @@ import MapIcon from "@mui/icons-material/Map";
 import SearchIcon from "@mui/icons-material/Search";
 import DirectionsIcon from "@mui/icons-material/Directions";
 import PlaceIcon from "@mui/icons-material/Place";
-import { AutocompleteSearchBox } from "./search";
+import { AutocompleteSearchBox } from "./Search/AutocompleteSearchBox";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import PlaceInformation from "./places";
-import { NearbyInfo } from "./nearby";
-import { DiscoverArea } from "./area";
-import { CalculateDistance } from "./distance";
-import { GetDirections } from "./direction";
+import PlaceInformation from "./Search/places";
+import NearbyInfo from "./Nearby";
+import DiscoverArea from "./Area";
+import CalculateDistance from "./Distance";
+import GetDirections from "./Direction";
 import ContextViewer from "./ContextPreview";
-import { Flag, Preview, Settings } from "@mui/icons-material";
+import { Flag, Settings } from "@mui/icons-material";
 import ExploreIcon from "@mui/icons-material/Explore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
-import { Parameters } from "./params";
-import MapComponent from "./MapComponent";
+import { Parameters } from "./Parameters/params";
+import MapComponent from "./Search/MapComponent";
+import PlaceSearch from "./Search";
 
 export default function ContextGenerator({
 	onFinish,
@@ -58,12 +59,72 @@ export default function ContextGenerator({
 		setCurrentInformation,
 	} = useContext(GlobalContext);
 
-	const locations = [
-		[40.712776, -74.005974], // New York
-		[34.052235, -118.243683], // Los Angeles
-		[51.507351, -0.127758], // London
-		// Add more locations as needed
-	];
+	const [paramsContext, setParamsContext] = useState([]);
+	const getParamsContext = () => {
+		const newContext = [];
+		if (currentInformation.time && currentInformation.day !== "") {
+			newContext.push(
+				`Current time is ${currentInformation.time.format(
+					"h:mm a"
+				)} on ${currentInformation.day}.`
+			);
+		} else if (currentInformation.time) {
+			newContext.push(
+				`Current time is ${currentInformation.time.format("h:mm a")}.`
+			);
+		} else if (currentInformation.day !== "") {
+			newContext.push(`Today is ${currentInformation.day}.`);
+		}
+
+		if (currentInformation.location !== "") {
+			newContext.push(
+				`Current location of user is <b>${
+					savedPlacesMap[currentInformation.location]?.name
+				}</b>.`
+			);
+		}
+		return newContext;
+	};
+	useEffect(() => {
+		setParamsContext(getParamsContext());
+	}, [currentInformation]);
+
+	const [areaContext, setAreaContext] = useState([]);
+	const getAreaContext = () => {
+		const newContext = [];
+		Object.keys(poisMap).forEach((place_id, index) => {
+			poisMap[place_id].forEach((poi) => {
+				newContext.push(
+					`Places in ${
+						// selectedPlacesMap[place_id].alias ||
+						savedPlacesMap[place_id].name
+					} of type \"${poi.type}\" are:`
+				);
+				let counter = 1;
+				poi.places.forEach((place) => {
+					if (place.selected) {
+						newContext.push(
+							`${counter}. <b>${
+								// selectedPlacesMap[place.place_id]?.alias ||
+								savedPlacesMap[place.place_id]?.name ||
+								place.name
+							}</b> (${
+								place.formatted_address ||
+								savedPlacesMap[place.place_id]?.vicinity
+							})`
+						);
+						counter++;
+					}
+				});
+
+				newContext.push("");
+			});
+		});
+		return newContext;
+	};
+	useEffect(() => {
+		setAreaContext(getAreaContext());
+	}, [poisMap]);
 	const steps = [
 		{
 			label: "Guidelines",
@@ -82,38 +143,7 @@ export default function ContextGenerator({
 			label: "Add Places",
 			description: `Start by searching for a location using the Places API. Type in a place name or address in the search bar below. While typing, saved places matching the search query will be shown. On pressing enter, google places API will be queried and the results will be shown.`,
 			icon: <SearchIcon />,
-			component: (
-				<div className="flex flex-col gap-2">
-					<AutocompleteSearchBox
-						{...{
-							savedPlacesMap,
-							setSavedPlacesMap,
-							selectedPlacesMap,
-							setSelectedPlacesMap,
-							setPoisMap,
-						}}
-					/>
-					{Object.keys(selectedPlacesMap).length > 0 && (
-						<MapComponent locations={locations} />
-					)}
-
-					<PlaceInformation
-						{...{
-							selectedPlacesMap,
-							setSelectedPlacesMap,
-							savedPlacesMap,
-							distanceMatrix,
-							setDistanceMatrix,
-							directionInformation,
-							setDirectionInformation,
-							nearbyPlacesMap,
-							setNearbyPlacesMap,
-							poisMap,
-							setPoisMap,
-						}}
-					/>
-				</div>
-			),
+			component: <PlaceSearch />,
 		},
 		{
 			label: "Explore Nearby Places",
@@ -164,6 +194,7 @@ export default function ContextGenerator({
 
 				// </Card>
 			),
+			context: areaContext,
 		},
 
 		{
@@ -228,6 +259,7 @@ export default function ContextGenerator({
 					<Divider />
 				</>
 			),
+			context: paramsContext,
 		},
 		{
 			label: "Generated Context",
@@ -296,8 +328,22 @@ export default function ContextGenerator({
 								>
 									{steps[activeStep]?.description}
 								</Typography>
-
 								{step.component}
+								<Typography
+									sx={{
+										whiteSpace: "pre-line", // This CSS property will make newlines render as expected
+									}}
+								>
+									Based on the information you add, a context
+									will generate below.
+								</Typography>
+
+								<Paper
+									elevation={1}
+									sx={{ p: 2, bgcolor: "grey.100" }}
+								>
+									<ContextViewer context={step.context} />
+								</Paper>
 
 								<Box sx={{ mb: 2 }}>
 									<div>

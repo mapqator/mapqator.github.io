@@ -41,8 +41,9 @@ import { Add, CheckBox, Delete, ExpandMore, Search } from "@mui/icons-material";
 import AreaCard from "./AreaCard";
 import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
 import TypeSelectionField from "@/components/InputFields/TypeSelectionField";
+import ContextViewer from "../ContextPreview";
 
-export function DiscoverArea({
+export default function DiscoverArea({
 	savedPlacesMap,
 	setSavedPlacesMap,
 	selectedPlacesMap,
@@ -52,9 +53,6 @@ export function DiscoverArea({
 }) {
 	const [newPois, setNewPois] = useState({ location: "", type: "" });
 	const [loading, setLoading] = useState(false);
-	// useEffect(() => {
-	// 	console.log(selectedPlacesMap);
-	// }, [selectedPlacesMap]);
 
 	const searchInsidePlaces = async () => {
 		if (newPois.location === "" || newPois.type === "") return;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -18,20 +18,22 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { GlobalContext } from "@/contexts/GlobalContext";
 
-export default function PlaceInformation({
-	selectedPlacesMap,
-	setSelectedPlacesMap,
-	savedPlacesMap,
-	distanceMatrix,
-	setDistanceMatrix,
-	directionInformation,
-	setDirectionInformation,
-	nearbyPlacesMap,
-	setNearbyPlacesMap,
-	poisMap,
-	setPoisMap,
-}) {
+export default function PlaceInformation() {
+	const {
+		selectedPlacesMap,
+		setSelectedPlacesMap,
+		savedPlacesMap,
+		distanceMatrix,
+		setDistanceMatrix,
+		directionInformation,
+		setDirectionInformation,
+		nearbyPlacesMap,
+		setNearbyPlacesMap,
+		poisMap,
+		setPoisMap,
+	} = useContext(GlobalContext);
 	const deletePlaceFromDistanceMatrix = (place_id) => {
 		const newDistanceMatrix = { ...distanceMatrix };
 		delete newDistanceMatrix[place_id];
