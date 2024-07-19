@@ -44,7 +44,16 @@ export default function GlobalContextProvider({ children }) {
 			},
 		},
 	});
-	const [selectedPlacesMap, setSelectedPlacesMap] = useState({});
+	const [selectedPlacesMap, setSelectedPlacesMap] = useState({
+		1: {
+			selectedAttributes: ["formatted_address", "name"],
+			attributes: ["formatted_address", "name"],
+		},
+		2: {
+			selectedAttributes: ["formatted_address", "name"],
+			attributes: ["formatted_address", "name"],
+		},
+	});
 	const [nearbyPlacesMap, setNearbyPlacesMap] = useState({
 		1: [
 			{

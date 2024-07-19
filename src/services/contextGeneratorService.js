@@ -1,103 +1,99 @@
+const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
+	let place = savedPlacesMap[place_id];
+	if (!place) return "";
+
+	let attributes = selectedPlacesMap[place_id].selectedAttributes;
+	let text = "";
+
+	if (
+		attributes.includes("formatted_address") ||
+		(attributes.includes("geometry") && place.geometry?.location)
+	) {
+		const lat =
+			typeof place.geometry?.location.lat === "function"
+				? place.geometry?.location.lat()
+				: place.geometry?.location.lat;
+		const lng =
+			typeof place.geometry?.location.lng === "function"
+				? place.geometry?.location.lng()
+				: place.geometry?.location.lng;
+		text += `- Location: ${
+			attributes.includes("formatted_address")
+				? place.formatted_address
+				: ""
+		}${
+			attributes.includes("geometry") ? "(" + lat + ", " + lng + ")" : ""
+		}.\n`;
+	}
+	if (attributes.includes("opening_hours")) {
+		text += `- Open: ${place.opening_hours.weekday_text.join(", ")}.\n`;
+	}
+	if (attributes.includes("rating")) {
+		text += `- Rating: ${place.rating}. (${place.user_ratings_total} ratings).\n`;
+	}
+
+	if (attributes.includes("reviews")) {
+		text += `- Reviews: \n${place.reviews
+			.map((review, index) => {
+				console.log(review.text);
+				return `   ${index + 1}. ${review.author_name} (Rating: ${
+					review.rating
+				}): ${review.text}\n`;
+			})
+			.join("")} `; // Use .join('') to concatenate without commas
+	}
+	console.log(text);
+	if (attributes.includes("price_level")) {
+		// - 0 Free
+		// - 1 Inexpensive
+		// - 2 Moderate
+		// - 3 Expensive
+		// - 4 Very Expensive
+		// Convert price level from number to string
+
+		let priceLevel = "";
+		const priceMap = [
+			"Free",
+			"Inexpensive",
+			"Moderate",
+			"Expensive",
+			"Very Expensive",
+		];
+
+		text += `- Price Level: ${priceMap[place.price_level]}.\n`;
+	}
+
+	if (attributes.includes("delivery")) {
+		text += place.delivery
+			? "- Delivery Available.\n"
+			: "- Delivery Not Available.\n";
+	}
+
+	if (attributes.includes("dine_in")) {
+		text += place.dine_in
+			? "- Dine In Available.\n"
+			: "- Dine In Not Available.\n";
+	}
+
+	if (attributes.includes("takeaway")) {
+		text += place.takeaway
+			? "- Takeaway Available.\n"
+			: "- Takeaway Not Available.\n";
+	}
+
+	if (attributes.includes("reservable")) {
+		text += place.reservable ? "- Reservable.\n" : "- Not Reservable.\n";
+	}
+
+	if (attributes.includes("wheelchair_accessible_entrance")) {
+		text += place.wheelchair_accessible_entrance
+			? "- Wheelchair Accessible Entrance.\n"
+			: "- Not Wheelchair Accessible Entrance.\n";
+	}
+
+	return text;
+};
 const ContextGeneratorService = {
-	placeToContext: (place_id, selectedPlacesMap, savedPlacesMap) => {
-		let place = savedPlacesMap[place_id];
-		if (!place) return "";
-
-		let attributes = selectedPlacesMap[place_id].selectedAttributes;
-		let text = "";
-
-		if (
-			attributes.includes("formatted_address") ||
-			(attributes.includes("geometry") && place.geometry.location)
-		) {
-			const lat =
-				typeof place.geometry.location.lat === "function"
-					? place.geometry.location.lat()
-					: place.geometry.location.lat;
-			const lng =
-				typeof place.geometry.location.lng === "function"
-					? place.geometry.location.lng()
-					: place.geometry.location.lng;
-			text += `- Location: ${
-				attributes.includes("formatted_address")
-					? place.formatted_address
-					: ""
-			}${
-				attributes.includes("geometry")
-					? "(" + lat + ", " + lng + ")"
-					: ""
-			}.\n`;
-		}
-		if (attributes.includes("opening_hours")) {
-			text += `- Open: ${place.opening_hours.weekday_text.join(", ")}.\n`;
-		}
-		if (attributes.includes("rating")) {
-			text += `- Rating: ${place.rating}. (${place.user_ratings_total} ratings).\n`;
-		}
-
-		if (attributes.includes("reviews")) {
-			text += `- Reviews: \n${place.reviews
-				.map((review, index) => {
-					console.log(review.text);
-					return `   ${index + 1}. ${review.author_name} (Rating: ${
-						review.rating
-					}): ${review.text}\n`;
-				})
-				.join("")} `; // Use .join('') to concatenate without commas
-		}
-		console.log(text);
-		if (attributes.includes("price_level")) {
-			// - 0 Free
-			// - 1 Inexpensive
-			// - 2 Moderate
-			// - 3 Expensive
-			// - 4 Very Expensive
-			// Convert price level from number to string
-
-			let priceLevel = "";
-			const priceMap = [
-				"Free",
-				"Inexpensive",
-				"Moderate",
-				"Expensive",
-				"Very Expensive",
-			];
-
-			text += `- Price Level: ${priceMap[place.price_level]}.\n`;
-		}
-
-		if (attributes.includes("delivery")) {
-			text += place.delivery
-				? "- Delivery Available.\n"
-				: "- Delivery Not Available.\n";
-		}
-
-		if (attributes.includes("dine_in")) {
-			text += place.dine_in
-				? "- Dine In Available.\n"
-				: "- Dine In Not Available.\n";
-		}
-
-		if (attributes.includes("takeaway")) {
-			text += place.takeaway
-				? "- Takeaway Available.\n"
-				: "- Takeaway Not Available.\n";
-		}
-
-		if (attributes.includes("reservable")) {
-			text += place.reservable
-				? "- Reservable.\n"
-				: "- Not Reservable.\n";
-		}
-
-		if (attributes.includes("wheelchair_accessible_entrance")) {
-			text += place.wheelchair_accessible_entrance
-				? "- Wheelchair Accessible Entrance.\n"
-				: "- Not Wheelchair Accessible Entrance.\n";
-		}
-
-		return text;
-	},
 	getPlacesContext: (selectedPlacesMap, savedPlacesMap) => {
 		const newContext = [];
 		for (const place_id of Object.keys(selectedPlacesMap)) {
