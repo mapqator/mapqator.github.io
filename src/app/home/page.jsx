@@ -27,7 +27,7 @@ import { useRouter } from "next/navigation";
 import Navbar from "./Navbar";
 
 export default function PageComponent() {
-	const [activeStep, setActiveStep] = useState(0);
+	const [activeStep, setActiveStep] = useState(null);
 	const [selected, setSelected] = useState("context-generator");
 
 	useEffect(() => {
@@ -37,6 +37,14 @@ export default function PageComponent() {
 		);
 		setSelected(page === "" || page === "onboard" ? "context" : page);
 	}, []);
+
+	useEffect(() => {
+		if (selected === "context" && activeStep === null) {
+			setActiveStep(
+				window.location.hash.substring(1) === "onboard" ? 0 : 1
+			);
+		}
+	}, [selected]);
 
 	return (
 		<Container
@@ -52,6 +60,7 @@ export default function PageComponent() {
 						setSelected("question");
 						window.scrollTo(0, 0);
 					}}
+					{...{ activeStep, setActiveStep }}
 				/>
 			) : selected === "question" ? (
 				<QuestionCreationPage

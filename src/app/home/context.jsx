@@ -42,10 +42,11 @@ import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { Parameters } from "./params";
 import MapComponent from "./MapComponent";
 
-export default function ContextGenerator({ onFinish }) {
-	const [activeStep, setActiveStep] = useState(
-		window.location.hash.substring(1) === "onboard" ? 0 : 1
-	);
+export default function ContextGenerator({
+	onFinish,
+	activeStep,
+	setActiveStep,
+}) {
 	const {
 		savedPlacesMap,
 		setSavedPlacesMap,
