@@ -108,7 +108,7 @@ const ContextGeneratorService = {
 			);
 			if (text !== "") {
 				newContext.push(
-					`Information of <b>${savedPlacesMap[place_id].name}</b>:`
+					`Information of <b>${savedPlacesMap[place_id]?.name}</b>:`
 				);
 
 				text.split("\n").forEach((line) => {
@@ -148,7 +148,7 @@ const ContextGeneratorService = {
 		Object.keys(poisMap).forEach((place_id, index) => {
 			poisMap[place_id].forEach((poi) => {
 				newContext.push(
-					`Places in ${savedPlacesMap[place_id].name} of type \"${poi.type}\" are:`
+					`Places in ${savedPlacesMap[place_id]?.name} of type \"${poi.type}\" are:`
 				);
 				let counter = 1;
 				poi.places.forEach((place) => {
@@ -178,7 +178,7 @@ const ContextGeneratorService = {
 				newContext.push(
 					`Nearby places of ${
 						// selectedPlacesMap[place_id].alias ||
-						savedPlacesMap[place_id].name
+						savedPlacesMap[place_id]?.name
 					} ${e.type === "any" ? "" : 'of type "' + e.type + '"'} ${
 						e.keyword !== ""
 							? 'with keyword "' + e.keyword + '"'
@@ -219,10 +219,10 @@ const ContextGeneratorService = {
 						newContext.push(
 							`Distance from ${
 								// selectedPlacesMap[from_id].alias ||
-								savedPlacesMap[from_id].name
+								savedPlacesMap[from_id]?.name
 							} to ${
 								// selectedPlacesMap[to_id].alias ||
-								savedPlacesMap[to_id].name
+								savedPlacesMap[to_id]?.name
 							} by public transport is ${
 								distanceMatrix[from_id][to_id][mode].distance
 							} (${
@@ -233,10 +233,10 @@ const ContextGeneratorService = {
 						newContext.push(
 							`Distance from ${
 								// selectedPlacesMap[from_id].alias ||
-								savedPlacesMap[from_id].name
+								savedPlacesMap[from_id]?.name
 							} to ${
 								// selectedPlacesMap[to_id].alias ||
-								savedPlacesMap[to_id].name
+								savedPlacesMap[to_id]?.name
 							} by car is ${
 								distanceMatrix[from_id][to_id][mode].distance
 							} (${
@@ -247,10 +247,10 @@ const ContextGeneratorService = {
 						newContext.push(
 							`Distance from ${
 								// selectedPlacesMap[from_id].alias ||
-								savedPlacesMap[from_id].name
+								savedPlacesMap[from_id]?.name
 							} to ${
 								// selectedPlacesMap[to_id].alias ||
-								savedPlacesMap[to_id].name
+								savedPlacesMap[to_id]?.name
 							} by cycle is ${
 								distanceMatrix[from_id][to_id][mode].distance
 							} (${
@@ -261,10 +261,10 @@ const ContextGeneratorService = {
 						newContext.push(
 							`Distance from ${
 								// selectedPlacesMap[from_id].alias ||
-								savedPlacesMap[from_id].name
+								savedPlacesMap[from_id]?.name
 							} to ${
 								// selectedPlacesMap[to_id].alias ||
-								savedPlacesMap[to_id].name
+								savedPlacesMap[to_id]?.name
 							} on foot is ${
 								distanceMatrix[from_id][to_id][mode].distance
 							} (${
@@ -290,10 +290,10 @@ const ContextGeneratorService = {
 										.routes.length
 								} routes from ${
 									// selectedPlacesMap[from_id].alias ||
-									savedPlacesMap[from_id].name
+									savedPlacesMap[from_id]?.name
 								} to ${
 									// selectedPlacesMap[to_id].alias ||
-									savedPlacesMap[to_id].name
+									savedPlacesMap[to_id]?.name
 								} by public transport. They are:`
 							);
 						} else if (mode === "driving") {
@@ -303,10 +303,10 @@ const ContextGeneratorService = {
 										.routes.length
 								} routes from ${
 									// selectedPlacesMap[from_id].alias ||
-									savedPlacesMap[from_id].name
+									savedPlacesMap[from_id]?.name
 								} to ${
 									// selectedPlacesMap[to_id].alias ||
-									savedPlacesMap[to_id].name
+									savedPlacesMap[to_id]?.name
 								} by car. They are:`
 							);
 						} else if (mode === "bicycling") {
@@ -316,10 +316,10 @@ const ContextGeneratorService = {
 										.routes.length
 								} routes from ${
 									// selectedPlacesMap[from_id].alias ||
-									savedPlacesMap[from_id].name
+									savedPlacesMap[from_id]?.name
 								} to ${
 									// selectedPlacesMap[to_id].alias ||
-									savedPlacesMap[to_id].name
+									savedPlacesMap[to_id]?.name
 								} by cycle. They are:`
 							);
 						} else if (mode === "walking") {
@@ -329,10 +329,10 @@ const ContextGeneratorService = {
 										.routes.length
 								} routes from ${
 									// selectedPlacesMap[from_id].alias ||
-									savedPlacesMap[from_id].name
+									savedPlacesMap[from_id]?.name
 								} to ${
 									// selectedPlacesMap[to_id].alias ||
-									savedPlacesMap[to_id].name
+									savedPlacesMap[to_id]?.name
 								} on foot. They are:`
 							);
 						}

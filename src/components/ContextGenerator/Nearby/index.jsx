@@ -22,7 +22,7 @@ export default function NearbyInfo({}) {
 		// <Card raised>
 		<CardContent>
 			{Object.keys(nearbyPlacesMap).map((place_id, index1) => (
-				<div key={index1} className="flex flex-col gap-1 ">
+				<div key={index1} className="flex flex-col gap-1">
 					{nearbyPlacesMap[place_id].map((e, index2) => (
 						<NearbyCard
 							key={index2}

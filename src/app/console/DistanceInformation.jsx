@@ -118,8 +118,7 @@ export function CalculateDistance({
 							className="flex flex-row gap-1 items-center bg-white p-2"
 						>
 							<h1 className={`text-center w-[30%]`}>
-								{savedPlacesMap[from_id].name ||
-									selectedPlacesMap[from_id].alias}
+								{savedPlacesMap[from_id].name}
 							</h1>
 							<div className="flex flex-col w-[70%]">
 								{Object.keys(distanceMatrix[from_id]).map(
@@ -136,12 +135,11 @@ export function CalculateDistance({
 														<h1
 															className={`text-center w-[30%]`}
 														>
-															{savedPlacesMap[
-																to_id
-															].name ||
-																selectedPlacesMap[
+															{
+																savedPlacesMap[
 																	to_id
-																].alias}
+																].name
+															}
 														</h1>
 														<h1
 															className={`text-center w-[20%]`}
