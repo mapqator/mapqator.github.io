@@ -265,7 +265,6 @@ export default function ContextGenerator({
 	};
 
 	const handleReset = () => {
-		setActiveStep(1);
 		setPoisMap({});
 		setDistanceMatrix({});
 		setNearbyPlacesMap({});
@@ -278,6 +277,7 @@ export default function ContextGenerator({
 		});
 		setDirectionInformation({});
 		setSelectedPlacesMap({});
+		setActiveStep(1);
 	};
 	return (
 		<>
