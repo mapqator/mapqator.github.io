@@ -183,7 +183,7 @@ export default function GlobalContextProvider({ children }) {
 				options: ["a", "b", "c", "d"],
 				correct: 1,
 			},
-			context: "",
+			context: "Today is monday",
 			context_json: {},
 			context_gpt: "",
 			classification: "planning",
