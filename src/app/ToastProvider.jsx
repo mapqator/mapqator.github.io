@@ -9,7 +9,7 @@ export default function ToastProvider({ children }) {
 			{children}
 			<ToastContainer
 				style={{ width: "270px" }}
-				position="top-left"
+				position="top-right"
 				theme="colored"
 				autoClose={3000}
 				hideProgressBar={false}

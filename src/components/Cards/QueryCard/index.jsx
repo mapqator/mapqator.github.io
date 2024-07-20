@@ -64,8 +64,8 @@ export default function QueryCard({ entry, onEdit }) {
 								flexGap: "1rem",
 							}}
 						>
-							<Typography sx={{ width: "40%" }}>
-								Question #{state.id}
+							<Typography sx={{ width: "20%" }}>
+								#{state.id}
 							</Typography>
 
 							<Box>
