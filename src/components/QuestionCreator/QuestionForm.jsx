@@ -78,11 +78,18 @@ export default function QuestionForm() {
 		});
 	};
 
+	const handleReset = () => {
+		setQuery((prev) => ({
+			...initQuery,
+			context: prev.context,
+			context_json: prev.context,
+		}));
+	};
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		const tmpQuery = query;
 		const prevQueries = [...queries];
-		setQuery(initQuery);
+		handleReset();
 
 		if (tmpQuery.id === undefined) {
 			const newQueries = [...queries];
@@ -253,13 +260,7 @@ export default function QuestionForm() {
 						: "Save #" + query.id}
 				</Button>
 				<Button
-					onClick={() =>
-						setQuery((prev) => ({
-							...initQuery,
-							context: prev.context,
-							context_json: prev.context_json,
-						}))
-					}
+					onClick={handleReset}
 					variant="outlined"
 					size="small"
 					startIcon={<Clear />}
