@@ -260,7 +260,10 @@ export default function QuestionForm() {
 						: "Save #" + query.id}
 				</Button>
 				<Button
-					onClick={handleReset}
+					onClick={() => {
+						handleReset();
+						window.scrollTo(0, 0);
+					}}
 					variant="outlined"
 					size="small"
 					startIcon={<Clear />}
