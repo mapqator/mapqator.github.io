@@ -16,6 +16,8 @@ import {
 	TextField,
 	Divider,
 	Typography,
+	ListItemText,
+	ListItem,
 } from "@mui/material";
 import _ from "lodash";
 
@@ -27,6 +29,63 @@ import { Chip, CircularProgress, InputAdornment } from "@mui/material";
 import debounce from "lodash/debounce";
 import { GlobalContext } from "@/contexts/GlobalContext";
 
+function SearchPlaceCard({ place, index, length }) {
+	const { selectedPlacesMap, setSelectedPlacesMap, setSavedPlacesMap } =
+		useContext(GlobalContext);
+
+	const handleAddPlace = async (place) => {
+		if (selectedPlacesMap[place.place_id]) return;
+
+		let details = savedPlacesMap[place.place_id];
+		if (!details) {
+			const res = await mapApi.getDetails(place.place_id);
+			if (res.success) {
+				details = res.data.result;
+				setSavedPlacesMap((prev) => ({
+					...prev,
+					[place.place_id]: details,
+				}));
+			} else {
+				console.error("Error fetching place details:", res.error);
+				return;
+			}
+		}
+
+		setSelectedPlacesMap((prev) => ({
+			...prev,
+			[place.place_id]: {
+				// alias: "",
+				selectedAttributes: ["formatted_address"],
+				attributes: Object.keys(details).filter(
+					(key) => details[key] !== null
+				),
+			},
+		}));
+	};
+
+	// Issue: Name overlaps with Add button
+	return (
+		<React.Fragment key={index}>
+			<ListItem
+				secondaryAction={
+					<Button
+						startIcon={<Add />}
+						onClick={() => handleAddPlace(place)}
+						disabled={selectedPlacesMap[place.place_id]}
+					>
+						Add
+					</Button>
+				}
+			>
+				<ListItemText
+					primary={place.name}
+					secondary={place.formatted_address}
+				/>
+			</ListItem>
+			{index < length - 1 && <Divider component="li" />}
+		</React.Fragment>
+	);
+}
 export default function AutocompleteSearchBox() {
 	const [search, setSearch] = useState("");
 	const [results, setResults] = useState([]);
@@ -35,12 +94,7 @@ export default function AutocompleteSearchBox() {
 	const [recentSearches, setRecentSearches] = useState([]);
 	const [shouldFetchFromAPI, setShouldFetchFromAPI] = useState(false);
 	const [cache, setCache] = useState({});
-	const {
-		savedPlacesMap,
-		setSavedPlacesMap,
-		selectedPlacesMap,
-		setSelectedPlacesMap,
-	} = useContext(GlobalContext);
+	const { savedPlacesMap } = useContext(GlobalContext);
 
 	const fuseOptions = {
 		keys: ["name", "formatted_address"],
@@ -117,39 +171,10 @@ export default function AutocompleteSearchBox() {
 		}
 	};
 
-	const handleAddPlace = async (place) => {
-		if (selectedPlacesMap[place.place_id]) return;
-
-		let details = savedPlacesMap[place.place_id];
-		if (!details) {
-			const res = await mapApi.getDetails(place.place_id);
-			if (res.success) {
-				details = res.data.result;
-				setSavedPlacesMap((prev) => ({
-					...prev,
-					[place.place_id]: details,
-				}));
-			} else {
-				console.error("Error fetching place details:", res.error);
-				return;
-			}
-		}
-
-		setSelectedPlacesMap((prev) => ({
-			...prev,
-			[place.place_id]: {
-				alias: "",
-				selectedAttributes: ["formatted_address"],
-				attributes: Object.keys(details).filter(
-					(key) => details[key] !== null
-				),
-			},
-		}));
-	};
-
 	return (
 		<div className="flex flex-col gap-4">
 			<TextField
+				autoComplete="off"
 				fullWidth
 				onKeyPress={handleKeyPress}
 				variant="outlined"
@@ -204,23 +229,11 @@ export default function AutocompleteSearchBox() {
 						</h3>
 						<ul className="max-h-60 overflow-y-auto">
 							{results.map((place, index) => (
-								<li
-									key={index}
-									className="p-2 hover:bg-gray-100 flex justify-between items-center"
-								>
-									<span>
-										{place.name} - {place.formatted_address}
-									</span>
-									<Button
-										startIcon={<Add />}
-										onClick={() => handleAddPlace(place)}
-										disabled={
-											selectedPlacesMap[place.place_id]
-										}
-									>
-										Add
-									</Button>
-								</li>
+								<SearchPlaceCard
+									place={place}
+									index={index}
+									length={results.length}
+								/>
 							))}
 						</ul>
 					</div>
@@ -233,23 +246,11 @@ export default function AutocompleteSearchBox() {
 						</h3>
 						<ul className="max-h-60 overflow-y-auto">
 							{mapResults.map((place, index) => (
-								<li
-									key={index}
-									className="p-2 hover:bg-gray-100 flex justify-between items-center"
-								>
-									<span>
-										{place.name} - {place.formatted_address}
-									</span>
-									<Button
-										startIcon={<Add />}
-										onClick={() => handleAddPlace(place)}
-										disabled={
-											selectedPlacesMap[place.place_id]
-										}
-									>
-										Add
-									</Button>
-								</li>
+								<SearchPlaceCard
+									place={place}
+									index={index}
+									length={results.length}
+								/>
 							))}
 						</ul>
 					</div>

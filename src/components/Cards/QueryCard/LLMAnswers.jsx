@@ -1,3 +1,16 @@
+import {
+	Box,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
+	Typography,
+	Paper,
+	Chip,
+} from "@mui/material";
+
 export default function LLMAnswers({ evaluation }) {
 	return (
 		<>
@@ -9,19 +22,39 @@ export default function LLMAnswers({ evaluation }) {
 					<TableContainer component={Paper}>
 						<Table size="small">
 							<TableHead>
-								<TableRow>
-									<TableCell sx={{ width: "30%" }}>
+								<TableRow
+									sx={{
+										fontWeight: "bold",
+										backgroundColor: "black",
+										color: "white",
+									}}
+								>
+									<TableCell
+										sx={{
+											width: "30%",
+											fontWeight: "bold",
+											color: "white",
+										}}
+									>
 										Model
 									</TableCell>
 									<TableCell
 										align="center"
-										sx={{ width: "60%" }}
+										sx={{
+											width: "60%",
+											fontWeight: "bold",
+											color: "white",
+										}}
 									>
 										Answer
 									</TableCell>
 									<TableCell
 										align="center"
-										sx={{ width: "10%" }}
+										sx={{
+											width: "10%",
+											fontWeight: "bold",
+											color: "white",
+										}}
 									>
 										Correct?
 									</TableCell>

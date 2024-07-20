@@ -115,7 +115,7 @@ function DistanceCard({ from_id, to_id }) {
 											onClick={() => handleDelete(mode)}
 											size="small"
 										>
-											<Delete />
+											<Delete color="error" />
 										</IconButton>
 									}
 								>

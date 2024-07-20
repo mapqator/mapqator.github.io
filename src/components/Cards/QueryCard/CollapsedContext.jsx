@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Typography, Paper, Box, Button } from "@mui/material";
 export default function CollapsedContext({ context }) {
 	const [contextExpanded, setContextExpanded] = useState(false);
+	console.log("Context Split:", context.split("\n"));
 	return (
 		<Box sx={{ mb: 2 }}>
 			<Typography variant="h6" gutterBottom>
@@ -22,6 +23,11 @@ export default function CollapsedContext({ context }) {
 								/>
 							</React.Fragment>
 						)
+				)}
+				{context === "" && (
+					<p className="text-center my-auto text-lg md:text-xl text-zinc-400">
+						No context provided.
+					</p>
 				)}
 				{context.split("\n").length > 5 && (
 					<Button

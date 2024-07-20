@@ -145,9 +145,9 @@ export default function PlaceInformation() {
 	// }, [directionInformation, savedPlacesMap]);
 
 	return (
-		<Grid container spacing={2} sx={{ mt: 0 }}>
+		<Grid container spacing={2} sx={{ mt: 0, mb: 2 }}>
 			{Object.keys(selectedPlacesMap).map((placeId) => (
-				<Grid item xs={12} sm={6} md={4} key={placeId}>
+				<Grid item xs={12} sm={6} md={6} key={placeId}>
 					<Card
 						raised
 						sx={{
@@ -244,16 +244,22 @@ export default function PlaceInformation() {
 											<OutlinedInput label="Attributes" />
 										}
 									>
-										{selectedPlacesMap[
-											placeId
-										].attributes.map((attribute) => (
-											<MenuItem
-												key={attribute}
-												value={attribute}
-											>
-												{attribute}
-											</MenuItem>
-										))}
+										{selectedPlacesMap[placeId].attributes
+											.filter(
+												(attribute) =>
+													attribute !==
+														"last_updated" &&
+													attribute !== "name" &&
+													attribute !== "place_id"
+											)
+											.map((attribute) => (
+												<MenuItem
+													key={attribute}
+													value={attribute}
+												>
+													{attribute}
+												</MenuItem>
+											))}
 									</Select>
 								</FormControl>
 							</Collapse>
@@ -268,7 +274,7 @@ export default function PlaceInformation() {
 								<IconButton
 									onClick={() => deletePlace(placeId)}
 								>
-									<DeleteIcon />
+									<DeleteIcon color="error" />
 								</IconButton>
 							</Box>
 						</CardContent>

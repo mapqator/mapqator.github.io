@@ -8,9 +8,15 @@ export default function GlobalContextProvider({ children }) {
 	const [savedPlacesMap, setSavedPlacesMap] = useState({
 		1: {
 			name: "Bangladesh University of Engineering and Technology",
+			place_id: 1,
+			formatted_address: "Polashi Bazar, Azimpur, Dhaka",
+			rating: "4.5",
 		},
 		2: {
 			name: "Labaid Hospital",
+			place_id: 2,
+			formatted_address: "Dhanmondi 32 Road, Dhaka",
+			rating: "4.8",
 		},
 	});
 	const [contextJSON, setContextJSON] = useState({});
@@ -46,12 +52,12 @@ export default function GlobalContextProvider({ children }) {
 	});
 	const [selectedPlacesMap, setSelectedPlacesMap] = useState({
 		1: {
-			selectedAttributes: ["formatted_address", "name"],
-			attributes: ["formatted_address", "name"],
+			selectedAttributes: ["formatted_address", "rating"],
+			attributes: ["formatted_address", "name", "place_id", "rating"],
 		},
 		2: {
-			selectedAttributes: ["formatted_address", "name"],
-			attributes: ["formatted_address", "name"],
+			selectedAttributes: ["formatted_address"],
+			attributes: ["formatted_address", "name", "place_id", "rating"],
 		},
 	});
 	const [nearbyPlacesMap, setNearbyPlacesMap] = useState({
@@ -182,6 +188,18 @@ export default function GlobalContextProvider({ children }) {
 			context_gpt: "",
 			classification: "planning",
 			username: "mahirlabibdihan",
+			evaluation: [
+				{
+					model: "Phi 3",
+					answer: 1,
+					verdict: "right",
+				},
+				{
+					model: "Llama 3",
+					answer: 2,
+					verdict: "wrong",
+				},
+			],
 		},
 	]);
 

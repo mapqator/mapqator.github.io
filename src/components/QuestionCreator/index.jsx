@@ -265,7 +265,7 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 											onClick={() => removeOption(index)}
 											sx={{ ml: 1 }}
 										>
-											<DeleteIcon />
+											<DeleteIcon color="error" />
 										</IconButton>
 									</InputAdornment>
 								),

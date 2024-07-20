@@ -19,9 +19,11 @@ export default function PlaceSearch() {
 		<div className="flex flex-col gap-2">
 			<AutocompleteSearchBox />
 			{Object.keys(selectedPlacesMap).length > 0 && (
-				<MapComponent locations={locations} />
+				<>
+					<MapComponent locations={locations} />
+					<PlaceInformation />
+				</>
 			)}
-			<PlaceInformation />
 		</div>
 	);
 }

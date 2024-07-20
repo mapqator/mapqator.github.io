@@ -17,6 +17,7 @@ import {
 	Checkbox,
 	Chip,
 	Divider,
+	Button,
 } from "@mui/material";
 import { Add, Delete, ExpandMore } from "@mui/icons-material";
 
@@ -93,46 +94,48 @@ export default function NearbyCard({
 				<Box
 					display="flex"
 					justifyContent="space-between"
-					alignItems="center"
+					alignItems="start"
 					className="gap-1"
 				>
 					<Typography variant="h6" component="div">
 						{savedPlacesMap[place_id].name ||
 							selectedPlacesMap[place_id].alias}
 					</Typography>
-					<Box className="flex flex-col items-end">
+					<Box className="flex flex-col items-end justify-start">
 						<IconButton onClick={handleDelete} size="small">
 							<Delete color="error" />
 						</IconButton>
-						<IconButton
-							onClick={() => setExpanded(!expanded)}
-							size="small"
-							sx={{
-								transform: expanded
-									? "rotate(180deg)"
-									: "rotate(0deg)",
-								transition: "0.3s",
-							}}
-						>
-							<ExpandMore />
-						</IconButton>
 					</Box>
 				</Box>
-				<Box display="flex" flexWrap="wrap" gap={1} mt={1}>
-					<Chip
-						label={e.type === "any" ? e.keyword : e.type}
-						color="primary"
+				<Box display="flex" justifyContent="space-between">
+					<Box display="flex" flexWrap="wrap" gap={1} mt={1}>
+						<Chip
+							label={e.type === "any" ? e.keyword : e.type}
+							color="primary"
+							size="small"
+						/>
+						<Chip
+							label={
+								e.rankBy === "prominence"
+									? `${e.radius} m`
+									: "Distance"
+							}
+							color="secondary"
+							size="small"
+						/>
+					</Box>
+					<IconButton
+						onClick={() => setExpanded(!expanded)}
 						size="small"
-					/>
-					<Chip
-						label={
-							e.rankBy === "prominence"
-								? `${e.radius} m`
-								: "Distance"
-						}
-						color="secondary"
-						size="small"
-					/>
+						sx={{
+							transform: expanded
+								? "rotate(180deg)"
+								: "rotate(0deg)",
+							transition: "0.3s",
+						}}
+					>
+						<ExpandMore />
+					</IconButton>
 				</Box>
 			</CardContent>
 			<Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -142,15 +145,17 @@ export default function NearbyCard({
 						<React.Fragment key={index3}>
 							<ListItem
 								secondaryAction={
-									<IconButton
-										edge="end"
+									<Button
+										startIcon={<Add />}
 										onClick={() =>
 											handleAddSave(place.place_id)
 										}
-										size="small"
+										disabled={
+											selectedPlacesMap[place.place_id]
+										}
 									>
-										<Add />
-									</IconButton>
+										Add
+									</Button>
 								}
 							>
 								<ListItemIcon>

@@ -17,6 +17,7 @@ import {
 	Chip,
 	Divider,
 	Checkbox,
+	Button,
 } from "@mui/material";
 import { Add, Delete, ExpandMore } from "@mui/icons-material";
 
@@ -76,7 +77,7 @@ export default function AreaCard({
 				<Box
 					display="flex"
 					justifyContent="space-between"
-					alignItems="center"
+					// alignItems="center"
 					className="gap-1"
 				>
 					<Typography variant="h6" component="div">
@@ -98,33 +99,35 @@ export default function AreaCard({
 						>
 							<Delete color="error" />
 						</IconButton>
-						<IconButton
-							onClick={() => setExpanded((prev) => !prev)}
-							size="small"
-							sx={{
-								transform: expanded
-									? "rotate(180deg)"
-									: "rotate(0deg)",
-								transition: "0.3s",
-							}}
-						>
-							<ExpandMore />
-						</IconButton>
 					</Box>
 				</Box>
-				<Box display="flex" flexWrap="wrap" gap={1} mt={1}>
-					<Chip label={poi.type} color="primary" size="small" />
-					<Chip
-						label={
-							(poisMap[place_id]
-								? poisMap[place_id][index2].places.filter(
-										(place) => place.selected
-								  ).length
-								: 0) + " POIs"
-						}
-						color="secondary"
+				<Box display="flex" justifyContent="space-between">
+					<Box display="flex" flexWrap="wrap" gap={1} mt={1}>
+						<Chip label={poi.type} color="primary" size="small" />
+						<Chip
+							label={
+								(poisMap[place_id]
+									? poisMap[place_id][index2].places.filter(
+											(place) => place.selected
+									  ).length
+									: 0) + " POIs"
+							}
+							color="secondary"
+							size="small"
+						/>
+					</Box>
+					<IconButton
+						onClick={() => setExpanded((prev) => !prev)}
 						size="small"
-					/>
+						sx={{
+							transform: expanded
+								? "rotate(180deg)"
+								: "rotate(0deg)",
+							transition: "0.3s",
+						}}
+					>
+						<ExpandMore />
+					</IconButton>
 				</Box>
 			</CardContent>
 			<Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -134,15 +137,17 @@ export default function AreaCard({
 						<React.Fragment key={index3}>
 							<ListItem
 								secondaryAction={
-									<IconButton
-										edge="end"
+									<Button
+										startIcon={<Add />}
 										onClick={() =>
 											handleAddSave(place.place_id)
 										}
-										size="small"
+										disabled={
+											selectedPlacesMap[place.place_id]
+										}
 									>
-										<Add />
-									</IconButton>
+										Add
+									</Button>
 								}
 							>
 								<ListItemIcon>
