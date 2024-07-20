@@ -94,7 +94,7 @@ export default function GlobalContextProvider({ children }) {
 						{
 							distance: "5 km",
 							duration: "6 mins",
-							label: "Via Mirpur",
+							label: "Mirpur",
 							steps: [],
 						},
 					],
@@ -105,7 +105,7 @@ export default function GlobalContextProvider({ children }) {
 						{
 							distance: "5 km",
 							duration: "6 mins",
-							label: "Via Uttara",
+							label: "Uttara",
 							steps: [],
 						},
 					],
@@ -116,7 +116,7 @@ export default function GlobalContextProvider({ children }) {
 						{
 							distance: "5 km",
 							duration: "6 mins",
-							label: "Via Jhigatola",
+							label: "Jhigatola",
 							steps: [],
 						},
 					],
@@ -127,13 +127,13 @@ export default function GlobalContextProvider({ children }) {
 						{
 							distance: "5 km",
 							duration: "6 mins",
-							label: "Via Uttara",
+							label: "Uttara",
 							steps: ["Go left from <b>Md pur</b>", "Then right"],
 						},
 						{
 							distance: "5 km",
 							duration: "6 mins",
-							label: "Via Dhanmondi",
+							label: "Dhanmondi",
 							steps: ["Go left from Md pur", "Then right"],
 						},
 					],

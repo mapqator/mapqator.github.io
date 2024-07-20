@@ -255,9 +255,8 @@ export default function DirectionCard({ from_id, to_id }) {
 																	primary={
 																		<div className="flex flex-row justify-between w-full">
 																			<h1 className="w-[70%]">
-																				{
-																					route.label
-																				}
+																				{"Via " +
+																					route.label}
 																			</h1>
 																			<h1 className="text-md text-right w-[15%]">
 																				{

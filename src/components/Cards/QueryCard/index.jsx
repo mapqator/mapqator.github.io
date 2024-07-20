@@ -62,9 +62,10 @@ export default function QueryCard({ entry, onEdit }) {
 								justifyContent: "flex-start",
 								width: "50%",
 								flexGap: "1rem",
+								alignItems: "center",
 							}}
 						>
-							<Typography sx={{ width: "20%" }}>
+							<Typography sx={{ width: "30%" }}>
 								#{state.id}
 							</Typography>
 
