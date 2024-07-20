@@ -24,9 +24,19 @@ export default function QuestionsContainer({ title, isPersonal, onEdit }) {
 
 	const handlePagination = (event, value) => {
 		setPage(value);
+		handleListChange(value);
 	};
 
 	useEffect(() => {
+		handleListChange(page);
+	}, [queries]);
+
+	useEffect(() => {
+		setPage(1);
+		handleListChange(1);
+	}, [selectedCategory]);
+
+	const handleListChange = (page) => {
 		const start = (page - 1) * itemsPerPage;
 		const end = start + itemsPerPage;
 		let newQueries;
@@ -41,7 +51,7 @@ export default function QuestionsContainer({ title, isPersonal, onEdit }) {
 		}
 		setPageCount(Math.ceil(newQueries.length / itemsPerPage));
 		setData(newQueries.slice(start, end));
-	}, [page, queries, selectedCategory]);
+	};
 	return (
 		<>
 			<div className="flex flex-row justify-between items-center">

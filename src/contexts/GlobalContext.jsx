@@ -207,6 +207,358 @@ export default function GlobalContextProvider({ children }) {
 				},
 			],
 		},
+		{
+			id: 153,
+			question: "Dummy Question",
+			answer: {
+				type: "mcq",
+				options: ["a", "b", "c", "d"],
+				correct: 1,
+			},
+			context: "Today is monday",
+			context_json: {
+				current_information: {
+					time: null,
+					day: "Monday",
+					location: "",
+				},
+			},
+			context_gpt: "",
+			classification: "routing",
+			username: "mahirlabibdihan",
+			evaluation: [
+				{
+					model: "Phi 3",
+					answer: 1,
+					verdict: "right",
+				},
+				{
+					model: "Llama 3",
+					answer: 2,
+					verdict: "wrong",
+				},
+			],
+		},
+		{
+			id: 154,
+			question: "Dummy Question",
+			answer: {
+				type: "mcq",
+				options: ["a", "b", "c", "d"],
+				correct: 1,
+			},
+			context: "Today is monday",
+			context_json: {
+				current_information: {
+					time: null,
+					day: "Monday",
+					location: "",
+				},
+			},
+			context_gpt: "",
+			classification: "time_calculation",
+			username: "mahirlabibdihan",
+			evaluation: [
+				{
+					model: "Phi 3",
+					answer: 1,
+					verdict: "right",
+				},
+				{
+					model: "Llama 3",
+					answer: 2,
+					verdict: "wrong",
+				},
+			],
+		},
+		{
+			id: 155,
+			question: "Dummy Question",
+			answer: {
+				type: "mcq",
+				options: ["a", "b", "c", "d"],
+				correct: 1,
+			},
+			context: "Today is monday",
+			context_json: {
+				current_information: {
+					time: null,
+					day: "Monday",
+					location: "",
+				},
+			},
+			context_gpt: "",
+			classification: "nearby_poi",
+			username: "mahirlabibdihan",
+			evaluation: [
+				{
+					model: "Phi 3",
+					answer: 1,
+					verdict: "right",
+				},
+				{
+					model: "Llama 3",
+					answer: 2,
+					verdict: "wrong",
+				},
+			],
+		},
+		{
+			id: 156,
+			question: "Dummy Question",
+			answer: {
+				type: "mcq",
+				options: ["a", "b", "c", "d"],
+				correct: 1,
+			},
+			context: "Today is monday",
+			context_json: {
+				current_information: {
+					time: null,
+					day: "Monday",
+					location: "",
+				},
+			},
+			context_gpt: "",
+			classification: "opinion",
+			username: "mahirlabibdihan",
+			evaluation: [
+				{
+					model: "Phi 3",
+					answer: 1,
+					verdict: "right",
+				},
+				{
+					model: "Llama 3",
+					answer: 2,
+					verdict: "wrong",
+				},
+			],
+		},
+		{
+			id: 157,
+			question: "Dummy Question",
+			answer: {
+				type: "mcq",
+				options: ["a", "b", "c", "d"],
+				correct: 1,
+			},
+			context: "Today is monday",
+			context_json: {
+				current_information: {
+					time: null,
+					day: "Monday",
+					location: "",
+				},
+			},
+			context_gpt: "",
+			classification: "planning",
+			username: "mahirlabibdihan",
+			evaluation: [
+				{
+					model: "Phi 3",
+					answer: 1,
+					verdict: "right",
+				},
+				{
+					model: "Llama 3",
+					answer: 2,
+					verdict: "wrong",
+				},
+			],
+		},
+		{
+			id: 158,
+			question: "Dummy Question",
+			answer: {
+				type: "mcq",
+				options: ["a", "b", "c", "d"],
+				correct: 1,
+			},
+			context: "Today is monday",
+			context_json: {
+				current_information: {
+					time: null,
+					day: "Monday",
+					location: "",
+				},
+			},
+			context_gpt: "",
+			classification: "planning",
+			username: "mahirlabibdihan",
+			evaluation: [
+				{
+					model: "Phi 3",
+					answer: 1,
+					verdict: "right",
+				},
+				{
+					model: "Llama 3",
+					answer: 2,
+					verdict: "wrong",
+				},
+			],
+		},
+		{
+			id: 159,
+			question: "Dummy Question",
+			answer: {
+				type: "mcq",
+				options: ["a", "b", "c", "d"],
+				correct: 1,
+			},
+			context: "Today is monday",
+			context_json: {
+				current_information: {
+					time: null,
+					day: "Monday",
+					location: "",
+				},
+			},
+			context_gpt: "",
+			classification: "planning",
+			username: "mahirlabibdihan",
+			evaluation: [
+				{
+					model: "Phi 3",
+					answer: 1,
+					verdict: "right",
+				},
+				{
+					model: "Llama 3",
+					answer: 2,
+					verdict: "wrong",
+				},
+			],
+		},
+		{
+			id: 160,
+			question: "Dummy Question",
+			answer: {
+				type: "mcq",
+				options: ["a", "b", "c", "d"],
+				correct: 1,
+			},
+			context: "Today is monday",
+			context_json: {
+				current_information: {
+					time: null,
+					day: "Monday",
+					location: "",
+				},
+			},
+			context_gpt: "",
+			classification: "planning",
+			username: "mahirlabibdihan",
+			evaluation: [
+				{
+					model: "Phi 3",
+					answer: 1,
+					verdict: "right",
+				},
+				{
+					model: "Llama 3",
+					answer: 2,
+					verdict: "wrong",
+				},
+			],
+		},
+		{
+			id: 161,
+			question: "Dummy Question",
+			answer: {
+				type: "mcq",
+				options: ["a", "b", "c", "d"],
+				correct: 1,
+			},
+			context: "Today is monday",
+			context_json: {
+				current_information: {
+					time: null,
+					day: "Monday",
+					location: "",
+				},
+			},
+			context_gpt: "",
+			classification: "planning",
+			username: "mahirlabibdihan",
+			evaluation: [
+				{
+					model: "Phi 3",
+					answer: 1,
+					verdict: "right",
+				},
+				{
+					model: "Llama 3",
+					answer: 2,
+					verdict: "wrong",
+				},
+			],
+		},
+		{
+			id: 162,
+			question: "Dummy Question",
+			answer: {
+				type: "mcq",
+				options: ["a", "b", "c", "d"],
+				correct: 1,
+			},
+			context: "Today is monday",
+			context_json: {
+				current_information: {
+					time: null,
+					day: "Monday",
+					location: "",
+				},
+			},
+			context_gpt: "",
+			classification: "planning",
+			username: "mahirlabibdihan",
+			evaluation: [
+				{
+					model: "Phi 3",
+					answer: 1,
+					verdict: "right",
+				},
+				{
+					model: "Llama 3",
+					answer: 2,
+					verdict: "wrong",
+				},
+			],
+		},
+		{
+			id: 163,
+			question: "Dummy Question",
+			answer: {
+				type: "mcq",
+				options: ["a", "b", "c", "d"],
+				correct: 1,
+			},
+			context: "Today is monday",
+			context_json: {
+				current_information: {
+					time: null,
+					day: "Monday",
+					location: "",
+				},
+			},
+			context_gpt: "",
+			classification: "planning",
+			username: "mahirlabibdihan",
+			evaluation: [
+				{
+					model: "Phi 3",
+					answer: 1,
+					verdict: "right",
+				},
+				{
+					model: "Llama 3",
+					answer: 2,
+					verdict: "wrong",
+				},
+			],
+		},
 	]);
 
 	const fetchQueries = async () => {
