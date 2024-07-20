@@ -4,7 +4,6 @@ import { Box, Typography, Button } from "@mui/material";
 import Image from "next/image";
 import { AppBar, Toolbar } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { getTokenFromLocalStorage } from "@/api/base";
 import { Login, Logout } from "@mui/icons-material";
 import config from "@/config.json";
 import { GlobalContext } from "@/contexts/GlobalContext";

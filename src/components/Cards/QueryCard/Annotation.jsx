@@ -20,8 +20,9 @@ import { getUserName } from "@/api/base";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { showError } from "@/app/page";
 const queryApi = new QueryApi();
-export default function Annotation({ state, setState }) {
+export default function Annotation({ query }) {
 	const { isAuthenticated } = useContext(GlobalContext);
+	const { setQueries } = useContext(GlobalContext);
 	const [value, setValue] = useState({
 		answer: "",
 		explanation: "",
@@ -29,11 +30,11 @@ export default function Annotation({ state, setState }) {
 	});
 
 	useEffect(() => {
-		if (state.human) {
-			console.log("Annotation: ", state.human);
-			setValue(state.human);
+		if (query.human) {
+			console.log("Annotation: ", query.human);
+			setValue(query.human);
 		}
-	}, [state]);
+	}, [query]);
 	return (
 		<>
 			<Divider />
@@ -75,7 +76,7 @@ export default function Annotation({ state, setState }) {
 							input={<OutlinedInput label={"Correct Answer"} />}
 						>
 							<MenuItem value={0}>No answer</MenuItem>
-							{state.answer.options.map((option, index) => (
+							{query.answer.options.map((option, index) => (
 								<MenuItem key={index} value={index + 1}>
 									{option}
 								</MenuItem>
@@ -103,7 +104,7 @@ export default function Annotation({ state, setState }) {
 							onClick={async () => {
 								if (isAuthenticated) {
 									const res = await queryApi.annotate(
-										state.id,
+										query.id,
 										{
 											answer: value.answer,
 											explanation: value.explanation,
@@ -111,26 +112,43 @@ export default function Annotation({ state, setState }) {
 									);
 									console.log(res);
 									if (res.success) {
-										setState((prev) => ({
-											...prev,
-											human: {
-												answer: value.answer,
-												explanation: value.explanation,
-												username: res.data[0].username,
-											},
-										}));
+										setQueries((prev) =>
+											prev.map((q) =>
+												q.id === query.id
+													? {
+															...q,
+															human: {
+																answer: value.answer,
+																explanation:
+																	value.explanation,
+																username:
+																	res.data[0]
+																		.username,
+															},
+													  }
+													: q
+											)
+										);
 									} else {
 										showError("Can't save annotation");
 									}
 								} else {
-									setState((prev) => ({
-										...prev,
-										human: {
-											answer: value.answer,
-											explanation: value.explanation,
-											username: getUserName(),
-										},
-									}));
+									setQueries((prev) =>
+										prev.map((q) =>
+											q.id === query.id
+												? {
+														...q,
+														human: {
+															answer: value.answer,
+															explanation:
+																value.explanation,
+															username:
+																getUserName(),
+														},
+												  }
+												: q
+										)
+									);
 								}
 							}}
 							startIcon={<Save />}

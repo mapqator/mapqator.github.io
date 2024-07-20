@@ -9,7 +9,7 @@ import { Edit } from "@mui/icons-material";
 import dayjs from "dayjs";
 const mapApi = new MapApi();
 
-export default function QueryEditButton({ onEdit, state }) {
+export default function QueryEditButton({ onEdit, query }) {
 	const [loading, setLoading] = useState(false);
 	const {
 		savedPlacesMap,
@@ -41,23 +41,23 @@ export default function QueryEditButton({ onEdit, state }) {
 	};
 
 	const handleEdit = async () => {
-		setLoading(true);
-		for (let place_id in state.context_json.places) {
+		// setLoading(true);
+		for (let place_id in query.context_json.places) {
 			await handleSave(place_id);
 		}
-		setSelectedPlacesMap(state.context_json.places ?? {});
-		setDistanceMatrix(state.context_json.distance_matrix ?? {});
-		setDirectionInformation(state.context_json.directions ?? {});
-		setNearbyPlacesMap(state.context_json.nearby_places ?? {});
+		setSelectedPlacesMap(query.context_json.places ?? {});
+		setDistanceMatrix(query.context_json.distance_matrix ?? {});
+		setDirectionInformation(query.context_json.directions ?? {});
+		setNearbyPlacesMap(query.context_json.nearby_places ?? {});
 		setCurrentInformation(
-			state.context_json.current_information
+			query.context_json.current_information
 				? {
-						time: state.context_json.current_information.time
-							? dayjs(state.context_json.current_information.time)
+						time: query.context_json.current_information.time
+							? dayjs(query.context_json.current_information.time)
 							: null,
-						day: state.context_json.current_information.day,
+						day: query.context_json.current_information.day,
 						location:
-							state.context_json.current_information.location,
+							query.context_json.current_information.location,
 				  }
 				: {
 						time: null,
@@ -66,41 +66,41 @@ export default function QueryEditButton({ onEdit, state }) {
 				  }
 		);
 		setPoisMap(
-			state.context_json.pois?.length > 0 ? state.context_json.pois : {}
+			query.context_json.pois?.length > 0 ? query.context_json.pois : {}
 		);
 		setContext({
 			places: ContextGeneratorService.getPlacesContext(
-				state.context_json.places ?? {},
+				query.context_json.places ?? {},
 				savedPlacesMap
 			),
 			nearby: ContextGeneratorService.getNearbyContext(
-				state.context_json.nearby_places ?? {},
+				query.context_json.nearby_places ?? {},
 				savedPlacesMap
 			),
 			area: ContextGeneratorService.getAreaContext(
-				state.context_json.pois ?? {},
+				query.context_json.pois ?? {},
 				savedPlacesMap
 			),
 			distance: ContextGeneratorService.getDistanceContext(
-				state.context_json.distance_matrix ?? {},
+				query.context_json.distance_matrix ?? {},
 				savedPlacesMap
 			),
 			direction: ContextGeneratorService.getDirectionContext(
-				state.context_json.directions ?? {},
+				query.context_json.directions ?? {},
 				savedPlacesMap
 			),
 			params: ContextGeneratorService.getParamsContext(
-				state.context_json.current_information
+				query.context_json.current_information
 					? {
-							time: state.context_json.current_information.time
+							time: query.context_json.current_information.time
 								? dayjs(
-										state.context_json.current_information
+										query.context_json.current_information
 											.time
 								  )
 								: null,
-							day: state.context_json.current_information.day,
+							day: query.context_json.current_information.day,
 							location:
-								state.context_json.current_information.location,
+								query.context_json.current_information.location,
 					  }
 					: {
 							time: null,
@@ -110,9 +110,9 @@ export default function QueryEditButton({ onEdit, state }) {
 				savedPlacesMap
 			),
 		});
-		setQuery(state);
+		setQuery(query);
 		onEdit();
-		setLoading(false);
+		// setLoading(false);
 	};
 
 	return (

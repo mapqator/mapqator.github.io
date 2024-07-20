@@ -30,9 +30,8 @@ import { LoadingButton } from "@mui/lab";
 import { showError, showSuccess } from "@/app/page";
 const queryApi = new QueryApi();
 
-export default function QuestionForm() {
-	const { query, setQuery, initQuery, queries, setQueries, isAuthenticated } =
-		useContext(GlobalContext);
+export default function QuestionForm({ handleSubmit, handleReset }) {
+	const { query, setQuery } = useContext(GlobalContext);
 
 	const [loading, setLoading] = useState(false);
 	const handleOptionChange = (index, value) => {
@@ -82,70 +81,14 @@ export default function QuestionForm() {
 		});
 	};
 
-	const handleReset = () => {
-		setQuery((prev) => ({
-			...initQuery,
-			context: prev.context,
-			context_json: prev.context,
-		}));
-	};
-
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-		setLoading(true);
-		if (isAuthenticated) {
-			if (query.id === undefined) {
-				const res = await queryApi.createQuery(query);
-				if (res.success) {
-					// update the queries
-					showSuccess("Query saved successfully");
-					const newQueries = [...queries];
-					newQueries.unshift(res.data[0]);
-					setQueries(newQueries);
-					handleReset();
-				} else {
-					showError("Can't save this query");
-					window.scrollTo(0, 0);
-				}
-			} else {
-				const res = await queryApi.updateQuery(query.id, query);
-				if (res.success) {
-					setQueries((prev) =>
-						prev.map((q) =>
-							q.id === res.data[0].id ? res.data[0] : q
-						)
-					);
-					// update the queries
-					showSuccess("Query edited successfully");
-					handleReset();
-				} else {
-					showError("Can't update this query");
-					window.scrollTo(0, 0);
-				}
-			}
-		} else {
-			if (query.id === undefined) {
-				const newQueries = [...queries];
-				newQueries.unshift({
-					...query,
-					id: 0,
-					username: getUserName(),
-				});
-				setQueries(newQueries);
-				showSuccess("Query saved successfully");
-			} else {
-				setQueries((prev) =>
-					prev.map((q) => (q.id === query.id ? query : q))
-				);
-				showSuccess("Query edited successfully");
-			}
-			handleReset();
-		}
-
-		setLoading(false);
-	};
 	return (
-		<form onSubmit={handleSubmit}>
+		<form
+			onSubmit={async (e) => {
+				setLoading(true);
+				await handleSubmit(e);
+				setLoading(false);
+			}}
+		>
 			<Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
 				Question:
 			</Typography>

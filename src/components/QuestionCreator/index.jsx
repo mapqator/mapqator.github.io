@@ -24,9 +24,13 @@ import QueryApi from "@/api/queryApi";
 import MyQuestions from "./MyQuestions";
 import categories from "@/database/categories.json";
 import { jwtDecode } from "jwt-decode";
-import { getTokenFromLocalStorage, getUserName } from "@/api/base";
+import { getUserName } from "@/api/base";
 import { Clear, Save } from "@mui/icons-material";
 import QuestionForm from "./QuestionForm";
+import { showError, showSuccess } from "@/app/page";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
+import CollapsedContext from "../Cards/QueryCard/CollapsedContext";
 const queryApi = new QueryApi();
 
 export default function QuestionCreationPage({ handleContextEdit }) {
@@ -35,26 +39,50 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 		query,
 		setQuery,
 		queries,
+		setQueries,
 		distanceMatrix,
 		selectedPlacesMap,
 		nearbyPlacesMap,
 		currentInformation,
 		poisMap,
 		directionInformation,
+		isAuthenticated,
+		initQuery,
 	} = useContext(GlobalContext);
 	const [expanded, setExpanded] = useState(false);
 
-	useEffect(() => {
+	let text = "";
+	text += context.places !== "" ? context.places : "";
+	text +=
+		context.nearby !== "" ? (text !== "" ? "\n" : "") + context.nearby : "";
+	text += context.area !== "" ? (text !== "" ? "\n" : "") + context.area : "";
+	text +=
+		context.distance !== ""
+			? (text !== "" ? "\n" : "") + context.distance
+			: "";
+	text +=
+		context.direction !== ""
+			? (text !== "" ? "\n" : "") + context.direction
+			: "";
+	text +=
+		context.params !== "" ? (text !== "" ? "\n" : "") + context.params : "";
+
+	console.log(text, text.split("\n"));
+
+	const handleReset = () => {
 		setQuery((prev) => ({
-			...prev,
-			context: [
-				...context.places,
-				...context.nearby,
-				...context.area,
-				...context.distance,
-				...context.direction,
-				...context.params,
-			].reduce((acc, e) => acc + e + "\n", ""),
+			...initQuery,
+			context: prev.context,
+			context_json: prev.context,
+		}));
+	};
+
+	const handleSubmit = async (event) => {
+		event.preventDefault();
+
+		const newQuery = {
+			...query,
+			context: text,
 			context_json: {
 				distance_matrix: distanceMatrix,
 				places: selectedPlacesMap,
@@ -63,8 +91,65 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 				pois: poisMap,
 				directions: directionInformation,
 			},
-		}));
-	}, [context]);
+		};
+		if (isAuthenticated) {
+			if (query.id === undefined) {
+				const res = await queryApi.createQuery(newQuery);
+				if (res.success) {
+					// update the queries
+					showSuccess("Query saved successfully");
+					const newQueries = [...queries];
+					newQueries.unshift(res.data[0]);
+					setQueries(newQueries);
+					handleReset();
+				} else {
+					showError("Can't save this query");
+					window.scrollTo(0, 0);
+				}
+			} else {
+				const res = await queryApi.updateQuery(query.id, newQuery);
+				if (res.success) {
+					setQueries((prev) =>
+						prev.map((q) =>
+							q.id === res.data[0].id ? res.data[0] : q
+						)
+					);
+					// update the queries
+					showSuccess("Query edited successfully");
+					handleReset();
+				} else {
+					showError("Can't update this query");
+					window.scrollTo(0, 0);
+				}
+			}
+		} else {
+			if (query.id === undefined) {
+				const new_id =
+					"G-" +
+					queries.filter((item) => item.username === getUserName())
+						.length;
+				const newQueries = [...queries];
+				newQueries.unshift({
+					...newQuery,
+					id: new_id,
+					username: getUserName(),
+					human: {
+						answer: "",
+						explanation: "",
+						username: "",
+					},
+				});
+				setQueries(newQueries);
+				showSuccess("Query saved successfully");
+			} else {
+				setQueries((prev) =>
+					prev.map((q) => (q.id === query.id ? newQuery : q))
+				);
+				showSuccess("Query edited successfully");
+			}
+			handleReset();
+		}
+	};
 
 	return (
 		<>
@@ -77,7 +162,6 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 						display: "flex",
 						justifyContent: "space-between",
 						alignItems: "center",
-						mb: 2,
 					}}
 				>
 					<Typography variant="h6">Context:</Typography>
@@ -88,32 +172,41 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 						Edit Context
 					</Button>
 				</Box>
+				<Divider sx={{ my: 2 }} />
 				<Box>
-					{query.context.split("\n").map(
-						(line, index) =>
-							(expanded || index < 5) && (
-								<React.Fragment key={index}>
-									<p
-										key={index}
-										className="w-full text-left"
-										dangerouslySetInnerHTML={{
-											__html: line,
-										}}
-									/>
-								</React.Fragment>
-							)
+					<CollapsedContext context={text} />
+					{/* <React.Fragment>
+						<p
+							className="w-full text-left"
+							dangerouslySetInnerHTML={{
+								__html: expanded
+									? text
+									: text.substring(0, 200) + " ...",
+							}}
+							style={{
+								whiteSpace: "pre-line",
+							}}
+						/>
+					</React.Fragment>
+					{text === "" && (
+						<p className="text-center my-auto text-lg md:text-xl text-zinc-400">
+							No context provided.
+						</p>
 					)}
-					{query.context.split("\n").length > 5 && (
+					{text.length > 200 && (
 						<Button
 							onClick={() => setExpanded((prev) => !prev)}
 							sx={{ mt: 1, textTransform: "none" }}
 						>
 							{expanded ? "Show Less" : "Read More"}
 						</Button>
-					)}
+					)} */}
 				</Box>
 			</Paper>
-			<QuestionForm />
+			<QuestionForm
+				handleSubmit={handleSubmit}
+				handleReset={handleReset}
+			/>
 
 			{queries.filter((item) => item.username === getUserName()).length >
 				0 && (

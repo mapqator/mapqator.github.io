@@ -242,14 +242,19 @@ export default function ContextGenerator({
 				<>
 					<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
 						<ContextViewer
-							context={[
-								...context.places,
-								...context.nearby,
-								...context.area,
-								...context.distance,
-								...context.direction,
-								...context.params,
-							]}
+							context={
+								context.places +
+								"\n" +
+								context.nearby +
+								"\n" +
+								context.area +
+								"\n" +
+								context.distance +
+								"\n" +
+								context.direction +
+								"\n" +
+								context.params
+							}
 						/>
 					</Paper>
 				</>

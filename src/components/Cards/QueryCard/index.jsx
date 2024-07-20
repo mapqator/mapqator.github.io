@@ -7,6 +7,7 @@ import {
 	AccordionDetails,
 	Box,
 	Chip,
+	Paper,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,13 +20,9 @@ import OptionsPreview from "./OptionsPreview";
 
 export default function QueryCard({ entry, onEdit }) {
 	const [flag, setFlag] = useState(false);
-	const [state, setState] = useState(entry);
-	useEffect(() => {
-		setState(entry);
-	}, [entry]);
 
 	useEffect(() => {
-		const invalid = state.evaluation?.find(
+		const invalid = entry.evaluation?.find(
 			(e) =>
 				e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
 				e.verdict === "invalid"
@@ -33,16 +30,16 @@ export default function QueryCard({ entry, onEdit }) {
 		if (invalid) {
 			setFlag(true);
 		} else {
-			setFlag(parseInt(state.human.answer) === 0);
+			setFlag(entry.human.answer === 0);
 		}
-	}, [state]);
+	}, [entry]);
 
 	return (
-		<Accordion key={state.id} sx={{ mb: 2 }}>
+		<Accordion key={entry.id} sx={{ mb: 2 }}>
 			<AccordionSummary
 				expandIcon={<ExpandMoreIcon />}
-				aria-controls={`panel${state.id}-content`}
-				id={`panel${state.id}-header`}
+				aria-controls={`panel${entry.id}-content`}
+				id={`panel${entry.id}-header`}
 			>
 				<Box
 					sx={{
@@ -50,6 +47,7 @@ export default function QueryCard({ entry, onEdit }) {
 						flexDirection: "column",
 						width: "100%",
 					}}
+					className="gap-2"
 				>
 					<Box
 						sx={{
@@ -62,46 +60,61 @@ export default function QueryCard({ entry, onEdit }) {
 							sx={{
 								display: "flex",
 								justifyContent: "flex-start",
-								width: "50%",
+								width: "70%",
 								flexGap: "1rem",
 								alignItems: "center",
 							}}
 						>
-							<Typography sx={{ width: "30%" }}>
-								#{state.id}
+							<Typography sx={{ width: "20%" }}>
+								#{entry.id}
 							</Typography>
 
 							<Box>
 								<Chip
-									label={state.classification}
+									label={entry.classification}
 									color="primary"
 								/>
 							</Box>
 						</Box>
 
-						<div className="flex flex-row gap-2 w-[50%] justify-end">
-							{flag && (
-								<Box sx={{ width: "20%" }}>
-									<Chip label={"Invalid"} color="error" />
-								</Box>
-							)}
-							<h2 className="text-base font-semibold px-1 flex flex-row gap-1 items-center">
-								<FontAwesomeIcon icon={faUser} />
-								{state.username}
-							</h2>
-						</div>
+						<h2 className="text-base font-semibold px-1 flex flex-row gap-1 items-center">
+							<FontAwesomeIcon icon={faUser} />
+							{entry.username}
+						</h2>
 					</Box>
-					<Typography sx={{ color: "text.primary", mt: 1 }}>
-						{state.question}
-					</Typography>
+					<div className="flex flex-row gap-4 justify-between items-start">
+						<Typography
+							sx={{
+								color: "text.primary",
+								mt: 1,
+								whiteSpace: "pre-line",
+							}}
+						>
+							{entry.question}
+						</Typography>
+						{flag && (
+							<Chip
+								label={"Invalid"}
+								color="error"
+								className="ml-auto"
+							/>
+						)}
+					</div>
 				</Box>
 			</AccordionSummary>
 			<AccordionDetails>
-				<CollapsedContext context={state.context} />
-				<OptionsPreview answer={state.answer} />
-				<LLMAnswers evaluation={state.evaluation} />
-				<Annotation {...{ state, setState }} />
-				<QueryEditButton {...{ onEdit, state }} />
+				<Box sx={{ mb: 2 }}>
+					<Typography variant="h6" gutterBottom>
+						Context:
+					</Typography>
+					<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
+						<CollapsedContext context={entry.context} />
+					</Paper>
+				</Box>
+				<OptionsPreview answer={entry.answer} />
+				<LLMAnswers evaluation={entry.evaluation} />
+				<Annotation query={entry} />
+				<QueryEditButton {...{ onEdit }} query={entry} />
 			</AccordionDetails>
 		</Accordion>
 	);

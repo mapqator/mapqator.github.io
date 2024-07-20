@@ -231,9 +231,9 @@ export default function GlobalContextProvider({ children }) {
 				},
 			],
 			human: {
-				answer: null,
-				explanation: null,
-				username: null,
+				answer: "",
+				explanation: "",
+				username: "",
 			},
 		},
 		{
@@ -244,14 +244,8 @@ export default function GlobalContextProvider({ children }) {
 				options: ["a", "b", "c", "d"],
 				correct: 1,
 			},
-			context: "Today is monday",
-			context_json: {
-				current_information: {
-					time: null,
-					day: "Monday",
-					location: "",
-				},
-			},
+			context: "",
+			context_json: {},
 			context_gpt: "",
 			classification: "routing",
 			username: "mahirlabibdihan",
@@ -268,9 +262,9 @@ export default function GlobalContextProvider({ children }) {
 				},
 			],
 			human: {
-				answer: null,
-				explanation: null,
-				username: null,
+				answer: "",
+				explanation: "",
+				username: "",
 			},
 		},
 		{
@@ -305,9 +299,9 @@ export default function GlobalContextProvider({ children }) {
 				},
 			],
 			human: {
-				answer: null,
-				explanation: null,
-				username: null,
+				answer: "",
+				explanation: "",
+				username: "",
 			},
 		},
 		{
@@ -342,9 +336,9 @@ export default function GlobalContextProvider({ children }) {
 				},
 			],
 			human: {
-				answer: null,
-				explanation: null,
-				username: null,
+				answer: "",
+				explanation: "",
+				username: "",
 			},
 		},
 		{
@@ -379,9 +373,9 @@ export default function GlobalContextProvider({ children }) {
 				},
 			],
 			human: {
-				answer: null,
-				explanation: null,
-				username: null,
+				answer: "",
+				explanation: "",
+				username: "",
 			},
 		},
 		{
@@ -416,9 +410,9 @@ export default function GlobalContextProvider({ children }) {
 				},
 			],
 			human: {
-				answer: null,
-				explanation: null,
-				username: null,
+				answer: "",
+				explanation: "",
+				username: "",
 			},
 		},
 		{
@@ -453,9 +447,9 @@ export default function GlobalContextProvider({ children }) {
 				},
 			],
 			human: {
-				answer: null,
-				explanation: null,
-				username: null,
+				answer: "",
+				explanation: "",
+				username: "",
 			},
 		},
 		{
@@ -490,9 +484,9 @@ export default function GlobalContextProvider({ children }) {
 				},
 			],
 			human: {
-				answer: null,
-				explanation: null,
-				username: null,
+				answer: "",
+				explanation: "",
+				username: "",
 			},
 		},
 		{
@@ -527,9 +521,9 @@ export default function GlobalContextProvider({ children }) {
 				},
 			],
 			human: {
-				answer: null,
-				explanation: null,
-				username: null,
+				answer: "",
+				explanation: "",
+				username: "",
 			},
 		},
 		{
@@ -564,9 +558,9 @@ export default function GlobalContextProvider({ children }) {
 				},
 			],
 			human: {
-				answer: null,
-				explanation: null,
-				username: null,
+				answer: "",
+				explanation: "",
+				username: "",
 			},
 		},
 		{
@@ -601,9 +595,9 @@ export default function GlobalContextProvider({ children }) {
 				},
 			],
 			human: {
-				answer: null,
-				explanation: null,
-				username: null,
+				answer: "",
+				explanation: "",
+				username: "",
 			},
 		},
 		{
@@ -638,9 +632,9 @@ export default function GlobalContextProvider({ children }) {
 				},
 			],
 			human: {
-				answer: null,
-				explanation: null,
-				username: null,
+				answer: "",
+				explanation: "",
+				username: "",
 			},
 		},
 	]);

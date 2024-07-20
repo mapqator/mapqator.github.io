@@ -99,7 +99,7 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 };
 const ContextGeneratorService = {
 	getPlacesContext: (selectedPlacesMap, savedPlacesMap) => {
-		const newContext = [];
+		let newContext = "";
 		for (const place_id of Object.keys(selectedPlacesMap)) {
 			const text = placeToContext(
 				place_id,
@@ -107,251 +107,159 @@ const ContextGeneratorService = {
 				savedPlacesMap
 			);
 			if (text !== "") {
-				newContext.push(
-					`Information of <b>${savedPlacesMap[place_id]?.name}</b>:`
-				);
-
-				text.split("\n").forEach((line) => {
-					newContext.push(line);
-				});
+				if (newContext.length > 0) {
+					newContext += "\n";
+				}
+				newContext +=
+					`Information of <b>${savedPlacesMap[place_id]?.name}</b>:\n` +
+					text;
 			}
 		}
 		return newContext;
 	},
 	getParamsContext: (currentInformation, savedPlacesMap) => {
-		const newContext = [];
+		let newContext = "";
 		if (currentInformation.time && currentInformation.day !== "") {
-			newContext.push(
-				`Current time is ${currentInformation.time.format(
-					"h:mm a"
-				)} on ${currentInformation.day}.`
-			);
+			newContext += `Current time is ${currentInformation.time.format(
+				"h:mm a"
+			)} on ${currentInformation.day}.\n`;
 		} else if (currentInformation.time) {
-			newContext.push(
-				`Current time is ${currentInformation.time.format("h:mm a")}.`
-			);
+			newContext += `Current time is ${currentInformation.time.format(
+				"h:mm a"
+			)}.\n`;
 		} else if (currentInformation.day !== "") {
-			newContext.push(`Today is ${currentInformation.day}.`);
+			newContext += `Current day is ${currentInformation.day}.\n`;
 		}
 
 		if (currentInformation.location !== "") {
-			newContext.push(
-				`Current location of user is <b>${
-					savedPlacesMap[currentInformation.location]?.name
-				}</b>.`
-			);
+			newContext += `Current location of user is <b>${
+				savedPlacesMap[currentInformation.location]?.name
+			}</b>.\n`;
 		}
 		return newContext;
 	},
 	getAreaContext: (poisMap, savedPlacesMap) => {
-		const newContext = [];
+		let newContext = "";
 		Object.keys(poisMap).forEach((place_id, index) => {
 			poisMap[place_id].forEach((poi) => {
-				newContext.push(
-					`Places in ${savedPlacesMap[place_id]?.name} of type \"${poi.type}\" are:`
-				);
+				if (newContext.length > 0) {
+					newContext += "\n";
+				}
+				newContext += `Places in ${savedPlacesMap[place_id]?.name} of type \"${poi.type}\" are:\n`;
 				let counter = 1;
 				poi.places.forEach((place) => {
 					if (place.selected) {
-						newContext.push(
-							`${counter}. <b>${
-								savedPlacesMap[place.place_id]?.name ||
-								place.name
-							}</b> (${
-								place.formatted_address ||
-								savedPlacesMap[place.place_id]?.vicinity
-							})`
-						);
+						newContext += `${counter}. <b>${
+							savedPlacesMap[place.place_id]?.name || place.name
+						}</b> (${
+							place.formatted_address ||
+							savedPlacesMap[place.place_id]?.vicinity
+						})\n`;
 						counter++;
 					}
 				});
-
-				newContext.push("");
 			});
 		});
 		return newContext;
 	},
 	getNearbyContext: (nearbyPlacesMap, savedPlacesMap) => {
-		const newContext = [];
+		let newContext = "";
 		Object.keys(nearbyPlacesMap).forEach((place_id, index) => {
 			nearbyPlacesMap[place_id].forEach((e) => {
-				newContext.push(
-					`Nearby places of ${
-						// selectedPlacesMap[place_id].alias ||
-						savedPlacesMap[place_id]?.name
-					} ${e.type === "any" ? "" : 'of type "' + e.type + '"'} ${
-						e.keyword !== ""
-							? 'with keyword "' + e.keyword + '"'
-							: ""
-					} are (${
-						e.hasRadius
-							? "in " + e.radius + " m radius"
-							: "sorted by distance in ascending order"
-					}):`
-				);
+				if (newContext.length > 0) {
+					newContext += "\n";
+				}
+				newContext += `Nearby places of ${
+					// selectedPlacesMap[place_id].alias ||
+					savedPlacesMap[place_id]?.name
+				} ${e.type === "any" ? "" : 'of type "' + e.type + '"'} ${
+					e.keyword !== "" ? 'with keyword "' + e.keyword + '"' : ""
+				} are (${
+					e.hasRadius
+						? "in " + e.radius + " m radius"
+						: "sorted by distance in ascending order"
+				}):\n`;
 				let counter = 1;
 				e.places.forEach((near_place) => {
 					if (near_place.selected) {
-						newContext.push(
-							`${counter}. <b>${
-								savedPlacesMap[near_place.place_id]?.name ||
-								near_place.name
-							}</b> (${
-								near_place.formatted_address ||
-								savedPlacesMap[near_place.place_id]?.vicinity
-							})`
-						);
+						newContext += `${counter}. <b>${
+							savedPlacesMap[near_place.place_id]?.name ||
+							near_place.name
+						}</b> (${
+							near_place.formatted_address ||
+							savedPlacesMap[near_place.place_id]?.vicinity
+						})\n`;
 						counter++;
 					}
 				});
-
-				newContext.push("\n");
 			});
 		});
 		return newContext;
 	},
 	getDistanceContext: (distanceMatrix, savedPlacesMap) => {
-		const newContext = [];
+		let newContext = "";
 		Object.keys(distanceMatrix).forEach((from_id) => {
 			Object.keys(distanceMatrix[from_id]).forEach((to_id) => {
 				Object.keys(distanceMatrix[from_id][to_id]).forEach((mode) => {
-					if (mode === "transit") {
-						newContext.push(
-							`Distance from ${
-								// selectedPlacesMap[from_id].alias ||
-								savedPlacesMap[from_id]?.name
-							} to ${
-								// selectedPlacesMap[to_id].alias ||
-								savedPlacesMap[to_id]?.name
-							} by public transport is ${
-								distanceMatrix[from_id][to_id][mode].distance
-							} (${
-								distanceMatrix[from_id][to_id][mode].duration
-							}).`
-						);
-					} else if (mode === "driving") {
-						newContext.push(
-							`Distance from ${
-								// selectedPlacesMap[from_id].alias ||
-								savedPlacesMap[from_id]?.name
-							} to ${
-								// selectedPlacesMap[to_id].alias ||
-								savedPlacesMap[to_id]?.name
-							} by car is ${
-								distanceMatrix[from_id][to_id][mode].distance
-							} (${
-								distanceMatrix[from_id][to_id][mode].duration
-							}).`
-						);
-					} else if (mode === "bicycling") {
-						newContext.push(
-							`Distance from ${
-								// selectedPlacesMap[from_id].alias ||
-								savedPlacesMap[from_id]?.name
-							} to ${
-								// selectedPlacesMap[to_id].alias ||
-								savedPlacesMap[to_id]?.name
-							} by cycle is ${
-								distanceMatrix[from_id][to_id][mode].distance
-							} (${
-								distanceMatrix[from_id][to_id][mode].duration
-							}).`
-						);
-					} else if (mode === "walking") {
-						newContext.push(
-							`Distance from ${
-								// selectedPlacesMap[from_id].alias ||
-								savedPlacesMap[from_id]?.name
-							} to ${
-								// selectedPlacesMap[to_id].alias ||
-								savedPlacesMap[to_id]?.name
-							} on foot is ${
-								distanceMatrix[from_id][to_id][mode].distance
-							} (${
-								distanceMatrix[from_id][to_id][mode].duration
-							}).`
-						);
-					}
+					newContext += `Distance from ${
+						// selectedPlacesMap[from_id].alias ||
+						savedPlacesMap[from_id]?.name
+					} to ${
+						// selectedPlacesMap[to_id].alias ||
+						savedPlacesMap[to_id]?.name
+					} ${
+						mode === "transit"
+							? "by public transport"
+							: mode === "walking"
+							? "on foot"
+							: mode === "driving"
+							? "by car"
+							: "by cycle"
+					} is ${distanceMatrix[from_id][to_id][mode].distance} (${
+						distanceMatrix[from_id][to_id][mode].duration
+					}).\n`;
 				});
 			});
 		});
 		return newContext;
 	},
 	getDirectionContext: (directionInformation, savedPlacesMap) => {
-		const newContext = [];
+		let newContext = "";
 		Object.keys(directionInformation).forEach((from_id) => {
 			Object.keys(directionInformation[from_id]).forEach((to_id) => {
 				Object.keys(directionInformation[from_id][to_id]).forEach(
 					(mode) => {
-						if (mode === "transit") {
-							newContext.push(
-								`There are ${
-									directionInformation[from_id][to_id][mode]
-										.routes.length
-								} routes from ${
-									// selectedPlacesMap[from_id].alias ||
-									savedPlacesMap[from_id]?.name
-								} to ${
-									// selectedPlacesMap[to_id].alias ||
-									savedPlacesMap[to_id]?.name
-								} by public transport. They are:`
-							);
-						} else if (mode === "driving") {
-							newContext.push(
-								`There are ${
-									directionInformation[from_id][to_id][mode]
-										.routes.length
-								} routes from ${
-									// selectedPlacesMap[from_id].alias ||
-									savedPlacesMap[from_id]?.name
-								} to ${
-									// selectedPlacesMap[to_id].alias ||
-									savedPlacesMap[to_id]?.name
-								} by car. They are:`
-							);
-						} else if (mode === "bicycling") {
-							newContext.push(
-								`There are ${
-									directionInformation[from_id][to_id][mode]
-										.routes.length
-								} routes from ${
-									// selectedPlacesMap[from_id].alias ||
-									savedPlacesMap[from_id]?.name
-								} to ${
-									// selectedPlacesMap[to_id].alias ||
-									savedPlacesMap[to_id]?.name
-								} by cycle. They are:`
-							);
-						} else if (mode === "walking") {
-							newContext.push(
-								`There are ${
-									directionInformation[from_id][to_id][mode]
-										.routes.length
-								} routes from ${
-									// selectedPlacesMap[from_id].alias ||
-									savedPlacesMap[from_id]?.name
-								} to ${
-									// selectedPlacesMap[to_id].alias ||
-									savedPlacesMap[to_id]?.name
-								} on foot. They are:`
-							);
+						if (newContext.length > 0) {
+							newContext += "\n";
 						}
+						newContext += `There are ${
+							directionInformation[from_id][to_id][mode].routes
+								.length
+						} routes from ${savedPlacesMap[from_id]?.name} to ${
+							savedPlacesMap[to_id]?.name
+						} ${
+							mode === "transit"
+								? "by public transport"
+								: mode === "walking"
+								? "on foot"
+								: mode === "driving"
+								? "by car"
+								: "by cycle"
+						}. They are:\n`;
 
 						directionInformation[from_id][to_id][
 							mode
 						].routes.forEach((route, index) => {
-							newContext.push(
-								`${index + 1}. Via ${route.label} | ${
-									route.duration
-								} | ${route.distance}`
-							);
+							newContext += `${index + 1}. Via ${route.label} | ${
+								route.duration
+							} | ${route.distance}\n`;
 
 							if (
 								directionInformation[from_id][to_id][mode]
 									.showSteps
 							) {
-								route.steps.forEach((step, index) => {
-									newContext.push(` - ${step}`);
+								route.steps.forEach((step) => {
+									newContext += ` - ${step}\n`;
 								});
 							}
 						});
