@@ -30,8 +30,12 @@ import debounce from "lodash/debounce";
 import { GlobalContext } from "@/contexts/GlobalContext";
 
 function SearchPlaceCard({ place, index, length }) {
-	const { selectedPlacesMap, setSelectedPlacesMap, setSavedPlacesMap } =
-		useContext(GlobalContext);
+	const {
+		selectedPlacesMap,
+		setSelectedPlacesMap,
+		savedPlacesMap,
+		setSavedPlacesMap,
+	} = useContext(GlobalContext);
 
 	const handleAddPlace = async (place) => {
 		if (selectedPlacesMap[place.place_id]) return;
