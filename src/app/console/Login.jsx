@@ -3,6 +3,7 @@ import AuthService from "@/services/authService";
 import { FormControl, InputLabel, OutlinedInput, Button } from "@mui/material";
 import EyeIcon from "@/components/Icons/EyeIcon";
 import { LoadingButton } from "@mui/lab";
+import { showMessage } from "./home";
 
 const MuiTextField = (props) => {
 	return (
@@ -122,7 +123,8 @@ const Login = () => {
 	const [password, setPassword] = useState("");
 	const [loggingIn, setLoggingIn] = useState(false);
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (e) => {
+		e.preventDefault();
 		if (!loggingIn) {
 			// setLoading(true);
 			setLoggingIn(true);
@@ -135,6 +137,7 @@ const Login = () => {
 				// navigate("/");
 			} else {
 				// setLoading(false);
+				// showMessage("Invalid Credentials", "error");
 			}
 		}
 	};
@@ -151,7 +154,10 @@ const Login = () => {
 							<h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl bu-text-primary">
 								Sign in to your account
 							</h1>
-							<div className="space-y-4 md:space-y-6">
+							<form
+								className="space-y-4 md:space-y-6"
+								onSubmit={handleSubmit}
+							>
 								<MuiTextField
 									label="Username"
 									placeholder=""
@@ -171,14 +177,13 @@ const Login = () => {
 								<LoadingButton
 									type="submit"
 									className="w-full rounded-lg text-sm px-5 py-2.5 text-center font-medium"
-									onClick={handleSubmit}
 									variant="contained"
 									fullWidth
 									loading={loggingIn}
 								>
 									Sign in
 								</LoadingButton>
-							</div>
+							</form>
 						</div>
 					</div>
 				</div>
