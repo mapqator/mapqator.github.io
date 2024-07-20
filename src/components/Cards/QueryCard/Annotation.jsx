@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
 	Select,
 	MenuItem,
@@ -17,19 +17,34 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Clear, Edit, Save } from "@mui/icons-material";
 import { getUserName } from "@/api/base";
+import { GlobalContext } from "@/contexts/GlobalContext";
+import { showError } from "@/app/page";
 const queryApi = new QueryApi();
 export default function Annotation({ state, setState }) {
+	const { isAuthenticated } = useContext(GlobalContext);
+	const [value, setValue] = useState({
+		answer: "",
+		explanation: "",
+		username: "",
+	});
+
+	useEffect(() => {
+		if (state.human) {
+			console.log("Annotation: ", state.human);
+			setValue(state.human);
+		}
+	}, [state]);
 	return (
 		<>
 			<Divider />
-			<CardContent className="flex flex-col gap-2">
+			<CardContent className="flex flex-col gap-2 w-full md:w-[30rem] mx-auto">
 				<div className="flex flex-row justify-between">
 					<h1 className="text-lg font-bold underline">
 						Human Annotation
 					</h1>
 					<h2 className="text-lg font-semibold text-black px-1 flex flex-row gap-1 items-center">
 						<FontAwesomeIcon icon={faUser} />
-						{state.human?.username}
+						{value.username}
 					</h2>
 				</div>
 				<div className="flex flex-col gap-3">
@@ -49,84 +64,92 @@ export default function Annotation({ state, setState }) {
 							// multiple
 							id="outlined-adornment"
 							className="outlined-input"
-							value={state.human?.answer}
+							value={value.answer}
 							onChange={(e) => {
-								setState((prev) => ({
+								console.log(e.target.value);
+								setValue((prev) => ({
 									...prev,
-									human: {
-										...prev.human,
-										answer: e.target.value,
-									},
+									answer: e.target.value,
 								}));
 							}}
 							input={<OutlinedInput label={"Correct Answer"} />}
 						>
 							<MenuItem value={0}>No answer</MenuItem>
-							{state.answer.options.map((value, index) => (
+							{state.answer.options.map((option, index) => (
 								<MenuItem key={index} value={index + 1}>
-									{value}
+									{option}
 								</MenuItem>
 							))}
 						</Select>
 					</FormControl>
 					<TextField
-						value={state.human?.explanation}
+						value={value.explanation}
 						onChange={(e) => {
-							setState((prev) => ({
+							setValue((prev) => ({
 								...prev,
-								human: {
-									...prev.human,
-									explanation: e.target.value,
-								},
+								explanation: e.target.value,
 							}));
 						}}
 						fullWidth
 						label="Comment"
 						size="small"
 						multiline
+						minRows={3}
 					/>
 					<div className="flex flex-row gap-2">
 						<Button
 							variant="contained"
-							color="error"
-							onClick={async () => {
-								setState((prev) => ({
-									...prev,
-									human: {
-										answer: null,
-										explanation: "",
-										username: prev.human.username,
-									},
-								}));
-							}}
-							startIcon={<Clear />}
-						>
-							Clear
-						</Button>
-						<Button
-							variant="contained"
 							color="primary"
 							onClick={async () => {
-								console.log(state.id);
-								setState((prev) => ({
-									...prev,
-									human: {
-										...prev.human,
-										username: getUserName(),
-									},
-								}));
-								const res = await queryApi.annotate(state.id, {
-									answer: state.human?.answer,
-									explanation: state.human?.explanation,
-								});
-								console.log(res);
-								if (res.success) {
-									// Success
+								if (isAuthenticated) {
+									const res = await queryApi.annotate(
+										state.id,
+										{
+											answer: value.answer,
+											explanation: value.explanation,
+										}
+									);
+									console.log(res);
+									if (res.success) {
+										setState((prev) => ({
+											...prev,
+											human: {
+												answer: value.answer,
+												explanation: value.explanation,
+												username: res.data[0].username,
+											},
+										}));
+									} else {
+										showError("Can't save annotation");
+									}
+								} else {
+									setState((prev) => ({
+										...prev,
+										human: {
+											answer: value.answer,
+											explanation: value.explanation,
+											username: getUserName(),
+										},
+									}));
 								}
 							}}
 							startIcon={<Save />}
 						>
 							Annotate
+						</Button>
+						<Button
+							variant="contained"
+							color="error"
+							onClick={async () => {
+								setValue((prev) => ({
+									answer: null,
+									explanation: "",
+									username: prev.username,
+								}));
+							}}
+							startIcon={<Clear />}
+						>
+							Clear
 						</Button>
 					</div>
 				</div>

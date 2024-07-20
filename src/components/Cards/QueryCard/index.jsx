@@ -23,6 +23,7 @@ export default function QueryCard({ entry, onEdit }) {
 	useEffect(() => {
 		setState(entry);
 	}, [entry]);
+
 	useEffect(() => {
 		const invalid = state.evaluation?.find(
 			(e) =>
@@ -32,9 +33,10 @@ export default function QueryCard({ entry, onEdit }) {
 		if (invalid) {
 			setFlag(true);
 		} else {
-			setFlag(state.human?.answer === 0);
+			setFlag(parseInt(state.human.answer) === 0);
 		}
-	}, [entry]);
+	}, [state]);
+
 	return (
 		<Accordion key={state.id} sx={{ mb: 2 }}>
 			<AccordionSummary

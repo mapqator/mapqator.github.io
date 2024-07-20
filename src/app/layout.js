@@ -9,7 +9,11 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
 	metadataBase: new URL("https://mahirlabibdihan.github.io/mapquest"),
-	title: "MapQuest",
+	title: {
+		template: "%s | MapQuest",
+		default: "MapQuest",
+	},
+
 	description: "Map dataset creator",
 	// openGraph: {
 	// 	title: "Title webtsite",

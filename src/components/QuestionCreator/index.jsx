@@ -24,7 +24,7 @@ import QueryApi from "@/api/queryApi";
 import MyQuestions from "./MyQuestions";
 import categories from "@/database/categories.json";
 import { jwtDecode } from "jwt-decode";
-import { getTokenFromLocalStorage } from "@/api/base";
+import { getTokenFromLocalStorage, getUserName } from "@/api/base";
 import { Clear, Save } from "@mui/icons-material";
 import QuestionForm from "./QuestionForm";
 const queryApi = new QueryApi();
@@ -115,7 +115,8 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 			</Paper>
 			<QuestionForm />
 
-			{queries.length > 0 && (
+			{queries.filter((item) => item.username === getUserName()).length >
+				0 && (
 				<>
 					<Divider sx={{ my: 4 }} />
 					<MyQuestions />

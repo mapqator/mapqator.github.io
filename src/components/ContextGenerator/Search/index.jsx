@@ -1,7 +1,7 @@
 "use client";
 
 import AutocompleteSearchBox from "./AutocompleteSearchBox";
-import PlaceInformation from "./places";
+import PlaceInformation from "./PlaceCards";
 import MapComponent from "./MapComponent";
 import { useContext, useEffect } from "react";
 import { GlobalContext } from "@/contexts/GlobalContext";

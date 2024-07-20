@@ -1,5 +1,9 @@
 import authApi from "@/api/authApi";
-import { showSuccess, showToast } from "@/app/console/home";
+import {
+	addTokenToLocalStorage,
+	removeTokenFromLocalStorage,
+} from "@/api/base";
+import { showError, showSuccess } from "@/app/page";
 
 const AuthService = {
 	/**
@@ -14,21 +18,18 @@ const AuthService = {
 		const res = await authApi.login(data);
 		console.log(res);
 		if (res.success) {
-			localStorage.setItem("token", res.data.access_token);
-			const event = new Event("storage");
-			// Dispatch the event
-			window.dispatchEvent(event);
-			showSuccess("Logged in successfully", res);
+			addTokenToLocalStorage(res.data.access_token);
+			showSuccess("Logged in successfully");
 		} else {
-			showToast(res.error, "error");
+			showError(res.error);
 		}
 		return res;
 	},
 	logout: async () => {
 		const res = await authApi.logout();
 		if (res.success) {
-			localStorage.removeItem("token");
-			showToast("Logged out successfully");
+			removeTokenFromLocalStorage();
+			showSuccess("Logged out successfully");
 		}
 	},
 };

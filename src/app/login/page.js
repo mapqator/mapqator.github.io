@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AuthService from "@/services/authService";
 import {
 	FormControl,
@@ -18,6 +18,8 @@ import EyeIcon from "@/components/Icons/EyeIcon";
 // import { setLoading } from "@/page";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/navigation";
+import config from "@/config.json";
+import { GlobalContext } from "@/contexts/GlobalContext";
 
 const MuiTextField = (props) => {
 	return (
@@ -68,7 +70,15 @@ const Login = () => {
 	const [username, setUserName] = useState("");
 	const [password, setPassword] = useState("");
 	const [loggingIn, setLoggingIn] = useState(false);
+	const { isAuthenticated } = useContext(GlobalContext);
 	const router = useRouter();
+
+	useEffect(() => {
+		if (isAuthenticated) {
+			router.push(config.loginRedirect);
+		}
+	}, [isAuthenticated]);
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (!loggingIn) {
@@ -80,7 +90,7 @@ const Login = () => {
 				password: password,
 			});
 			if (res.success) {
-				// navigate("/");
+				router.push(config.loginRedirect);
 			} else {
 				// setLoading(false);
 				setLoggingIn(false);

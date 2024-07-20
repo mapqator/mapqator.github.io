@@ -22,6 +22,11 @@ class AuthApi extends Api {
 			}
 		}
 	};
+	logout = async () => {
+		return {
+			success: true,
+		};
+	};
 }
 const authApi = new AuthApi();
 export default authApi;

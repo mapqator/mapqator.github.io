@@ -121,7 +121,7 @@ export default function HomePage() {
 								backgroundColor: "#3367D6",
 							},
 						}}
-						onClick={() => router.push("/home#onboard")}
+						onClick={() => router.push("/#onboard")}
 					>
 						Get Started
 					</Button>

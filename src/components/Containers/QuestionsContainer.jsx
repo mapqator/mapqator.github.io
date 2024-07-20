@@ -41,7 +41,9 @@ export default function QuestionsContainer({ title, isPersonal, onEdit }) {
 		const end = start + itemsPerPage;
 		let newQueries;
 		if (selectedCategory === "All") {
-			newQueries = queries;
+			newQueries = queries.filter(
+				(item) => !isPersonal || item.username === getUserName()
+			);
 		} else {
 			newQueries = queries.filter(
 				(item) =>

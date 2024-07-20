@@ -19,7 +19,7 @@ import DirectionsIcon from "@mui/icons-material/Directions";
 import PlaceIcon from "@mui/icons-material/Place";
 import { AutocompleteSearchBox } from "./Search/AutocompleteSearchBox";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import PlaceInformation from "./Search/places";
+import PlaceInformation from "./Search/PlaceCards";
 import NearbyInfo from "./Nearby";
 import DiscoverArea from "./Area";
 import CalculateDistance from "./Distance";

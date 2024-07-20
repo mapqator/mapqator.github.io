@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import Image from "next/image";
 import { AppBar, Toolbar } from "@mui/material";
@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { getTokenFromLocalStorage } from "@/api/base";
 import { Login, Logout } from "@mui/icons-material";
 import config from "@/config.json";
+import { GlobalContext } from "@/contexts/GlobalContext";
+import AuthService from "@/services/authService";
 export default function Navbar({ selected, setSelected }) {
 	const [baseUrl, setBaseUrl] = useState(
 		process.env.REACT_APP_BASE_URL
@@ -22,6 +24,7 @@ export default function Navbar({ selected, setSelected }) {
 		{ name: "Evaluation", key: "evaluation" },
 	];
 	const router = useRouter();
+	const { isAuthenticated } = useContext(GlobalContext);
 
 	return (
 		<AppBar position="fixed" sx={{ background: "white", mb: 4 }}>
@@ -87,11 +90,14 @@ export default function Navbar({ selected, setSelected }) {
 					))}
 				</Box>
 				<Box className="w-1/6 hidden md:flex justify-end">
-					{getTokenFromLocalStorage() ? (
+					{isAuthenticated ? (
 						<Button
 							variant="outlined"
 							endIcon={<Logout />}
-							onClick={() => router.push(config.logoutRedirect)}
+							onClick={() => {
+								router.push(config.logoutRedirect);
+								AuthService.logout();
+							}}
 						>
 							Logout
 						</Button>

@@ -25,12 +25,16 @@ import categories from "@/database/categories.json";
 
 import { Clear, Save, WindowSharp } from "@mui/icons-material";
 import { getUserName } from "@/api/base";
-import { showToast } from "@/app/console/home";
+
+import { LoadingButton } from "@mui/lab";
+import { showError, showSuccess } from "@/app/page";
 const queryApi = new QueryApi();
 
 export default function QuestionForm() {
-	const { query, setQuery, initQuery, queries, setQueries } =
+	const { query, setQuery, initQuery, queries, setQueries, isAuthenticated } =
 		useContext(GlobalContext);
+
+	const [loading, setLoading] = useState(false);
 	const handleOptionChange = (index, value) => {
 		setQuery((prev) => {
 			const options = [...prev.answer.options];
@@ -85,52 +89,60 @@ export default function QuestionForm() {
 			context_json: prev.context,
 		}));
 	};
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		const tmpQuery = query;
-		const prevQueries = [...queries];
-		handleReset();
-
-		if (tmpQuery.id === undefined) {
-			const newQueries = [...queries];
-			newQueries.unshift({ ...tmpQuery, id: 0, username: getUserName() });
-			setQueries(newQueries);
-
-			const res = await queryApi.createQuery(tmpQuery);
-			if (res.success) {
-				// update the queries
-				// showSuccess("Query saved successfully", res);
-				setQueries((prev) =>
-					prev.map((q) => (q.id === 0 ? res.data[0] : q))
-				);
+		setLoading(true);
+		if (isAuthenticated) {
+			if (query.id === undefined) {
+				const res = await queryApi.createQuery(query);
+				if (res.success) {
+					// update the queries
+					showSuccess("Query saved successfully");
+					const newQueries = [...queries];
+					newQueries.unshift(res.data[0]);
+					setQueries(newQueries);
+					handleReset();
+				} else {
+					showError("Can't save this query");
+					window.scrollTo(0, 0);
+				}
 			} else {
-				// showToast("Can't save this query", "error");
-				showToast("Can't save this query", "error");
-				setQuery(tmpQuery);
-				setQueries(prevQueries);
-				window.scrollTo(0, 0);
+				const res = await queryApi.updateQuery(query.id, query);
+				if (res.success) {
+					setQueries((prev) =>
+						prev.map((q) =>
+							q.id === res.data[0].id ? res.data[0] : q
+						)
+					);
+					// update the queries
+					showSuccess("Query edited successfully");
+					handleReset();
+				} else {
+					showError("Can't update this query");
+					window.scrollTo(0, 0);
+				}
 			}
 		} else {
-			setQueries((prev) =>
-				prev.map((q) => (q.id === tmpQuery.id ? tmpQuery : q))
-			);
-
-			const res = await queryApi.updateQuery(tmpQuery.id, tmpQuery);
-			if (res.success) {
-				setQueries((prev) =>
-					prev.map((q) => (q.id === res.data[0].id ? res.data[0] : q))
-				);
-				// update the queries
-				// showSuccess("Query edited successfully", res);
+			if (query.id === undefined) {
+				const newQueries = [...queries];
+				newQueries.unshift({
+					...query,
+					id: 0,
+					username: getUserName(),
+				});
+				setQueries(newQueries);
+				showSuccess("Query saved successfully");
 			} else {
-				showToast("Can't update this query", "error");
-				setQuery(tmpQuery);
-				setQueries(prevQueries);
-				window.scrollTo(0, 0);
+				setQueries((prev) =>
+					prev.map((q) => (q.id === query.id ? query : q))
+				);
+				showSuccess("Query edited successfully");
 			}
+			handleReset();
 		}
 
-		console.log("Here comes reset");
+		setLoading(false);
 	};
 	return (
 		<form onSubmit={handleSubmit}>
@@ -249,16 +261,18 @@ export default function QuestionForm() {
 			</FormControl>
 
 			<Box className="flex flex-row gap-4">
-				<Button
+				<LoadingButton
 					type="submit"
 					variant="contained"
 					color="primary"
 					startIcon={<Save />}
+					loading={loading}
+					loadingPosition="start"
 				>
 					{query.id === undefined
 						? "Submit Question"
 						: "Save #" + query.id}
-				</Button>
+				</LoadingButton>
 				<Button
 					onClick={() => {
 						handleReset();

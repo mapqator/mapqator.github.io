@@ -1,6 +1,6 @@
 {
 	"drawerWidth": 270,
 	"topbarHeight": 64,
-	"loginRedirect": "/home",
+	"loginRedirect": "/",
 	"logoutRedirect": "/login"
 }

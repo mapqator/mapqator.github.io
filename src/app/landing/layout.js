@@ -1,6 +1,6 @@
 export const metadata = {
-	// title: "Coding",
-	description: "Login page of Mapquest",
+	title: "Landing",
+	description: "Landing page of Mapquest",
 };
 export default function RootLayout({ children }) {
 	return <>{children}</>;
