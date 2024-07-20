@@ -184,7 +184,13 @@ export default function GlobalContextProvider({ children }) {
 				correct: 1,
 			},
 			context: "Today is monday",
-			context_json: {},
+			context_json: {
+				current_information: {
+					time: null,
+					day: "Monday",
+					location: "",
+				},
+			},
 			context_gpt: "",
 			classification: "planning",
 			username: "mahirlabibdihan",

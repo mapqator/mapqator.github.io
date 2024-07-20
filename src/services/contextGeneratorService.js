@@ -29,7 +29,11 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 		text += `- Open: ${place.opening_hours.weekday_text.join(", ")}.\n`;
 	}
 	if (attributes.includes("rating")) {
-		text += `- Rating: ${place.rating}. (${place.user_ratings_total} ratings).\n`;
+		text += `- Rating: ${place.rating}. ${
+			place.user_ratings_total
+				? "(" + place.user_ratings_total + " ratings)"
+				: ""
+		}\n`;
 	}
 
 	if (attributes.includes("reviews")) {
