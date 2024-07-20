@@ -56,7 +56,8 @@ const Login = () => {
 	const [password, setPassword] = useState("");
 	const [loggingIn, setLoggingIn] = useState(false);
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (e) => {
+		e.preventDefault();
 		if (!loggingIn) {
 			// setLoading(true);
 			setLoggingIn(true);
