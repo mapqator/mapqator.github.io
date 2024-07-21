@@ -208,6 +208,18 @@ const Login = () => {
 										Sign in
 									</LoadingButton>
 								</form>
+								<Button
+									type="submit"
+									className="w-full rounded-lg text-sm px-5 py-2.5 text-center font-medium bg-orange-400"
+									onClick={() =>
+										router.push(config.loginRedirect)
+									}
+									// color="orange"
+									variant="outlined"
+									fullWidth
+								>
+									Enter as Guest
+								</Button>
 							</CardContent>
 						</Card>
 					</Box>
