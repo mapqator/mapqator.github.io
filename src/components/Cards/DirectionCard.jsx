@@ -56,7 +56,10 @@ export default function DirectionCard({ from_id, to_id }) {
 	};
 	return (
 		<Card variant="outlined" sx={{ mb: 2 }}>
-			<CardContent>
+			<CardContent
+				onClick={() => setExpanded(!expanded)}
+				className="cursor-pointer"
+			>
 				<Box
 					display="flex"
 					justifyContent="space-between"
@@ -66,19 +69,13 @@ export default function DirectionCard({ from_id, to_id }) {
 						<Typography variant="h6" component="div" align="center">
 							{savedPlacesMap[from_id].name}
 						</Typography>
-
 						<FontAwesomeIcon icon={faArrowDown} />
-
 						<Typography variant="h6" component="div" align="center">
 							{savedPlacesMap[to_id].name}
 						</Typography>
 					</Box>
 					<Box>
-						{/* <IconButton onClick={handleFullDelete} size="small">
-							<Delete color="error" />
-						</IconButton> */}
 						<IconButton
-							onClick={() => setExpanded(!expanded)}
 							size="small"
 							sx={{
 								transform: expanded
@@ -115,6 +112,13 @@ export default function DirectionCard({ from_id, to_id }) {
 						(mode, index3) => (
 							<React.Fragment key={index3}>
 								<ListItem
+									onClick={() =>
+										setExpandedRoute((prev) => ({
+											...prev,
+											[mode]: !prev[mode],
+										}))
+									}
+									className="cursor-pointer"
 									secondaryAction={
 										<IconButton
 											edge="end"
@@ -162,16 +166,8 @@ export default function DirectionCard({ from_id, to_id }) {
 												}}
 											/>
 										</div>
-										<div className="ml-auto">
+										<div className="ml-auto mr-2">
 											<IconButton
-												onClick={() =>
-													setExpandedRoute(
-														(prev) => ({
-															...prev,
-															[mode]: !prev[mode],
-														})
-													)
-												}
 												size="small"
 												sx={{
 													transform: expandedRoute[
@@ -305,9 +301,7 @@ export default function DirectionCard({ from_id, to_id }) {
 									Object.keys(
 										directionInformation[from_id][to_id]
 									).length -
-										1 && (
-									<Divider variant="inset" component="li" />
-								)}
+										1 && <Divider component="li" />}
 							</React.Fragment>
 						)
 					)}

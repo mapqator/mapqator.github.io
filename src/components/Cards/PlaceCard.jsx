@@ -109,35 +109,42 @@ export default function PlaceCard({ placeId }) {
 					flexDirection: "column",
 				}}
 			>
-				<Typography variant="h6" component="div" noWrap>
-					{savedPlacesMap[placeId].name}
-				</Typography>
-				<Typography color="textSecondary" gutterBottom noWrap>
-					{savedPlacesMap[placeId].formatted_address}
-				</Typography>
-
 				<Box
-					sx={{
-						display: "flex",
-						alignItems: "center",
-						mt: 1,
-					}}
+					onClick={() => handleExpandClick(placeId)}
+					className="cursor-pointer"
 				>
-					<Typography variant="body2" sx={{ flexGrow: 1 }}>
-						Selected Attributes:{" "}
-						{selectedPlacesMap[placeId].selectedAttributes.length}
+					<Typography variant="h6" component="div" noWrap>
+						{savedPlacesMap[placeId].name}
 					</Typography>
-					<IconButton
-						onClick={() => handleExpandClick(placeId)}
+					<Typography color="textSecondary" gutterBottom noWrap>
+						{savedPlacesMap[placeId].formatted_address}
+					</Typography>
+
+					<Box
 						sx={{
-							transform: expanded[placeId]
-								? "rotate(180deg)"
-								: "rotate(0deg)",
-							transition: "0.3s",
+							display: "flex",
+							alignItems: "center",
+							mt: 1,
 						}}
 					>
-						<ExpandMoreIcon />
-					</IconButton>
+						<Typography variant="body2" sx={{ flexGrow: 1 }}>
+							Selected Attributes:{" "}
+							{
+								selectedPlacesMap[placeId].selectedAttributes
+									.length
+							}
+						</Typography>
+						<IconButton
+							sx={{
+								transform: expanded[placeId]
+									? "rotate(180deg)"
+									: "rotate(0deg)",
+								transition: "0.3s",
+							}}
+						>
+							<ExpandMoreIcon />
+						</IconButton>
+					</Box>
 				</Box>
 
 				<Collapse in={expanded[placeId]} timeout="auto" unmountOnExit>

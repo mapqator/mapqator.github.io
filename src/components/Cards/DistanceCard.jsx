@@ -46,7 +46,10 @@ export default function DistanceCard({ from_id, to_id }) {
 
 	return (
 		<Card variant="outlined" sx={{ mb: 2 }}>
-			<CardContent>
+			<CardContent
+				onClick={() => setExpanded(!expanded)}
+				className="cursor-pointer"
+			>
 				<Box
 					display="flex"
 					justifyContent="space-between"
@@ -68,7 +71,6 @@ export default function DistanceCard({ from_id, to_id }) {
 							<Delete color="error" />
 						</IconButton> */}
 						<IconButton
-							onClick={() => setExpanded(!expanded)}
 							size="small"
 							sx={{
 								transform: expanded
@@ -155,9 +157,7 @@ export default function DistanceCard({ from_id, to_id }) {
 								{index3 <
 									Object.keys(distanceMatrix[from_id][to_id])
 										.length -
-										1 && (
-									<Divider variant="inset" component="li" />
-								)}
+										1 && <Divider component="li" />}
 							</React.Fragment>
 						)
 					)}

@@ -73,7 +73,10 @@ export default function AreaCard({
 	};
 	return (
 		<Card variant="outlined" sx={{ mb: 2 }}>
-			<CardContent>
+			<CardContent
+				onClick={() => setExpanded(!expanded)}
+				className="cursor-pointer"
+			>
 				<Box
 					display="flex"
 					justifyContent="space-between"
@@ -117,7 +120,6 @@ export default function AreaCard({
 						/>
 					</Box>
 					<IconButton
-						onClick={() => setExpanded((prev) => !prev)}
 						size="small"
 						sx={{
 							transform: expanded

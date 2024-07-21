@@ -90,7 +90,10 @@ export default function NearbyCard({
 
 	return (
 		<Card variant="outlined" sx={{ mb: 2 }}>
-			<CardContent>
+			<CardContent
+				onClick={() => setExpanded(!expanded)}
+				className="cursor-pointer"
+			>
 				<Box
 					display="flex"
 					justifyContent="space-between"
@@ -125,7 +128,6 @@ export default function NearbyCard({
 						/>
 					</Box>
 					<IconButton
-						onClick={() => setExpanded(!expanded)}
 						size="small"
 						sx={{
 							transform: expanded

@@ -255,11 +255,6 @@ export default function ContextGenerator({
 						<StepLabel
 							icon={
 								<div
-									onClick={() => {
-										if (index !== activeStep)
-											setActiveStep(index);
-										// else setActiveStep(-1);
-									}}	
 									className={`cursor-pointer hover:text-blue-500 ${
 										index === activeStep && "text-blue-500"
 									}`}
@@ -267,9 +262,12 @@ export default function ContextGenerator({
 									{step.icon}
 								</div>
 							}
+							onClick={() => {
+								if (index !== activeStep) setActiveStep(index);
+							}}
 						>
 							<Typography
-								className={`${
+								className={`cursor-pointer flex ${
 									index === activeStep &&
 									"!text-blue-500 !font-semibold"
 								}`}
