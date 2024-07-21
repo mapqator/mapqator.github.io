@@ -1,36 +1,15 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
-import {
-	Box,
-	Typography,
-	TextField,
-	Button,
-	Radio,
-	RadioGroup,
-	FormControlLabel,
-	FormControl,
-	Select,
-	MenuItem,
-	IconButton,
-	Paper,
-	InputAdornment,
-	Divider,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
+import React, { useContext } from "react";
+import { Box, Typography, Button, Paper, Divider } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import QueryApi from "@/api/queryApi";
-import MyQuestions from "./MyQuestions";
-import categories from "@/database/categories.json";
-import { jwtDecode } from "jwt-decode";
 import { getUserName } from "@/api/base";
-import { Clear, Save } from "@mui/icons-material";
-import QuestionForm from "./QuestionForm";
+import QuestionForm from "../Forms/QuestionForm";
 import { showError, showSuccess } from "@/app/page";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import CollapsedContext from "../Cards/QueryCard/CollapsedContext";
+import QuestionsContainer from "../Containers/QuestionsContainer";
+import ContextGeneratorService from "@/services/contextGeneratorService";
 const queryApi = new QueryApi();
 
 export default function QuestionCreationPage({ handleContextEdit }) {
@@ -49,25 +28,6 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 		isAuthenticated,
 		initQuery,
 	} = useContext(GlobalContext);
-	const [expanded, setExpanded] = useState(false);
-
-	let text = "";
-	text += context.places !== "" ? context.places : "";
-	text +=
-		context.nearby !== "" ? (text !== "" ? "\n" : "") + context.nearby : "";
-	text += context.area !== "" ? (text !== "" ? "\n" : "") + context.area : "";
-	text +=
-		context.distance !== ""
-			? (text !== "" ? "\n" : "") + context.distance
-			: "";
-	text +=
-		context.direction !== ""
-			? (text !== "" ? "\n" : "") + context.direction
-			: "";
-	text +=
-		context.params !== "" ? (text !== "" ? "\n" : "") + context.params : "";
-
-	console.log(text, text.split("\n"));
 
 	const handleReset = () => {
 		setQuery((prev) => ({
@@ -174,7 +134,11 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 				</Box>
 				<Divider sx={{ my: 2 }} />
 				<Box>
-					<CollapsedContext context={text} />
+					<CollapsedContext
+						context={ContextGeneratorService.convertContextToText(
+							context
+						)}
+					/>
 					{/* <React.Fragment>
 						<p
 							className="w-full text-left"
@@ -212,7 +176,11 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 				0 && (
 				<>
 					<Divider sx={{ my: 4 }} />
-					<MyQuestions />
+					<QuestionsContainer
+						title="My Questions"
+						isPersonal={true}
+						onEdit={() => window.scrollTo(0, 0)}
+					/>
 				</>
 			)}
 		</>

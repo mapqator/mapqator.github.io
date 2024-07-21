@@ -25,12 +25,10 @@ import {
 	faTrashCan,
 	faWalking,
 } from "@fortawesome/free-solid-svg-icons";
-import DistanceForm from "./DistanceForm";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import ContextGeneratorService from "@/services/contextGeneratorService";
 import { Delete, ExpandMore, ForkRight, JoinRight } from "@mui/icons-material";
 
-function DistanceCard({ from_id, to_id }) {
+export default function DistanceCard({ from_id, to_id }) {
 	const { distanceMatrix, setDistanceMatrix, savedPlacesMap } =
 		useContext(GlobalContext);
 	console.log(distanceMatrix[from_id][to_id], from_id, to_id);
@@ -168,27 +166,5 @@ function DistanceCard({ from_id, to_id }) {
 				</List>
 			</Collapse>
 		</Card>
-	);
-}
-export default function CalculateDistance() {
-	const {
-		selectedPlacesMap,
-		savedPlacesMap,
-		distanceMatrix,
-		setDistanceMatrix,
-	} = useContext(GlobalContext);
-
-	return (
-		<CardContent>
-			{Object.keys(distanceMatrix).map((from_id, index) => (
-				<div key={index} className="flex flex-col gap-1">
-					{Object.keys(distanceMatrix[from_id]).map((to_id) => (
-						<DistanceCard from_id={from_id} to_id={to_id} />
-					))}
-				</div>
-			))}
-
-			<DistanceForm />
-		</CardContent>
 	);
 }

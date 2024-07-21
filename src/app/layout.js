@@ -27,9 +27,9 @@ export default function RootLayout({ children }) {
 		<html lang="en">
 			<body className={inter.className}>
 				<AppRouterCacheProvider>
-					<ParentProvider>
-						<ToastProvider>{children}</ToastProvider>
-					</ParentProvider>
+					{/* <ParentProvider> */}
+					<ToastProvider>{children}</ToastProvider>
+					{/* </ParentProvider> */}
 				</AppRouterCacheProvider>
 			</body>
 		</html>

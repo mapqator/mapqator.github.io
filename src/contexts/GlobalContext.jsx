@@ -61,6 +61,26 @@ export default function GlobalContextProvider({ children }) {
 				},
 			},
 		},
+		2: {
+			1: {
+				walking: {
+					distance: "5 km",
+					duration: "6 mins",
+				},
+				driving: {
+					distance: "5 km",
+					duration: "6 mins",
+				},
+				bicycling: {
+					distance: "5 km",
+					duration: "6 mins",
+				},
+				transit: {
+					distance: "5 km",
+					duration: "6 mins",
+				},
+			},
+		},
 	});
 	const [selectedPlacesMap, setSelectedPlacesMap] = useState({
 		1: {

@@ -10,7 +10,8 @@ import EvaluationResultsPage from "@/components/Evaluation";
 import Navbar from "@/components/Navbar";
 
 import { toast } from "react-toastify";
-import { GlobalContext } from "@/contexts/GlobalContext";
+import GlobalContextProvider, { GlobalContext } from "@/contexts/GlobalContext";
+import ParentProvider from "./wrapper";
 export const showToast = (message, type) => {
 	console.log(message, type);
 	if (type === "success") toast.success(message, {});
@@ -53,40 +54,42 @@ export default function PageComponent() {
 	}, [selected]);
 
 	return (
-		<Container
-			maxWidth="md"
-			sx={{ mt: 4, mb: 4 }}
-			// className="gap-5 flex flex-col"
-		>
-			<Navbar {...{ selected, setSelected }} />
-			<Toolbar />
-			{selected === "context" ? (
-				<ContextGenerator
-					onFinish={() => {
-						setSelected("question");
-						window.scrollTo(0, 0);
-					}}
-					{...{ activeStep, setActiveStep }}
-				/>
-			) : selected === "question" ? (
-				<QuestionCreationPage
-					handleContextEdit={() => {
-						setSelected("context");
-						window.scrollTo(0, 0);
-					}}
-				/>
-			) : selected === "dataset" ? (
-				<DatasetPage
-					onEdit={() => {
-						setSelected("question");
-						window.scrollTo(0, 0);
-					}}
-				/>
-			) : selected === "evaluation" ? (
-				<EvaluationResultsPage />
-			) : (
-				<></>
-			)}
-		</Container>
+		<GlobalContextProvider>
+			<Container
+				maxWidth="md"
+				sx={{ mt: 4, mb: 4 }}
+				// className="gap-5 flex flex-col"
+			>
+				<Navbar {...{ selected, setSelected }} />
+				<Toolbar />
+				{selected === "context" ? (
+					<ContextGenerator
+						onFinish={() => {
+							setSelected("question");
+							window.scrollTo(0, 0);
+						}}
+						{...{ activeStep, setActiveStep }}
+					/>
+				) : selected === "question" ? (
+					<QuestionCreationPage
+						handleContextEdit={() => {
+							setSelected("context");
+							window.scrollTo(0, 0);
+						}}
+					/>
+				) : selected === "dataset" ? (
+					<DatasetPage
+						onEdit={() => {
+							setSelected("question");
+							window.scrollTo(0, 0);
+						}}
+					/>
+				) : selected === "evaluation" ? (
+					<EvaluationResultsPage />
+				) : (
+					<></>
+				)}
+			</Container>
+		</GlobalContextProvider>
 	);
 }

@@ -12,27 +12,27 @@ import {
 	Paper,
 	Card,
 	Divider,
+	CardContent,
 } from "@mui/material";
 import MapIcon from "@mui/icons-material/Map";
 import SearchIcon from "@mui/icons-material/Search";
 import DirectionsIcon from "@mui/icons-material/Directions";
 import PlaceIcon from "@mui/icons-material/Place";
-import { AutocompleteSearchBox } from "./Search/AutocompleteSearchBox";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import PlaceInformation from "./Search/PlaceCards";
-import NearbyInfo from "./Nearby";
-import DiscoverArea from "./Area";
-import CalculateDistance from "./Distance";
-import GetDirections from "./Direction";
 import ContextViewer from "./ContextPreview";
 import { Flag, RemoveRedEye, Settings } from "@mui/icons-material";
 import ExploreIcon from "@mui/icons-material/Explore";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
-import { Parameters } from "./Parameters/params";
-import MapComponent from "./Search/MapComponent";
-import PlaceSearch from "./Search";
 import ContextGeneratorService from "@/services/contextGeneratorService";
+import ParamsForm from "@/components/Forms/ParamsForm";
+import DirectionGrid from "@/components/Grids/DirectionGrid";
+import DirectionForm from "@/components/Forms/DirectionForm";
+import DistanceGrid from "@/components/Grids/DistanceGrid";
+import DistanceForm from "@/components/Forms/DistanceForm";
+import AreaGrid from "@/components/Grids/AreaGrid";
+import AreaForm from "@/components/Forms/AreaForm";
+import NearbyGrid from "@/components/Grids/NearbyGrid";
+import NearbyForm from "@/components/Forms/NearbyForm";
+import PlaceSearch from "./Search";
 
 export default function ContextGenerator({
 	onFinish,
@@ -41,7 +41,6 @@ export default function ContextGenerator({
 }) {
 	const {
 		savedPlacesMap,
-		setSavedPlacesMap,
 		selectedPlacesMap,
 		setSelectedPlacesMap,
 		distanceMatrix,
@@ -125,16 +124,10 @@ export default function ContextGenerator({
 				<>
 					<Divider />
 					<Box className="w-full md:w-[30rem] mx-auto">
-						<NearbyInfo
-							{...{
-								savedPlacesMap,
-								setSavedPlacesMap,
-								selectedPlacesMap,
-								nearbyPlacesMap,
-								setNearbyPlacesMap,
-								setSelectedPlacesMap,
-							}}
-						/>
+						<CardContent>
+							<NearbyGrid />
+							<NearbyForm />
+						</CardContent>
 					</Box>
 					<Divider />
 				</>
@@ -146,25 +139,16 @@ export default function ContextGenerator({
 			description: `Explore various Points of Interest (POIs) within a larger area using the Places API. Select a region like a city or neighborhood, then choose a category (e.g., restaurants, museums, parks) to see POIs within that area.`,
 			icon: <ExploreIcon />,
 			component: (
-				// <Card className="p-3" raised>
 				<>
 					<Divider />
 					<Box className="w-full md:w-[30rem] mx-auto">
-						<DiscoverArea
-							{...{
-								savedPlacesMap,
-								setSavedPlacesMap,
-								selectedPlacesMap,
-								poisMap,
-								setPoisMap,
-								setSelectedPlacesMap,
-							}}
-						/>
+						<CardContent>
+							<AreaGrid />
+							<AreaForm />
+						</CardContent>
 					</Box>
 					<Divider />
 				</>
-
-				// </Card>
 			),
 			context: context.area,
 		},
@@ -176,14 +160,10 @@ export default function ContextGenerator({
 				<>
 					<Divider />
 					<Box className="w-full md:w-[30rem] mx-auto">
-						<CalculateDistance
-							{...{
-								selectedPlacesMap,
-								savedPlacesMap,
-								distanceMatrix,
-								setDistanceMatrix,
-							}}
-						/>
+						<CardContent>
+							<DistanceGrid />
+							<DistanceForm />
+						</CardContent>
 					</Box>
 					<Divider />
 				</>
@@ -198,14 +178,10 @@ export default function ContextGenerator({
 				<>
 					<Divider />
 					<Box className="w-full md:w-[30rem] mx-auto">
-						<GetDirections
-							{...{
-								selectedPlacesMap,
-								savedPlacesMap,
-								directionInformation,
-								setDirectionInformation,
-							}}
-						/>
+						<CardContent>
+							<DirectionGrid />
+							<DirectionForm />
+						</CardContent>
 					</Box>
 					<Divider />
 				</>
@@ -220,14 +196,9 @@ export default function ContextGenerator({
 				<>
 					<Divider />
 					<Box className="w-full md:w-[30rem] mx-auto">
-						<Parameters
-							{...{
-								selectedPlacesMap,
-								currentInformation,
-								setCurrentInformation,
-								savedPlacesMap,
-							}}
-						/>
+						<CardContent>
+							<ParamsForm />
+						</CardContent>
 					</Box>
 					<Divider />
 				</>
@@ -242,19 +213,9 @@ export default function ContextGenerator({
 				<>
 					<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
 						<ContextViewer
-							context={
-								context.places +
-								"\n" +
-								context.nearby +
-								"\n" +
-								context.area +
-								"\n" +
-								context.distance +
-								"\n" +
-								context.direction +
-								"\n" +
-								context.params
-							}
+							context={ContextGeneratorService.convertContextToText(
+								context
+							)}
 						/>
 					</Paper>
 				</>
@@ -305,7 +266,7 @@ export default function ContextGenerator({
 							<div className="flex flex-col gap-2">
 								<Typography
 									sx={{
-										whiteSpace: "pre-line", // This CSS property will make newlines render as expected
+										whiteSpace: "pre-line",
 									}}
 								>
 									{steps[activeStep]?.description}
@@ -315,7 +276,7 @@ export default function ContextGenerator({
 									<>
 										<Typography
 											sx={{
-												whiteSpace: "pre-line", // This CSS property will make newlines render as expected
+												whiteSpace: "pre-line",
 											}}
 										>
 											Based on the information you add, a
@@ -339,20 +300,15 @@ export default function ContextGenerator({
 											variant="contained"
 											onClick={handleNext}
 											sx={{ mt: 1, mr: 1 }}
-											// disabled={
-											// 	index === steps.length - 1
-											// }
 										>
 											{index === steps.length - 1
 												? "Finish"
 												: index === 0
 												? "Start"
 												: "Continue"}
-											{/* {"Continue"} */}
 										</Button>
 										{index > 0 && (
 											<Button
-												// disabled={index === 0}
 												onClick={handleBack}
 												sx={{ mt: 1, mr: 1 }}
 											>

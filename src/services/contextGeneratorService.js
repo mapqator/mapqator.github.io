@@ -269,6 +269,30 @@ const ContextGeneratorService = {
 		});
 		return newContext;
 	},
+	convertContextToText: (context) => {
+		let text = "";
+		text += context.places !== "" ? context.places : "";
+		text +=
+			context.nearby !== ""
+				? (text !== "" ? "\n" : "") + context.nearby
+				: "";
+		text +=
+			context.area !== "" ? (text !== "" ? "\n" : "") + context.area : "";
+		text +=
+			context.distance !== ""
+				? (text !== "" ? "\n" : "") + context.distance
+				: "";
+		text +=
+			context.direction !== ""
+				? (text !== "" ? "\n" : "") + context.direction
+				: "";
+		text +=
+			context.params !== ""
+				? (text !== "" ? "\n" : "") + context.params
+				: "";
+		return text;
+	},
+	
 };
 
 export default ContextGeneratorService;

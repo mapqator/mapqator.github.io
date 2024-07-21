@@ -1,21 +1,13 @@
 "use client";
 
 import React, { useContext, useEffect, useState } from "react";
-import PlaceApi from "@/api/placeApi";
-const placeApi = new PlaceApi();
 import MapApi from "@/api/mapApi";
 const mapApi = new MapApi();
 
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import {
-	Select,
-	MenuItem,
 	Button,
 	TextField,
 	Divider,
-	Typography,
 	ListItemText,
 	ListItem,
 } from "@mui/material";
