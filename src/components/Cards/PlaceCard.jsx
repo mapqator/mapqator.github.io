@@ -189,7 +189,7 @@ export default function PlaceCard({ placeId }) {
 				<Box
 					sx={{
 						display: "flex",
-						justifyContent: "flex-end",
+						justifyContent: "flex-start",
 						mt: "auto",
 					}}
 				>

@@ -6,7 +6,7 @@ import React, { useContext, useEffect } from "react";
 
 export default function ContextViewer({ context }) {
 	return (
-		<div className="p-2 flex flex-col gap-2 w-full min-h-16">
+		<div className="p-0 md:p-2 flex flex-col gap-2 w-full min-h-16">
 			{context?.length > 0 ? (
 				<p
 					className="w-full text-left"
