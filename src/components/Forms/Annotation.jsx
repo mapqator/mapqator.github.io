@@ -44,10 +44,12 @@ export default function Annotation({ query }) {
 					<h1 className="text-lg font-bold underline">
 						Human Annotation
 					</h1>
-					<h2 className="text-lg font-semibold text-black px-1 flex flex-row gap-1 items-center">
-						<FontAwesomeIcon icon={faUser} />
-						{value.username}
-					</h2>
+					{value.username && (
+						<h2 className="text-lg font-semibold text-black px-1 flex flex-row gap-1 items-center">
+							<FontAwesomeIcon icon={faUser} />
+							{value.username}
+						</h2>
+					)}
 				</div>
 				<div className="flex flex-col gap-3">
 					<FormControl
