@@ -1,11 +1,16 @@
+"use client";
 import axios from "axios";
 // import Cookies from "universal-cookie";
 // import { API_BASE_URL } from "../index";
 // const cookies = new Cookies();
-export const API_BASE_URL = "https://mapquest-app.onrender.com/api";
-// export const API_BASE_URL = "http://localhost:5000/api";
+console.log(process.env.NODE_ENV);
+export const API_BASE_URL =
+	(process.env.NODE_ENV === "development"
+		? "http://localhost:5000"
+		: "https://mapquest-app.onrender.com") + "/api";
+
+console.log("NEXT APP: ", API_BASE_URL);
 import { jwtDecode } from "jwt-decode";
-import config from "@/config.json";
 
 export const addTokenToLocalStorage = (access_token) => {
 	localStorage.setItem("token", access_token);
@@ -19,10 +24,7 @@ export const isTokenValid = () => {
 	if (token) {
 		const decoded_token = jwtDecode(token);
 		if (decoded_token) {
-			// JWT exp is in seconds
-			if (decoded_token.exp * 1000 > new Date().getTime()) {
-				return true;
-			}
+			return decoded_token.username !== undefined;
 		}
 	}
 	return false;
@@ -32,20 +34,21 @@ export const getTokenFromLocalStorage = () => {
 	if (token) {
 		const decoded_token = jwtDecode(token);
 		if (decoded_token) {
-			// JWT exp is in seconds
-			if (decoded_token.exp * 1000 > new Date().getTime()) {
-				return token;
-			}
+			return token;
 		}
+		logout();
 	}
-	// logout();
 	return null;
 };
 
+export const getUserName = () => {
+	const token = getTokenFromLocalStorage();
+	if (!token) return "Guest";
+	return jwtDecode(token).username;
+};
 export const removeTokenFromLocalStorage = () => {
 	localStorage.removeItem("token");
 	const event = new Event("storage");
-	// Dispatch the event
 	window.dispatchEvent(event);
 };
 
@@ -53,7 +56,7 @@ const logout = () => {
 	console.log("Redirect to login");
 	// showError("Session expired. Please login again.");
 	removeTokenFromLocalStorage();
-	window.location.href = config.logoutRedirect;
+	// window.location.href = config.logoutRedirect;
 };
 
 // axios.defaults.withCredentials = true;
@@ -72,16 +75,11 @@ axios.interceptors.response.use(
 	(response) => response,
 	async (error) => {
 		let originalRequest = error.config;
-		// If the error status is 401 and there is no originalRequest._retry flag,
-		// it means the token has expired and we need to refresh it
-		console.log("Retry:", originalRequest._retry);
+		console.log(error.response);
 		if (error.response.status === 401) {
 			// Handle refresh token error or redirect to login
 			console.log("Redirect to login");
-			localStorage.removeItem("token");
-			const event = new Event("storage");
-			// Dispatch the event
-			window.dispatchEvent(event);
+			removeTokenFromLocalStorage();
 		}
 		return Promise.reject(error);
 	}
