@@ -253,14 +253,29 @@ export default function ContextGenerator({
 				{steps.map((step, index) => (
 					<Step key={step.label}>
 						<StepLabel
-							icon={step.icon}
-							onClick={() => {
-								if (index !== activeStep) setActiveStep(index);
-								// else setActiveStep(-1);
-							}}
-							className="!cursor-pointer hover:!text-blue-500"
+							icon={
+								<div
+									onClick={() => {
+										if (index !== activeStep)
+											setActiveStep(index);
+										// else setActiveStep(-1);
+									}}	
+									className={`cursor-pointer hover:text-blue-500 ${
+										index === activeStep && "text-blue-500"
+									}`}
+								>
+									{step.icon}
+								</div>
+							}
 						>
-							{step.label}
+							<Typography
+								className={`${
+									index === activeStep &&
+									"!text-blue-500 !font-semibold"
+								}`}
+							>
+								{step.label}
+							</Typography>
 						</StepLabel>
 						<StepContent>
 							<div className="flex flex-col gap-2">
