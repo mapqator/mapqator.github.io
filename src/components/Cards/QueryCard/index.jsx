@@ -12,7 +12,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import Annotation from "./Annotation";
+import Annotation from "@/components/Forms/Annotation";
 import LLMAnswers from "./LLMAnswers";
 import QueryEditButton from "@/components/Buttons/QueryEditButton";
 import CollapsedContext from "./CollapsedContext";
