@@ -18,11 +18,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faArrowDown,
-	faArrowRight,
 	faBicycle,
 	faBus,
 	faCar,
-	faTrashCan,
 	faWalking,
 } from "@fortawesome/free-solid-svg-icons";
 import { GlobalContext } from "@/contexts/GlobalContext";
