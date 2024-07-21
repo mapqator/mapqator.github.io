@@ -36,6 +36,7 @@ import {
 } from "@mui/icons-material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
+import Confirmation from "@/components/Dialogs/Confirmation";
 
 const MuiTextField = (props) => {
 	return (
@@ -96,7 +97,7 @@ const Login = () => {
 	const [loggingIn, setLoggingIn] = useState(false);
 	const { isAuthenticated } = useAuth();
 	const router = useRouter();
-
+	const [open, setOpen] = useState(false);
 	useEffect(() => {
 		if (isAuthenticated) {
 			router.push(config.loginRedirect);
@@ -132,6 +133,14 @@ const Login = () => {
 	return (
 		<>
 			<div className="bg-gradient-to-r from-blue-100 to-green-100 w-full h-screen">
+				<Confirmation
+					open={open}
+					setOpen={setOpen}
+					onConfirm={() => {
+						router.push(config.loginRedirect + "#onboard");
+					}}
+					text="As a guest, you can explore different features of our platform. But your changes won't be saved in our database."
+				/>
 				<Container
 					component="main"
 					maxWidth="xs"
@@ -242,7 +251,8 @@ const Login = () => {
 									type="submit"
 									className="w-full rounded-lg text-sm px-5 py-2.5 text-center font-medium bg-orange-400"
 									onClick={() =>
-										router.push(config.loginRedirect)
+										// router.push(config.loginRedirect)
+										setOpen(true)
 									}
 									// color="orange"
 									startIcon={<RemoveRedEye />}

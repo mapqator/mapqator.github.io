@@ -14,7 +14,7 @@ import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import DatasetIcon from "@mui/icons-material/Dataset";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import { useRouter } from "next/navigation";
-
+import config from "@/config.json";
 export default function HomePage() {
 	const router = useRouter();
 	const features = [
@@ -121,7 +121,7 @@ export default function HomePage() {
 								backgroundColor: "#3367D6",
 							},
 						}}
-						onClick={() => router.push("/#onboard")}
+						onClick={() => router.push(config.logoutRedirect)}
 					>
 						Get Started
 					</Button>
