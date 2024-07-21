@@ -95,7 +95,7 @@ export default function Navbar({ selected, setSelected }) {
 							variant="outlined"
 							endIcon={<Logout />}
 							onClick={() => {
-								router.push(config.logoutRedirect);
+								// router.push(config.logoutRedirect);
 								AuthService.logout();
 							}}
 						>

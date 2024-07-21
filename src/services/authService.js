@@ -3,7 +3,7 @@ import {
 	addTokenToLocalStorage,
 	removeTokenFromLocalStorage,
 } from "@/api/base";
-import { showError, showSuccess } from "@/app/page";
+import { showError, showMessage, showSuccess } from "@/app/page";
 
 const AuthService = {
 	/**
@@ -29,7 +29,7 @@ const AuthService = {
 		const res = await authApi.logout();
 		if (res.success) {
 			removeTokenFromLocalStorage();
-			showSuccess("Logged out successfully");
+			showMessage("Logged out successfully", res);
 		}
 	},
 };
