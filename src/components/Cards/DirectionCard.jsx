@@ -45,6 +45,18 @@ export default function DirectionCard({ from_id, to_id }) {
 		selectedPlacesMap,
 		savedPlacesMap,
 	} = useContext(GlobalContext);
+
+	const handleDelete = (mode) => {
+		const newDirectionMatrix = {
+			...directionInformation,
+		};
+		delete newDirectionMatrix[from_id][to_id][mode];
+		if (Object.keys(newDirectionMatrix[from_id][to_id]).length === 0)
+			delete newDirectionMatrix[from_id][to_id];
+		if (Object.keys(newDirectionMatrix[from_id]).length === 0)
+			delete newDirectionMatrix[from_id];
+		setDirectionInformation(newDirectionMatrix);
+	};
 	return (
 		<Card variant="outlined" sx={{ mb: 2 }}>
 			<CardContent>
