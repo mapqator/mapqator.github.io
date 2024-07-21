@@ -39,7 +39,7 @@ export default function Navbar({ selected, setSelected }) {
 						width={30}
 						height={30}
 					/>
-					<div className="hidden lg:flex flex-col justify-center">
+					<div className="hidden md:flex flex-col justify-center">
 						<Typography
 							variant="h6"
 							component="div"
