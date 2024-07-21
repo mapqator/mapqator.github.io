@@ -15,6 +15,7 @@ import {
 	Avatar,
 	InputAdornment,
 	TextField,
+	Divider,
 } from "@mui/material";
 import Image from "next/image";
 import EyeIcon from "@/components/Icons/EyeIcon";
@@ -232,6 +233,11 @@ const Login = () => {
 										Sign in
 									</LoadingButton>
 								</form>
+								<Divider>
+									<Typography className="text-zinc-500">
+										or
+									</Typography>
+								</Divider>
 								<Button
 									type="submit"
 									className="w-full rounded-lg text-sm px-5 py-2.5 text-center font-medium bg-orange-400"
