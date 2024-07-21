@@ -15,6 +15,7 @@ import {
 	Paper,
 	InputAdornment,
 	Divider,
+	InputLabel,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -94,6 +95,7 @@ export default function QuestionForm({ handleSubmit, handleReset }) {
 			</Typography>
 			<TextField
 				fullWidth
+				placeholder="Write a question based on context..."
 				// label="Question"
 				value={query.question}
 				onChange={(e) =>
@@ -106,12 +108,22 @@ export default function QuestionForm({ handleSubmit, handleReset }) {
 				required
 				minRows={4}
 			/>
-			<Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+			{/* <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
 				Category:
-			</Typography>
-			<FormControl fullWidth variant="outlined">
+			</Typography> */}
+			<FormControl
+				variant="outlined"
+				className="w-[20rem]"
+				sx={{ mt: 2 }}
+				size="small"
+				required
+			>
+				<InputLabel>Category</InputLabel>
 				<Select
+					required
 					multiple
+					label={"Category"}
+					placeholder="Choose a category of the question"
 					id="outlined-adornment"
 					className="outlined-input"
 					value={query.classification.split(",").filter(Boolean)}
@@ -129,7 +141,7 @@ export default function QuestionForm({ handleSubmit, handleReset }) {
 					))}
 				</Select>
 			</FormControl>
-			<Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+			<Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
 				Options:
 			</Typography>
 			{query.answer.options.map((option, index) => (
