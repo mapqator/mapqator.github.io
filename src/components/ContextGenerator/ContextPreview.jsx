@@ -2,6 +2,7 @@
 
 import { GlobalContext } from "@/contexts/GlobalContext";
 import ContextGeneratorService from "@/services/contextGeneratorService";
+import { Typography } from "@mui/material";
 import React, { useContext, useEffect } from "react";
 
 export default function ContextViewer({ context }) {
@@ -9,7 +10,7 @@ export default function ContextViewer({ context }) {
 		<div className="p-0 md:p-2 flex flex-col gap-2 w-full min-h-16">
 			{context?.length > 0 ? (
 				<p
-					className="w-full text-left text-base md:text-sm"
+					className="w-full text-left text-sm"
 					style={{
 						whiteSpace: "pre-line",
 					}}
