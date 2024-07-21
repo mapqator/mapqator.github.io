@@ -221,8 +221,8 @@ export default function QuestionForm({ handleSubmit, handleReset }) {
 						handleReset();
 						window.scrollTo(0, 0);
 					}}
-					variant="outlined"
-					size="small"
+					// variant="outlined"
+					// size="small"
 					startIcon={<Clear />}
 					color="error"
 				>

@@ -44,7 +44,7 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 
 		const newQuery = {
 			...query,
-			context: text,
+			context: ContextGeneratorService.convertContextToText(context),
 			context_json: {
 				distance_matrix: distanceMatrix,
 				places: selectedPlacesMap,

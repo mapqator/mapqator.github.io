@@ -157,7 +157,7 @@ export default function Annotation({ query }) {
 							Annotate
 						</Button>
 						<Button
-							variant="contained"
+							// variant="contained"
 							color="error"
 							onClick={async () => {
 								setValue((prev) => ({

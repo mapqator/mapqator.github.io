@@ -8,6 +8,7 @@ import {
 	Box,
 	Chip,
 	Paper,
+	Button,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,9 +18,33 @@ import LLMAnswers from "./LLMAnswers";
 import QueryEditButton from "@/components/Buttons/QueryEditButton";
 import CollapsedContext from "./CollapsedContext";
 import OptionsPreview from "./OptionsPreview";
+import { getUserName } from "@/api/base";
+import { GlobalContext } from "@/contexts/GlobalContext";
+import QueryApi from "@/api/queryApi";
+import { Delete } from "@mui/icons-material";
+import { useAuth } from "@/contexts/AuthContext";
+import { showError, showSuccess } from "@/app/page";
+const queryApi = new QueryApi();
 
 export default function QueryCard({ entry, onEdit }) {
 	const [flag, setFlag] = useState(false);
+	const { setQueries } = useContext(GlobalContext);
+	const { isAuthenticated } = useAuth();
+
+	const handleDelete = async () => {
+		if (isAuthenticated) {
+			const res = await queryApi.deleteQuery(entry.id);
+			if (res.success) {
+				setQueries((prev) => prev.filter((q) => q.id !== entry.id));
+				showSuccess("Query deleted successfully");
+			} else {
+				showError("Can't delete query");
+			}
+		} else {
+			setQueries((prev) => prev.filter((q) => q.id !== entry.id));
+			showSuccess("Query deleted successfully");
+		}
+	};
 
 	useEffect(() => {
 		const invalid = entry.evaluation?.find(
@@ -114,7 +139,21 @@ export default function QueryCard({ entry, onEdit }) {
 				<OptionsPreview answer={entry.answer} />
 				<LLMAnswers evaluation={entry.evaluation} />
 				<Annotation query={entry} />
-				<QueryEditButton {...{ onEdit }} query={entry} />
+				{/* Only creator can edit his question */}
+				{(entry.username === getUserName() ||
+					getUserName() === "admin") && (
+					<div className="w-full flex flex-row justify-end gap-2 mt-2">
+						<Button
+							// variant="contained"
+							color="error"
+							startIcon={<Delete />}
+							onClick={() => handleDelete()}
+						>
+							Delete
+						</Button>
+						<QueryEditButton {...{ onEdit }} query={entry} />
+					</div>
+				)}
 			</AccordionDetails>
 		</Accordion>
 	);

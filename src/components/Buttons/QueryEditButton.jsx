@@ -116,17 +116,15 @@ export default function QueryEditButton({ onEdit, query }) {
 	};
 
 	return (
-		<Box className="w-full flex justify-end mt-2">
-			<LoadingButton
-				variant="contained"
-				color="primary"
-				startIcon={<Edit />}
-				onClick={handleEdit}
-				loading={loading}
-				loadingPosition="start"
-			>
-				Edit
-			</LoadingButton>
-		</Box>
+		<LoadingButton
+			variant="contained"
+			color="primary"
+			startIcon={<Edit />}
+			onClick={handleEdit}
+			loading={loading}
+			loadingPosition="start"
+		>
+			Edit
+		</LoadingButton>
 	);
 }
