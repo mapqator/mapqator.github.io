@@ -25,7 +25,7 @@ export default function PageComponent() {
 		>
 			<Fade in={showContent} timeout={1000}>
 				<Box className="text-center">
-					<Box className="flex  items-end">
+					<Box className="flex  items-end gap-5">
 						<motion.img
 							src={`${baseUrl}/images/logo.png`}
 							alt="Google Maps Logo"
@@ -38,6 +38,42 @@ export default function PageComponent() {
 							animate={{ y: 0, opacity: 1 }}
 							transition={{ duration: 0.5 }}
 						/>
+						<motion.div
+							initial={{ y: -50, opacity: 0 }}
+							animate={{ y: 0, opacity: 1 }}
+							transition={{ duration: 0.5 }}
+						>
+							<div className="flex flex-col items-start justify-center mb-16">
+								<Typography
+									variant="h2"
+									component="div"
+									sx={{
+										// ml: 2,
+										color: "#333",
+										fontWeight: "bold",
+										fontSize: "5rem",
+									}}
+								>
+									MapQuest
+								</Typography>
+								<Typography
+									variant="h6"
+									component="div"
+									sx={{
+										color: "#666",
+										fontWeight: "300",
+										ml: "16rem",
+									}}
+									className="h-3 font-mono"
+									style={{
+										transform: "translateY(-15px)",
+									}}
+								>
+									by Mahir Labib Dihan
+								</Typography>
+							</div>
+						</motion.div>
+
 						{/* <Typography
 							variant="h2"
 							component="h1"
@@ -63,8 +99,8 @@ export default function PageComponent() {
 							component="h1"
 							gutterBottom
 							sx={{
-								fontWeight: "bold",
-								color: "#333",
+								fontWeight: "600",
+								color: "#555",
 								mb: 2,
 								textShadow: "2px 2px 4px rgba(0,0,0,0.1)",
 							}}
