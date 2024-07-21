@@ -12,6 +12,9 @@ import {
 	CssBaseline,
 	Container,
 	Box,
+	Avatar,
+	InputAdornment,
+	TextField,
 } from "@mui/material";
 import Image from "next/image";
 import EyeIcon from "@/components/Icons/EyeIcon";
@@ -21,50 +24,69 @@ import { useRouter } from "next/navigation";
 import config from "@/config.json";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { useAuth } from "@/contexts/AuthContext";
+import {
+	DoorBackOutlined,
+	DoorFrontOutlined,
+	DoorSlidingOutlined,
+	Lock,
+	LoginOutlined,
+	RemoveRedEye,
+	Search,
+} from "@mui/icons-material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 
 const MuiTextField = (props) => {
 	return (
-		<FormControl fullWidth variant="outlined" size="small">
-			<InputLabel>{props.label}</InputLabel>
-			<OutlinedInput
-				required
-				placeholder={props.placeholder}
-				type="text"
-				value={props.value}
-				onChange={props.onChange}
-				label={props.label}
-				size="small"
-				fullWidth
-			/>
-		</FormControl>
+		<TextField
+			required
+			placeholder={props.placeholder}
+			type="text"
+			value={props.value}
+			onChange={props.onChange}
+			// label={props.label}
+			size="small"
+			fullWidth
+			variant="outlined"
+			InputProps={{
+				startAdornment: (
+					<InputAdornment position="start">
+						<FontAwesomeIcon icon={faUser} />
+					</InputAdornment>
+				),
+			}}
+		/>
 	);
 };
 
 const MuiPasswordField = (props) => {
 	const [showPassword, setShowPassword] = useState(false);
 	return (
-		<FormControl fullWidth variant="outlined" size="small">
-			<InputLabel>{props.label}</InputLabel>
-			<OutlinedInput
-				required
-				placeholder={props.placeholder}
-				type={showPassword ? "text" : "password"}
-				value={props.value}
-				onChange={props.onChange}
-				label={props.label}
-				size="small"
-				fullWidth
-				endAdornment={
-					<div>
+		<TextField
+			required
+			placeholder={props.placeholder}
+			type={showPassword ? "text" : "password"}
+			value={props.value}
+			onChange={props.onChange}
+			size="small"
+			fullWidth
+			InputProps={{
+				startAdornment: (
+					<InputAdornment position="start">
+						<FontAwesomeIcon icon={faLock} />
+					</InputAdornment>
+				),
+				endAdornment: (
+					<InputAdornment position="end">
 						<EyeIcon
 							isVisible={props.value.length > 0}
 							showPassword={showPassword}
 							setShowPassword={setShowPassword}
 						/>
-					</div>
-				}
-			/>
-		</FormControl>
+					</InputAdornment>
+				),
+			}}
+		/>
 	);
 };
 const Login = () => {
@@ -173,7 +195,7 @@ const Login = () => {
 								<Typography
 									variant="h5"
 									component="h2"
-									className="font-semibold"
+									className="font-semibold text-center"
 								>
 									Sign in to your account
 								</Typography>
@@ -183,7 +205,7 @@ const Login = () => {
 								>
 									<MuiTextField
 										label="Username"
-										placeholder=""
+										placeholder="username"
 										onChange={(e) =>
 											setUserName(e.target.value)
 										}
@@ -204,6 +226,8 @@ const Login = () => {
 										variant="contained"
 										fullWidth
 										loading={loggingIn}
+										startIcon={<LoginOutlined />}
+										loadingPosition="start"
 									>
 										Sign in
 									</LoadingButton>
@@ -215,10 +239,11 @@ const Login = () => {
 										router.push(config.loginRedirect)
 									}
 									// color="orange"
+									startIcon={<RemoveRedEye />}
 									variant="outlined"
 									fullWidth
 								>
-									Enter as Guest
+									View as Guest
 								</Button>
 							</CardContent>
 						</Card>
