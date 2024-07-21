@@ -19,9 +19,10 @@ import { Clear, Edit, Save } from "@mui/icons-material";
 import { getUserName } from "@/api/base";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { showError } from "@/app/page";
+import { useAuth } from "@/contexts/AuthContext";
 const queryApi = new QueryApi();
 export default function Annotation({ query }) {
-	const { isAuthenticated } = useContext(GlobalContext);
+	const { isAuthenticated } = useAuth();
 	const { setQueries } = useContext(GlobalContext);
 	const [value, setValue] = useState({
 		answer: "",

@@ -20,6 +20,7 @@ import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/navigation";
 import config from "@/config.json";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const MuiTextField = (props) => {
 	return (
@@ -70,7 +71,7 @@ const Login = () => {
 	const [username, setUserName] = useState("");
 	const [password, setPassword] = useState("");
 	const [loggingIn, setLoggingIn] = useState(false);
-	const { isAuthenticated } = useContext(GlobalContext);
+	const { isAuthenticated } = useAuth();
 	const router = useRouter();
 
 	useEffect(() => {

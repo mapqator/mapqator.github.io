@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import GlobalContextProvider from "../contexts/GlobalContext";
+import AuthContextProvider from "@/contexts/AuthContext";
 
 export default function ParentProvider({ children }) {
-	return <GlobalContextProvider>{children}</GlobalContextProvider>;
+	return <AuthContextProvider>{children}</AuthContextProvider>;
 }

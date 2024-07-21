@@ -8,6 +8,7 @@ import { Login, Logout } from "@mui/icons-material";
 import config from "@/config.json";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import AuthService from "@/services/authService";
+import { useAuth } from "@/contexts/AuthContext";
 export default function Navbar({ selected, setSelected }) {
 	const [baseUrl, setBaseUrl] = useState(
 		process.env.REACT_APP_BASE_URL
@@ -23,7 +24,7 @@ export default function Navbar({ selected, setSelected }) {
 		{ name: "Evaluation", key: "evaluation" },
 	];
 	const router = useRouter();
-	const { isAuthenticated } = useContext(GlobalContext);
+	const { isAuthenticated } = useAuth();
 
 	return (
 		<AppBar position="fixed" sx={{ background: "white", mb: 4 }}>

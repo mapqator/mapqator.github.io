@@ -659,25 +659,6 @@ export default function GlobalContextProvider({ children }) {
 		},
 	]);
 
-	const [isAuthenticated, setIsAuthenticated] = useState(null);
-	const handleStorageChange = () => {
-		const token = localStorage.getItem("token");
-		if (isTokenValid()) {
-			setIsAuthenticated(true);
-		} else {
-			console.log("Removing token");
-			if (token) localStorage.removeItem("token");
-			setIsAuthenticated(false);
-		}
-	};
-	useEffect(() => {
-		handleStorageChange();
-		window.addEventListener("storage", handleStorageChange);
-		return () => {
-			window.removeEventListener("storage", handleStorageChange);
-		};
-	}, []);
-
 	const fetchQueries = async () => {
 		// setLoading(true);
 		try {
@@ -743,7 +724,6 @@ export default function GlobalContextProvider({ children }) {
 				queries,
 				setQueries,
 				initQuery,
-				isAuthenticated,
 			}}
 		>
 			{children}

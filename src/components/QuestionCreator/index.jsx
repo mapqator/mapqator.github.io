@@ -10,6 +10,7 @@ import { showError, showSuccess } from "@/app/page";
 import CollapsedContext from "../Cards/QueryCard/CollapsedContext";
 import QuestionsContainer from "../Containers/QuestionsContainer";
 import ContextGeneratorService from "@/services/contextGeneratorService";
+import { useAuth } from "@/contexts/AuthContext";
 const queryApi = new QueryApi();
 
 export default function QuestionCreationPage({ handleContextEdit }) {
@@ -25,9 +26,10 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 		currentInformation,
 		poisMap,
 		directionInformation,
-		isAuthenticated,
 		initQuery,
 	} = useContext(GlobalContext);
+
+	const { isAuthenticated } = useAuth();
 
 	const handleReset = () => {
 		setQuery((prev) => ({
