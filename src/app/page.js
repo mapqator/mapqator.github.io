@@ -11,7 +11,6 @@ import Navbar from "@/components/Navbar";
 
 import { toast } from "react-toastify";
 import GlobalContextProvider, { GlobalContext } from "@/contexts/GlobalContext";
-import ParentProvider from "./wrapper";
 export const showToast = (message, type) => {
 	console.log(message, type);
 	if (type === "success") toast.success(message, {});
@@ -35,13 +34,10 @@ export const showMessage = (message, res) => {
 
 export default function PageComponent() {
 	const [activeStep, setActiveStep] = useState(null);
-	const [selected, setSelected] = useState("context-generator");
+	const [selected, setSelected] = useState("context");
 
 	useEffect(() => {
 		const page = window.location.hash.substring(1);
-		console.log(
-			"Hi" + (page === "" || page === "onboard" ? "context" : page)
-		);
 		setSelected(page === "" || page === "onboard" ? "context" : page);
 	}, []);
 
