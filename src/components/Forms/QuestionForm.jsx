@@ -16,6 +16,7 @@ import {
 	InputAdornment,
 	Divider,
 	InputLabel,
+	Chip,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -133,6 +134,19 @@ export default function QuestionForm({ handleSubmit, handleReset }) {
 							classification: e.target.value.join(","),
 						}));
 					}}
+					renderValue={(selected) => (
+						<Box
+							sx={{
+								display: "flex",
+								flexWrap: "wrap",
+								gap: 0.5,
+							}}
+						>
+							{selected.map((value) => (
+								<Chip key={value} label={value} size="small" />
+							))}
+						</Box>
+					)}
 				>
 					{categories.map((value, index) => (
 						<MenuItem key={index} value={value}>
