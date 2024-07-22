@@ -43,7 +43,7 @@ export const getTokenFromLocalStorage = () => {
 
 export const getUserName = () => {
 	const token = getTokenFromLocalStorage();
-	if (!token) return "Guest";
+	if (!token) return "guest";
 	return jwtDecode(token).username;
 };
 export const removeTokenFromLocalStorage = () => {
