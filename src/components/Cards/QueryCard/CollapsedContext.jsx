@@ -35,7 +35,7 @@ export default function CollapsedContext({ context }) {
 			)}
 
 			{context === "" && (
-				<p className="text-center my-auto text-lg md:text-xl text-zinc-400">
+				<p className="text-center py-2 my-auto text-lg md:text-xl text-zinc-400">
 					No context provided.
 				</p>
 			)}

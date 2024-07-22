@@ -489,7 +489,7 @@ export default function GlobalContextProvider({ children }) {
 				},
 			},
 			context_gpt: "",
-			classification: "planning",
+			classification: "planning,routing",
 			username: "mahirlabibdihan",
 			evaluation: [
 				{
