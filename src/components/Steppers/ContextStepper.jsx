@@ -41,7 +41,15 @@ export default function ContextStepper({
 	activeStep,
 	setActiveStep,
 }) {
-	const { selectedPlacesMap, context } = useContext(GlobalContext);
+	const {
+		selectedPlacesMap,
+		nearbyPlacesMap,
+		poisMap,
+		distanceMatrix,
+		directionInformation,
+		currentInformation,
+		context,
+	} = useContext(GlobalContext);
 
 	const handleNext = () => {
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -95,7 +103,7 @@ export default function ContextStepper({
 			You can choose a type from the given list or a custom type. Custom type's results are unpredictable.`,
 			icon: <PlaceIcon />,
 			form: <NearbyForm />,
-			grid: <NearbyGrid />,
+			grid: Object.keys(nearbyPlacesMap).length > 0 && <NearbyGrid />,
 			context: context.nearby,
 		},
 		{
@@ -103,7 +111,7 @@ export default function ContextStepper({
 			description: `Explore various Points of Interest (POIs) within a larger area using the Places API. Select a region like a city or neighborhood, then choose a category (e.g., restaurants, museums, parks) to see POIs within that area.`,
 			icon: <ExploreIcon />,
 			form: <AreaForm />,
-			grid: <AreaGrid />,
+			grid: Object.keys(poisMap).length > 0 && <AreaGrid />,
 			context: context.area,
 		},
 		{
@@ -111,7 +119,7 @@ export default function ContextStepper({
 			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Select several places and click "Calculate Distances".`,
 			icon: <MapIcon />,
 			form: <DistanceForm />,
-			grid: <DistanceGrid />,
+			grid: Object.keys(distanceMatrix).length > 0 && <DistanceGrid />,
 			context: context.distance,
 		},
 		{
@@ -119,7 +127,9 @@ export default function ContextStepper({
 			description: `Utilize the Directions API to find routes between two points. Click on two places on the map to set start and end points.`,
 			icon: <DirectionsIcon />,
 			form: <DirectionForm />,
-			grid: <DirectionGrid />,
+			grid: Object.keys(directionInformation).length > 0 && (
+				<DirectionGrid />
+			),
 			context: context.direction,
 		},
 		{
@@ -195,8 +205,7 @@ export default function ContextStepper({
 								</Typography>
 								{step.component
 									? step.component
-									: step.form &&
-									  step.grid && (
+									: step.form && (
 											<>
 												<Divider />
 												<Box>
@@ -205,18 +214,22 @@ export default function ContextStepper({
 															{step.form}
 														</Box>
 													</CardContent>
-													<Divider
-														sx={{
-															mt: 2,
-															mb: 1,
-															color: "#888",
-														}}
-													>
-														Already added
-													</Divider>
-													<CardContent>
-														{step.grid}
-													</CardContent>
+													{step.grid && (
+														<>
+															<Divider
+																sx={{
+																	mt: 2,
+																	mb: 1,
+																	color: "#888",
+																}}
+															>
+																Already added
+															</Divider>
+															<CardContent>
+																{step.grid}
+															</CardContent>
+														</>
+													)}
 												</Box>
 												<Divider />
 											</>
