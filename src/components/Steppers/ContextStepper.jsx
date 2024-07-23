@@ -50,6 +50,10 @@ export default function ContextStepper({
 		setActiveStep((prevActiveStep) => prevActiveStep - 1);
 	};
 
+	const loadExample = () => {
+		// Load dummy data
+		handleNext();
+	};
 	const steps = [
 		{
 			label: "Guidelines",
@@ -251,12 +255,19 @@ export default function ContextStepper({
 												? "Start"
 												: "Continue"}
 										</Button>
-										{index > 0 && (
+										{index > 0 ? (
 											<Button
 												onClick={handleBack}
 												sx={{ mt: 1, mr: 1 }}
 											>
 												Back
+											</Button>
+										) : (
+											<Button
+												onClick={loadExample}
+												sx={{ mt: 1, mr: 1 }}
+											>
+												See Example
 											</Button>
 										)}
 									</div>

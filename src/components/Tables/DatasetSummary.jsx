@@ -53,18 +53,15 @@ export default function DatasetSummary() {
 					<TableRow
 						sx={{
 							fontWeight: "bold",
-							backgroundColor: "black",
-							color: "white",
+							color: "black",
 						}}
+						className="bg-gray-200"
 					>
-						<TableCell sx={{ fontWeight: "bold", color: "white" }}>
+						<TableCell sx={{ fontWeight: "bold" }}>
 							{" "}
 							Dataset Summary
 						</TableCell>
-						<TableCell
-							align="right"
-							sx={{ fontWeight: "bold", color: "white" }}
-						>
+						<TableCell align="right" sx={{ fontWeight: "bold" }}>
 							Count
 						</TableCell>
 					</TableRow>

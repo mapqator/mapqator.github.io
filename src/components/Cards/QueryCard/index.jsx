@@ -14,7 +14,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import Annotation from "@/components/Forms/Annotation";
-import LLMAnswers from "./LLMAnswers";
+import LLMAnswers from "../../Tables/LLMAnswers";
 import QueryEditButton from "@/components/Buttons/QueryEditButton";
 import CollapsedContext from "../CollapsedContext";
 import OptionsPreview from "./OptionsPreview";

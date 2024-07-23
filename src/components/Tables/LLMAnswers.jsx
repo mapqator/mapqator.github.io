@@ -25,15 +25,14 @@ export default function LLMAnswers({ evaluation }) {
 								<TableRow
 									sx={{
 										fontWeight: "bold",
-										backgroundColor: "black",
-										color: "white",
+										color: "black",
 									}}
+									className="bg-gray-200"
 								>
 									<TableCell
 										sx={{
 											width: "30%",
 											fontWeight: "bold",
-											color: "white",
 										}}
 									>
 										Model
@@ -43,7 +42,6 @@ export default function LLMAnswers({ evaluation }) {
 										sx={{
 											width: "60%",
 											fontWeight: "bold",
-											color: "white",
 										}}
 									>
 										Answer
@@ -53,7 +51,6 @@ export default function LLMAnswers({ evaluation }) {
 										sx={{
 											width: "10%",
 											fontWeight: "bold",
-											color: "white",
 										}}
 									>
 										Correct?

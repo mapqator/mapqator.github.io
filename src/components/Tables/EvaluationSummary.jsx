@@ -68,39 +68,27 @@ export default function EvaluationSummary() {
 					<TableRow
 						sx={{
 							fontWeight: "bold",
-							backgroundColor: "black",
-							color: "white",
+							color: "black",
 						}}
+						className="bg-gray-200"
 					>
 						<TableCell
 							component="th"
 							scope="row"
-							sx={{ fontWeight: "bold", color: "white" }}
+							sx={{ fontWeight: "bold" }}
 						>
 							Model
 						</TableCell>
-						<TableCell
-							align="center"
-							sx={{ fontWeight: "bold", color: "white" }}
-						>
+						<TableCell align="center" sx={{ fontWeight: "bold" }}>
 							Accuracy
 						</TableCell>
-						<TableCell
-							align="center"
-							sx={{ fontWeight: "bold", color: "white" }}
-						>
+						<TableCell align="center" sx={{ fontWeight: "bold" }}>
 							Correct
 						</TableCell>
-						<TableCell
-							align="center"
-							sx={{ fontWeight: "bold", color: "white" }}
-						>
+						<TableCell align="center" sx={{ fontWeight: "bold" }}>
 							Wrong
 						</TableCell>
-						<TableCell
-							align="center"
-							sx={{ fontWeight: "bold", color: "white" }}
-						>
+						<TableCell align="center" sx={{ fontWeight: "bold" }}>
 							No Answer
 						</TableCell>
 					</TableRow>
