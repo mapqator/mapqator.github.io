@@ -1,6 +1,14 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import { Box, Typography, Button, IconButton } from "@mui/material";
+import {
+	Box,
+	Typography,
+	Button,
+	IconButton,
+	Tabs,
+	Tab,
+	BottomNavigation,
+} from "@mui/material";
 import Image from "next/image";
 import { AppBar, Toolbar } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -87,15 +95,14 @@ export default function Navbar({ selected, setSelected }) {
 						</h6>
 					</div>
 				</Box>
+
 				<Box>
 					{navItems.map((item) => (
 						<Button
 							key={item.key}
 							onClick={() => setSelected(item.key)}
 							sx={{
-								mx: {
-									md: 1,
-								},
+								height: `${config.topbarHeight}px`,
 								color:
 									selected === item.key ? "#1976d2" : "#666",
 								fontWeight:
@@ -111,7 +118,7 @@ export default function Navbar({ selected, setSelected }) {
 								borderRadius: 0,
 								paddingBottom: "6px",
 							}}
-							className="!text-[0.6rem] md:!text-base"
+							className="!text-[0.6rem] md:!text-base h-full px-1"
 							// startIcon=
 						>
 							<div className="flex flex-col md:flex-row md:gap-2 items-center">
