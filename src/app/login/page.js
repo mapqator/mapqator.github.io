@@ -174,12 +174,15 @@ const Login = () => {
 								onClick={() => router.push("landing")}
 								className="cursor-pointer flex-row items-end flex w-full gap-2"
 							>
-								<Image
-									src={`${baseUrl}/images/logo.png`}
-									alt=""
-									width={30}
-									height={30}
-								/>
+								<div className="flex">
+									<Image
+										src={`${baseUrl}/images/logo.png`}
+										alt="MapQuest Logo"
+										width={30}
+										height={30}
+									/>
+								</div>
+
 								<Typography
 									variant="h4"
 									component="div"
