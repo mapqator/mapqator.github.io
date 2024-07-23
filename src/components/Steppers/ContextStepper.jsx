@@ -74,12 +74,12 @@ export default function ContextStepper({
 			3. Get Directions & Distances: Find routes between places and calculate distances.
 			4. Generate Context: Review and finalize your place-related information.
 
-			Use the "Continue" button to move through each step, or click on the step icons to jump to a specific step. Let's begin!`,
+			You can start from scratch or with an example. Let's begin!`,
 			icon: <Flag />,
 		},
 		{
 			label: "Add Places",
-			description: `Start by searching for a location using the Places API. Type in a place name or address in the search bar below. While typing, saved places matching the search query will be shown. On pressing enter, google places API will be queried and the results will be shown.`,
+			description: `Start by searching for a location. Type in a place name or address in the search bar below. While typing, recently searched places matched with the search query will be shown. On pressing enter, places will be fetched from the Google Map!!`,
 			icon: <SearchIcon />,
 			component: (
 				<div className="flex flex-col gap-2">
@@ -99,8 +99,8 @@ export default function ContextStepper({
 		},
 		{
 			label: "Explore Nearby Places",
-			description: `Use the Nearby Search API to discover points of interest around your selected location. Click on the "Nearby" button and choose a category.
-			You can choose a type from the given list or a custom type. Custom type's results are unpredictable.`,
+			description: `Use the Nearby Search Tool to discover points of interest around your selected location. You just need to select a location and the type of poi you are looking for.
+			You can choose a type from the given list or a custom type. It is recommended to choose from the given list for better result.`,
 			icon: <PlaceIcon />,
 			form: <NearbyForm />,
 			grid: Object.keys(nearbyPlacesMap).length > 0 && <NearbyGrid />,
@@ -108,7 +108,7 @@ export default function ContextStepper({
 		},
 		{
 			label: "Discover Area POIs",
-			description: `Explore various Points of Interest (POIs) within a larger area using the Places API. Select a region like a city or neighborhood, then choose a category (e.g., restaurants, museums, parks) to see POIs within that area.`,
+			description: `Explore various Points of Interest (POIs) within a larger area. Select a region like a city or neighborhood, then choose a type (e.g., restaurants, museums, parks) to see POIs within that area.`,
 			icon: <ExploreIcon />,
 			form: <AreaForm />,
 			grid: Object.keys(poisMap).length > 0 && <AreaGrid />,
@@ -116,7 +116,7 @@ export default function ContextStepper({
 		},
 		{
 			label: "Calculate Distances",
-			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Select several places and click "Calculate Distances".`,
+			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Choose origins, destinations and travel mode to find distance and durations.`,
 			icon: <MapIcon />,
 			form: <DistanceForm />,
 			grid: Object.keys(distanceMatrix).length > 0 && <DistanceGrid />,
@@ -124,7 +124,7 @@ export default function ContextStepper({
 		},
 		{
 			label: "Get Directions",
-			description: `Utilize the Directions API to find routes between two points. Click on two places on the map to set start and end points.`,
+			description: `Utilize the Directions API to find routes between two points. Choose origin, destination and travel mode to find possible routes between them.`,
 			icon: <DirectionsIcon />,
 			form: <DirectionForm />,
 			grid: Object.keys(directionInformation).length > 0 && (
