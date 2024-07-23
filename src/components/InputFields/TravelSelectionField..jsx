@@ -16,7 +16,7 @@ export default function TravelSelectionField({ mode, setMode }) {
 			size="small"
 		>
 			<InputLabel htmlFor="outlined-adornment" className="input-label">
-				Travel by
+				Travel mode
 			</InputLabel>
 			<Select
 				required
@@ -24,12 +24,12 @@ export default function TravelSelectionField({ mode, setMode }) {
 				className="outlined-input"
 				value={mode}
 				onChange={(event) => setMode(event.target.value)}
-				input={<OutlinedInput label={"Travel by"} />}
+				input={<OutlinedInput label={"Travel mode"} />}
 			>
 				{[
-					{ value: "walking", label: "Foot" },
-					{ value: "driving", label: "Car" },
-					{ value: "bicycling", label: "Cycle" },
+					{ value: "walking", label: "Walking" },
+					{ value: "driving", label: "Driving" },
+					{ value: "bicycling", label: "Bicycling" },
 					{ value: "transit", label: "Public Transport" },
 				].map((mode, index) => (
 					<MenuItem key={index} value={mode.value}>

@@ -41,7 +41,7 @@ export default function DirectionCard({ from_id, to_id }) {
 		useContext(GlobalContext);
 
 	const { savedPlacesMap } = useContext(AppContext);
-	
+
 	const handleDelete = (mode) => {
 		const newDirectionMatrix = {
 			...directionInformation,
@@ -144,12 +144,12 @@ export default function DirectionCard({ from_id, to_id }) {
 											<ListItemText
 												primary={
 													mode === "walking"
-														? "On foot"
+														? "Walking"
 														: mode === "driving"
-														? "By car"
+														? "Driving"
 														: mode === "bicycling"
-														? "By cycle"
-														: "By public transport"
+														? "Bicycling"
+														: "Public transport"
 												}
 												secondary={
 													directionInformation[
@@ -236,19 +236,14 @@ export default function DirectionCard({ from_id, to_id }) {
 																<ListItemText
 																	primary={
 																		<div className="flex flex-row justify-between w-full">
-																			<h1 className="w-[70%]">
+																			<h1 className="w-[60%] text-wrap">
 																				{"Via " +
 																					route.label}
 																			</h1>
-																			<h1 className="text-md text-right w-[15%]">
-																				{
-																					route.duration
-																				}
-																			</h1>
-																			<h1 className="text-md text-right w-[15%]">
-																				{
-																					route.distance
-																				}
+																			<h1 className="w-[40%] text-right">
+																				{route.duration +
+																					" | " +
+																					route.distance}
 																			</h1>
 																		</div>
 																	}

@@ -123,8 +123,8 @@ export default function GlobalContextProvider({ children }) {
 				driving: {
 					routes: [
 						{
-							distance: "5 km",
-							duration: "6 mins",
+							distance: "4.5 km",
+							duration: "1 hr 45 min",
 							label: "Uttara",
 							steps: [],
 						},

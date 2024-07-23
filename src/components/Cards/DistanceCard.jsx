@@ -133,20 +133,19 @@ export default function DistanceCard({ from_id, to_id }) {
 									<ListItemText
 										primary={
 											mode === "walking"
-												? "On foot"
+												? "Walking"
 												: mode === "driving"
-												? "By car"
+												? "Driving"
 												: mode === "bicycling"
-												? "By cycle"
-												: "By public transport"
+												? "Bicycling"
+												: "Public transport"
 										}
 										secondary={
 											distanceMatrix[from_id][to_id][mode]
 												.duration +
-											" (" +
+											" | " +
 											distanceMatrix[from_id][to_id][mode]
-												.distance +
-											")"
+												.distance
 										}
 										primaryTypographyProps={{
 											noWrap: true,
