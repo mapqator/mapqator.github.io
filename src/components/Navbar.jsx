@@ -1,6 +1,6 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, IconButton } from "@mui/material";
 import Image from "next/image";
 import { AppBar, Toolbar } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,11 @@ import config from "@/config.json";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import AuthService from "@/services/authService";
 import { useAuth } from "@/contexts/AuthContext";
+import { faGears, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import MapIcon from "@mui/icons-material/Map";
+import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
+import DatasetIcon from "@mui/icons-material/Dataset";
+import AssessmentIcon from "@mui/icons-material/Assessment";
 export default function Navbar({ selected, setSelected }) {
 	const [baseUrl, setBaseUrl] = useState(
 		process.env.REACT_APP_BASE_URL
@@ -18,10 +23,22 @@ export default function Navbar({ selected, setSelected }) {
 			: "https://mahirlabibdihan.github.io/mapquest"
 	);
 	const navItems = [
-		{ name: "Context", key: "context" },
-		{ name: "Question", key: "question" },
-		{ name: "Dataset", key: "dataset" },
-		{ name: "Evaluation", key: "evaluation" },
+		{ name: "Context", key: "context", icon: <MapIcon /> },
+		{
+			name: "Question",
+			key: "question",
+			icon: <QuestionAnswerIcon />,
+		},
+		{
+			name: "Dataset",
+			key: "dataset",
+			icon: <DatasetIcon />,
+		},
+		{
+			name: "Evaluation",
+			key: "evaluation",
+			icon: <AssessmentIcon />,
+		},
 	];
 	const router = useRouter();
 	const { isAuthenticated } = useAuth();
@@ -33,12 +50,23 @@ export default function Navbar({ selected, setSelected }) {
 					onClick={() => router.push("landing")}
 					className="cursor-pointer flex-row items-center flex w-1/6"
 				>
-					<Image
-						src={`${baseUrl}/images/logo.png`}
-						alt="MapQuest Logo"
-						width={30}
-						height={30}
-					/>
+					<div className="hidden md:flex">
+						<Image
+							src={`${baseUrl}/images/logo.png`}
+							alt="MapQuest Logo"
+							width={30}
+							height={30}
+						/>
+					</div>
+					<div className="flex md:hidden">
+						<Image
+							src={`${baseUrl}/images/logo.png`}
+							alt="MapQuest Logo"
+							width={25}
+							height={25}
+						/>
+					</div>
+
 					<div className="hidden md:flex flex-col justify-center">
 						<Typography
 							variant="h6"
@@ -83,9 +111,13 @@ export default function Navbar({ selected, setSelected }) {
 								borderRadius: 0,
 								paddingBottom: "6px",
 							}}
-							className="!text-xs md:!text-base"
+							className="!text-[0.6rem] md:!text-base"
+							// startIcon=
 						>
-							{item.name}
+							<div className="flex flex-col md:flex-row md:gap-2 items-center">
+								{item.icon}
+								{item.name}
+							</div>
 						</Button>
 					))}
 				</Box>
@@ -109,6 +141,28 @@ export default function Navbar({ selected, setSelected }) {
 						>
 							Login
 						</Button>
+					)}
+				</Box>
+				<Box className="w-1/6 flex md:hidden justify-end">
+					{isAuthenticated ? (
+						<IconButton
+							// variant="outlined"
+							// endIcon={}
+							onClick={() => {
+								// router.push(config.logoutRedirect);
+								AuthService.logout();
+							}}
+						>
+							<Logout />
+						</IconButton>
+					) : (
+						<IconButton
+							// variant="contained"
+							// endIcon={}
+							onClick={() => router.push(config.logoutRedirect)}
+						>
+							<Login />
+						</IconButton>
 					)}
 				</Box>
 			</Toolbar>

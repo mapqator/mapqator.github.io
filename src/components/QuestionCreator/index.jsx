@@ -7,7 +7,7 @@ import QueryApi from "@/api/queryApi";
 import { getUserName } from "@/api/base";
 import QuestionForm from "../Forms/QuestionForm";
 import { showError, showSuccess } from "@/app/page";
-import CollapsedContext from "../Cards/QueryCard/CollapsedContext";
+import CollapsedContext from "../Cards/CollapsedContext";
 import QuestionsContainer from "../Containers/QuestionsContainer";
 import ContextGeneratorService from "@/services/contextGeneratorService";
 import { useAuth } from "@/contexts/AuthContext";

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Typography, Paper, Box, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 export default function CollapsedContext({ context }) {
@@ -14,23 +14,21 @@ export default function CollapsedContext({ context }) {
 			{context.split("\n").map(
 				(line, index) =>
 					(contextExpanded || index < 5) && (
-						<React.Fragment key={index}>
-							<p
-								key={index}
-								className="w-full text-left"
-								style={{
-									whiteSpace: "pre-line",
-								}}
-								dangerouslySetInnerHTML={{
-									__html:
-										line +
-										(line === "" &&
-										index < context.split("\n").length - 1
-											? "\n"
-											: ""),
-								}}
-							/>
-						</React.Fragment>
+						<p
+							key={index}
+							className="w-full text-left"
+							style={{
+								whiteSpace: "pre-line",
+							}}
+							dangerouslySetInnerHTML={{
+								__html:
+									line +
+									(line === "" &&
+									index < context.split("\n").length - 1
+										? "\n"
+										: ""),
+							}}
+						/>
 					)
 			)}
 

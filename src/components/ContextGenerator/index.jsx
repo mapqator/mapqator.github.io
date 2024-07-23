@@ -19,7 +19,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import DirectionsIcon from "@mui/icons-material/Directions";
 import PlaceIcon from "@mui/icons-material/Place";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import ContextViewer from "./ContextPreview";
+import ContextPreview from "../Cards/ContextPreview";
 import { Flag, RemoveRedEye, Settings } from "@mui/icons-material";
 import ExploreIcon from "@mui/icons-material/Explore";
 import ContextGeneratorService from "@/services/contextGeneratorService";
@@ -32,7 +32,9 @@ import AreaGrid from "@/components/Grids/AreaGrid";
 import AreaForm from "@/components/Forms/AreaForm";
 import NearbyGrid from "@/components/Grids/NearbyGrid";
 import NearbyForm from "@/components/Forms/NearbyForm";
-import PlaceSearch from "./Search";
+import AutocompleteSearchBox from "@/components/InputFields/AutocompleteSearchBox";
+import MapComponent from "@/components/GoogleMap/MapComponent";
+import PlaceInformation from "@/components/Grids/PlacesGrid";
 
 export default function ContextGenerator({
 	onFinish,
@@ -112,7 +114,17 @@ export default function ContextGenerator({
 			label: "Add Places",
 			description: `Start by searching for a location using the Places API. Type in a place name or address in the search bar below. While typing, saved places matching the search query will be shown. On pressing enter, google places API will be queried and the results will be shown.`,
 			icon: <SearchIcon />,
-			component: <PlaceSearch />,
+			component: (
+				<div className="flex flex-col gap-2">
+					<AutocompleteSearchBox />
+					{Object.keys(selectedPlacesMap).length > 0 && (
+						<>
+							<MapComponent />
+							<PlaceInformation />
+						</>
+					)}
+				</div>
+			),
 			context: context.places,
 		},
 		{
@@ -212,7 +224,7 @@ export default function ContextGenerator({
 			component: (
 				<>
 					<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
-						<ContextViewer
+						<ContextPreview
 							context={ContextGeneratorService.convertContextToText(
 								context
 							)}
@@ -300,7 +312,7 @@ export default function ContextGenerator({
 											elevation={1}
 											sx={{ p: 2, bgcolor: "grey.100" }}
 										>
-											<ContextViewer
+											<ContextPreview
 												context={step.context}
 											/>
 										</Paper>
