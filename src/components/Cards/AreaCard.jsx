@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import MapApi from "@/api/mapApi";
 const mapApi = new MapApi();
 import {
@@ -20,19 +20,19 @@ import {
 	Button,
 } from "@mui/material";
 import { Add, Delete, ExpandMore } from "@mui/icons-material";
+import { GlobalContext } from "@/contexts/GlobalContext";
 
-export default function AreaCard({
-	selectedPlacesMap,
-	savedPlacesMap,
-	setSavedPlacesMap,
-	poi,
-	poisMap,
-	setPoisMap,
-	index2,
-	place_id,
-	setSelectedPlacesMap,
-}) {
+export default function AreaCard({ entry, index, place_id }) {
 	const [expanded, setExpanded] = useState(false);
+	const {
+		selectedPlacesMap,
+		savedPlacesMap,
+		setSavedPlacesMap,
+		poisMap,
+		setPoisMap,
+		setSelectedPlacesMap,
+	} = useContext(GlobalContext);
+
 	const handleAddSave = async (place_id) => {
 		let details = selectedPlacesMap[place_id];
 		if (details === undefined) {
@@ -93,7 +93,7 @@ export default function AreaCard({
 								const newPoisMap = {
 									...poisMap,
 								};
-								newPoisMap[place_id].splice(index2, 1);
+								newPoisMap[place_id].splice(index, 1);
 								if (newPoisMap[place_id].length === 0)
 									delete newPoisMap[place_id];
 								setPoisMap(newPoisMap);
@@ -106,11 +106,11 @@ export default function AreaCard({
 				</Box>
 				<Box display="flex" justifyContent="space-between">
 					<Box display="flex" flexWrap="wrap" gap={1} mt={1}>
-						<Chip label={poi.type} color="primary" size="small" />
+						<Chip label={entry.type} color="primary" size="small" />
 						<Chip
 							label={
 								(poisMap[place_id]
-									? poisMap[place_id][index2].places.filter(
+									? poisMap[place_id][index].places.filter(
 											(place) => place.selected
 									  ).length
 									: 0) + " POIs"
@@ -135,7 +135,7 @@ export default function AreaCard({
 			<Collapse in={expanded} timeout="auto" unmountOnExit>
 				<Divider />
 				<List dense>
-					{poi.places?.map((place, index3) => (
+					{entry.places?.map((place, index3) => (
 						<React.Fragment key={index3}>
 							<ListItem
 								secondaryAction={
@@ -160,7 +160,7 @@ export default function AreaCard({
 											const newPoisMap = {
 												...poisMap,
 											};
-											newPoisMap[place_id][index2].places[
+											newPoisMap[place_id][index].places[
 												index3
 											].selected = event.target.checked;
 											setPoisMap(newPoisMap);
@@ -178,7 +178,7 @@ export default function AreaCard({
 									}}
 								/>
 							</ListItem>
-							{index3 < poi.places.length - 1 && (
+							{index3 < entry.places.length - 1 && (
 								<Divider variant="inset" component="li" />
 							)}
 						</React.Fragment>

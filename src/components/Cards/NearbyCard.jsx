@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import MapApi from "@/api/mapApi";
 const mapApi = new MapApi();
 import {
@@ -20,19 +20,19 @@ import {
 	Button,
 } from "@mui/material";
 import { Add, Delete, ExpandMore } from "@mui/icons-material";
+import { GlobalContext } from "@/contexts/GlobalContext";
 
-export default function NearbyCard({
-	index2,
-	selectedPlacesMap,
-	savedPlacesMap,
-	setSavedPlacesMap,
-	nearbyPlacesMap,
-	setNearbyPlacesMap,
-	setSelectedPlacesMap,
-	place_id,
-	e,
-}) {
+export default function NearbyCard({ index, place_id, entry }) {
 	const [expanded, setExpanded] = useState(false);
+
+	const {
+		selectedPlacesMap,
+		savedPlacesMap,
+		setSavedPlacesMap,
+		nearbyPlacesMap,
+		setNearbyPlacesMap,
+		setSelectedPlacesMap,
+	} = useContext(GlobalContext);
 
 	const handleAddSave = async (place_id) => {
 		let details = selectedPlacesMap[place_id];
@@ -75,7 +75,7 @@ export default function NearbyCard({
 
 	const handleDelete = () => {
 		const newNearbyPlacesMap = { ...nearbyPlacesMap };
-		newNearbyPlacesMap[place_id].splice(index2, 1);
+		newNearbyPlacesMap[place_id].splice(index, 1);
 		if (newNearbyPlacesMap[place_id].length === 0)
 			delete newNearbyPlacesMap[place_id];
 		setNearbyPlacesMap(newNearbyPlacesMap);
@@ -83,8 +83,8 @@ export default function NearbyCard({
 
 	const handleTogglePlace = (index3) => {
 		const newNearbyPlacesMap = { ...nearbyPlacesMap };
-		newNearbyPlacesMap[place_id][index2].places[index3].selected =
-			!newNearbyPlacesMap[place_id][index2].places[index3].selected;
+		newNearbyPlacesMap[place_id][index].places[index3].selected =
+			!newNearbyPlacesMap[place_id][index].places[index3].selected;
 		setNearbyPlacesMap(newNearbyPlacesMap);
 	};
 
@@ -113,14 +113,14 @@ export default function NearbyCard({
 				<Box display="flex" justifyContent="space-between">
 					<Box display="flex" flexWrap="wrap" gap={1} mt={1}>
 						<Chip
-							label={e.type === "any" ? e.keyword : e.type}
+							label={entry.type === "any" ? entry.keyword : entry.type}
 							color="primary"
 							size="small"
 						/>
 						<Chip
 							label={
-								e.rankBy === "prominence"
-									? `${e.radius} m`
+								entry.rankBy === "prominence"
+									? `${entry.radius} m`
 									: "Distance"
 							}
 							color="secondary"
@@ -143,7 +143,7 @@ export default function NearbyCard({
 			<Collapse in={expanded} timeout="auto" unmountOnExit>
 				<Divider />
 				<List dense>
-					{e.places.map((place, index3) => (
+					{entry.places.map((place, index3) => (
 						<React.Fragment key={index3}>
 							<ListItem
 								secondaryAction={
@@ -176,7 +176,7 @@ export default function NearbyCard({
 									secondaryTypographyProps={{ noWrap: true }}
 								/>
 							</ListItem>
-							{index3 < e.places.length - 1 && (
+							{index3 < entry.places.length - 1 && (
 								<Divider variant="inset" component="li" />
 							)}
 						</React.Fragment>
