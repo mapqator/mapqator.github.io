@@ -78,7 +78,7 @@ function SearchPlaceCard({ place, index, length }) {
 					secondary={place.formatted_address}
 				/>
 			</ListItem>
-			{index < length - 1 && <Divider component="li" />}
+			<Divider component="li" />
 		</React.Fragment>
 	);
 }
@@ -230,23 +230,27 @@ export default function AutocompleteSearchBox() {
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 				<div
 					className={`border rounded-lg overflow-hidden ${
-						results.length > 0
-							? ""
-							: search
-							? "invisible"
-							: "hidden"
+						search ? "" : "hidden"
 					}`}
 				>
 					<h3 className="bg-gray-200 p-2 font-bold">Recent Places</h3>
-					<ul className="max-h-60 overflow-y-auto">
-						{results.map((place, index) => (
-							<SearchPlaceCard
-								place={place}
-								index={index}
-								length={results.length}
-							/>
-						))}
-					</ul>
+					{results.length > 0 ? (
+						<ul className="h-60 overflow-y-auto">
+							{results.map((place, index) => (
+								<SearchPlaceCard
+									place={place}
+									index={index}
+									length={results.length}
+								/>
+							))}
+						</ul>
+					) : (
+						<div className="h-60 flex items-center justify-center">
+							<p className="text-lg md:text-xl text-gray-400">
+								No places found
+							</p>
+						</div>
+					)}
 				</div>
 
 				<div
