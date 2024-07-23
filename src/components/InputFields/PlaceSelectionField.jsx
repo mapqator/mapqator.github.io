@@ -21,29 +21,27 @@ export default function PlaceSelectionField({
 				onChange={onChange}
 				label={label}
 				multiple={multiple}
-				renderValue={(selected) => (
-					<Box
-						sx={{
-							display: "flex",
-							flexWrap: "wrap",
-							gap: 0.5,
-						}}
-					>
-						{multiple ? (
-							selected.map((value) => (
-								<Chip
-									key={value}
-									label={savedPlacesMap[value].name}
-									size="small"
-								/>
-							))
-						) : (
-							<Typography>
-								{savedPlacesMap[value].name}
-							</Typography>
-						)}
-					</Box>
-				)}
+				renderValue={
+					multiple
+						? (selected) => (
+								<Box
+									sx={{
+										display: "flex",
+										flexWrap: "wrap",
+										gap: 0.5,
+									}}
+								>
+									{selected.map((value) => (
+										<Chip
+											key={value}
+											label={savedPlacesMap[value].name}
+											size="small"
+										/>
+									))}
+								</Box>
+						  )
+						: undefined
+				}
 			>
 				{Object.keys(selectedPlacesMap).map((place_id) => (
 					<MenuItem key={place_id} value={place_id}>
