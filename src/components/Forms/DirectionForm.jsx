@@ -80,7 +80,7 @@ export default function DirectionForm() {
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
 				<PlaceSelectionField
-					label="Origins"
+					label="Origin"
 					value={newDirection.from}
 					onChange={(event) => {
 						setNewDirection((prev) => ({
@@ -93,7 +93,7 @@ export default function DirectionForm() {
 
 			<Grid item xs={12}>
 				<PlaceSelectionField
-					label="Destinations"
+					label="Destination"
 					value={newDirection.to}
 					onChange={(event) => {
 						setNewDirection((prev) => ({
