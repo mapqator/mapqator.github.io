@@ -27,6 +27,24 @@ export default function ContextGenerator({
 		setCurrentInformation,
 	} = useContext(GlobalContext);
 
+	const {
+		exampleSelectedPlacesMap,
+		exampleNearbyPlacesMap,
+		examplePoisMap,
+		exampleDistanceMatrix,
+		exampleDirectionInformation,
+		exampleCurrentInformation,
+	} = useContext(GlobalContext);
+
+	const {
+		initSelectedPlacesMap,
+		initNearbyPlacesMap,
+		initPoisMap,
+		initDistanceMatrix,
+		initDirectionInformation,
+		initCurrentInformation,
+	} = useContext(GlobalContext);
+
 	useEffect(() => {
 		setContext({
 			places: ContextGeneratorService.getPlacesContext(
@@ -65,18 +83,32 @@ export default function ContextGenerator({
 	]);
 
 	const handleReset = () => {
-		setPoisMap({});
-		setDistanceMatrix({});
-		setNearbyPlacesMap({});
-		setContext([]);
-		setCurrentInformation({
-			time: null,
-			day: "",
-			location: "",
-		});
-		setDirectionInformation({});
-		setSelectedPlacesMap({});
+		setPoisMap(initPoisMap);
+		setDistanceMatrix(initDistanceMatrix);
+		setNearbyPlacesMap(initNearbyPlacesMap);
+		setCurrentInformation(initCurrentInformation);
+		setDirectionInformation(initDirectionInformation);
+		setSelectedPlacesMap(initSelectedPlacesMap);
 		setActiveStep(1);
+		setContext([]);
+	};
+
+	// const handleStart = () => {
+	// 	setSelectedPlacesMap(exampleSelectedPlacesMap);
+	// 	setNearbyPlacesMap(exampleNearbyPlacesMap);
+	// 	setPoisMap(examplePoisMap);
+	// 	setDistanceMatrix(exampleDistanceMatrix);
+	// 	setDirectionInformation(exampleDirectionInformation);
+	// 	setCurrentInformation(exampleCurrentInformation);
+	// };
+
+	const handleExample = () => {
+		setSelectedPlacesMap(exampleSelectedPlacesMap);
+		setNearbyPlacesMap(exampleNearbyPlacesMap);
+		setPoisMap(examplePoisMap);
+		setDistanceMatrix(exampleDistanceMatrix);
+		setDirectionInformation(exampleDirectionInformation);
+		setCurrentInformation(exampleCurrentInformation);
 	};
 	return (
 		<>
@@ -84,7 +116,13 @@ export default function ContextGenerator({
 				Create a Context Using Google Maps APIs
 			</Typography>
 			<ContextStepper
-				{...{ handleReset, onFinish, activeStep, setActiveStep }}
+				{...{
+					handleReset,
+					onFinish,
+					handleExample,
+					activeStep,
+					setActiveStep,
+				}}
 			/>
 		</>
 	);

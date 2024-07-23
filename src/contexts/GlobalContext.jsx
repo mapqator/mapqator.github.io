@@ -1,12 +1,12 @@
 import QueryApi from "@/api/queryApi";
 import PlaceApi from "@/api/placeApi";
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { isTokenValid } from "@/api/base";
+import dayjs from "dayjs";
 const queryApi = new QueryApi();
 const placeApi = new PlaceApi();
 export const GlobalContext = createContext();
 export default function GlobalContextProvider({ children }) {
-	const [savedPlacesMap, setSavedPlacesMap] = useState({
+	const exampleSavedPlacesMap = {
 		1: {
 			name: "Bangladesh University of Engineering and Technology",
 			place_id: 1,
@@ -31,16 +31,8 @@ export default function GlobalContextProvider({ children }) {
 				},
 			},
 		},
-	});
-	const [context, setContext] = useState({
-		places: [],
-		nearby: [],
-		area: [],
-		distance: [],
-		direction: [],
-		params: [],
-	});
-	const [distanceMatrix, setDistanceMatrix] = useState({
+	};
+	const exampleDistanceMatrix = {
 		1: {
 			2: {
 				walking: {
@@ -81,8 +73,8 @@ export default function GlobalContextProvider({ children }) {
 				},
 			},
 		},
-	});
-	const [selectedPlacesMap, setSelectedPlacesMap] = useState({
+	};
+	const exampleSelectedPlacesMap = {
 		1: {
 			selectedAttributes: ["formatted_address", "rating"],
 			attributes: [
@@ -103,8 +95,8 @@ export default function GlobalContextProvider({ children }) {
 				"geometry",
 			],
 		},
-	});
-	const [nearbyPlacesMap, setNearbyPlacesMap] = useState({
+	};
+	const exampleNearbyPlacesMap = {
 		1: [
 			{
 				type: "restaurant",
@@ -124,13 +116,27 @@ export default function GlobalContextProvider({ children }) {
 				],
 			},
 		],
-	});
-	const [currentInformation, setCurrentInformation] = useState({
-		time: null,
-		day: "",
-		location: "",
-	});
-	const [directionInformation, setDirectionInformation] = useState({
+	};
+	const examplePoisMap = {
+		1: [
+			{
+				type: "restaurant",
+				places: [
+					{
+						name: "Dhanmondi",
+						formatted_address: "Dhanmondi 27 road",
+						selected: true,
+					},
+					{
+						name: "Farmgate",
+						formatted_address: "Indira road, Dhaka",
+						selected: true,
+					},
+				],
+			},
+		],
+	};
+	const exampleDirectionInformation = {
 		1: {
 			2: {
 				walking: {
@@ -185,26 +191,48 @@ export default function GlobalContextProvider({ children }) {
 				},
 			},
 		},
+	};
+	const exampleCurrentInformation = {
+		time: dayjs("2024-07-22T21:00:00.000Z"),
+		day: "Monday",
+		location: 1,
+	};
+
+	const initSelectedPlacesMap = {};
+	const initNearbyPlacesMap = {};
+	const initPoisMap = {};
+	const initDistanceMatrix = {};
+	const initDirectionInformation = {};
+	const initCurrentInformation = {
+		time: null,
+		day: "",
+		location: "",
+	};
+
+	const [context, setContext] = useState({
+		places: [],
+		nearby: [],
+		area: [],
+		distance: [],
+		direction: [],
+		params: [],
 	});
-	const [poisMap, setPoisMap] = useState({
-		1: [
-			{
-				type: "restaurant",
-				places: [
-					{
-						name: "Dhanmondi",
-						formatted_address: "Dhanmondi 27 road",
-						selected: true,
-					},
-					{
-						name: "Farmgate",
-						formatted_address: "Indira road, Dhaka",
-						selected: true,
-					},
-				],
-			},
-		],
-	});
+
+	const [savedPlacesMap, setSavedPlacesMap] = useState(exampleSavedPlacesMap);
+
+	const [selectedPlacesMap, setSelectedPlacesMap] = useState(
+		initSelectedPlacesMap
+	);
+	const [nearbyPlacesMap, setNearbyPlacesMap] = useState(initNearbyPlacesMap);
+	const [poisMap, setPoisMap] = useState(initPoisMap);
+	const [distanceMatrix, setDistanceMatrix] = useState(initDistanceMatrix);
+	const [directionInformation, setDirectionInformation] = useState(
+		initDirectionInformation
+	);
+	const [currentInformation, setCurrentInformation] = useState(
+		initCurrentInformation
+	);
+
 	const initQuery = {
 		question: "",
 		answer: {
@@ -724,6 +752,18 @@ export default function GlobalContextProvider({ children }) {
 				queries,
 				setQueries,
 				initQuery,
+				exampleSelectedPlacesMap,
+				exampleNearbyPlacesMap,
+				examplePoisMap,
+				exampleDistanceMatrix,
+				exampleDirectionInformation,
+				exampleCurrentInformation,
+				initSelectedPlacesMap,
+				initNearbyPlacesMap,
+				initPoisMap,
+				initDistanceMatrix,
+				initDirectionInformation,
+				initCurrentInformation,
 			}}
 		>
 			{children}

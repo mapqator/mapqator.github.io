@@ -37,6 +37,7 @@ import PlaceInformation from "@/components/Grids/PlacesGrid";
 export default function ContextStepper({
 	handleReset,
 	onFinish,
+	handleExample,
 	activeStep,
 	setActiveStep,
 }) {
@@ -51,7 +52,7 @@ export default function ContextStepper({
 	};
 
 	const loadExample = () => {
-		// Load dummy data
+		handleExample();
 		handleNext();
 	};
 	const steps = [
@@ -267,7 +268,7 @@ export default function ContextStepper({
 												onClick={loadExample}
 												sx={{ mt: 1, mr: 1 }}
 											>
-												See Example
+												Start with Example
 											</Button>
 										)}
 									</div>
