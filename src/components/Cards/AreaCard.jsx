@@ -21,17 +21,14 @@ import {
 } from "@mui/material";
 import { Add, Delete, ExpandMore } from "@mui/icons-material";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import { AppContext } from "@/contexts/AppContext";
 
 export default function AreaCard({ entry, index, place_id }) {
 	const [expanded, setExpanded] = useState(false);
-	const {
-		selectedPlacesMap,
-		savedPlacesMap,
-		setSavedPlacesMap,
-		poisMap,
-		setPoisMap,
-		setSelectedPlacesMap,
-	} = useContext(GlobalContext);
+	const { selectedPlacesMap, poisMap, setPoisMap, setSelectedPlacesMap } =
+		useContext(GlobalContext);
+
+	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 
 	const handleAddSave = async (place_id) => {
 		let details = selectedPlacesMap[place_id];

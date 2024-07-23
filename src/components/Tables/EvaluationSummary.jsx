@@ -10,9 +10,10 @@ import {
 	TableRow,
 } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import { AppContext } from "@/contexts/AppContext";
 export default function EvaluationSummary() {
 	const [evaluationResults, setEvaluationResults] = useState({});
-	const { queries } = useContext(GlobalContext);
+	const { queries } = useContext(AppContext);
 	useEffect(() => {
 		const tmp = {};
 		let valid_questions = 0;

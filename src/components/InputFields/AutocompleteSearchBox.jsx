@@ -20,14 +20,13 @@ import { useCallback } from "react";
 import { Chip, CircularProgress, InputAdornment } from "@mui/material";
 import debounce from "lodash/debounce";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import { AppContext } from "@/contexts/AppContext";
 
 function SearchPlaceCard({ place, index, length }) {
-	const {
-		selectedPlacesMap,
-		setSelectedPlacesMap,
-		savedPlacesMap,
-		setSavedPlacesMap,
-	} = useContext(GlobalContext);
+	const { selectedPlacesMap, setSelectedPlacesMap } =
+		useContext(GlobalContext);
+
+	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 
 	const handleAddPlace = async (place) => {
 		if (selectedPlacesMap[place.place_id]) return;
@@ -90,7 +89,7 @@ export default function AutocompleteSearchBox() {
 	const [recentSearches, setRecentSearches] = useState([]);
 	const [shouldFetchFromAPI, setShouldFetchFromAPI] = useState(false);
 	const [cache, setCache] = useState({});
-	const { savedPlacesMap } = useContext(GlobalContext);
+	const { savedPlacesMap } = useContext(AppContext);
 	const [notFound, setNotFound] = useState(false);
 
 	const fuseOptions = {

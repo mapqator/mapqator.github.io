@@ -20,12 +20,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import ContextGeneratorService from "@/services/contextGeneratorService";
+import { AppContext } from "@/contexts/AppContext";
 
 export default function PlaceCard({ placeId }) {
 	const {
 		// Getters
 		selectedPlacesMap,
-		savedPlacesMap,
 		distanceMatrix,
 		directionInformation,
 		nearbyPlacesMap,
@@ -36,8 +36,9 @@ export default function PlaceCard({ placeId }) {
 		setNearbyPlacesMap,
 		setSelectedPlacesMap,
 		setPoisMap,
-		setContext,
 	} = useContext(GlobalContext);
+
+	const { savedPlacesMap } = useContext(AppContext);
 
 	const [expanded, setExpanded] = React.useState({});
 	const handleExpandClick = (placeId) => {

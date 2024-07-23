@@ -13,14 +13,7 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 export default function AreaForm() {
 	const [newPois, setNewPois] = useState({ location: "", type: "" });
 	const [loading, setLoading] = useState(false);
-	const {
-		savedPlacesMap,
-		setSavedPlacesMap,
-		selectedPlacesMap,
-		poisMap,
-		setSelectedPlacesMap,
-		setPoisMap,
-	} = useContext(GlobalContext);
+	const { poisMap, setPoisMap } = useContext(GlobalContext);
 	const searchInsidePlaces = async () => {
 		if (newPois.location === "" || newPois.type === "") return;
 

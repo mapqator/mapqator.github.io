@@ -5,6 +5,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import { Select, MenuItem, Box, Chip, Typography } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import { AppContext } from "@/contexts/AppContext";
 
 export default function PlaceSelectionField({
 	label,
@@ -12,7 +13,9 @@ export default function PlaceSelectionField({
 	value,
 	multiple,
 }) {
-	const { selectedPlacesMap, savedPlacesMap } = useContext(GlobalContext);
+	const { selectedPlacesMap } = useContext(GlobalContext);
+	const { savedPlacesMap } = useContext(AppContext);
+
 	return (
 		<FormControl fullWidth size="small">
 			<InputLabel>{label}</InputLabel>

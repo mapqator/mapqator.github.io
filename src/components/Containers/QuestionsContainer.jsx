@@ -13,9 +13,10 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 import { getUserName } from "@/api/base";
 import categories from "@/database/categories.json";
 import QueryCard from "@/components/Cards/QueryCard";
+import { AppContext } from "@/contexts/AppContext";
 const itemsPerPage = 10;
 export default function QuestionsContainer({ title, isPersonal, onEdit }) {
-	const { queries } = useContext(GlobalContext);
+	const { queries } = useContext(AppContext);
 	const [selectedCategory, setSelectedCategory] = useState("All");
 	const allCategories = ["All", ...categories];
 	const [data, setData] = useState([]);

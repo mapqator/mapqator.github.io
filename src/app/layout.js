@@ -3,6 +3,7 @@ import "./globals.css";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import ToastProvider from "./ToastProvider";
 import AuthContextProvider from "@/contexts/AuthContext";
+import AppContextProvider from "@/contexts/AppContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -25,9 +26,11 @@ export default function RootLayout({ children }) {
 		<html lang="en">
 			<body className={inter.className}>
 				<AppRouterCacheProvider>
-					<AuthContextProvider>
-						<ToastProvider>{children}</ToastProvider>
-					</AuthContextProvider>
+					<AppContextProvider>
+						<AuthContextProvider>
+							<ToastProvider>{children}</ToastProvider>
+						</AuthContextProvider>
+					</AppContextProvider>
 				</AppRouterCacheProvider>
 			</body>
 		</html>

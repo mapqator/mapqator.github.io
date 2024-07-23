@@ -47,14 +47,13 @@ import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { useContext } from "react";
 import TypeSelectionField from "@/components/InputFields/TypeSelectionField";
+import { AppContext } from "@/contexts/AppContext";
 
 export default function NearbyForm() {
-	const {
-		savedPlacesMap,
-		selectedPlacesMap,
-		nearbyPlacesMap,
-		setNearbyPlacesMap,
-	} = useContext(GlobalContext);
+	const { selectedPlacesMap, nearbyPlacesMap, setNearbyPlacesMap } =
+		useContext(GlobalContext);
+	const { savedPlacesMap } = useContext(AppContext);
+
 	const [newNearbyPlaces, setNewNearbyPlaces] = useState({
 		location: "",
 		type: "",

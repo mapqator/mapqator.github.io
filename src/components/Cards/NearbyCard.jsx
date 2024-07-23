@@ -21,18 +21,19 @@ import {
 } from "@mui/material";
 import { Add, Delete, ExpandMore } from "@mui/icons-material";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import { AppContext } from "@/contexts/AppContext";
 
 export default function NearbyCard({ index, place_id, entry }) {
 	const [expanded, setExpanded] = useState(false);
 
 	const {
 		selectedPlacesMap,
-		savedPlacesMap,
-		setSavedPlacesMap,
 		nearbyPlacesMap,
 		setNearbyPlacesMap,
 		setSelectedPlacesMap,
 	} = useContext(GlobalContext);
+
+	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 
 	const handleAddSave = async (place_id) => {
 		let details = selectedPlacesMap[place_id];
@@ -113,7 +114,11 @@ export default function NearbyCard({ index, place_id, entry }) {
 				<Box display="flex" justifyContent="space-between">
 					<Box display="flex" flexWrap="wrap" gap={1} mt={1}>
 						<Chip
-							label={entry.type === "any" ? entry.keyword : entry.type}
+							label={
+								entry.type === "any"
+									? entry.keyword
+									: entry.type
+							}
 							color="primary"
 							size="small"
 						/>

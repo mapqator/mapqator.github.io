@@ -25,10 +25,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { Delete, ExpandMore, ForkRight, JoinRight } from "@mui/icons-material";
+import { AppContext } from "@/contexts/AppContext";
 
 export default function DistanceCard({ from_id, to_id }) {
-	const { distanceMatrix, setDistanceMatrix, savedPlacesMap } =
-		useContext(GlobalContext);
+	const { distanceMatrix, setDistanceMatrix } = useContext(GlobalContext);
+	const { savedPlacesMap } = useContext(AppContext);
+
 	console.log(distanceMatrix[from_id][to_id], from_id, to_id);
 	const [expanded, setExpanded] = useState(false);
 	const handleDelete = (mode) => {

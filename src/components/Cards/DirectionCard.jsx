@@ -28,6 +28,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Delete, ExpandMore } from "@mui/icons-material";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import { AppContext } from "@/contexts/AppContext";
 export default function DirectionCard({ from_id, to_id }) {
 	const [expanded, setExpanded] = useState(false);
 	const [expandedRoute, setExpandedRoute] = useState({
@@ -36,13 +37,11 @@ export default function DirectionCard({ from_id, to_id }) {
 		bicycling: false,
 		transit: false,
 	});
-	const {
-		directionInformation,
-		setDirectionInformation,
-		selectedPlacesMap,
-		savedPlacesMap,
-	} = useContext(GlobalContext);
+	const { directionInformation, setDirectionInformation } =
+		useContext(GlobalContext);
 
+	const { savedPlacesMap } = useContext(AppContext);
+	
 	const handleDelete = (mode) => {
 		const newDirectionMatrix = {
 			...directionInformation,

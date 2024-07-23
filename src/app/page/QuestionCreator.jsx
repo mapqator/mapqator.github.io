@@ -19,6 +19,7 @@ import CollapsedContext from "@/components/Cards/CollapsedContext";
 import QuestionsContainer from "@/components/Containers/QuestionsContainer";
 import ContextGeneratorService from "@/services/contextGeneratorService";
 import { useAuth } from "@/contexts/AuthContext";
+import { AppContext } from "@/contexts/AppContext";
 const queryApi = new QueryApi();
 
 export default function QuestionCreationPage({ handleContextEdit }) {
@@ -26,8 +27,6 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 		context,
 		query,
 		setQuery,
-		queries,
-		setQueries,
 		distanceMatrix,
 		selectedPlacesMap,
 		nearbyPlacesMap,
@@ -36,6 +35,8 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 		directionInformation,
 		initQuery,
 	} = useContext(GlobalContext);
+
+	const { queries, setQueries } = useContext(AppContext);
 
 	const { isAuthenticated } = useAuth();
 

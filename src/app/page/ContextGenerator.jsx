@@ -4,6 +4,7 @@ import { Typography } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import ContextGeneratorService from "@/services/contextGeneratorService";
 import ContextStepper from "@/components/Steppers/ContextStepper";
+import { AppContext } from "@/contexts/AppContext";
 
 export default function ContextGenerator({
 	onFinish,
@@ -11,7 +12,6 @@ export default function ContextGenerator({
 	setActiveStep,
 }) {
 	const {
-		savedPlacesMap,
 		selectedPlacesMap,
 		setSelectedPlacesMap,
 		distanceMatrix,
@@ -26,6 +26,8 @@ export default function ContextGenerator({
 		currentInformation,
 		setCurrentInformation,
 	} = useContext(GlobalContext);
+
+	const { savedPlacesMap } = useContext(AppContext);
 
 	const {
 		exampleSelectedPlacesMap,

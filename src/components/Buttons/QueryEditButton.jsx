@@ -7,14 +7,12 @@ import ContextGeneratorService from "@/services/contextGeneratorService";
 import { LoadingButton } from "@mui/lab";
 import { Edit } from "@mui/icons-material";
 import dayjs from "dayjs";
+import { AppContext } from "@/contexts/AppContext";
 const mapApi = new MapApi();
 
 export default function QueryEditButton({ onEdit, query }) {
 	const [loading, setLoading] = useState(false);
 	const {
-		savedPlacesMap,
-
-		// Setters
 		setSelectedPlacesMap,
 		setDistanceMatrix,
 		setNearbyPlacesMap,
@@ -25,6 +23,9 @@ export default function QueryEditButton({ onEdit, query }) {
 		setQuery,
 		setPoisMap,
 	} = useContext(GlobalContext);
+
+	const { savedPlacesMap } = useContext(AppContext);
+
 	const handleSave = async (place_id) => {
 		if (savedPlacesMap[place_id]) return;
 		const res = await mapApi.getDetails(place_id);

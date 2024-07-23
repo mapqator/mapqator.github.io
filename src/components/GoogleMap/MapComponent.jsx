@@ -1,11 +1,14 @@
 "use client";
 
+import { AppContext } from "@/contexts/AppContext";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useContext, useEffect, useState } from "react";
 
 export default function MapComponent() {
-	const { selectedPlacesMap, savedPlacesMap } = useContext(GlobalContext);
+	const { selectedPlacesMap } = useContext(GlobalContext);
+	const { savedPlacesMap } = useContext(AppContext);
+
 	const [locations, setLocations] = useState([]);
 
 	useEffect(() => {
