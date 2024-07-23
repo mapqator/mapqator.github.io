@@ -2,7 +2,9 @@
 	"nearby_poi",
 	"planning",
 	"time_calculation",
-	"routing",
 	"location_finding",
-	"opinion"
+	"opinion",
+	"routing",
+	"poi",
+	"trip"
 ]

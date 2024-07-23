@@ -264,7 +264,7 @@ export default function GlobalContextProvider({ children }) {
 				},
 			},
 			context_gpt: "",
-			classification: "planning",
+			classification: "trip",
 			username: "mahirlabibdihan",
 			evaluation: [
 				{
@@ -332,7 +332,7 @@ export default function GlobalContextProvider({ children }) {
 				},
 			},
 			context_gpt: "",
-			classification: "time_calculation",
+			classification: "trip",
 			username: "mahirlabibdihan",
 			evaluation: [
 				{
@@ -369,7 +369,7 @@ export default function GlobalContextProvider({ children }) {
 				},
 			},
 			context_gpt: "",
-			classification: "nearby_poi",
+			classification: "poi",
 			username: "mahirlabibdihan",
 			evaluation: [
 				{
@@ -406,7 +406,7 @@ export default function GlobalContextProvider({ children }) {
 				},
 			},
 			context_gpt: "",
-			classification: "opinion",
+			classification: "poi",
 			username: "mahirlabibdihan",
 			evaluation: [
 				{
@@ -443,7 +443,7 @@ export default function GlobalContextProvider({ children }) {
 				},
 			},
 			context_gpt: "",
-			classification: "planning",
+			classification: "trip",
 			username: "mahirlabibdihan",
 			evaluation: [
 				{
@@ -480,7 +480,7 @@ export default function GlobalContextProvider({ children }) {
 				},
 			},
 			context_gpt: "",
-			classification: "planning",
+			classification: "trip",
 			username: "mahirlabibdihan",
 			evaluation: [
 				{
@@ -517,7 +517,7 @@ export default function GlobalContextProvider({ children }) {
 				},
 			},
 			context_gpt: "",
-			classification: "planning,routing",
+			classification: "trip",
 			username: "mahirlabibdihan",
 			evaluation: [
 				{
@@ -554,7 +554,7 @@ export default function GlobalContextProvider({ children }) {
 				},
 			},
 			context_gpt: "",
-			classification: "planning",
+			classification: "trip",
 			username: "mahirlabibdihan",
 			evaluation: [
 				{
@@ -591,7 +591,7 @@ export default function GlobalContextProvider({ children }) {
 				},
 			},
 			context_gpt: "",
-			classification: "planning",
+			classification: "trip",
 			username: "mahirlabibdihan",
 			evaluation: [
 				{
@@ -628,7 +628,7 @@ export default function GlobalContextProvider({ children }) {
 				},
 			},
 			context_gpt: "",
-			classification: "planning",
+			classification: "trip",
 			username: "mahirlabibdihan",
 			evaluation: [
 				{
@@ -665,7 +665,7 @@ export default function GlobalContextProvider({ children }) {
 				},
 			},
 			context_gpt: "",
-			classification: "planning",
+			classification: "trip",
 			username: "mahirlabibdihan",
 			evaluation: [
 				{
