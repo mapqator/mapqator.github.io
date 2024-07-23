@@ -1,6 +1,14 @@
 "use client";
-import React, { useContext } from "react";
-import { Box, Typography, Button, Paper, Divider } from "@mui/material";
+import React, { useContext, useRef } from "react";
+import {
+	Box,
+	Typography,
+	Button,
+	Paper,
+	Divider,
+	List,
+	ListItem,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import QueryApi from "@/api/queryApi";
@@ -63,6 +71,7 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 					const newQueries = [...queries];
 					newQueries.unshift(res.data[0]);
 					setQueries(newQueries);
+					window.scrollTo(document.getElementById("questions"));
 					handleReset();
 				} else {
 					showError("Can't save this query");
@@ -102,6 +111,7 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 					},
 				});
 				setQueries(newQueries);
+				window.scrollTo(document.getElementById("questions"));
 				showSuccess("Query saved successfully");
 			} else {
 				setQueries((prev) =>
@@ -118,7 +128,7 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 			<Typography variant="h4" gutterBottom component="h1">
 				Create MCQ Question based on Context
 			</Typography>
-			<Paper elevation={3} sx={{ p: 3, mb: 4 }}>
+			<Paper elevation={2} sx={{ p: 3, mb: 4 }}>
 				<Box
 					sx={{
 						display: "flex",
@@ -169,6 +179,17 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 					)} */}
 				</Box>
 			</Paper>
+
+			{/* <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+				<Typography variant="h6">AI Generated Questions</Typography>
+				<Divider sx={{ my: 2 }} />
+				<ul className="list-disc pl-4">
+					<li>Dummy Question 1</li>
+					<li>Dummy Question 2</li>
+					<li>Dummy Question 3</li>
+					<li>Dummy Question 4</li>
+				</ul>
+			</Paper> */}
 			<QuestionForm
 				handleSubmit={handleSubmit}
 				handleReset={handleReset}
@@ -178,11 +199,13 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 				0 && (
 				<>
 					<Divider sx={{ my: 4 }} />
-					<QuestionsContainer
-						title="My Questions"
-						isPersonal={true}
-						onEdit={() => window.scrollTo(0, 0)}
-					/>
+					<div id="questions">
+						<QuestionsContainer
+							title="My Questions"
+							isPersonal={true}
+							onEdit={() => window.scrollTo(0, 0)}
+						/>
+					</div>
 				</>
 			)}
 		</>

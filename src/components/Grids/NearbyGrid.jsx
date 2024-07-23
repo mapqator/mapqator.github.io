@@ -20,7 +20,7 @@ export default function NearbyGrid() {
 							}}
 						/>
 					</Grid>
-				))Ar
+				))
 			)}
 		</Grid>
 	);
