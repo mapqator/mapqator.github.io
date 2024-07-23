@@ -11,7 +11,7 @@ export default function PlaceInformation() {
 	return (
 		<Grid container spacing={2} sx={{ mt: 0, mb: 2 }}>
 			{Object.keys(selectedPlacesMap).map((placeId) => (
-				<Grid item xs={12} sm={6} md={4} key={placeId}>
+				<Grid item xs={12} sm={6} md={6} key={placeId}>
 					<PlaceCard placeId={placeId} />
 				</Grid>
 			))}

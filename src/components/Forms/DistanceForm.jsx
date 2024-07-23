@@ -86,7 +86,7 @@ export default function DistanceForm() {
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
 				<PlaceSelectionField
-					label="From"
+					label="Origins"
 					multiple={true}
 					onChange={(event) => {
 						setNewDistance((prev) => ({
@@ -100,7 +100,7 @@ export default function DistanceForm() {
 
 			<Grid item xs={12}>
 				<PlaceSelectionField
-					label="To"
+					label="Destinations"
 					multiple={true}
 					value={newDistance.to}
 					onChange={(event) => {
@@ -133,7 +133,7 @@ export default function DistanceForm() {
 					loading={loading}
 					loadingPosition="start"
 				>
-					Calculate Distance and Duration
+					Add Distance and Duration
 				</LoadingButton>
 			</Grid>
 		</Grid>

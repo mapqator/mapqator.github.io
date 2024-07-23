@@ -17,23 +17,24 @@ export default function NearbyGrid() {
 		setSelectedPlacesMap,
 	} = useContext(GlobalContext);
 	return (
-		<Grid container>
+		<Grid container spacing={2}>
 			{Object.keys(nearbyPlacesMap).map((place_id) =>
-				nearbyPlacesMap[place_id].map((e, index2) => (
-					<NearbyCard
-						key={index2}
-						{...{
-							index2,
-							selectedPlacesMap,
-							savedPlacesMap,
-							setSavedPlacesMap,
-							nearbyPlacesMap,
-							setNearbyPlacesMap,
-							place_id,
-							setSelectedPlacesMap,
-							e,
-						}}
-					/>
+				nearbyPlacesMap[place_id].map((e, index) => (
+					<Grid item xs={12} sm={6} md={6} key={index}>
+						<NearbyCard
+							index2={index}
+							{...{
+								selectedPlacesMap,
+								savedPlacesMap,
+								setSavedPlacesMap,
+								nearbyPlacesMap,
+								setNearbyPlacesMap,
+								place_id,
+								setSelectedPlacesMap,
+								e,
+							}}
+						/>
+					</Grid>
 				))
 			)}
 		</Grid>

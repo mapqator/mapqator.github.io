@@ -14,21 +14,22 @@ export default function AreaGrid() {
 		setPoisMap,
 	} = useContext(GlobalContext);
 	return (
-		<Grid container>
+		<Grid container spacing={2}>
 			{Object.keys(poisMap).map((place_id) =>
-				poisMap[place_id].map((poi, index2) => (
-					<AreaCard
-						key={index2}
-						selectedPlacesMap={selectedPlacesMap}
-						savedPlacesMap={savedPlacesMap}
-						setSavedPlacesMap={setSavedPlacesMap}
-						poi={poi}
-						poisMap={poisMap}
-						setPoisMap={setPoisMap}
-						index2={index2}
-						place_id={place_id}
-						setSelectedPlacesMap={setSelectedPlacesMap}
-					/>
+				poisMap[place_id].map((poi, index) => (
+					<Grid item xs={12} sm={6} md={6} key={index}>
+						<AreaCard
+							selectedPlacesMap={selectedPlacesMap}
+							savedPlacesMap={savedPlacesMap}
+							setSavedPlacesMap={setSavedPlacesMap}
+							poi={poi}
+							poisMap={poisMap}
+							setPoisMap={setPoisMap}
+							index2={index}
+							place_id={place_id}
+							setSelectedPlacesMap={setSelectedPlacesMap}
+						/>
+					</Grid>
 				))
 			)}
 		</Grid>

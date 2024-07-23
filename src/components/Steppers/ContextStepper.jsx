@@ -73,6 +73,9 @@ export default function ContextStepper({
 					<AutocompleteSearchBox />
 					{Object.keys(selectedPlacesMap).length > 0 && (
 						<>
+							<Divider sx={{ mt: 2, mb: 1, color: "#888" }}>
+								Already added
+							</Divider>
 							<MapComponent />
 							<PlaceInformation />
 						</>
@@ -89,10 +92,17 @@ export default function ContextStepper({
 			component: (
 				<>
 					<Divider />
-					<Box className="w-full md:w-[30rem] mx-auto">
+					<Box>
+						<CardContent>
+							<Box className="mx-auto w-full md:w-[30rem]">
+								<NearbyForm />
+							</Box>
+						</CardContent>
+						<Divider sx={{ mt: 2, mb: 1, color: "#888" }}>
+							Already added
+						</Divider>
 						<CardContent>
 							<NearbyGrid />
-							<NearbyForm />
 						</CardContent>
 					</Box>
 					<Divider />
@@ -107,10 +117,17 @@ export default function ContextStepper({
 			component: (
 				<>
 					<Divider />
-					<Box className="w-full md:w-[30rem] mx-auto">
+					<Box>
+						<CardContent>
+							<Box className="mx-auto w-full md:w-[30rem]">
+								<AreaForm />
+							</Box>
+						</CardContent>
+						<Divider sx={{ mt: 2, mb: 1, color: "#888" }}>
+							Already added
+						</Divider>
 						<CardContent>
 							<AreaGrid />
-							<AreaForm />
 						</CardContent>
 					</Box>
 					<Divider />
@@ -125,10 +142,17 @@ export default function ContextStepper({
 			component: (
 				<>
 					<Divider />
-					<Box className="w-full md:w-[30rem] mx-auto">
+					<Box>
+						<CardContent>
+							<Box className="mx-auto w-full md:w-[30rem]">
+								<DistanceForm />
+							</Box>
+						</CardContent>
+						<Divider sx={{ mt: 2, mb: 1, color: "#888" }}>
+							Already added
+						</Divider>
 						<CardContent>
 							<DistanceGrid />
-							<DistanceForm />
 						</CardContent>
 					</Box>
 					<Divider />
@@ -143,10 +167,17 @@ export default function ContextStepper({
 			component: (
 				<>
 					<Divider />
-					<Box className="w-full md:w-[30rem] mx-auto">
+					<Box>
+						<CardContent>
+							<Box className="mx-auto w-full md:w-[30rem]">
+								<DirectionForm />
+							</Box>
+						</CardContent>
+						<Divider sx={{ mt: 2, mb: 1, color: "#888" }}>
+							Already added
+						</Divider>
 						<CardContent>
 							<DirectionGrid />
-							<DirectionForm />
 						</CardContent>
 					</Box>
 					<Divider />

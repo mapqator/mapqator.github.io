@@ -89,7 +89,7 @@ export default function NearbyCard({
 	};
 
 	return (
-		<Card variant="outlined" sx={{ mb: 2 }}>
+		<Card variant="outlined">
 			<CardContent
 				onClick={() => setExpanded(!expanded)}
 				className="cursor-pointer"

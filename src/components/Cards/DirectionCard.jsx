@@ -55,7 +55,7 @@ export default function DirectionCard({ from_id, to_id }) {
 		setDirectionInformation(newDirectionMatrix);
 	};
 	return (
-		<Card variant="outlined" sx={{ mb: 2 }}>
+		<Card variant="outlined">
 			<CardContent
 				onClick={() => setExpanded(!expanded)}
 				className="cursor-pointer"

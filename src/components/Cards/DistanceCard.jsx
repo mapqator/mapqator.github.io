@@ -45,7 +45,7 @@ export default function DistanceCard({ from_id, to_id }) {
 	};
 
 	return (
-		<Card variant="outlined" sx={{ mb: 2 }}>
+		<Card variant="outlined">
 			<CardContent
 				onClick={() => setExpanded(!expanded)}
 				className="cursor-pointer"
