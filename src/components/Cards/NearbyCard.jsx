@@ -124,11 +124,23 @@ export default function NearbyCard({ index, place_id, entry }) {
 						/>
 						<Chip
 							label={
+								(nearbyPlacesMap[place_id]
+									? nearbyPlacesMap[place_id][
+											index
+									  ].places.filter((place) => place.selected)
+											.length
+									: 0) + " POIs"
+							}
+							color="secondary"
+							size="small"
+						/>
+						<Chip
+							label={
 								entry.rankBy === "prominence"
 									? `${entry.radius} m`
 									: "Distance"
 							}
-							color="secondary"
+							color="success"
 							size="small"
 						/>
 					</Box>
