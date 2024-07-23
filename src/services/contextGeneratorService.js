@@ -200,25 +200,27 @@ const ContextGeneratorService = {
 		let newContext = "";
 		Object.keys(distanceMatrix).forEach((from_id) => {
 			Object.keys(distanceMatrix[from_id]).forEach((to_id) => {
+				newContext += `Travel time from <b>${
+					// selectedPlacesMap[from_id].alias ||
+					savedPlacesMap[from_id]?.name
+				}</b> to <b>${
+					// selectedPlacesMap[to_id].alias ||
+					savedPlacesMap[to_id]?.name
+				}</b> is:\n`;
 				Object.keys(distanceMatrix[from_id][to_id]).forEach((mode) => {
-					newContext += `Distance from ${
-						// selectedPlacesMap[from_id].alias ||
-						savedPlacesMap[from_id]?.name
-					} to ${
-						// selectedPlacesMap[to_id].alias ||
-						savedPlacesMap[to_id]?.name
-					} ${
+					newContext += `- ${
 						mode === "transit"
-							? "by public transport"
+							? "By public transport"
 							: mode === "walking"
-							? "on foot"
+							? "On foot"
 							: mode === "driving"
-							? "by car"
-							: "by cycle"
-					} is ${distanceMatrix[from_id][to_id][mode].distance} (${
-						distanceMatrix[from_id][to_id][mode].duration
+							? "By car"
+							: "By cycle"
+					}: ${distanceMatrix[from_id][to_id][mode].duration} (${
+						distanceMatrix[from_id][to_id][mode].distance
 					}).\n`;
 				});
+				newContext += "\n";
 			});
 		});
 		return newContext;
@@ -235,9 +237,9 @@ const ContextGeneratorService = {
 						newContext += `There are ${
 							directionInformation[from_id][to_id][mode].routes
 								.length
-						} routes from ${savedPlacesMap[from_id]?.name} to ${
-							savedPlacesMap[to_id]?.name
-						} ${
+						} routes from <b>${
+							savedPlacesMap[from_id]?.name
+						}</b> to <b>${savedPlacesMap[to_id]?.name}</b> ${
 							mode === "transit"
 								? "by public transport"
 								: mode === "walking"
@@ -292,7 +294,6 @@ const ContextGeneratorService = {
 				: "";
 		return text;
 	},
-	
 };
 
 export default ContextGeneratorService;
