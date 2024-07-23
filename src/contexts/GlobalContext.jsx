@@ -162,6 +162,7 @@ export default function GlobalContextProvider({ children }) {
 			},
 		},
 	};
+
 	const exampleCurrentInformation = {
 		time: dayjs("2024-07-22T21:00:00.000Z"),
 		day: "Monday",

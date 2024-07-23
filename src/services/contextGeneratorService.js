@@ -22,16 +22,18 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 				? place.formatted_address
 				: ""
 		}${
-			attributes.includes("geometry") ? "(" + lat + ", " + lng + ")" : ""
+			attributes.includes("geometry") ? " (" + lat + ", " + lng + ")" : ""
 		}.\n`;
 	}
 	if (attributes.includes("opening_hours")) {
-		text += `- Open: ${place.opening_hours.weekday_text.join(", ")}.\n`;
+		text += `- Opening hours: ${place.opening_hours.weekday_text.join(
+			", "
+		)}.\n`;
 	}
 	if (attributes.includes("rating")) {
 		text += `- Rating: ${place.rating}. ${
 			place.user_ratings_total
-				? "(" + place.user_ratings_total + " ratings)"
+				? "Total " + place.user_ratings_total + " ratings)"
 				: ""
 		}\n`;
 	}

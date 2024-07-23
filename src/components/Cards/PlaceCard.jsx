@@ -170,7 +170,17 @@ export default function PlaceCard({ placeId }) {
 									{selected.map((value) => (
 										<Chip
 											key={value}
-											label={value}
+											label={value
+												.replace(/_/g, " ") // Replace underscores with spaces
+												.split(" ") // Split the string into an array of words
+												.map(
+													(word) =>
+														word
+															.charAt(0)
+															.toUpperCase() +
+														word.slice(1)
+												) // Capitalize the first letter of each word
+												.join(" ")}
 											size="small"
 										/>
 									))}
@@ -187,7 +197,17 @@ export default function PlaceCard({ placeId }) {
 								)
 								.map((attribute) => (
 									<MenuItem key={attribute} value={attribute}>
-										{attribute}
+										{attribute
+											.replace(/_/g, " ") // Replace underscores with spaces
+											.split(" ") // Split the string into an array of words
+											.map(
+												(word) =>
+													word
+														.charAt(0)
+														.toUpperCase() +
+													word.slice(1)
+											) // Capitalize the first letter of each word
+											.join(" ")}
 									</MenuItem>
 								))}
 						</Select>

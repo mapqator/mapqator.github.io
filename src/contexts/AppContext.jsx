@@ -33,6 +33,43 @@ export default function AppContextProvider({ children }) {
 				},
 			},
 		},
+		ChIJNwjmp8q4VTcRxVCb9Pb8fvQ: {
+			name: "Sultan's Dine (Dhanmondi Branch)",
+			place_id: "ChIJNwjmp8q4VTcRxVCb9Pb8fvQ",
+			formatted_address: "Polashi Bazar, Azimpur, Dhaka",
+			rating: "4.5",
+			geometry: {
+				location: {
+					lat: 23.7388632,
+					lng: 90.3753979,
+				},
+			},
+			opening_hours: {
+				weekday_text: [
+					"Monday: 12:00\u2009\u2013\u200910:00\u202fPM",
+					"Tuesday: 12:00\u2009\u2013\u200910:00\u202fPM",
+					"Wednesday: 12:00\u2009\u2013\u200910:00\u202fPM",
+					"Thursday: 12:00\u2009\u2013\u200910:00\u202fPM",
+					"Friday: 12:00\u2009\u2013\u200910:00\u202fPM",
+					"Saturday: 12:00\u2009\u2013\u200910:00\u202fPM",
+					"Sunday: 12:00\u2009\u2013\u200910:00\u202fPM",
+				],
+			},
+			price_level: 2,
+			rating: 4.3,
+			user_ratings_total: 19284,
+			delivery: true,
+			dine_in: true,
+			reservable: true,
+			takeout: true,
+			serves_breakfast: false,
+			serves_lunch: true,
+			serves_dinner: true,
+			serves_brunch: true,
+			wheelchair_accessible_entrance: true,
+			formatted_address:
+				"Green Akshay Plaza, 1st Floor, 146/G (Old), 59, New \u09b8\u09be\u09a4\u09ae\u09b8\u099c\u09bf\u09a6 \u09b8\u09a1\u09bc\u0995, \u09a2\u09be\u0995\u09be 1209, Bangladesh",
+		},
 	};
 	const [savedPlacesMap, setSavedPlacesMap] = useState(initSavedPlacesMap);
 	const [queries, setQueries] = useState([

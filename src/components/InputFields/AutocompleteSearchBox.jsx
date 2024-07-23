@@ -50,9 +50,21 @@ function SearchPlaceCard({ place, index, length }) {
 			...prev,
 			[place.place_id]: {
 				// alias: "",
-				selectedAttributes: ["formatted_address"],
+				selectedAttributes: Object.keys(details).filter(
+					(key) =>
+						details[key] !== null &&
+						key !== "place_id" &&
+						key !== "name" &&
+						key !== "last_updated" &&
+						key !== "user_ratings_total"
+				),
 				attributes: Object.keys(details).filter(
-					(key) => details[key] !== null
+					(key) =>
+						details[key] !== null &&
+						key !== "place_id" &&
+						key !== "name" &&
+						key !== "last_updated" &&
+						key !== "user_ratings_total"
 				),
 			},
 		}));
