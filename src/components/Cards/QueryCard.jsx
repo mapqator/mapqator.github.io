@@ -97,8 +97,12 @@ export default function QueryCard({ entry, onEdit }) {
 							<Box className="flex gap-2">
 								{entry.classification
 									.split(",")
-									.map((label) => (
-										<Chip label={label} color="primary" />
+									.map((label, index) => (
+										<Chip
+											label={label}
+											key={index}
+											color="primary"
+										/>
 									))}
 							</Box>
 						</Box>

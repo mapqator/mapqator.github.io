@@ -240,6 +240,7 @@ export default function AutocompleteSearchBox() {
 									place={place}
 									index={index}
 									length={results.length}
+									key={index}
 								/>
 							))}
 						</ul>
@@ -271,6 +272,7 @@ export default function AutocompleteSearchBox() {
 									place={place}
 									index={index}
 									length={results.length}
+									key={index}
 								/>
 							))}
 						</ul>
