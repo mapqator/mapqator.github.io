@@ -176,7 +176,7 @@ const Login = () => {
 							>
 								<Image
 									src={`${baseUrl}/images/logo.png`}
-									alt="MapQuest Logo"
+									alt=""
 									width={30}
 									height={30}
 								/>
