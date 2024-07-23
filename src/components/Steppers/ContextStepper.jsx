@@ -89,100 +89,32 @@ export default function ContextStepper({
 			description: `Use the Nearby Search API to discover points of interest around your selected location. Click on the "Nearby" button and choose a category.
 			You can choose a type from the given list or a custom type. Custom type's results are unpredictable.`,
 			icon: <PlaceIcon />,
-			component: (
-				<>
-					<Divider />
-					<Box>
-						<CardContent>
-							<Box className="mx-auto w-full md:w-[30rem]">
-								<NearbyForm />
-							</Box>
-						</CardContent>
-						<Divider sx={{ mt: 2, mb: 1, color: "#888" }}>
-							Already added
-						</Divider>
-						<CardContent>
-							<NearbyGrid />
-						</CardContent>
-					</Box>
-					<Divider />
-				</>
-			),
+			form: <NearbyForm />,
+			grid: <NearbyGrid />,
 			context: context.nearby,
 		},
 		{
 			label: "Discover Area POIs",
 			description: `Explore various Points of Interest (POIs) within a larger area using the Places API. Select a region like a city or neighborhood, then choose a category (e.g., restaurants, museums, parks) to see POIs within that area.`,
 			icon: <ExploreIcon />,
-			component: (
-				<>
-					<Divider />
-					<Box>
-						<CardContent>
-							<Box className="mx-auto w-full md:w-[30rem]">
-								<AreaForm />
-							</Box>
-						</CardContent>
-						<Divider sx={{ mt: 2, mb: 1, color: "#888" }}>
-							Already added
-						</Divider>
-						<CardContent>
-							<AreaGrid />
-						</CardContent>
-					</Box>
-					<Divider />
-				</>
-			),
+			form: <AreaForm />,
+			grid: <AreaGrid />,
 			context: context.area,
 		},
 		{
 			label: "Calculate Distances",
 			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Select several places and click "Calculate Distances".`,
 			icon: <MapIcon />,
-			component: (
-				<>
-					<Divider />
-					<Box>
-						<CardContent>
-							<Box className="mx-auto w-full md:w-[30rem]">
-								<DistanceForm />
-							</Box>
-						</CardContent>
-						<Divider sx={{ mt: 2, mb: 1, color: "#888" }}>
-							Already added
-						</Divider>
-						<CardContent>
-							<DistanceGrid />
-						</CardContent>
-					</Box>
-					<Divider />
-				</>
-			),
+			form: <DistanceForm />,
+			grid: <DistanceGrid />,
 			context: context.distance,
 		},
 		{
 			label: "Get Directions",
 			description: `Utilize the Directions API to find routes between two points. Click on two places on the map to set start and end points.`,
 			icon: <DirectionsIcon />,
-			component: (
-				<>
-					<Divider />
-					<Box>
-						<CardContent>
-							<Box className="mx-auto w-full md:w-[30rem]">
-								<DirectionForm />
-							</Box>
-						</CardContent>
-						<Divider sx={{ mt: 2, mb: 1, color: "#888" }}>
-							Already added
-						</Divider>
-						<CardContent>
-							<DirectionGrid />
-						</CardContent>
-					</Box>
-					<Divider />
-				</>
-			),
+			form: <DirectionForm />,
+			grid: <DirectionGrid />,
 			context: context.direction,
 		},
 		{
@@ -256,7 +188,34 @@ export default function ContextStepper({
 								>
 									{steps[activeStep]?.description}
 								</Typography>
-								{step.component}
+								{step.component
+									? step.component
+									: step.form &&
+									  step.grid && (
+											<>
+												<Divider />
+												<Box>
+													<CardContent>
+														<Box className="mx-auto w-full md:w-[30rem]">
+															{step.form}
+														</Box>
+													</CardContent>
+													<Divider
+														sx={{
+															mt: 2,
+															mb: 1,
+															color: "#888",
+														}}
+													>
+														Already added
+													</Divider>
+													<CardContent>
+														{step.grid}
+													</CardContent>
+												</Box>
+												<Divider />
+											</>
+									  )}
 								{step.context !== undefined && (
 									<>
 										<Typography
