@@ -91,6 +91,7 @@ export default function AutocompleteSearchBox() {
 	const [shouldFetchFromAPI, setShouldFetchFromAPI] = useState(false);
 	const [cache, setCache] = useState({});
 	const { savedPlacesMap } = useContext(GlobalContext);
+	const [notFound, setNotFound] = useState(false);
 
 	const fuseOptions = {
 		keys: ["name", "formatted_address"],
@@ -108,17 +109,19 @@ export default function AutocompleteSearchBox() {
 
 	const searchMap = async (query) => {
 		setLoading(true);
-		try {
-			const response = await mapApi.search(query);
-			if (response.success) {
-				setMapResults([...response.data.results]);
-				// setCache((prev) => ({
-				// 	...prev,
-				// 	[query]: response.data.results,
-				// }));
+		const response = await mapApi.search(query);
+		if (response.success) {
+			setMapResults([...response.data.results]);
+			// setCache((prev) => ({
+			// 	...prev,
+			// 	[query]: response.data.results,
+			// }));
+			if (response.data.results.length === 0) {
+				setNotFound(true);
 			}
-		} catch (error) {
-			console.error("Error fetching data:", error);
+		} else {
+			console.error("Error fetching data:", response.error);
+			setNotFound(true);
 		}
 		setLoading(false);
 		setShouldFetchFromAPI(false);
@@ -156,8 +159,15 @@ export default function AutocompleteSearchBox() {
 			// setRecentSearches((prev) =>
 			// 	[search, ...prev.filter((s) => s !== search)].slice(0, 5)
 			// );
+		} else {
+			setResults([]);
 		}
 	}, [search, handleSearch, savedPlacesMap]);
+
+	useEffect(() => {
+		setNotFound(false);
+		setMapResults([]);
+	}, [search]);
 
 	const handleKeyPress = (event) => {
 		console.log("Key Pressed: ", event.key);
@@ -218,28 +228,40 @@ export default function AutocompleteSearchBox() {
 			)} */}
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-				{results.length > 0 && (
-					<div className="border rounded-lg overflow-hidden">
-						<h3 className="bg-gray-200 p-2 font-bold">
-							Saved Places
-						</h3>
-						<ul className="max-h-60 overflow-y-auto">
-							{results.map((place, index) => (
-								<SearchPlaceCard
-									place={place}
-									index={index}
-									length={results.length}
-								/>
-							))}
-						</ul>
-					</div>
-				)}
+				<div
+					className={`border rounded-lg overflow-hidden ${
+						results.length > 0
+							? ""
+							: search
+							? "invisible"
+							: "hidden"
+					}`}
+				>
+					<h3 className="bg-gray-200 p-2 font-bold">Recent Places</h3>
+					<ul className="max-h-60 overflow-y-auto">
+						{results.map((place, index) => (
+							<SearchPlaceCard
+								place={place}
+								index={index}
+								length={results.length}
+							/>
+						))}
+					</ul>
+				</div>
 
-				{mapResults.length > 0 && (
-					<div className="border rounded-lg overflow-hidden">
-						<h3 className="bg-gray-200 p-2 font-bold">
-							Google Places Results
-						</h3>
+				<div
+					className={`border rounded-lg overflow-hidden ${
+						mapResults.length > 0 || search
+							? ""
+							: search
+							? "invisible"
+							: "hidden"
+					}`}
+				>
+					<h3 className="bg-gray-200 p-2 font-bold">
+						Places found in Google Map
+					</h3>
+					{mapResults.length > 0 ? (
 						<ul className="max-h-60 overflow-y-auto">
 							{mapResults.map((place, index) => (
 								<SearchPlaceCard
@@ -249,8 +271,16 @@ export default function AutocompleteSearchBox() {
 								/>
 							))}
 						</ul>
-					</div>
-				)}
+					) : (
+						<div className="h-60 flex items-center justify-center">
+							<p className="text-lg md:text-xl text-gray-400">
+								{notFound
+									? "No places found"
+									: "Press enter to search in google"}
+							</p>
+						</div>
+					)}
+				</div>
 			</div>
 		</div>
 	);
