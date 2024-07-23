@@ -1,16 +1,8 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
-import { Box, Container } from "@mui/material";
-
-import { AppBar, Toolbar } from "@mui/material";
-import ContextGenerator from "@/components/ContextGenerator";
-import QuestionCreationPage from "@/components/QuestionCreator";
-import DatasetPage from "@/components/Dataset";
-import EvaluationResultsPage from "@/components/Evaluation";
-import Navbar from "@/components/Navbar";
-
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import GlobalContextProvider, { GlobalContext } from "@/contexts/GlobalContext";
+import Home from "./page/Home";
 export const showToast = (message, type) => {
 	console.log(message, type);
 	if (type === "success") toast.success(message, {});
@@ -51,41 +43,7 @@ export default function PageComponent() {
 
 	return (
 		<GlobalContextProvider>
-			<Container
-				maxWidth="md"
-				sx={{ mt: 4, mb: 4 }}
-				// className="gap-5 flex flex-col"
-			>
-				<Navbar {...{ selected, setSelected }} />
-				<Toolbar />
-				{selected === "context" ? (
-					<ContextGenerator
-						onFinish={() => {
-							setSelected("question");
-							window.scrollTo(0, 0);
-						}}
-						{...{ activeStep, setActiveStep }}
-					/>
-				) : selected === "question" ? (
-					<QuestionCreationPage
-						handleContextEdit={() => {
-							setSelected("context");
-							window.scrollTo(0, 0);
-						}}
-					/>
-				) : selected === "dataset" ? (
-					<DatasetPage
-						onEdit={() => {
-							setSelected("question");
-							window.scrollTo(0, 0);
-						}}
-					/>
-				) : selected === "evaluation" ? (
-					<EvaluationResultsPage />
-				) : (
-					<></>
-				)}
-			</Container>
+			<Home />
 		</GlobalContextProvider>
 	);
 }

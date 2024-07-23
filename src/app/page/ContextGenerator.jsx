@@ -19,7 +19,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import DirectionsIcon from "@mui/icons-material/Directions";
 import PlaceIcon from "@mui/icons-material/Place";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import ContextPreview from "../Cards/ContextPreview";
+import ContextPreview from "@/components/Cards/ContextPreview";
 import { Flag, RemoveRedEye, Settings } from "@mui/icons-material";
 import ExploreIcon from "@mui/icons-material/Explore";
 import ContextGeneratorService from "@/services/contextGeneratorService";

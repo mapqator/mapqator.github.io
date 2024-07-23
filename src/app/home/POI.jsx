@@ -16,7 +16,7 @@ import {
 	faTrashCan,
 	faAdd,
 } from "@fortawesome/free-solid-svg-icons";
-import placeTypes from "@/app/types.json";
+import placeTypes from "@/database/types.json";
 import Autocomplete from "@mui/material/Autocomplete";
 import { LoadingButton } from "@mui/lab";
 import { Add } from "@mui/icons-material";

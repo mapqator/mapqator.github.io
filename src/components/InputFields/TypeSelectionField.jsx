@@ -1,5 +1,5 @@
 "use client";
-import placeTypes from "@/app/types.json";
+import placeTypes from "@/database/types.json";
 import { Autocomplete, TextField } from "@mui/material";
 export default function TypeSelectionField({ type, setType }) {
 	return (
