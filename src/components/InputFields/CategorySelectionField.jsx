@@ -33,7 +33,7 @@ export default function CategorySelectionField() {
 			variant="outlined"
 			className="w-[20rem]"
 			sx={{ mt: 2 }}
-			size="small"
+			// size="small"
 			required
 		>
 			<InputLabel>Category</InputLabel>
