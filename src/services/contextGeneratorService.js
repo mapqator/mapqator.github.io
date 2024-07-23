@@ -200,6 +200,9 @@ const ContextGeneratorService = {
 		let newContext = "";
 		Object.keys(distanceMatrix).forEach((from_id) => {
 			Object.keys(distanceMatrix[from_id]).forEach((to_id) => {
+				if (newContext.length > 0) {
+					newContext += "\n";
+				}
 				newContext += `Travel time from <b>${
 					// selectedPlacesMap[from_id].alias ||
 					savedPlacesMap[from_id]?.name
@@ -220,7 +223,6 @@ const ContextGeneratorService = {
 						distanceMatrix[from_id][to_id][mode].distance
 					}).\n`;
 				});
-				newContext += "\n";
 			});
 		});
 		return newContext;
