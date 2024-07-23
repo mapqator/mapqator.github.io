@@ -25,14 +25,13 @@ export default function PageComponent() {
 		>
 			<Fade in={showContent} timeout={1000}>
 				<Box className="text-center">
-					<Box className="flex  items-end gap-5">
+					<Box className="flex flex-col md:flex-row items-center md:items-end gap-0 md:gap-5">
 						<motion.img
 							src={`${baseUrl}/images/logo.png`}
 							alt="Google Maps Logo"
 							style={{
 								width: "160px",
 								marginBottom: "30px",
-								marginLeft: "16px",
 							}}
 							initial={{ y: -50, opacity: 0 }}
 							animate={{ y: 0, opacity: 1 }}
@@ -43,7 +42,7 @@ export default function PageComponent() {
 							animate={{ y: 0, opacity: 1 }}
 							transition={{ duration: 0.5 }}
 						>
-							<div className="flex flex-col items-start justify-center mb-16">
+							<div className="hidden md:flex flex-col items-start justify-center mb-16">
 								<Typography
 									variant="h2"
 									component="div"
@@ -62,12 +61,14 @@ export default function PageComponent() {
 									sx={{
 										color: "#666",
 										fontWeight: "300",
-										ml: "16rem",
-									}}
-									className="h-3 font-mono"
-									style={{
+										ml: {
+											xs: "12rem",
+											md: "16rem",
+										},
 										transform: "translateY(-15px)",
 									}}
+									className="h-3 font-mono"
+									// style={{}}
 								>
 									by Mahir Labib Dihan
 								</Typography>
@@ -95,13 +96,14 @@ export default function PageComponent() {
 						transition={{ delay: 0.5, duration: 0.8 }}
 					>
 						<Typography
-							variant="h3"
-							component="h1"
-							gutterBottom
 							sx={{
+								fontSize: {
+									xs: "2.3rem",
+									md: "3rem",
+								},
 								fontWeight: "600",
 								color: "#555",
-								mb: 2,
+								mb: 1,
 								textShadow: "2px 2px 4px rgba(0,0,0,0.1)",
 							}}
 						>
