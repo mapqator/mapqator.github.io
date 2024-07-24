@@ -8,7 +8,6 @@ import {
 	Icon,
 	Container,
 } from "@mui/material";
-import { motion } from "framer-motion";
 import MapIcon from "@mui/icons-material/Map";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import DatasetIcon from "@mui/icons-material/Dataset";

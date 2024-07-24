@@ -1,6 +1,5 @@
 "use client";
-import React, { useState, useEffect, useContext } from "react";
-import AuthService from "@/services/authService";
+import React, { useState, useEffect } from "react";
 import {
 	Button,
 	Card,
