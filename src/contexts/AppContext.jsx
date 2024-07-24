@@ -548,7 +548,7 @@ export default function AppContextProvider({ children }) {
 
 	useEffect(() => {
 		if (process.env.NODE_ENV === "production") {
-			// fetchPlaces();
+			fetchPlaces();
 			fetchQueries();
 		}
 	}, []);
