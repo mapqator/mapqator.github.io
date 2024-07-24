@@ -6,6 +6,7 @@ import { Add } from "@mui/icons-material";
 import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
 import TravelSelectionField from "@/components/InputFields/TravelSelectionField.";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import { showError } from "@/contexts/ToastProvider";
 
 export default function DistanceForm() {
 	const { selectedPlacesMap, distanceMatrix, setDistanceMatrix } =
@@ -71,6 +72,8 @@ export default function DistanceForm() {
 				}
 			}
 			setDistanceMatrix(newDistanceMatrix);
+		} else {
+			showError("Couldn't find the distance between the places");
 		}
 		setNewDistance((prev) => ({
 			from: [],

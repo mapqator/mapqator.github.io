@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { Select, MenuItem, Button, TextField, IconButton } from "@mui/material";
-import OnlineSearch from "./OnlineSearch";
-import OfflineSearch from "./OfflineSearch";
 import PlaceInformation from "./PlaceInformation";
 import DistanceInformation from "./DistanceInformation";
 import NearbyInformation from "./NearbyInformation";

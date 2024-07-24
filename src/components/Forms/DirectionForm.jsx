@@ -6,6 +6,7 @@ import { LoadingButton } from "@mui/lab";
 import TravelSelectionField from "@/components/InputFields/TravelSelectionField.";
 import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import { showError } from "@/contexts/ToastProvider";
 
 export default function DirectionForm() {
 	const { selectedPlacesMap, directionInformation, setDirectionInformation } =
@@ -70,6 +71,8 @@ export default function DirectionForm() {
 				};
 			}
 			setDirectionInformation(newDirectionInfo);
+		} else {
+			showError("Couldn't find directions between the two places");
 		}
 		setLoading(false);
 	};

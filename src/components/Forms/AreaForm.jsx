@@ -6,6 +6,7 @@ import { Search } from "@mui/icons-material";
 import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
 import TypeSelectionField from "@/components/InputFields/TypeSelectionField";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import { showError } from "@/contexts/ToastProvider";
 
 export default function AreaForm() {
 	const [newPois, setNewPois] = useState({ location: "", type: "" });
@@ -13,37 +14,34 @@ export default function AreaForm() {
 	const { poisMap, setPoisMap } = useContext(GlobalContext);
 	const searchInsidePlaces = async () => {
 		if (newPois.location === "" || newPois.type === "") return;
-
 		setLoading(true);
-		try {
-			const res = await mapApi.getInside({
-				location: newPois.location,
-				type: newPois.type,
-			});
-			if (res.success) {
-				const places = res.data.results;
-				const newPoisMap = { ...poisMap };
-				if (newPoisMap[newPois.location] === undefined) {
-					newPoisMap[newPois.location] = [];
-				}
-
-				const placesWithSelection = places.map((place) => ({
-					selected: true,
-					place_id: place.place_id,
-					name: place.name,
-					formatted_address: place.formatted_address,
-				}));
-
-				newPoisMap[newPois.location].push({
-					type: newPois.type,
-					places: placesWithSelection,
-				});
-
-				setPoisMap(newPoisMap);
-				setLoading(false);
+		const res = await mapApi.getInside({
+			location: newPois.location,
+			type: newPois.type,
+		});
+		if (res.success) {
+			const places = res.data.results;
+			const newPoisMap = { ...poisMap };
+			if (newPoisMap[newPois.location] === undefined) {
+				newPoisMap[newPois.location] = [];
 			}
-		} catch (error) {
-			// console.error("Error fetching data: ", error);
+
+			const placesWithSelection = places.map((place) => ({
+				selected: true,
+				place_id: place.place_id,
+				name: place.name,
+				formatted_address: place.formatted_address,
+			}));
+
+			newPoisMap[newPois.location].push({
+				type: newPois.type,
+				places: placesWithSelection,
+			});
+
+			setPoisMap(newPoisMap);
+			setLoading(false);
+		} else {
+			showError("Couldn't discover places in the area");
 		}
 		setLoading(false);
 	};

@@ -17,6 +17,7 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 import { useContext } from "react";
 import TypeSelectionField from "@/components/InputFields/TypeSelectionField";
 import { AppContext } from "@/contexts/AppContext";
+import { showError } from "@/contexts/ToastProvider";
 
 export default function NearbyForm() {
 	const { selectedPlacesMap, nearbyPlacesMap, setNearbyPlacesMap } =
@@ -44,70 +45,66 @@ export default function NearbyForm() {
 		if (newNearbyPlaces.location === "" || newNearbyPlaces.type === "")
 			return;
 		setLoading(true);
-		try {
-			const loc =
-				savedPlacesMap[newNearbyPlaces.location].geometry.location;
-			const lat = typeof loc.lat === "function" ? loc.lat() : loc.lat;
-			const lng = typeof loc.lng === "function" ? loc.lng() : loc.lng;
-			if (!placeTypes.includes(newNearbyPlaces.type)) {
-				newNearbyPlaces.keyword = newNearbyPlaces.type;
-				newNearbyPlaces.type = "";
+		const loc = savedPlacesMap[newNearbyPlaces.location].geometry.location;
+		const lat = typeof loc.lat === "function" ? loc.lat() : loc.lat;
+		const lng = typeof loc.lng === "function" ? loc.lng() : loc.lng;
+		if (!placeTypes.includes(newNearbyPlaces.type)) {
+			newNearbyPlaces.keyword = newNearbyPlaces.type;
+			newNearbyPlaces.type = "";
+		}
+
+		const response = await mapApi.getNearby({
+			location: newNearbyPlaces.location,
+			lat,
+			lng,
+			radius: newNearbyPlaces.radius,
+			type: newNearbyPlaces.type,
+			keyword: newNearbyPlaces.keyword,
+			rankBy: newNearbyPlaces.rankBy,
+		});
+
+		if (response.success) {
+			const places = response.data.results;
+			console.log("Nearby Places: ", response.data);
+			const newNearbyPlacesMap = { ...nearbyPlacesMap };
+			if (newNearbyPlacesMap[newNearbyPlaces.location] === undefined) {
+				newNearbyPlacesMap[newNearbyPlaces.location] = [];
 			}
 
-			const response = await mapApi.getNearby({
-				location: newNearbyPlaces.location,
-				lat,
-				lng,
+			const placesWithSelection = places.map((place) => ({
+				selected: true,
+				place_id: place.place_id,
+				name: place.name,
+				formatted_address: place.vicinity,
+			}));
+
+			newNearbyPlacesMap[newNearbyPlaces.location].push({
+				type: placeTypes.includes(newNearbyPlaces.type)
+					? newNearbyPlaces.type
+					: "any",
+				places: placesWithSelection,
+				keyword: placeTypes.includes(newNearbyPlaces.type)
+					? ""
+					: newNearbyPlaces.keyword,
 				radius: newNearbyPlaces.radius,
-				type: newNearbyPlaces.type,
-				keyword: newNearbyPlaces.keyword,
 				rankBy: newNearbyPlaces.rankBy,
 			});
-			if (response.success) {
-				const places = response.data.results;
-				console.log("Nearby Places: ", response.data);
-				const newNearbyPlacesMap = { ...nearbyPlacesMap };
-				if (
-					newNearbyPlacesMap[newNearbyPlaces.location] === undefined
-				) {
-					newNearbyPlacesMap[newNearbyPlaces.location] = [];
-				}
 
-				const placesWithSelection = places.map((place) => ({
-					selected: true,
-					place_id: place.place_id,
-					name: place.name,
-					formatted_address: place.vicinity,
-				}));
+			setNearbyPlacesMap(newNearbyPlacesMap);
+			console.log("Update Nearby Places: ", {
+				...newNearbyPlaces,
+				type: "",
+				keyword: "",
+			});
+			setNewNearbyPlaces((prev) => ({
+				...prev,
+				type: "",
+				keyword: "",
+			}));
 
-				newNearbyPlacesMap[newNearbyPlaces.location].push({
-					type: placeTypes.includes(newNearbyPlaces.type)
-						? newNearbyPlaces.type
-						: "any",
-					places: placesWithSelection,
-					keyword: placeTypes.includes(newNearbyPlaces.type)
-						? ""
-						: newNearbyPlaces.keyword,
-					radius: newNearbyPlaces.radius,
-					rankBy: newNearbyPlaces.rankBy,
-				});
-
-				setNearbyPlacesMap(newNearbyPlacesMap);
-				console.log("Update Nearby Places: ", {
-					...newNearbyPlaces,
-					type: "",
-					keyword: "",
-				});
-				setNewNearbyPlaces((prev) => ({
-					...prev,
-					type: "",
-					keyword: "",
-				}));
-
-				setLoading(false);
-			}
-		} catch (error) {
-			console.error("Error fetching data: ", error);
+			setLoading(false);
+		} else {
+			showError("Couldn't find nearby places.");
 		}
 		setLoading(false);
 	};

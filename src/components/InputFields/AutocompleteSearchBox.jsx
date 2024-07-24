@@ -7,6 +7,7 @@ import {
 	Divider,
 	ListItemText,
 	ListItem,
+	Box,
 } from "@mui/material";
 import _ from "lodash";
 
@@ -17,19 +18,21 @@ import { CircularProgress, InputAdornment } from "@mui/material";
 import debounce from "lodash/debounce";
 import { AppContext } from "@/contexts/AppContext";
 import PlaceAddButton from "../Buttons/PlaceAddButton";
+import { useAuth } from "@/contexts/AuthContext";
 
 function SearchPlaceCard({ place, index, length }) {
 	// Issue: Name overlaps with Add button
 	return (
 		<React.Fragment key={index}>
-			<ListItem
-				secondaryAction={<PlaceAddButton place_id={place.place_id} />}
-			>
+			<Box className="flex gap-1 justify-between w-full items-center px-2">
 				<ListItemText
 					primary={place.name}
 					secondary={place.formatted_address}
 				/>
-			</ListItem>
+				<Box className="ml-auto">
+					<PlaceAddButton place_id={place.place_id} />
+				</Box>
+			</Box>
 			<Divider component="li" />
 		</React.Fragment>
 	);
@@ -44,7 +47,7 @@ export default function AutocompleteSearchBox() {
 	const [cache, setCache] = useState({});
 	const { savedPlacesMap } = useContext(AppContext);
 	const [notFound, setNotFound] = useState(false);
-
+	const { isAuthenticated } = useAuth();
 	const fuseOptions = {
 		keys: ["name", "formatted_address"],
 		threshold: 0.3,
@@ -234,7 +237,9 @@ export default function AutocompleteSearchBox() {
 							<p className="text-lg md:text-xl text-gray-400">
 								{notFound
 									? "No places found"
-									: "Press enter to search in google"}
+									: isAuthenticated
+									? "Press enter to search in google"
+									: "Please log in to search in google"}
 							</p>
 						</div>
 					)}

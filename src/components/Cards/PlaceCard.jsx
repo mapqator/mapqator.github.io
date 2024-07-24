@@ -32,7 +32,6 @@ function PlaceCardSummary({ placeId, expanded }) {
 			<Typography color="textSecondary" gutterBottom noWrap>
 				{savedPlacesMap[placeId].formatted_address}
 			</Typography>
-
 			<Box
 				sx={{
 					display: "flex",
