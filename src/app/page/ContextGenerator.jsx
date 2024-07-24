@@ -112,9 +112,10 @@ export default function ContextGenerator({
 		setCurrentInformation(exampleCurrentInformation);
 	};
 
-	useEffect(() => {
-		handleExample();
-	}, []);
+	// useEffect(() => {
+	// 	handleExample();
+	// }, []);
+
 	return (
 		<>
 			<Typography variant="h4" gutterBottom component="h1">
