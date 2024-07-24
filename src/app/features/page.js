@@ -14,7 +14,7 @@ import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import DatasetIcon from "@mui/icons-material/Dataset";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import { useRouter } from "next/navigation";
-import config from "@/config.json";
+import config from "@/config/config";
 export default function HomePage() {
 	const router = useRouter();
 	const features = [

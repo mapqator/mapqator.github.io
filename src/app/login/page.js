@@ -9,79 +9,17 @@ import {
 	CssBaseline,
 	Container,
 	Box,
-	InputAdornment,
-	TextField,
 	Divider,
 } from "@mui/material";
 import Image from "next/image";
-import EyeIcon from "@/components/Icons/EyeIcon";
-// import { setLoading } from "@/page";
-import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/navigation";
-import config from "@/config.json";
+import config from "@/config/config";
 import { useAuth } from "@/contexts/AuthContext";
-import { LoginOutlined, RemoveRedEye } from "@mui/icons-material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
+import { RemoveRedEye } from "@mui/icons-material";
 import Confirmation from "@/components/Dialogs/Confirmation";
+import LoginForm from "@/components/Forms/LoginForm";
 
-const MuiTextField = (props) => {
-	return (
-		<TextField
-			required
-			placeholder={props.placeholder}
-			type="text"
-			value={props.value}
-			onChange={props.onChange}
-			// label={props.label}
-			size="small"
-			fullWidth
-			variant="outlined"
-			InputProps={{
-				startAdornment: (
-					<InputAdornment position="start">
-						<FontAwesomeIcon icon={faUser} />
-					</InputAdornment>
-				),
-			}}
-		/>
-	);
-};
-
-const MuiPasswordField = (props) => {
-	const [showPassword, setShowPassword] = useState(false);
-	return (
-		<TextField
-			required
-			placeholder={props.placeholder}
-			type={showPassword ? "text" : "password"}
-			value={props.value}
-			onChange={props.onChange}
-			size="small"
-			fullWidth
-			InputProps={{
-				startAdornment: (
-					<InputAdornment position="start">
-						<FontAwesomeIcon icon={faLock} />
-					</InputAdornment>
-				),
-				endAdornment: (
-					<InputAdornment position="end">
-						<EyeIcon
-							isVisible={props.value.length > 0}
-							showPassword={showPassword}
-							setShowPassword={setShowPassword}
-						/>
-					</InputAdornment>
-				),
-			}}
-		/>
-	);
-};
 const Login = () => {
-	const [username, setUserName] = useState("");
-	const [password, setPassword] = useState("");
-	const [loggingIn, setLoggingIn] = useState(false);
 	const { isAuthenticated } = useAuth();
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
@@ -90,32 +28,6 @@ const Login = () => {
 			router.push(config.loginRedirect);
 		}
 	}, [isAuthenticated]);
-
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		if (!loggingIn) {
-			// setLoading(true);
-			setLoggingIn(true);
-
-			const res = await AuthService.login({
-				username: username,
-				password: password,
-			});
-			if (res.success) {
-				router.push(config.loginRedirect);
-			} else {
-				// setLoading(false);
-				setLoggingIn(false);
-			}
-		}
-	};
-	const [baseUrl, setBaseUrl] = useState(
-		process.env.REACT_APP_BASE_URL
-			? process.env.REACT_APP_BASE_URL
-			: process.env.NODE_ENV === "development"
-			? ""
-			: "https://mahirlabibdihan.github.io/mapquest"
-	);
 
 	return (
 		<>
@@ -163,7 +75,7 @@ const Login = () => {
 							>
 								<div className="flex">
 									<Image
-										src={`${baseUrl}/images/logo.png`}
+										src={`${config.baseUrl}/images/logo.png`}
 										alt="MapQuest Logo"
 										width={30}
 										height={30}
@@ -199,39 +111,7 @@ const Login = () => {
 								>
 									Sign in to your account
 								</Typography>
-								<form
-									className="space-y-4"
-									onSubmit={handleSubmit}
-								>
-									<MuiTextField
-										label="Username"
-										placeholder="username"
-										onChange={(e) =>
-											setUserName(e.target.value)
-										}
-										value={username}
-									/>
-									<MuiPasswordField
-										label="Password"
-										placeholder="••••••••"
-										onChange={(e) =>
-											setPassword(e.target.value)
-										}
-										value={password}
-									/>
-									<LoadingButton
-										type="submit"
-										className="w-full rounded-lg text-sm px-5 py-2.5 text-center font-medium"
-										// onClick={handleSubmit}
-										variant="contained"
-										fullWidth
-										loading={loggingIn}
-										startIcon={<LoginOutlined />}
-										loadingPosition="start"
-									>
-										Sign in
-									</LoadingButton>
-								</form>
+								<LoginForm />
 								<Divider>
 									<Typography className="text-zinc-500">
 										or
