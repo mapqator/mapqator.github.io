@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useContext } from "react";
 import NearbyCard from "@/components/Cards/NearbyCard";
 import { GlobalContext } from "@/contexts/GlobalContext";

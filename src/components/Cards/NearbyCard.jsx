@@ -16,9 +16,9 @@ import PoiList from "@/components/Lists/PoiList";
 
 function NearbyCardDetails({ index, place_id, entry }) {
 	const { nearbyPlacesMap, setNearbyPlacesMap } = useContext(GlobalContext);
-	const handleTogglePlace = (e, index3) => {
+	const handleTogglePlace = (e, poi_index) => {
 		const newNearbyPlacesMap = { ...nearbyPlacesMap };
-		newNearbyPlacesMap[place_id][index].places[index3].selected =
+		newNearbyPlacesMap[place_id][index].places[poi_index].selected =
 			e.target.checked;
 		setNearbyPlacesMap(newNearbyPlacesMap);
 	};

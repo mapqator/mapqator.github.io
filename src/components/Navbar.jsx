@@ -1,23 +1,12 @@
-"use client";
-import { useContext, useEffect, useState } from "react";
-import {
-	Box,
-	Typography,
-	Button,
-	IconButton,
-	Tabs,
-	Tab,
-	BottomNavigation,
-} from "@mui/material";
+import { useState } from "react";
+import { Box, Typography, Button, IconButton } from "@mui/material";
 import Image from "next/image";
 import { AppBar, Toolbar } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { Login, Logout } from "@mui/icons-material";
 import config from "@/config.json";
-import { GlobalContext } from "@/contexts/GlobalContext";
 import AuthService from "@/services/authService";
 import { useAuth } from "@/contexts/AuthContext";
-import { faGears, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import MapIcon from "@mui/icons-material/Map";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import DatasetIcon from "@mui/icons-material/Dataset";

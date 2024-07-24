@@ -2,9 +2,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import AuthService from "@/services/authService";
 import {
-	FormControl,
-	InputLabel,
-	OutlinedInput,
 	Button,
 	Card,
 	CardContent,
@@ -12,7 +9,6 @@ import {
 	CssBaseline,
 	Container,
 	Box,
-	Avatar,
 	InputAdornment,
 	TextField,
 	Divider,
@@ -23,17 +19,8 @@ import EyeIcon from "@/components/Icons/EyeIcon";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/navigation";
 import config from "@/config.json";
-import { GlobalContext } from "@/contexts/GlobalContext";
 import { useAuth } from "@/contexts/AuthContext";
-import {
-	DoorBackOutlined,
-	DoorFrontOutlined,
-	DoorSlidingOutlined,
-	Lock,
-	LoginOutlined,
-	RemoveRedEye,
-	Search,
-} from "@mui/icons-material";
+import { LoginOutlined, RemoveRedEye } from "@mui/icons-material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import Confirmation from "@/components/Dialogs/Confirmation";

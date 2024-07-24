@@ -1,27 +1,15 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from "react";
-import mapApi from "@/api/mapApi";
+import React from "react";
 
 import {
-	IconButton,
-	Typography,
-	Card,
-	CardContent,
 	Box,
-	Collapse,
 	List,
 	ListItem,
 	ListItemText,
-	ListItemIcon,
 	Checkbox,
-	Chip,
 	Divider,
-	Button,
 } from "@mui/material";
-import { Add, Delete, ExpandMore } from "@mui/icons-material";
-import { GlobalContext } from "@/contexts/GlobalContext";
-import { AppContext } from "@/contexts/AppContext";
 import PlaceAddButton from "../Buttons/PlaceAddButton";
 
 export default function PoiList({ places, handleTogglePlace }) {

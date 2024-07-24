@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useContext } from "react";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import DistanceCard from "@/components/Cards/DistanceCard";

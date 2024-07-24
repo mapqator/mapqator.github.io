@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useContext } from "react";
 import AreaCard from "@/components/Cards/AreaCard";
 import { Grid } from "@mui/material";

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import placeApi from "@/api/placeApi";
 import mapApi from "@/api/mapApi";
 import {
 	TextField,

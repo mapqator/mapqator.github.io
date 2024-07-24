@@ -1,4 +1,3 @@
-"use client";
 import { Typography } from "@mui/material";
 import DatasetSummary from "@/components/Tables/DatasetSummary";
 import EvaluationSummary from "@/components/Tables/EvaluationSummary";

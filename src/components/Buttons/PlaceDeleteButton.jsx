@@ -1,25 +1,7 @@
-"use client";
-
 import React, { useContext } from "react";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import {
-	Card,
-	CardContent,
-	Typography,
-	Chip,
-	IconButton,
-	Collapse,
-	Box,
-	Select,
-	MenuItem,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import { AppContext } from "@/contexts/AppContext";
-import { convertFromSnake } from "@/services/utils";
 
 export default function PlaceDeleteButton({ placeId }) {
 	const {

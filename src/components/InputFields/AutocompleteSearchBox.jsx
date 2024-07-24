@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useContext, useEffect, useState } from "react";
 import mapApi from "@/api/mapApi";
 
@@ -12,13 +10,11 @@ import {
 } from "@mui/material";
 import _ from "lodash";
 
-import { LoadingButton } from "@mui/lab";
-import { Add, Clear, Download, Search, Start } from "@mui/icons-material";
+import { Clear, Search } from "@mui/icons-material";
 import Fuse from "fuse.js";
 import { useCallback } from "react";
-import { Chip, CircularProgress, InputAdornment } from "@mui/material";
+import { CircularProgress, InputAdornment } from "@mui/material";
 import debounce from "lodash/debounce";
-import { GlobalContext } from "@/contexts/GlobalContext";
 import { AppContext } from "@/contexts/AppContext";
 import PlaceAddButton from "../Buttons/PlaceAddButton";
 

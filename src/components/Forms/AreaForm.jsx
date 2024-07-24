@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useContext, useState } from "react";
 import mapApi from "@/api/mapApi";
 import { Grid } from "@mui/material";

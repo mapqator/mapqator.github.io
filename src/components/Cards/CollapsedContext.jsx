@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import { Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

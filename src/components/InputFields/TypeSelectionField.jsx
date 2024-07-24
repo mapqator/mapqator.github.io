@@ -1,4 +1,3 @@
-"use client";
 import placeTypes from "@/database/types.json";
 import { Autocomplete, TextField } from "@mui/material";
 import { convertFromSnake } from "@/services/utils";

@@ -1,5 +1,4 @@
-"use client";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 import {
 	Typography,
 	Box,

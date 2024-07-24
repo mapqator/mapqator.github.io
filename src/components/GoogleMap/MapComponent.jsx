@@ -1,5 +1,3 @@
-"use client";
-
 import { AppContext } from "@/contexts/AppContext";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";

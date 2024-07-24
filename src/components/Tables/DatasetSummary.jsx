@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect, useContext } from "react";
 import {
 	Paper,
@@ -9,7 +8,6 @@ import {
 	TableHead,
 	TableRow,
 } from "@mui/material";
-import { GlobalContext } from "@/contexts/GlobalContext";
 import { AppContext } from "@/contexts/AppContext";
 
 export default function DatasetSummary() {

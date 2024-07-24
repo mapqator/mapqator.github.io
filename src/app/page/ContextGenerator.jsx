@@ -1,4 +1,3 @@
-"use client";
 import { useContext, useEffect } from "react";
 import { Typography } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";

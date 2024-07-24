@@ -1,4 +1,3 @@
-"use client";
 import React, { useContext } from "react";
 import { Box, Typography, Button, Paper, Divider } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";

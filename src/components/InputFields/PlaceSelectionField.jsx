@@ -1,9 +1,7 @@
-"use client";
-
 import React, { useContext } from "react";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import { Select, MenuItem, Box, Chip, Typography } from "@mui/material";
+import { Select, MenuItem, Box, Chip } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { AppContext } from "@/contexts/AppContext";
 

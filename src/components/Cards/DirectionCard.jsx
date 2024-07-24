@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
 	Box,
 	Card,
@@ -101,8 +99,8 @@ function DirectionCardDetails({ from_id, to_id }) {
 	return (
 		<List dense>
 			{Object.keys(directionInformation[from_id][to_id]).map(
-				(mode, index3) => (
-					<React.Fragment key={index3}>
+				(mode, index) => (
+					<React.Fragment key={index}>
 						<ListItem
 							onClick={() =>
 								setExpandedRoute((prev) => ({
@@ -211,7 +209,7 @@ function DirectionCardDetails({ from_id, to_id }) {
 								/>
 							</Paper>
 						</Collapse>
-						{index3 <
+						{index <
 							Object.keys(directionInformation[from_id][to_id])
 								.length -
 								1 && <Divider component="li" />}

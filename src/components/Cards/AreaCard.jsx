@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useContext, useState } from "react";
 import {
 	IconButton,
@@ -18,11 +16,12 @@ import PoiList from "@/components/Lists/PoiList";
 
 function AreaCardDetails({ entry, place_id, index }) {
 	const { poisMap, setPoisMap } = useContext(GlobalContext);
-	const handleTogglePlace = (e, index3) => {
+	const handleTogglePlace = (e, poi_index) => {
 		const newPoisMap = {
 			...poisMap,
 		};
-		newPoisMap[place_id][index].places[index3].selected = e.target.checked;
+		newPoisMap[place_id][index].places[poi_index].selected =
+			e.target.checked;
 		setPoisMap(newPoisMap);
 	};
 	return (

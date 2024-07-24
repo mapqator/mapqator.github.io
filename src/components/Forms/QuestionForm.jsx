@@ -1,27 +1,6 @@
-"use client";
-import React, { useContext, useEffect, useState } from "react";
-import {
-	Box,
-	Typography,
-	TextField,
-	Button,
-	Radio,
-	RadioGroup,
-	FormControlLabel,
-	FormControl,
-	Select,
-	MenuItem,
-	IconButton,
-	InputAdornment,
-	InputLabel,
-	Chip,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { GlobalContext } from "@/contexts/GlobalContext";
-import queryApi from "@/api/queryApi";
-import categories from "@/database/categories.json";
-import { Clear, Save, WindowSharp } from "@mui/icons-material";
+import React, { useContext, useState } from "react";
+import { Box, Button } from "@mui/material";
+import { Clear, Save } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import OptionsEditor from "../InputFields/OptionsEditor";
 import CategorySelectionField from "../InputFields/CategorySelectionField";

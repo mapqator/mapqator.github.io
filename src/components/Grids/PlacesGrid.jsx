@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useContext } from "react";
 import { Grid } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";

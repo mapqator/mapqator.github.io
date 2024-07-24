@@ -1,4 +1,3 @@
-"use client";
 import React, { useContext } from "react";
 import { Button } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";

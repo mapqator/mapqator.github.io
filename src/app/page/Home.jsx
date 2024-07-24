@@ -1,8 +1,7 @@
-"use client";
-import { useContext, useEffect, useState } from "react";
-import { Box, Container } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Container } from "@mui/material";
 
-import { AppBar, Toolbar } from "@mui/material";
+import { Toolbar } from "@mui/material";
 import ContextGenerator from "./ContextGenerator";
 import QuestionCreationPage from "./QuestionCreator";
 import DatasetPage from "./Dataset";

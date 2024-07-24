@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
 	IconButton,
 	CardContent,
@@ -41,8 +39,8 @@ function DistanceCardDetails({ from_id, to_id }) {
 	};
 	return (
 		<List dense>
-			{Object.keys(distanceMatrix[from_id][to_id]).map((mode, index3) => (
-				<React.Fragment key={index3}>
+			{Object.keys(distanceMatrix[from_id][to_id]).map((mode, index) => (
+				<React.Fragment key={index}>
 					<ListItem
 						secondaryAction={
 							<IconButton
@@ -72,7 +70,7 @@ function DistanceCardDetails({ from_id, to_id }) {
 							}}
 						/>
 					</ListItem>
-					{index3 <
+					{index <
 						Object.keys(distanceMatrix[from_id][to_id]).length -
 							1 && <Divider component="li" />}
 				</React.Fragment>

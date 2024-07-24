@@ -1,12 +1,4 @@
-"use client";
-import {
-	IconButton,
-	Select,
-	MenuItem,
-	CardContent,
-	Box,
-	Divider,
-} from "@mui/material";
+import { IconButton, Select, MenuItem, Box } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";

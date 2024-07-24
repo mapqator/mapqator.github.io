@@ -1,4 +1,3 @@
-"use client";
 import React, { useState, useEffect, useContext } from "react";
 import {
 	Typography,
@@ -9,7 +8,7 @@ import {
 	InputLabel,
 	Pagination,
 } from "@mui/material";
-import { GlobalContext } from "@/contexts/GlobalContext";
+
 import { getUserName } from "@/api/base";
 import categories from "@/database/categories.json";
 import QueryCard from "@/components/Cards/QueryCard";
