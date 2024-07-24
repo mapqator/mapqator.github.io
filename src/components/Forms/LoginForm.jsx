@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import config from "@/config/config";
 import { LoginOutlined } from "@mui/icons-material";
 import PasswordField from "@/components/InputFields/PasswordField";
-import UserNameField from "@/components/InputFields/UsernameField";
+import UserNameField from "@/components/InputFields/UserNameField";
 export default function LoginForm() {
 	const [username, setUserName] = useState("");
 	const [password, setPassword] = useState("");
