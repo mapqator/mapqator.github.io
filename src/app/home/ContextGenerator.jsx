@@ -1,11 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import PlaceApi from "@/api/placeApi";
-const placeApi = new PlaceApi();
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import { Select, MenuItem, Button, TextField, IconButton } from "@mui/material";
 import OnlineSearch from "./OnlineSearch";
 import OfflineSearch from "./OfflineSearch";

@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import PlaceApi from "@/api/placeApi";
-const placeApi = new PlaceApi();
-import MapApi from "@/api/mapApi";
-const mapApi = new MapApi();
+import placeApi from "@/api/placeApi";
+import mapApi from "@/api/mapApi";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -20,6 +18,7 @@ import placeTypes from "@/database/types.json";
 import Autocomplete from "@mui/material/Autocomplete";
 import { LoadingButton } from "@mui/lab";
 import { Add } from "@mui/icons-material";
+import { convertFromSnake } from "@/services/utils";
 
 function POICard({
 	selectedPlacesMap,
@@ -311,17 +310,7 @@ export function DiscoverArea({
 						options={placeTypes}
 						fullWidth
 						freeSolo
-						getOptionLabel={(option) =>
-							`${option
-								.replace(/_/g, " ") // Replace underscores with spaces
-								.split(" ") // Split the string into an array of words
-								.map(
-									(word) =>
-										word.charAt(0).toUpperCase() +
-										word.slice(1)
-								) // Capitalize the first letter of each word
-								.join(" ")}`
-						}
+						getOptionLabel={(option) => convertFromSnake(option)}
 						onChange={(e, newValue) => {
 							setNewPois((prev) => ({
 								...prev,

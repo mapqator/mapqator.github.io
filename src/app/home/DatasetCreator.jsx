@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import QueryApi from "@/api/queryApi";
-const queryApi = new QueryApi();
+import queryApi from "@/api/queryApi";
 import FormControl from "@mui/material/FormControl";
 import {
 	FormLabel,

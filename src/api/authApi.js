@@ -28,5 +28,6 @@ class AuthApi extends Api {
 		};
 	};
 }
+
 const authApi = new AuthApi();
 export default authApi;

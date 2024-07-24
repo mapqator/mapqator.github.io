@@ -1,17 +1,9 @@
 "use client";
-import React, { useContext, useRef } from "react";
-import {
-	Box,
-	Typography,
-	Button,
-	Paper,
-	Divider,
-	List,
-	ListItem,
-} from "@mui/material";
+import React, { useContext } from "react";
+import { Box, Typography, Button, Paper, Divider } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import QueryApi from "@/api/queryApi";
+import queryApi from "@/api/queryApi";
 import { getUserName } from "@/api/base";
 import QuestionForm from "@/components/Forms/QuestionForm";
 import { showError, showSuccess } from "@/app/page";
@@ -20,7 +12,6 @@ import QuestionsContainer from "@/components/Containers/QuestionsContainer";
 import ContextGeneratorService from "@/services/contextGeneratorService";
 import { useAuth } from "@/contexts/AuthContext";
 import { AppContext } from "@/contexts/AppContext";
-const queryApi = new QueryApi();
 
 export default function QuestionCreationPage({ handleContextEdit }) {
 	const {

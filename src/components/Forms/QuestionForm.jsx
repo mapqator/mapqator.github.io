@@ -19,7 +19,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import QueryApi from "@/api/queryApi";
+import queryApi from "@/api/queryApi";
 import categories from "@/database/categories.json";
 import { Clear, Save, WindowSharp } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
@@ -27,7 +27,6 @@ import OptionsEditor from "../InputFields/OptionsEditor";
 import CategorySelectionField from "../InputFields/CategorySelectionField";
 import CorrectAnswerEditor from "../InputFields/CorrectAnswerEditor";
 import QuestionEditor from "../InputFields/QuestionEditor";
-const queryApi = new QueryApi();
 
 export default function QuestionForm({ handleSubmit, handleReset }) {
 	const { query, setQuery } = useContext(GlobalContext);

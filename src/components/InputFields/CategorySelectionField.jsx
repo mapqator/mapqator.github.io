@@ -1,30 +1,16 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import {
 	Box,
-	Typography,
-	TextField,
-	Button,
-	Radio,
-	RadioGroup,
-	FormControlLabel,
 	FormControl,
 	Select,
 	MenuItem,
-	IconButton,
-	InputAdornment,
 	InputLabel,
 	Chip,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import QueryApi from "@/api/queryApi";
 import categories from "@/database/categories.json";
-import { Clear, Save, WindowSharp } from "@mui/icons-material";
-import { LoadingButton } from "@mui/lab";
-import OptionsEditor from "../InputFields/OptionsEditor";
-const queryApi = new QueryApi();
+import { convertFromSnake } from "@/services/utils";
 
 export default function CategorySelectionField() {
 	const { query, setQuery } = useContext(GlobalContext);
@@ -60,14 +46,18 @@ export default function CategorySelectionField() {
 						}}
 					>
 						{selected.map((value) => (
-							<Chip key={value} label={value} size="small" />
+							<Chip
+								key={value}
+								label={convertFromSnake(value)}
+								size="small"
+							/>
 						))}
 					</Box>
 				)}
 			>
 				{categories.map((value, index) => (
 					<MenuItem key={index} value={value}>
-						{value}
+						{convertFromSnake(value)}
 					</MenuItem>
 				))}
 			</Select>

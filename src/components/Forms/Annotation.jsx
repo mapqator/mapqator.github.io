@@ -12,7 +12,7 @@ import {
 	CardContent,
 	Divider,
 } from "@mui/material";
-import QueryApi from "@/api/queryApi";
+import queryApi from "@/api/queryApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Clear, Edit, Save } from "@mui/icons-material";
@@ -20,7 +20,7 @@ import { getUserName } from "@/api/base";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { showError } from "@/app/page";
 import { useAuth } from "@/contexts/AuthContext";
-const queryApi = new QueryApi();
+
 export default function Annotation({ query }) {
 	const { isAuthenticated } = useAuth();
 	const { setQueries } = useContext(GlobalContext);

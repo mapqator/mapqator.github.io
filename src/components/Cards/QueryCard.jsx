@@ -20,11 +20,10 @@ import CollapsedContext from "./CollapsedContext";
 import OptionsPreview from "../Lists/OptionsPreview";
 import { getUserName } from "@/api/base";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import QueryApi from "@/api/queryApi";
+import queryApi from "@/api/queryApi";
 import { Delete } from "@mui/icons-material";
 import { useAuth } from "@/contexts/AuthContext";
 import { showError, showSuccess } from "@/app/page";
-const queryApi = new QueryApi();
 
 export default function QueryCard({ entry, onEdit }) {
 	const [flag, setFlag] = useState(false);

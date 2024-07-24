@@ -1,17 +1,14 @@
 "use client";
-import React, { useState, useEffect, useContext } from "react";
-import { Box, Button } from "@mui/material";
+import React, { useContext } from "react";
+import { Button } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import MapApi from "@/api/mapApi";
+import mapApi from "@/api/mapApi";
 import ContextGeneratorService from "@/services/contextGeneratorService";
-import { LoadingButton } from "@mui/lab";
 import { Edit } from "@mui/icons-material";
 import dayjs from "dayjs";
 import { AppContext } from "@/contexts/AppContext";
-const mapApi = new MapApi();
 
 export default function QueryEditButton({ onEdit, query }) {
-	const [loading, setLoading] = useState(false);
 	const {
 		setSelectedPlacesMap,
 		setDistanceMatrix,
@@ -42,7 +39,6 @@ export default function QueryEditButton({ onEdit, query }) {
 	};
 
 	const handleEdit = async () => {
-		// setLoading(true);
 		for (let place_id in query.context_json.places) {
 			await handleSave(place_id);
 		}
@@ -113,19 +109,16 @@ export default function QueryEditButton({ onEdit, query }) {
 		});
 		setQuery(query);
 		onEdit();
-		// setLoading(false);
 	};
 
 	return (
-		<LoadingButton
+		<Button
 			variant="contained"
 			color="primary"
 			startIcon={<Edit />}
 			onClick={handleEdit}
-			loading={loading}
-			loadingPosition="start"
 		>
 			Edit
-		</LoadingButton>
+		</Button>
 	);
 }

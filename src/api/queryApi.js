@@ -24,4 +24,6 @@ class QueryApi extends Api {
 		return await this.post("/queries/annotate/" + query_id, human);
 	};
 }
-export default QueryApi;
+
+const queryApi = new QueryApi();
+export default queryApi;

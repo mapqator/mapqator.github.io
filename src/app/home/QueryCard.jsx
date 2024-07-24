@@ -21,15 +21,11 @@ import {
 	faTrash,
 	faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import QueryApi from "@/api/queryApi";
+import queryApi from "@/api/queryApi";
 import QueryFields from "./QueryFields";
-import GptApi from "@/api/gptApi";
 import dayjs from "dayjs";
 import { Clear, Save } from "@mui/icons-material";
-import MapApi from "@/api/mapApi";
-const mapApi = new MapApi();
-const queryApi = new QueryApi();
-const gptApi = new GptApi();
+import mapApi from "@/api/mapApi";
 
 export default function QueryCard({
 	initQuery,

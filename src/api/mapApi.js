@@ -55,4 +55,5 @@ class MapApi extends Api {
 		);
 	};
 }
-export default MapApi;
+const mapApi = new MapApi();
+export default mapApi;

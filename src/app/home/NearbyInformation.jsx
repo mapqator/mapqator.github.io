@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import PlaceApi from "@/api/placeApi";
-const placeApi = new PlaceApi();
-import MapApi from "@/api/mapApi";
-const mapApi = new MapApi();
+import placeApi from "@/api/placeApi";
+import mapApi from "@/api/mapApi";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -27,6 +25,7 @@ import placeTypes from "@/database/types.json";
 import Autocomplete from "@mui/material/Autocomplete";
 import { LoadingButton } from "@mui/lab";
 import { Add } from "@mui/icons-material";
+import { convertFromSnake } from "@/services/utils";
 
 function NearbyCard({
 	index2,
@@ -263,32 +262,6 @@ export function NearbyInfo({
 				setNearbyPlacesMap(newNearbyPlacesMap);
 				setLoading(false);
 				setNearbyPlacesResults(placesWithSelection);
-				// const newSavedPlacesMap = { ...savedPlacesMap };
-				// for (const place of places) {
-				// 	if (newSavedPlacesMap[place.place_id] === undefined) {
-				// 		try {
-				// 			const response = await mapApi.getDetails(
-				// 				place.place_id
-				// 			);
-				// 			if (response.success) {
-				// 				const res = await placeApi.createPlace(
-				// 					response.data.result
-				// 				);
-				// 				if (res.success) {
-				// 					newSavedPlacesMap[place.place_id] =
-				// 						res.data[0];
-				// 					console.log(
-				// 						"saved: ",
-				// 						res.data[0].place_id
-				// 					);
-				// 				}
-				// 			}
-				// 		} catch (error) {
-				// 			console.error(error);
-				// 		}
-				// 	}
-				// }
-				// setSavedPlacesMap(newSavedPlacesMap);
 			}
 		} catch (error) {
 			console.error("Error fetching data: ", error);
@@ -389,17 +362,7 @@ export function NearbyInfo({
 						options={placeTypes}
 						fullWidth
 						freeSolo
-						getOptionLabel={(option) =>
-							`${option
-								.replace(/_/g, " ") // Replace underscores with spaces
-								.split(" ") // Split the string into an array of words
-								.map(
-									(word) =>
-										word.charAt(0).toUpperCase() +
-										word.slice(1)
-								) // Capitalize the first letter of each word
-								.join(" ")}`
-						}
+						getOptionLabel={(option) => convertFromSnake(option)}
 						onChange={(e, newValue) => {
 							// console.log("newValue: ", newValue);
 							setNewNearbyPlaces((prev) => ({

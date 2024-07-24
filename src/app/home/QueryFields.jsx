@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import QueryApi from "@/api/queryApi";
-const queryApi = new QueryApi();
-import GptApi from "@/api/gptApi";
-const gptApi = new GptApi();
+import queryApi from "@/api/queryApi";
+import gptApi from "@/api/gptApi";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";

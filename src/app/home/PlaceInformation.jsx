@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import PlaceApi from "@/api/placeApi";
-const placeApi = new PlaceApi();
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { Select, MenuItem, Button, TextField, IconButton } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { convertFromSnake } from "@/services/utils";
 
 export default function PlaceInformation({
 	selectedPlacesMap,
@@ -178,24 +177,9 @@ export default function PlaceInformation({
 															// sx={{ width: "2rem" }}
 															// style={getStyles(name, personName, theme)}
 														>
-															{value
-																.replace(
-																	/_/g,
-																	" "
-																) // Replace underscores with spaces
-																.split(" ") // Split the string into an array of words
-																.map(
-																	(word) =>
-																		word
-																			.charAt(
-																				0
-																			)
-																			.toUpperCase() +
-																		word.slice(
-																			1
-																		)
-																) // Capitalize the first letter of each word
-																.join(" ")}
+															{convertFromSnake(
+																value
+															)}
 														</MenuItem>
 													))}
 											</Select>

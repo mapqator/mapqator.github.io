@@ -74,7 +74,7 @@ export default function GlobalContextProvider({ children }) {
 				keyword: "",
 				places: [
 					{
-						name: "Dhanmondi",
+						name: "Dhanmondi, Uttara, Farmgate, Indira Road",
 						formatted_address: "Dhanmondi 27 road",
 						selected: true,
 					},

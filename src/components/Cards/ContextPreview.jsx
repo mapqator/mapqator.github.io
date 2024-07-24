@@ -1,9 +1,6 @@
 "use client";
 
-import { GlobalContext } from "@/contexts/GlobalContext";
-import ContextGeneratorService from "@/services/contextGeneratorService";
-import { Typography } from "@mui/material";
-import React, { useContext, useEffect } from "react";
+import React from "react";
 
 export default function ContextPreview({ context }) {
 	return (

@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useContext, useEffect, useState } from "react";
-import MapApi from "@/api/mapApi";
-const mapApi = new MapApi();
+import mapApi from "@/api/mapApi";
 
 import {
 	Button,
@@ -21,68 +20,14 @@ import { Chip, CircularProgress, InputAdornment } from "@mui/material";
 import debounce from "lodash/debounce";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { AppContext } from "@/contexts/AppContext";
+import PlaceAddButton from "../Buttons/PlaceAddButton";
 
 function SearchPlaceCard({ place, index, length }) {
-	const { selectedPlacesMap, setSelectedPlacesMap } =
-		useContext(GlobalContext);
-
-	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
-
-	const handleAddPlace = async (place) => {
-		if (selectedPlacesMap[place.place_id]) return;
-
-		let details = savedPlacesMap[place.place_id];
-		if (!details) {
-			const res = await mapApi.getDetails(place.place_id);
-			if (res.success) {
-				details = res.data.result;
-				setSavedPlacesMap((prev) => ({
-					...prev,
-					[place.place_id]: details,
-				}));
-			} else {
-				console.error("Error fetching place details:", res.error);
-				return;
-			}
-		}
-
-		setSelectedPlacesMap((prev) => ({
-			...prev,
-			[place.place_id]: {
-				// alias: "",
-				selectedAttributes: Object.keys(details).filter(
-					(key) =>
-						details[key] !== null &&
-						key !== "place_id" &&
-						key !== "name" &&
-						key !== "last_updated" &&
-						key !== "user_ratings_total"
-				),
-				attributes: Object.keys(details).filter(
-					(key) =>
-						details[key] !== null &&
-						key !== "place_id" &&
-						key !== "name" &&
-						key !== "last_updated" &&
-						key !== "user_ratings_total"
-				),
-			},
-		}));
-	};
-
 	// Issue: Name overlaps with Add button
 	return (
 		<React.Fragment key={index}>
 			<ListItem
-				secondaryAction={
-					<Button
-						startIcon={<Add />}
-						onClick={() => handleAddPlace(place)}
-						disabled={selectedPlacesMap[place.place_id]}
-					>
-						Add
-					</Button>
-				}
+				secondaryAction={<PlaceAddButton place_id={place.place_id} />}
 			>
 				<ListItemText
 					primary={place.name}

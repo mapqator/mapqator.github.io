@@ -1,13 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import PlaceApi from "@/api/placeApi";
-const placeApi = new PlaceApi();
-import MapApi from "@/api/mapApi";
-const mapApi = new MapApi();
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import OutlinedInput from "@mui/material/OutlinedInput";
+import placeApi from "@/api/placeApi";
+import mapApi from "@/api/mapApi";
 import { Select, MenuItem, Button, TextField } from "@mui/material";
 
 export default function OnlineSearch({

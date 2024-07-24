@@ -1,10 +1,9 @@
 "use client";
 
 import { createContext, useEffect, useState } from "react";
-import QueryApi from "@/api/queryApi";
-import PlaceApi from "@/api/placeApi";
-const queryApi = new QueryApi();
-const placeApi = new PlaceApi();
+import queryApi from "@/api/queryApi";
+import placeApi from "@/api/placeApi";
+
 export const AppContext = createContext();
 
 export default function AppContextProvider({ children }) {

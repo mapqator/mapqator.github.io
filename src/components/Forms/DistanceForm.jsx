@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useContext, useEffect, useState } from "react";
-import MapApi from "@/api/mapApi";
-const mapApi = new MapApi();
+import mapApi from "@/api/mapApi";
 import { Grid } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Add } from "@mui/icons-material";

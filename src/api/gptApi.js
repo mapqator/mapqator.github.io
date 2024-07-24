@@ -9,4 +9,5 @@ class GptApi extends Api {
 	};
 }
 
+const gptApi = new GptApi();
 export default GptApi;

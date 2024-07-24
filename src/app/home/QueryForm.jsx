@@ -1,21 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import QueryApi from "@/api/queryApi";
-const queryApi = new QueryApi();
-import FormControl from "@mui/material/FormControl";
-import {
-	FormLabel,
-	RadioGroup,
-	FormControlLabel,
-	Radio,
-	IconButton,
-	Button,
-	TextField,
-} from "@mui/material";
-import QueryCard from "./QueryCard";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
+
 import QueryFields from "./QueryFields";
 
 export default function QueryForm({ contextJSON, context, handleSave }) {
