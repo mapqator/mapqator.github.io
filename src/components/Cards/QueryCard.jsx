@@ -95,9 +95,9 @@ export default function QueryCard({ entry, onEdit }) {
 								display: "flex",
 								justifyContent: "flex-start",
 								width: "70%",
-								flexGap: "1rem",
 								alignItems: "center",
 							}}
+							className="gap-2"
 						>
 							<Typography sx={{ width: "20%" }}>
 								#{entry.id}
