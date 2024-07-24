@@ -17,7 +17,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Clear, Save } from "@mui/icons-material";
 import { getUserName } from "@/api/base";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import { showError } from "@/app/page";
+import { showError } from "@/contexts/ToastProvider";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Annotation({ query }) {
