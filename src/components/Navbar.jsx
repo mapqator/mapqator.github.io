@@ -45,9 +45,9 @@ export default function Navbar({ selected, setSelected }) {
 			<Toolbar sx={{ justifyContent: "space-between" }}>
 				<Box
 					onClick={() => router.push("landing")}
-					className="cursor-pointer flex-row items-center flex w-1/6"
+					className="cursor-pointer flex-row items-center flex w-1/7 lg:w-1/6"
 				>
-					<div className="hidden md:flex">
+					<div className="hidden lg:flex">
 						<Image
 							src={`${baseUrl}/images/logo.png`}
 							alt="MapQuest Logo"
@@ -55,16 +55,16 @@ export default function Navbar({ selected, setSelected }) {
 							height={30}
 						/>
 					</div>
-					<div className="flex md:hidden">
+					<div className="flex lg:hidden">
 						<Image
 							src={`${baseUrl}/images/logo.png`}
 							alt="MapQuest Logo"
-							width={25}
-							height={25}
+							width={20}
+							height={20}
 						/>
 					</div>
 
-					<div className="hidden md:flex flex-col justify-center">
+					<div className="hidden lg:flex flex-col justify-center">
 						<Typography
 							variant="h6"
 							component="div"
@@ -107,17 +107,17 @@ export default function Navbar({ selected, setSelected }) {
 								borderRadius: 0,
 								paddingBottom: "6px",
 							}}
-							className="!text-[0.6rem] md:!text-base h-full px-1"
+							className="!text-[0.5rem] lg:!text-base h-full px-1"
 							// startIcon=
 						>
-							<div className="flex flex-col md:flex-row md:gap-2 items-center">
+							<div className="flex flex-col lg:flex-row lg:gap-2 items-center">
 								{item.icon}
 								{item.name}
 							</div>
 						</Button>
 					))}
 				</Box>
-				<Box className="w-1/6 hidden md:flex justify-end">
+				<Box className="w-1/6 hidden lg:flex justify-end">
 					{isAuthenticated ? (
 						<Button
 							variant="outlined"
@@ -139,11 +139,10 @@ export default function Navbar({ selected, setSelected }) {
 						</Button>
 					)}
 				</Box>
-				<Box className="w-1/6 flex md:hidden justify-end">
+				<Box className="w-1/7 flex lg:hidden justify-end">
 					{isAuthenticated ? (
 						<IconButton
-							// variant="outlined"
-							// endIcon={}
+							edge="end"
 							onClick={() => {
 								// router.push(config.logoutRedirect);
 								AuthService.logout();
@@ -153,8 +152,7 @@ export default function Navbar({ selected, setSelected }) {
 						</IconButton>
 					) : (
 						<IconButton
-							// variant="contained"
-							// endIcon={}
+							edge="end"
 							onClick={() => router.push(config.logoutRedirect)}
 						>
 							<Login />
