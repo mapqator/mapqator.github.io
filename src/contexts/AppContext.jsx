@@ -70,8 +70,7 @@ export default function AppContextProvider({ children }) {
 				"Green Akshay Plaza, 1st Floor, 146/G (Old), 59, New \u09b8\u09be\u09a4\u09ae\u09b8\u099c\u09bf\u09a6 \u09b8\u09a1\u09bc\u0995, \u09a2\u09be\u0995\u09be 1209, Bangladesh",
 		},
 	};
-	const [savedPlacesMap, setSavedPlacesMap] = useState(initSavedPlacesMap);
-	const [queries, setQueries] = useState([
+	const exampleQueries = [
 		{
 			id: 152,
 			question: "Dummy Question",
@@ -510,7 +509,9 @@ export default function AppContextProvider({ children }) {
 				username: "",
 			},
 		},
-	]);
+	];
+	const [savedPlacesMap, setSavedPlacesMap] = useState(initSavedPlacesMap);
+	const [queries, setQueries] = useState([]);
 
 	const fetchQueries = async () => {
 		// setLoading(true);
