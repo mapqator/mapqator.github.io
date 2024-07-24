@@ -10,6 +10,9 @@ class QueryApi extends Api {
 	createQuery = async (body) => {
 		return await this.post("/queries", body);
 	};
+	updateCategory = async (id, category) => {
+		return await this.put(`/queries/${id}/category`, { category });
+	};
 	updateQuery = async (id, body) => {
 		return await this.put(`/queries/${id}`, body);
 	};

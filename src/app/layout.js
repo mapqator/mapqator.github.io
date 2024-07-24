@@ -6,8 +6,6 @@ import AuthContextProvider from "@/contexts/AuthContext";
 import AppContextProvider from "@/contexts/AppContext";
 // const inter = Inter({ subsets: ["latin"] });
 
-
-
 export const metadata = {
 	metadataBase: new URL("https://mahirlabibdihan.github.io/mapquest"),
 	title: {
@@ -28,11 +26,11 @@ export default function RootLayout({ children }) {
 		<html lang="en">
 			<body /*={inter.className}*/>
 				<AppRouterCacheProvider>
-					<AppContextProvider>
-						<AuthContextProvider>
+					<AuthContextProvider>
+						<AppContextProvider>
 							<ToastProvider>{children}</ToastProvider>
-						</AuthContextProvider>
-					</AppContextProvider>
+						</AppContextProvider>
+					</AuthContextProvider>
 				</AppRouterCacheProvider>
 			</body>
 		</html>
