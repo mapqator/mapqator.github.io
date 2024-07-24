@@ -14,8 +14,11 @@ import DatasetIcon from "@mui/icons-material/Dataset";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import { useRouter } from "next/navigation";
 import config from "@/config/config";
+import { useContext } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 export default function HomePage() {
 	const router = useRouter();
+	const { isAuthenticated } = useAuth();
 	const features = [
 		{
 			icon: <MapIcon fontSize="large" />,
@@ -120,7 +123,13 @@ export default function HomePage() {
 								backgroundColor: "#3367D6",
 							},
 						}}
-						onClick={() => router.push(config.logoutRedirect)}
+						onClick={() =>
+							router.push(
+								isAuthenticated
+									? config.loginRedirect
+									: config.logoutRedirect
+							)
+						}
 					>
 						Get Started
 					</Button>
