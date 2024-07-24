@@ -33,6 +33,135 @@ import AutocompleteSearchBox from "@/components/InputFields/AutocompleteSearchBo
 import MapComponent from "@/components/GoogleMap/MapComponent";
 import PlaceInformation from "@/components/Grids/PlacesGrid";
 
+function ContextStep({
+	step,
+	index,
+	totalSteps,
+	activeStep,
+	setActiveStep,
+	handleNext,
+	handleBack,
+	loadExample,
+}) {
+	return (
+		<>
+			<StepLabel
+				icon={
+					<div
+						className={`cursor-pointer hover:text-blue-500 ${
+							index === activeStep && "text-blue-500"
+						}`}
+					>
+						{step.icon}
+					</div>
+				}
+				onClick={() => {
+					if (index !== activeStep) setActiveStep(index);
+				}}
+			>
+				<Typography
+					className={`cursor-pointer flex ${
+						index === activeStep && "!text-blue-500 !font-semibold"
+					}`}
+				>
+					{step.label}
+				</Typography>
+			</StepLabel>
+			<StepContent>
+				<div className="flex flex-col gap-2">
+					<Typography
+						sx={{
+							whiteSpace: "pre-line",
+						}}
+					>
+						{step.description}
+					</Typography>
+					{step.component
+						? step.component
+						: step.form && (
+								<>
+									<Divider />
+									<Box>
+										<CardContent>
+											<Box className="mx-auto w-full md:w-[30rem]">
+												{step.form}
+											</Box>
+										</CardContent>
+										{step.grid && (
+											<>
+												<Divider
+													sx={{
+														mt: 2,
+														mb: 1,
+														color: "#888",
+													}}
+												>
+													Already added
+												</Divider>
+												<CardContent>
+													{step.grid}
+												</CardContent>
+											</>
+										)}
+									</Box>
+									<Divider />
+								</>
+						  )}
+					{step.context !== undefined && (
+						<>
+							<Typography
+								sx={{
+									whiteSpace: "pre-line",
+								}}
+							>
+								Based on the information you add, a context will
+								be generated below.
+							</Typography>
+
+							<Paper
+								elevation={1}
+								sx={{ p: 2, bgcolor: "grey.100" }}
+							>
+								<ContextPreview context={step.context} />
+							</Paper>
+						</>
+					)}
+
+					<Box sx={{ mb: 2 }}>
+						<div>
+							<Button
+								variant="contained"
+								onClick={handleNext}
+								sx={{ mt: 1, mr: 1 }}
+							>
+								{index === totalSteps - 1
+									? "Finish"
+									: index === 0
+									? "Start"
+									: "Continue"}
+							</Button>
+							{index > 0 ? (
+								<Button
+									onClick={handleBack}
+									sx={{ mt: 1, mr: 1 }}
+								>
+									Back
+								</Button>
+							) : (
+								<Button
+									onClick={loadExample}
+									sx={{ mt: 1, mr: 1 }}
+								>
+									Start with Example
+								</Button>
+							)}
+						</div>
+					</Box>
+				</div>
+			</StepContent>
+		</>
+	);
+}
 export default function ContextStepper({
 	handleReset,
 	onFinish,
@@ -46,7 +175,6 @@ export default function ContextStepper({
 		poisMap,
 		distanceMatrix,
 		directionInformation,
-		currentInformation,
 		context,
 	} = useContext(GlobalContext);
 
@@ -170,123 +298,18 @@ export default function ContextStepper({
 			<Stepper activeStep={activeStep} orientation="vertical">
 				{steps.map((step, index) => (
 					<Step key={step.label}>
-						<StepLabel
-							icon={
-								<div
-									className={`cursor-pointer hover:text-blue-500 ${
-										index === activeStep && "text-blue-500"
-									}`}
-								>
-									{step.icon}
-								</div>
-							}
-							onClick={() => {
-								if (index !== activeStep) setActiveStep(index);
+						<ContextStep
+							totalSteps={steps.length}
+							{...{
+								step,
+								index,
+								activeStep,
+								setActiveStep,
+								handleNext,
+								handleBack,
+								loadExample,
 							}}
-						>
-							<Typography
-								className={`cursor-pointer flex ${
-									index === activeStep &&
-									"!text-blue-500 !font-semibold"
-								}`}
-							>
-								{step.label}
-							</Typography>
-						</StepLabel>
-						<StepContent>
-							<div className="flex flex-col gap-2">
-								<Typography
-									sx={{
-										whiteSpace: "pre-line",
-									}}
-								>
-									{steps[activeStep]?.description}
-								</Typography>
-								{step.component
-									? step.component
-									: step.form && (
-											<>
-												<Divider />
-												<Box>
-													<CardContent>
-														<Box className="mx-auto w-full md:w-[30rem]">
-															{step.form}
-														</Box>
-													</CardContent>
-													{step.grid && (
-														<>
-															<Divider
-																sx={{
-																	mt: 2,
-																	mb: 1,
-																	color: "#888",
-																}}
-															>
-																Already added
-															</Divider>
-															<CardContent>
-																{step.grid}
-															</CardContent>
-														</>
-													)}
-												</Box>
-												<Divider />
-											</>
-									  )}
-								{step.context !== undefined && (
-									<>
-										<Typography
-											sx={{
-												whiteSpace: "pre-line",
-											}}
-										>
-											Based on the information you add, a
-											context will be generated below.
-										</Typography>
-
-										<Paper
-											elevation={1}
-											sx={{ p: 2, bgcolor: "grey.100" }}
-										>
-											<ContextPreview
-												context={step.context}
-											/>
-										</Paper>
-									</>
-								)}
-
-								<Box sx={{ mb: 2 }}>
-									<div>
-										<Button
-											variant="contained"
-											onClick={handleNext}
-											sx={{ mt: 1, mr: 1 }}
-										>
-											{index === steps.length - 1
-												? "Finish"
-												: index === 0
-												? "Start"
-												: "Continue"}
-										</Button>
-										{index > 0 ? (
-											<Button
-												onClick={handleBack}
-												sx={{ mt: 1, mr: 1 }}
-											>
-												Back
-											</Button>
-										) : (
-											<Button
-												onClick={loadExample}
-												sx={{ mt: 1, mr: 1 }}
-											>
-												Start with Example
-											</Button>
-										)}
-									</div>
-								</Box>
-							</div>
-						</StepContent>
+						/>
 					</Step>
 				))}
 			</Stepper>
