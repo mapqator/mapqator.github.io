@@ -536,6 +536,7 @@ export default function AppContextProvider({ children }) {
 				res.data.forEach((e) => {
 					newSavedPlacesMap[e.place_id] = e;
 				});
+				console.log("Places: ", res.data);
 				setSavedPlacesMap(newSavedPlacesMap);
 				// setFetched(true);
 			}
@@ -547,7 +548,7 @@ export default function AppContextProvider({ children }) {
 
 	useEffect(() => {
 		if (process.env.NODE_ENV === "production") {
-			fetchPlaces();
+			// fetchPlaces();
 			fetchQueries();
 		}
 	}, []);

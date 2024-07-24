@@ -112,9 +112,9 @@ export default function ContextGenerator({
 		setCurrentInformation(exampleCurrentInformation);
 	};
 
-	// useEffect(() => {
-	// 	handleExample();
-	// }, []);
+	useEffect(() => {
+		handleExample();
+	}, []);
 
 	return (
 		<>
