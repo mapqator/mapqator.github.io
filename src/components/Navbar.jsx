@@ -89,7 +89,9 @@ export default function Navbar({ selected, setSelected }) {
 					{navItems.map((item) => (
 						<Button
 							key={item.key}
-							onClick={() => setSelected(item.key)}
+							onClick={() => {
+								setSelected(item.key);
+							}}
 							sx={{
 								height: `${config.topbarHeight}px`,
 								color:
@@ -108,6 +110,7 @@ export default function Navbar({ selected, setSelected }) {
 								paddingBottom: "6px",
 							}}
 							className="!text-[0.5rem] lg:!text-base h-full px-1"
+							href={"#" + item.key}
 							// startIcon=
 						>
 							<div className="flex flex-col lg:flex-row lg:gap-2 items-center">
