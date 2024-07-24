@@ -25,6 +25,7 @@ import {
 	convertTravelModeToLabel,
 } from "@/services/utils";
 import RoutesList from "../Lists/RoutesList";
+import RouteSummary from "../Box/RouteSummary";
 
 function DirectionCardDetails({ from_id, to_id }) {
 	const [expandedRoute, setExpandedRoute] = useState({
@@ -181,15 +182,7 @@ function DirectionCardSummary({ from_id, to_id, expanded }) {
 				justifyContent="space-between"
 				alignItems="center"
 			>
-				<Box className="flex flex-col">
-					<Typography variant="h6" component="div" align="center">
-						{savedPlacesMap[from_id].name}
-					</Typography>
-					<FontAwesomeIcon icon={faArrowDown} />
-					<Typography variant="h6" component="div" align="center">
-						{savedPlacesMap[to_id].name}
-					</Typography>
-				</Box>
+				<RouteSummary {...{ from_id, to_id }} />
 				<Box>
 					<IconButton
 						size="small"
