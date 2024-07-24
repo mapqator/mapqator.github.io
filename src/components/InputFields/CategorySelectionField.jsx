@@ -24,35 +24,17 @@ export default function CategorySelectionField() {
 			<InputLabel>Category</InputLabel>
 			<Select
 				required
-				multiple
 				label={"Category"}
 				placeholder="Choose a category of the question"
 				id="outlined-adornment"
 				className="outlined-input"
-				value={query.classification.split(",").filter(Boolean)}
+				value={query.classification}
 				onChange={(e) => {
 					setQuery((prev) => ({
 						...prev,
-						classification: e.target.value.join(","),
+						classification: e.target.value,
 					}));
 				}}
-				renderValue={(selected) => (
-					<Box
-						sx={{
-							display: "flex",
-							flexWrap: "wrap",
-							gap: 0.5,
-						}}
-					>
-						{selected.map((value) => (
-							<Chip
-								key={value}
-								label={convertFromSnake(value)}
-								size="small"
-							/>
-						))}
-					</Box>
-				)}
 			>
 				{categories.map((value, index) => (
 					<MenuItem key={index} value={value}>

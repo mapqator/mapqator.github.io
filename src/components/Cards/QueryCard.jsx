@@ -186,38 +186,14 @@ export default function QueryCard({ entry, onEdit }) {
 										<InputLabel>Category</InputLabel>
 										<Select
 											required
-											multiple
 											label={"Category"}
 											placeholder="Choose a category of the question"
 											id="outlined-adornment"
 											className="outlined-input"
-											value={category
-												.split(",")
-												.filter(Boolean)}
+											value={category}
 											onChange={(e) => {
-												setCategory(
-													e.target.value.join(",")
-												);
+												setCategory(e.target.value);
 											}}
-											renderValue={(selected) => (
-												<Box
-													sx={{
-														display: "flex",
-														flexWrap: "wrap",
-														gap: 0.5,
-													}}
-												>
-													{selected.map((value) => (
-														<Chip
-															key={value}
-															label={convertFromSnake(
-																value
-															)}
-															size="small"
-														/>
-													))}
-												</Box>
-											)}
 										>
 											{categories.map((value, index) => (
 												<MenuItem
