@@ -5,9 +5,9 @@ import EvaluationSummary from "@/components/Tables/EvaluationSummary";
 export default function EvaluationResultsPage() {
 	return (
 		<>
-			<Typography variant="h4" gutterBottom component="h1">
+			<h1 className="text-3xl md:text-4xl font-normal pb-5">
 				LLM Evaluation Results
-			</Typography>
+			</h1>
 			<DatasetSummary />
 			<EvaluationSummary />
 		</>

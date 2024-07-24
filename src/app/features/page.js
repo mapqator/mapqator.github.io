@@ -53,11 +53,14 @@ export default function HomePage() {
 		>
 			<Container maxWidth="lg">
 				<Typography
-					variant="h3"
-					component="h2"
 					gutterBottom
 					align="center"
-					sx={{ mb: 1, fontWeight: "bold", color: "#333" }}
+					sx={{
+						fontSize: { xs: "2.4rem", md: "3.5rem" },
+						mb: 1,
+						fontWeight: "bold",
+						color: "#333",
+					}}
 				>
 					MapQuest for NLP Researchers
 				</Typography>

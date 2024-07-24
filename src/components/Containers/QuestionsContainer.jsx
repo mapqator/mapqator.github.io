@@ -57,14 +57,9 @@ export default function QuestionsContainer({ title, isPersonal, onEdit }) {
 	return (
 		<>
 			<div className="flex flex-col md:flex-row justify-between items-center">
-				<Typography
-					variant="h4"
-					gutterBottom
-					component="h1"
-					sx={{ mr: "auto" }}
-				>
+				<h1 className="text-3xl md:text-4xl font-normal pb-5 mr-auto">
 					{title}
-				</Typography>
+				</h1>
 				<Box sx={{ mb: 3, ml: "auto" }}>
 					<FormControl sx={{ minWidth: 200 }} size="small">
 						<InputLabel id="category-select-label">

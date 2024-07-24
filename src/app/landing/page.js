@@ -20,7 +20,7 @@ export default function PageComponent() {
 	console.log("url", `${process.env.REACT_APP_BASE_URL}/images/logo.png`);
 	return (
 		<Box
-			className="bg-gradient-to-r from-blue-100 to-green-100 w-full min-h-screen flex flex-col items-center justify-center"
+			className="bg-gradient-to-r from-blue-100 to-green-100 w-full min-h-screen flex flex-col items-center justify-center p-1"
 			sx={{ overflow: "hidden" }}
 		>
 			<Fade in={showContent} timeout={1000}>
@@ -98,7 +98,7 @@ export default function PageComponent() {
 						<Typography
 							sx={{
 								fontSize: {
-									xs: "2.3rem",
+									xs: "2rem",
 									md: "3rem",
 								},
 								fontWeight: "600",
@@ -112,6 +112,10 @@ export default function PageComponent() {
 						<Typography
 							variant="h6"
 							sx={{
+								fontSize: {
+									xs: "1.2rem",
+									md: "1.5rem",
+								},
 								color: "#666",
 								mb: 6,
 								fontWeight: "300",

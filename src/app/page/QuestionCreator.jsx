@@ -116,9 +116,9 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 
 	return (
 		<>
-			<Typography variant="h4" gutterBottom component="h1">
+			<h1 className="text-3xl md:text-4xl font-normal pb-5">
 				Create MCQ Question based on Context
-			</Typography>
+			</h1>
 			<Paper elevation={2} sx={{ p: 3, mb: 4 }}>
 				<Box
 					sx={{

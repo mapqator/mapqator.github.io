@@ -118,9 +118,9 @@ export default function ContextGenerator({
 
 	return (
 		<>
-			<Typography variant="h4" gutterBottom component="h1">
+			<h1 className="text-3xl md:text-4xl font-normal pb-5">
 				Create a Context Using Google Maps APIs
-			</Typography>
+			</h1>
 			<ContextStepper
 				{...{
 					handleReset,
