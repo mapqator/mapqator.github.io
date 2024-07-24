@@ -5,7 +5,7 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 import queryApi from "@/api/queryApi";
 import { getUserName } from "@/api/base";
 import QuestionForm from "@/components/Forms/QuestionForm";
-import { showError, showSuccess } from "@/app/page";
+import { showError, showSuccess } from "@/contexts/ToastProvider";
 import CollapsedContext from "@/components/Cards/CollapsedContext";
 import QuestionsContainer from "@/components/Containers/QuestionsContainer";
 import ContextGeneratorService from "@/services/contextGeneratorService";

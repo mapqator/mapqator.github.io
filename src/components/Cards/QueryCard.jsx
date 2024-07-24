@@ -22,7 +22,7 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 import queryApi from "@/api/queryApi";
 import { Delete } from "@mui/icons-material";
 import { useAuth } from "@/contexts/AuthContext";
-import { showError, showSuccess } from "@/app/page";
+import { showError, showSuccess } from "@/contexts/ToastProvider";
 
 export default function QueryCard({ entry, onEdit }) {
 	const [flag, setFlag] = useState(false);

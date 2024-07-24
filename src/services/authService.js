@@ -3,7 +3,7 @@ import {
 	addTokenToLocalStorage,
 	removeTokenFromLocalStorage,
 } from "@/api/base";
-import { showError, showMessage, showSuccess } from "@/app/page";
+import { showError, showMessage, showSuccess } from "@/contexts/ToastProvider";
 
 const AuthService = {
 	login: async (data) => {
