@@ -7,11 +7,12 @@ import QuestionCreationPage from "./QuestionCreator";
 import DatasetPage from "./Dataset";
 import EvaluationResultsPage from "./Evaluation";
 import Navbar from "@/components/Navbar";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
 	const [activeStep, setActiveStep] = useState(null);
 	const [selected, setSelected] = useState("context");
-
+	const router = useRouter();
 	useEffect(() => {
 		const page = window.location.hash.substring(1);
 		setSelected(page === "" || page === "onboard" ? "context" : page);
@@ -37,6 +38,7 @@ export default function Home() {
 				<ContextGenerator
 					onFinish={() => {
 						setSelected("question");
+						router.push("/#question");
 						window.scrollTo(0, 0);
 					}}
 					{...{ activeStep, setActiveStep }}
@@ -45,6 +47,7 @@ export default function Home() {
 				<QuestionCreationPage
 					handleContextEdit={() => {
 						setSelected("context");
+						router.push("/#context");
 						window.scrollTo(0, 0);
 					}}
 				/>
@@ -52,6 +55,7 @@ export default function Home() {
 				<DatasetPage
 					onEdit={() => {
 						setSelected("question");
+						router.push("/#question");
 						window.scrollTo(0, 0);
 					}}
 				/>
