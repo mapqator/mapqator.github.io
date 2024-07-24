@@ -99,7 +99,7 @@ export default function QueryCard({ entry, onEdit }) {
 							}}
 							className="gap-2"
 						>
-							<Typography sx={{ width: "20%" }}>
+							<Typography sx={{ width: "3rem" }}>
 								#{entry.id}
 							</Typography>
 
