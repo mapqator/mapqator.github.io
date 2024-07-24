@@ -6,7 +6,6 @@ import { useContext, useEffect, useState } from "react";
 export default function MapComponent() {
 	const { selectedPlacesMap } = useContext(GlobalContext);
 	const { savedPlacesMap } = useContext(AppContext);
-
 	const [locations, setLocations] = useState([]);
 
 	useEffect(() => {
@@ -36,7 +35,8 @@ export default function MapComponent() {
 	};
 	return (
 		<LoadScript
-			googleMapsApiKey={"AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs"}
+			// googleMapsApiKey={"AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs"} // old api key
+			googleMapsApiKey={"AIzaSyDUaku8pBeUW6ZpujduxBiKpsdCZmgrzv0"} // new api key
 		>
 			<GoogleMap
 				mapContainerStyle={mapStyles}
@@ -44,10 +44,7 @@ export default function MapComponent() {
 				center={defaultCenter}
 			>
 				{locations.map((location, index) => (
-					<Marker
-						key={index}
-						position={{ lat: location[0], lng: location[1] }}
-					/>
+					<Marker key={index} position={location} />
 				))}
 			</GoogleMap>
 		</LoadScript>
