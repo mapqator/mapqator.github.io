@@ -18,17 +18,65 @@ import {
 	Typography,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faArrowDown,
-	faBicycle,
-	faBus,
-	faCar,
-	faWalking,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { Delete, ExpandMore } from "@mui/icons-material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { AppContext } from "@/contexts/AppContext";
+import {
+	convertTravelModeToIcon,
+	convertTravelModeToLabel,
+} from "@/services/utils";
 
+function RoutesList({ routes, showSteps }) {
+	return (
+		<List dense>
+			{routes.map((route, index) => (
+				<React.Fragment key={index}>
+					<Divider />
+					<ListItem>
+						<div className="flex flex-col gap-2 w-full">
+							<ListItemText
+								primary={
+									<div className="flex flex-row justify-between w-full">
+										<h1 className="w-[60%] text-wrap">
+											{"Via " + route.label}
+										</h1>
+										<h1 className="w-[40%] text-right">
+											{route.duration +
+												" | " +
+												route.distance}
+										</h1>
+									</div>
+								}
+								secondary={
+									showSteps && (
+										<div className="flex flex-col gap-0">
+											{route.steps.map((step, index1) => (
+												<p
+													key={index1}
+													// className="text-sm"
+													dangerouslySetInnerHTML={{
+														__html: "- " + step,
+													}}
+												/>
+											))}
+										</div>
+									)
+								}
+								primaryTypographyProps={{
+									noWrap: true,
+								}}
+								secondaryTypographyProps={{
+									noWrap: true,
+								}}
+							/>
+						</div>
+					</ListItem>
+				</React.Fragment>
+			))}
+		</List>
+	);
+}
 function DirectionCardDetails({ from_id, to_id }) {
 	const [expandedRoute, setExpandedRoute] = useState({
 		walking: false,
@@ -74,28 +122,12 @@ function DirectionCardDetails({ from_id, to_id }) {
 							}
 						>
 							<ListItemIcon>
-								{mode === "walking" ? (
-									<FontAwesomeIcon icon={faWalking} />
-								) : mode === "driving" ? (
-									<FontAwesomeIcon icon={faCar} />
-								) : mode === "bicycling" ? (
-									<FontAwesomeIcon icon={faBicycle} />
-								) : (
-									<FontAwesomeIcon icon={faBus} />
-								)}
+								{convertTravelModeToIcon(mode)}
 							</ListItemIcon>
 							<div className="flex flex-row gap-2 items-center w-full">
 								<div className="w-1/2">
 									<ListItemText
-										primary={
-											mode === "walking"
-												? "Walking"
-												: mode === "driving"
-												? "Driving"
-												: mode === "bicycling"
-												? "Bicycling"
-												: "Public transport"
-										}
+										primary={convertTravelModeToLabel(mode)}
 										secondary={
 											directionInformation[from_id][
 												to_id
@@ -165,67 +197,18 @@ function DirectionCardDetails({ from_id, to_id }) {
 										size="small"
 									/>
 								</Box>
-								<List dense>
-									{directionInformation[from_id][to_id][
-										mode
-									].routes.map((route, index) => (
-										<React.Fragment key={index}>
-											<Divider />
-											<ListItem>
-												<div className="flex flex-col gap-2 w-full">
-													<ListItemText
-														primary={
-															<div className="flex flex-row justify-between w-full">
-																<h1 className="w-[60%] text-wrap">
-																	{"Via " +
-																		route.label}
-																</h1>
-																<h1 className="w-[40%] text-right">
-																	{route.duration +
-																		" | " +
-																		route.distance}
-																</h1>
-															</div>
-														}
-														secondary={
-															directionInformation[
-																from_id
-															][to_id][mode]
-																.showSteps && (
-																<div className="flex flex-col gap-0">
-																	{route.steps.map(
-																		(
-																			step,
-																			index1
-																		) => (
-																			<p
-																				key={
-																					index1
-																				}
-																				// className="text-sm"
-																				dangerouslySetInnerHTML={{
-																					__html:
-																						"- " +
-																						step,
-																				}}
-																			/>
-																		)
-																	)}
-																</div>
-															)
-														}
-														primaryTypographyProps={{
-															noWrap: true,
-														}}
-														secondaryTypographyProps={{
-															noWrap: true,
-														}}
-													/>
-												</div>
-											</ListItem>
-										</React.Fragment>
-									))}
-								</List>
+								<RoutesList
+									routes={
+										directionInformation[from_id][to_id][
+											mode
+										].routes
+									}
+									showSteps={
+										directionInformation[from_id][to_id][
+											mode
+										].showSteps
+									}
+								/>
 							</Paper>
 						</Collapse>
 						{index3 <

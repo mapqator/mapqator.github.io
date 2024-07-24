@@ -16,16 +16,14 @@ import {
 	ListItemIcon,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faArrowDown,
-	faBicycle,
-	faBus,
-	faCar,
-	faWalking,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import { Delete, ExpandMore, ForkRight, JoinRight } from "@mui/icons-material";
+import { Delete, ExpandMore } from "@mui/icons-material";
 import { AppContext } from "@/contexts/AppContext";
+import {
+	convertTravelModeToIcon,
+	convertTravelModeToLabel,
+} from "@/services/utils";
 
 function DistanceCardDetails({ from_id, to_id }) {
 	const { distanceMatrix, setDistanceMatrix } = useContext(GlobalContext);
@@ -57,26 +55,10 @@ function DistanceCardDetails({ from_id, to_id }) {
 						}
 					>
 						<ListItemIcon>
-							{mode === "walking" ? (
-								<FontAwesomeIcon icon={faWalking} />
-							) : mode === "driving" ? (
-								<FontAwesomeIcon icon={faCar} />
-							) : mode === "bicycling" ? (
-								<FontAwesomeIcon icon={faBicycle} />
-							) : (
-								<FontAwesomeIcon icon={faBus} />
-							)}
+							{convertTravelModeToIcon(mode)}
 						</ListItemIcon>
 						<ListItemText
-							primary={
-								mode === "walking"
-									? "Walking"
-									: mode === "driving"
-									? "Driving"
-									: mode === "bicycling"
-									? "Bicycling"
-									: "Public transport"
-							}
+							primary={convertTravelModeToLabel(mode)}
 							secondary={
 								distanceMatrix[from_id][to_id][mode].duration +
 								" | " +
@@ -121,9 +103,6 @@ function DistanceCardSummary({ from_id, to_id, expanded }) {
 					</Typography>
 				</Box>
 				<Box>
-					{/* <IconButton onClick={handleFullDelete} size="small">
-							<Delete color="error" />
-						</IconButton> */}
 					<IconButton
 						size="small"
 						sx={{
