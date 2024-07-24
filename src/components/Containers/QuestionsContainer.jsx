@@ -94,7 +94,7 @@ export default function QuestionsContainer({ title, isPersonal, onEdit }) {
 					<QueryCard key={entry.id} entry={entry} onEdit={onEdit} />
 				))}
 			</div>
-			<div className="flex justify-center bottom-0 left-0 right-0 pb-4">
+			<div className="flex justify-center bottom-0 left-0 right-0 pt-4">
 				<Pagination
 					size="medium"
 					count={pageCount}
