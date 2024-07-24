@@ -13,7 +13,7 @@ import { getUserName } from "@/api/base";
 import categories from "@/database/categories.json";
 import QueryCard from "@/components/Cards/QueryCard";
 import { AppContext } from "@/contexts/AppContext";
-const itemsPerPage = 5;
+const itemsPerPage = 10;
 export default function QuestionsContainer({ title, isPersonal, onEdit }) {
 	const { queries } = useContext(AppContext);
 	const [selectedCategory, setSelectedCategory] = useState("All");
@@ -89,6 +89,11 @@ export default function QuestionsContainer({ title, isPersonal, onEdit }) {
 				</Box>
 			</div>
 
+			<div className="flex flex-col gap-5">
+				{data.map((entry) => (
+					<QueryCard key={entry.id} entry={entry} onEdit={onEdit} />
+				))}
+			</div>
 			<div className="flex justify-center bottom-0 left-0 right-0 pb-4">
 				<Pagination
 					size="medium"
@@ -98,12 +103,6 @@ export default function QuestionsContainer({ title, isPersonal, onEdit }) {
 					siblingCount={1}
 					page={page}
 				/>
-			</div>
-
-			<div className="flex flex-col gap-5">
-				{data.map((entry) => (
-					<QueryCard key={entry.id} entry={entry} onEdit={onEdit} />
-				))}
 			</div>
 		</>
 	);
