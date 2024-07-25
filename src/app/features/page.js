@@ -129,7 +129,7 @@ export default function HomePage() {
 						onClick={() =>
 							router.push(
 								isAuthenticated
-									? config.loginRedirect
+									? config.loginRedirect + "#onboard"
 									: config.logoutRedirect
 							)
 						}
