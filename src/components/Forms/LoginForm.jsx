@@ -23,7 +23,7 @@ export default function LoginForm() {
 			});
 			if (res.success) {
 				// router.refresh();
-				window.location.reload();
+				// window.location.reload();
 			} else {
 				// setLoading(false);
 				setLoggingIn(false);

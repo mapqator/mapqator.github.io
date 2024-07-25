@@ -10,6 +10,7 @@ export default function GoogleMapWrapper({ children }) {
 		setGoogleMapsApiKey(getGoogleMapsApiKey());
 	}, [isAuthenticated]);
 
+	return <>{children}</>;
 	return googleMapsApiKey ? (
 		<LoadScript googleMapsApiKey={googleMapsApiKey}>{children}</LoadScript>
 	) : googleMapsApiKey !== undefined ? (

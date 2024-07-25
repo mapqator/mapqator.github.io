@@ -128,7 +128,7 @@ export default function Navbar({ selected, setSelected }) {
 							onClick={() => {
 								// router.push(config.logoutRedirect);
 								AuthService.logout();
-								window.location.reload();
+								// window.location.reload();
 							}}
 						>
 							Logout

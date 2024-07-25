@@ -27,7 +27,6 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 	} = useContext(GlobalContext);
 
 	const { queries, setQueries } = useContext(AppContext);
-
 	const { isAuthenticated } = useAuth();
 
 	const handleReset = () => {
@@ -40,7 +39,6 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-
 		const newQuery = {
 			...query,
 			context: ContextGeneratorService.convertContextToText(context),
@@ -59,6 +57,7 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 				if (res.success) {
 					// update the queries
 					showSuccess("Query saved successfully");
+					console.log("Saved query: ", res.data[0]);
 					const newQueries = [...queries];
 					newQueries.unshift(res.data[0]);
 					setQueries(newQueries);
