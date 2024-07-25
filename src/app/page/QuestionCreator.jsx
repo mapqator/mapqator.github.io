@@ -189,13 +189,13 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 				0 && (
 				<>
 					<Divider sx={{ my: 4 }} />
-					{/* <div id="questions">
+					<div id="questions">
 						<QuestionsContainer
 							title="My Questions"
 							isPersonal={true}
 							onEdit={() => window.scrollTo(0, 0)}
 						/>
-					</div> */}
+					</div>
 				</>
 			)}
 		</>
