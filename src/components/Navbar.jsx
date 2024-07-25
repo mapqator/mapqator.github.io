@@ -85,7 +85,7 @@ export default function Navbar({ selected, setSelected }) {
 					</div>
 				</Box>
 
-				<Box>
+				<Box className="flex flex-row lg:gap-2">
 					{navItems.map((item) => (
 						<Button
 							key={item.key}
