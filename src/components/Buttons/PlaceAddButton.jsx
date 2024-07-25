@@ -3,16 +3,18 @@ import { AppContext } from "@/contexts/AppContext";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { showError } from "@/contexts/ToastProvider";
 import { Add } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 import { Button } from "@mui/material";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 export default function PlaceAddButton({ place_id }) {
 	const { selectedPlacesMap, setSelectedPlacesMap } =
 		useContext(GlobalContext);
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
-
+	const [loading, setLoading] = useState(false);
 	const handleAddSave = async (place_id) => {
 		// let details = undefined;
+		setLoading(true);
 		let details = savedPlacesMap[place_id];
 		if (details === undefined) {
 			const res = await mapApi.getDetails(place_id);
@@ -29,6 +31,7 @@ export default function PlaceAddButton({ place_id }) {
 			}
 		}
 		handleAdd(details);
+		setLoading(false);
 	};
 
 	const handleAdd = (details) => {
@@ -58,12 +61,13 @@ export default function PlaceAddButton({ place_id }) {
 	};
 
 	return (
-		<Button
+		<LoadingButton
 			startIcon={<Add />}
 			onClick={() => handleAddSave(place_id)}
 			disabled={selectedPlacesMap[place_id]}
+			loading={loading}
 		>
 			Add
-		</Button>
+		</LoadingButton>
 	);
 }
