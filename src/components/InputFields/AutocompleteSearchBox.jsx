@@ -133,7 +133,7 @@ export default function AutocompleteSearchBox() {
 	};
 
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="flex flex-col gap-4 mx-auto w-full md:w-[30rem]">
 			<TextField
 				autoComplete="off"
 				fullWidth
@@ -182,8 +182,8 @@ export default function AutocompleteSearchBox() {
 				</div>
 			)} */}
 
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<div
+			<div className="grid grid-cols-1 gap-4">
+				{/* <div
 					className={`border rounded-lg overflow-hidden ${
 						search ? "" : "hidden"
 					}`}
@@ -207,7 +207,7 @@ export default function AutocompleteSearchBox() {
 							</p>
 						</div>
 					)}
-				</div>
+				</div> */}
 
 				<div
 					className={`border rounded-lg overflow-hidden ${
@@ -218,11 +218,11 @@ export default function AutocompleteSearchBox() {
 							: "hidden"
 					}`}
 				>
-					<h3 className="bg-gray-200 p-2 font-bold">
+					{/* <h3 className="bg-gray-200 p-2 font-bold">
 						Places found in Google Map
-					</h3>
+					</h3> */}
 					{mapResults.length > 0 ? (
-						<ul className="max-h-60 overflow-y-auto">
+						<ul className="max-h-72 overflow-y-auto">
 							{mapResults.map((place, index) => (
 								<SearchPlaceCard
 									place={place}
@@ -237,9 +237,7 @@ export default function AutocompleteSearchBox() {
 							<p className="text-lg md:text-xl text-gray-400">
 								{notFound
 									? "No places found"
-									: isAuthenticated
-									? "Press enter to search in google"
-									: "Please log in to search in google"}
+									: "Press enter to search"}
 							</p>
 						</div>
 					)}
