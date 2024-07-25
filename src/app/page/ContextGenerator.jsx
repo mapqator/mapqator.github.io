@@ -4,7 +4,9 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 import ContextGeneratorService from "@/services/contextGeneratorService";
 import ContextStepper from "@/components/Steppers/ContextStepper";
 import { AppContext } from "@/contexts/AppContext";
-
+import example from "./example.json";
+import mapApi from "@/api/mapApi";
+import dayjs from "dayjs";
 export default function ContextGenerator({
 	onFinish,
 	activeStep,
@@ -26,7 +28,7 @@ export default function ContextGenerator({
 		setCurrentInformation,
 	} = useContext(GlobalContext);
 
-	const { savedPlacesMap } = useContext(AppContext);
+	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 
 	const {
 		exampleSelectedPlacesMap,
@@ -103,13 +105,89 @@ export default function ContextGenerator({
 	// 	setCurrentInformation(exampleCurrentInformation);
 	// };
 
-	const handleExample = () => {
+	const handleSave = async (place_id) => {
+		if (savedPlacesMap[place_id]) return;
+		const res = await mapApi.getDetails(place_id);
+		if (res.success) {
+			const details = res.data.result;
+			setSavedPlacesMap((prev) => ({
+				...prev,
+				[place_id]: details,
+			}));
+		} else {
+			console.error("Error fetching data: ", res.error);
+			return;
+		}
+	};
+
+	const handleExample = async () => {
 		// setSelectedPlacesMap(exampleSelectedPlacesMap);
 		// setNearbyPlacesMap(exampleNearbyPlacesMap);
 		// setPoisMap(examplePoisMap);
 		// setDistanceMatrix(exampleDistanceMatrix);
 		// setDirectionInformation(exampleDirectionInformation);
 		// setCurrentInformation(exampleCurrentInformation);
+		for (let place_id in example.places) {
+			await handleSave(place_id);
+		}
+		setSelectedPlacesMap(example.places ?? {});
+		setDistanceMatrix(example.distance_matrix ?? {});
+		setDirectionInformation(example.directions ?? {});
+		setNearbyPlacesMap(example.nearby_places ?? {});
+		setCurrentInformation(
+			example.current_information
+				? {
+						time: example.current_information.time
+							? dayjs(example.current_information.time)
+							: null,
+						day: example.current_information.day,
+						location: example.current_information.location,
+				  }
+				: {
+						time: null,
+						day: "",
+						location: "",
+				  }
+		);
+		setPoisMap(example.pois ?? {});
+		setContext({
+			places: ContextGeneratorService.getPlacesContext(
+				example.places ?? {},
+				savedPlacesMap
+			),
+			nearby: ContextGeneratorService.getNearbyContext(
+				example.nearby_places ?? {},
+				savedPlacesMap
+			),
+			area: ContextGeneratorService.getAreaContext(
+				example.pois ?? {},
+				savedPlacesMap
+			),
+			distance: ContextGeneratorService.getDistanceContext(
+				example.distance_matrix ?? {},
+				savedPlacesMap
+			),
+			direction: ContextGeneratorService.getDirectionContext(
+				example.directions ?? {},
+				savedPlacesMap
+			),
+			params: ContextGeneratorService.getParamsContext(
+				example.current_information
+					? {
+							time: example.current_information.time
+								? dayjs(example.current_information.time)
+								: null,
+							day: example.current_information.day,
+							location: example.current_information.location,
+					  }
+					: {
+							time: null,
+							day: "",
+							location: "",
+					  },
+				savedPlacesMap
+			),
+		});
 	};
 
 	// useEffect(() => {

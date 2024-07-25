@@ -57,7 +57,7 @@ export default function DirectionForm() {
 					...newDirectionInfo[newDirection.from][newDirection.to],
 					[newDirection.travelMode]: {
 						routes: all_routes,
-						showSteps: false,
+						showSteps: true,
 					},
 				};
 			else {
@@ -65,7 +65,7 @@ export default function DirectionForm() {
 					[newDirection.to]: {
 						[newDirection.travelMode]: {
 							routes: all_routes,
-							showSteps: false,
+							showSteps: true,
 						},
 					},
 				};

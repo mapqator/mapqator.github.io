@@ -8,11 +8,16 @@ import DatasetPage from "./Dataset";
 import EvaluationResultsPage from "./Evaluation";
 import Navbar from "@/components/Navbar";
 import { useRouter } from "next/navigation";
+import { getGoogleMapsApiKey } from "@/api/base";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Home() {
 	const [activeStep, setActiveStep] = useState(null);
 	const [selected, setSelected] = useState("context");
+	const [googleMapsApiKey, setGoogleMapsApiKey] = useState(null);
 	const router = useRouter();
+	const { isAuthenticated } = useAuth();
 	useEffect(() => {
 		const page = window.location.hash.substring(1);
 		setSelected(page === "" || page === "onboard" ? "context" : page);
@@ -25,6 +30,10 @@ export default function Home() {
 			);
 		}
 	}, [selected]);
+
+	useEffect(() => {
+		setGoogleMapsApiKey(getGoogleMapsApiKey());
+	}, [isAuthenticated]);
 
 	return (
 		<Container

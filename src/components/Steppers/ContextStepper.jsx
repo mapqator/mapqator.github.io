@@ -186,8 +186,8 @@ export default function ContextStepper({
 		setActiveStep((prevActiveStep) => prevActiveStep - 1);
 	};
 
-	const loadExample = () => {
-		handleExample();
+	const loadExample = async () => {
+		await handleExample();
 		handleNext();
 	};
 	const steps = [

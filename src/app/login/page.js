@@ -24,7 +24,7 @@ const Login = () => {
 	const [open, setOpen] = useState(false);
 	useEffect(() => {
 		if (isAuthenticated) {
-			router.push(config.loginRedirect);
+			router.replace(config.loginRedirect + "#onboard");
 		}
 	}, [isAuthenticated]);
 

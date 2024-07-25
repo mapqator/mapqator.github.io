@@ -61,9 +61,7 @@ export default function QueryEditButton({ onEdit, query }) {
 						location: "",
 				  }
 		);
-		setPoisMap(
-			query.context_json.pois?.length > 0 ? query.context_json.pois : {}
-		);
+		setPoisMap(query.context_json.pois ?? {});
 		setContext({
 			places: ContextGeneratorService.getPlacesContext(
 				query.context_json.places ?? {},

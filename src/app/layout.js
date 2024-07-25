@@ -4,6 +4,7 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import ToastProvider from "../contexts/ToastProvider";
 import AuthContextProvider from "@/contexts/AuthContext";
 import AppContextProvider from "@/contexts/AppContext";
+import GoogleMapWrapper from "@/contexts/GoogleMapScript";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -28,7 +29,9 @@ export default function RootLayout({ children }) {
 				<AppRouterCacheProvider>
 					<AuthContextProvider>
 						<AppContextProvider>
-							<ToastProvider>{children}</ToastProvider>
+							<ToastProvider>
+								<GoogleMapWrapper>{children}</GoogleMapWrapper>
+							</ToastProvider>
 						</AppContextProvider>
 					</AuthContextProvider>
 				</AppRouterCacheProvider>

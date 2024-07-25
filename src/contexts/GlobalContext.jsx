@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import dayjs from "dayjs";
 export const GlobalContext = createContext();
+
 export default function GlobalContextProvider({ children }) {
 	const exampleDistanceMatrix = {
 		1: {

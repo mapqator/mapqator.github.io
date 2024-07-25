@@ -1,5 +1,6 @@
 import { getGoogleMapsApiKey } from "@/api/base";
 import { AppContext } from "@/contexts/AppContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useContext, useEffect, useState } from "react";
@@ -8,8 +9,6 @@ export default function MapComponent() {
 	const { selectedPlacesMap } = useContext(GlobalContext);
 	const { savedPlacesMap } = useContext(AppContext);
 	const [locations, setLocations] = useState([]);
-	const [googleMapsApiKey, setGoogleMapsApiKey] = useState(null);
-
 	useEffect(() => {
 		const list = [];
 		Object.keys(selectedPlacesMap).map((place_id) => {
@@ -28,32 +27,20 @@ export default function MapComponent() {
 		setLocations(list);
 	}, [selectedPlacesMap]);
 
-	useEffect(() => {
-		setGoogleMapsApiKey(getGoogleMapsApiKey());
-	}, []);
 	const mapStyles = {
 		height: "400px",
 		width: "100%",
 	};
 
 	return (
-		googleMapsApiKey && (
-			<LoadScript
-				// googleMapsApiKey={"AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs"} // old api key
-				// googleMapsApiKey={"AIzaSyDUaku8pBeUW6ZpujduxBiKpsdCZmgrzv0"} // new api key
-				// googleMapsApiKey="AIzaSyCNtIajO-Xwpocu9ARrah2khQF-tG8vWok" // my api key //
-				googleMapsApiKey={googleMapsApiKey} // generic
-			>
-				<GoogleMap
-					mapContainerStyle={mapStyles}
-					zoom={12}
-					center={locations[locations.length - 1]}
-				>
-					{locations.map((location, index) => (
-						<Marker key={index} position={location} />
-					))}
-				</GoogleMap>
-			</LoadScript>
-		)
+		<GoogleMap
+			mapContainerStyle={mapStyles}
+			zoom={12}
+			center={locations[locations.length - 1]}
+		>
+			{locations.map((location, index) => (
+				<Marker key={index} position={location} />
+			))}
+		</GoogleMap>
 	);
 }

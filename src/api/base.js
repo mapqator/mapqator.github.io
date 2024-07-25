@@ -48,7 +48,7 @@ export const getUserName = () => {
 
 export const getGoogleMapsApiKey = () => {
 	const token = getTokenFromLocalStorage();
-	if (!token) return undefined;
+	if (!token) return null;
 	return jwtDecode(token).google_maps_api_key;
 };
 

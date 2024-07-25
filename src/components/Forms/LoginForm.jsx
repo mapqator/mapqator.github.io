@@ -22,7 +22,8 @@ export default function LoginForm() {
 				password: password,
 			});
 			if (res.success) {
-				router.push(config.loginRedirect);
+				// router.refresh();
+				window.location.reload();
 			} else {
 				// setLoading(false);
 				setLoggingIn(false);
