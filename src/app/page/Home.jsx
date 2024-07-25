@@ -26,7 +26,8 @@ export default function Home() {
 	useEffect(() => {
 		const page = window.location.hash.substring(1);
 		if (selected === "context" && activeStep === null) {
-			setActiveStep(page === "onboard" || page === "" ? 0 : 1);
+			// setActiveStep(page === "onboard" || page === "" ? 0 : 1);
+			setActiveStep(0);
 		}
 	}, [selected]);
 

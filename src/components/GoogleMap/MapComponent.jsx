@@ -9,6 +9,13 @@ export default function MapComponent() {
 	const { selectedPlacesMap } = useContext(GlobalContext);
 	const { savedPlacesMap } = useContext(AppContext);
 	const [locations, setLocations] = useState([]);
+	const [googleMapsApiKey, setGoogleMapsApiKey] = useState(undefined);
+	const { isAuthenticated } = useAuth();
+	useEffect(() => {
+		const key = getGoogleMapsApiKey();
+		setGoogleMapsApiKey(key);
+	}, [isAuthenticated]);
+
 	useEffect(() => {
 		const list = [];
 		Object.keys(selectedPlacesMap).map((place_id) => {
@@ -32,8 +39,7 @@ export default function MapComponent() {
 		width: "100%",
 	};
 
-	return (
-		
+	return googleMapsApiKey && (
 		<GoogleMap
 			mapContainerStyle={mapStyles}
 			zoom={12}
