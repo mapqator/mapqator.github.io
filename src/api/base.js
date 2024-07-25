@@ -45,6 +45,13 @@ export const getUserName = () => {
 	if (!token) return "guest";
 	return jwtDecode(token).username;
 };
+
+export const getGoogleMapsApiKey = () => {
+	const token = getTokenFromLocalStorage();
+	if (!token) return undefined;
+	return jwtDecode(token).google_maps_api_key;
+};
+
 export const removeTokenFromLocalStorage = () => {
 	localStorage.removeItem("token");
 	const event = new Event("storage");

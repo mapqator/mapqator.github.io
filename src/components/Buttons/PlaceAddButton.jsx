@@ -1,6 +1,7 @@
 import mapApi from "@/api/mapApi";
 import { AppContext } from "@/contexts/AppContext";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import { showError } from "@/contexts/ToastProvider";
 import { Add } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { useContext } from "react";
@@ -11,6 +12,7 @@ export default function PlaceAddButton({ place_id }) {
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 
 	const handleAddSave = async (place_id) => {
+		// let details = undefined;
 		let details = savedPlacesMap[place_id];
 		if (details === undefined) {
 			const res = await mapApi.getDetails(place_id);
@@ -22,6 +24,7 @@ export default function PlaceAddButton({ place_id }) {
 				}));
 			} else {
 				console.error("Error fetching data: ", res.error);
+				showError(res.error);
 				return;
 			}
 		}
