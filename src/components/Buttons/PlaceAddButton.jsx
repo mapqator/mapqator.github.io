@@ -46,7 +46,10 @@ export default function PlaceAddButton({ place_id }) {
 						key !== "place_id" &&
 						key !== "name" &&
 						key !== "last_updated" &&
-						key !== "user_ratings_total"
+						key !== "user_ratings_total" &&
+						key !== "types" &&
+						key !== "search_vector" &&
+						key !== "vicinity"
 				),
 				attributes: Object.keys(details).filter(
 					(key) =>
@@ -54,7 +57,10 @@ export default function PlaceAddButton({ place_id }) {
 						key !== "place_id" &&
 						key !== "name" &&
 						key !== "last_updated" &&
-						key !== "user_ratings_total"
+						key !== "user_ratings_total" &&
+						key !== "types" &&
+						key !== "search_vector" &&
+						key !== "vicinity"
 				),
 			},
 		}));

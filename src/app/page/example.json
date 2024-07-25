@@ -22,9 +22,7 @@
 				"rating",
 				"reviews",
 				"wheelchair_accessible_entrance",
-				"vicinity",
-				"types",
-				"search_vector"
+				"vicinity"
 			],
 			"attributes": [
 				"formatted_address",
@@ -33,9 +31,7 @@
 				"rating",
 				"reviews",
 				"wheelchair_accessible_entrance",
-				"vicinity",
-				"types",
-				"search_vector"
+				"vicinity"
 			]
 		},
 		"ChIJLU7jZClu5kcR4PcOOO6p3I0": {
@@ -46,9 +42,7 @@
 				"rating",
 				"reviews",
 				"wheelchair_accessible_entrance",
-				"vicinity",
-				"types",
-				"search_vector"
+				"vicinity"
 			],
 			"attributes": [
 				"formatted_address",
@@ -57,26 +51,12 @@
 				"rating",
 				"reviews",
 				"wheelchair_accessible_entrance",
-				"vicinity",
-				"types",
-				"search_vector"
+				"vicinity"
 			]
 		},
 		"ChIJD7fiBh9u5kcRYJSMaMOCCwQ": {
-			"selectedAttributes": [
-				"formatted_address",
-				"geometry",
-				"vicinity",
-				"types",
-				"search_vector"
-			],
-			"attributes": [
-				"formatted_address",
-				"geometry",
-				"vicinity",
-				"types",
-				"search_vector"
-			]
+			"selectedAttributes": ["formatted_address", "geometry", "vicinity"],
+			"attributes": ["formatted_address", "geometry", "vicinity"]
 		}
 	},
 	"nearby_places": {
