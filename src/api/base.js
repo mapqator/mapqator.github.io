@@ -47,9 +47,10 @@ export const getUserName = () => {
 };
 
 export const getGoogleMapsApiKey = () => {
-	const token = getTokenFromLocalStorage();
+	const token = localStorage.getItem("token");
 	if (!token) return null;
-	return jwtDecode(token).google_maps_api_key;
+	const key = localStorage.getItem("google_maps_api_key");
+	return key;
 };
 
 export const removeTokenFromLocalStorage = () => {
@@ -73,7 +74,7 @@ axios.interceptors.request.use(
 			config.headers.Authorization = `Bearer ${token}`;
 		}
 		const apiKey = localStorage.getItem("google_maps_api_key");
-		if (apiKey) {
+		if (token && apiKey) {
 			config.headers["google_maps_api_key"] = apiKey;
 		}
 		return config;

@@ -16,6 +16,7 @@ import KeyStoreButton from "@/components/Buttons/KeyStoreButton";
 export default function Home() {
 	const [activeStep, setActiveStep] = useState(null);
 	const [selected, setSelected] = useState("context");
+	const { isAuthenticated } = useAuth();
 	const router = useRouter();
 
 	useEffect(() => {
@@ -70,7 +71,7 @@ export default function Home() {
 				<></>
 			)}
 
-			<KeyStoreButton onClick={() => {}} />
+			{isAuthenticated && <KeyStoreButton />}
 		</Container>
 	);
 }
