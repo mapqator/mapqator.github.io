@@ -551,7 +551,7 @@ export default function AppContextProvider({ children }) {
 		// if (process.env.NODE_ENV === "production")
 		{
 			fetchQueries();
-			fetchPlaces();
+			// fetchPlaces();
 		}
 	}, []);
 
