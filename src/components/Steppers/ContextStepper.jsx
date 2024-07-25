@@ -210,17 +210,20 @@ export default function ContextStepper({
 			icon: <SearchIcon />,
 			component: (
 				<div className="flex flex-col gap-2">
-					<Divider sx={{ my: 1 }} />
-					<AutocompleteSearchBox />
-					{Object.keys(selectedPlacesMap).length > 0 && (
-						<>
-							<Divider sx={{ my: 1, color: "#888" }}>
-								Already added
-							</Divider>
-							<MapComponent />
-							<PlaceInformation />
-						</>
-					)}
+					<Divider />
+					<CardContent>
+						<AutocompleteSearchBox />
+						{Object.keys(selectedPlacesMap).length > 0 && (
+							<>
+								<Divider sx={{ my: 1, color: "#888" }}>
+									Already added
+								</Divider>
+								<MapComponent />
+								<PlaceInformation />
+							</>
+						)}
+					</CardContent>
+
 					<Divider />
 				</div>
 			),
