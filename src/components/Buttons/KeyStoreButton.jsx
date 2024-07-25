@@ -4,7 +4,7 @@ import { faGear, faGears } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Add, Settings } from "@mui/icons-material";
 import { Box, Button, CardContent, Dialog, DialogTitle } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
@@ -15,9 +15,7 @@ import { showSuccess } from "@/contexts/ToastProvider";
 
 export default function KeyStoreButton({ onClick }) {
 	const [open, setOpen] = useState(false);
-	const [key, setKey] = useState(
-		localStorage.getItem("google_maps_api_key") || ""
-	);
+	const [key, setKey] = useState("");
 	const handleClose = () => {
 		setOpen(false);
 	};
@@ -26,6 +24,9 @@ export default function KeyStoreButton({ onClick }) {
 		setOpen(false);
 		showSuccess("Google Map Api Key saved successfully");
 	};
+	useEffect(() => {
+		setKey(localStorage.getItem("google_maps_api_key"));
+	}, []);
 
 	return (
 		<div className="fixed bottom-10 z-10 right-10 items-center justify-center ">
