@@ -104,12 +104,12 @@ export default function ContextGenerator({
 	// };
 
 	const handleExample = () => {
-		setSelectedPlacesMap(exampleSelectedPlacesMap);
-		setNearbyPlacesMap(exampleNearbyPlacesMap);
-		setPoisMap(examplePoisMap);
-		setDistanceMatrix(exampleDistanceMatrix);
-		setDirectionInformation(exampleDirectionInformation);
-		setCurrentInformation(exampleCurrentInformation);
+		// setSelectedPlacesMap(exampleSelectedPlacesMap);
+		// setNearbyPlacesMap(exampleNearbyPlacesMap);
+		// setPoisMap(examplePoisMap);
+		// setDistanceMatrix(exampleDistanceMatrix);
+		// setDirectionInformation(exampleDirectionInformation);
+		// setCurrentInformation(exampleCurrentInformation);
 	};
 
 	// useEffect(() => {
