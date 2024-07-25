@@ -1,3 +1,5 @@
+"use client";
+
 import { faGear, faGears } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Add, Settings } from "@mui/icons-material";
