@@ -182,8 +182,39 @@ export default function AutocompleteSearchBox() {
 				</div>
 			)} */}
 
-			<div className="grid grid-cols-1 gap-4">
-				{/* <div
+			<div
+				className={`border rounded-md overflow-hidden ${
+					mapResults.length > 0 || search
+						? ""
+						: search
+						? "invisible"
+						: "hidden"
+				}`}
+			>
+				{mapResults.length > 0 ? (
+					<ul className="max-h-72 overflow-y-auto">
+						{mapResults.map((place, index) => (
+							<SearchPlaceCard
+								place={place}
+								index={index}
+								length={results.length}
+								key={index}
+							/>
+						))}
+					</ul>
+				) : (
+					<div className="h-60 flex items-center justify-center">
+						<p className="text-lg md:text-xl text-gray-400">
+							{notFound
+								? "No places found"
+								: "Press enter to search"}
+						</p>
+					</div>
+				)}
+			</div>
+
+			{/* <div className="grid grid-cols-1 gap-4">
+				<div
 					className={`border rounded-lg overflow-hidden ${
 						search ? "" : "hidden"
 					}`}
@@ -207,7 +238,7 @@ export default function AutocompleteSearchBox() {
 							</p>
 						</div>
 					)}
-				</div> */}
+				</div>
 
 				<div
 					className={`border rounded-lg overflow-hidden ${
@@ -218,9 +249,9 @@ export default function AutocompleteSearchBox() {
 							: "hidden"
 					}`}
 				>
-					{/* <h3 className="bg-gray-200 p-2 font-bold">
+					<h3 className="bg-gray-200 p-2 font-bold">
 						Places found in Google Map
-					</h3> */}
+					</h3>
 					{mapResults.length > 0 ? (
 						<ul className="max-h-72 overflow-y-auto">
 							{mapResults.map((place, index) => (
@@ -242,7 +273,7 @@ export default function AutocompleteSearchBox() {
 						</div>
 					)}
 				</div>
-			</div>
+			</div> */}
 		</div>
 	);
 }
