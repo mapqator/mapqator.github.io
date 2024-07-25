@@ -11,13 +11,13 @@ import { useRouter } from "next/navigation";
 import { getGoogleMapsApiKey } from "@/api/base";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useAuth } from "@/contexts/AuthContext";
+import KeyStoreButton from "@/components/Buttons/KeyStoreButton";
 
 export default function Home() {
 	const [activeStep, setActiveStep] = useState(null);
 	const [selected, setSelected] = useState("context");
-	const [googleMapsApiKey, setGoogleMapsApiKey] = useState(null);
 	const router = useRouter();
-	const { isAuthenticated } = useAuth();
+
 	useEffect(() => {
 		const page = window.location.hash.substring(1);
 		setSelected(page === "" || page === "onboard" ? "context" : page);
@@ -30,10 +30,6 @@ export default function Home() {
 			setActiveStep(0);
 		}
 	}, [selected]);
-
-	useEffect(() => {
-		setGoogleMapsApiKey(getGoogleMapsApiKey());
-	}, [isAuthenticated]);
 
 	return (
 		<Container
@@ -73,6 +69,8 @@ export default function Home() {
 			) : (
 				<></>
 			)}
+
+			<KeyStoreButton onClick={() => {}} />
 		</Container>
 	);
 }

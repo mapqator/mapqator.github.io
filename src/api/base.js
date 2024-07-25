@@ -72,6 +72,10 @@ axios.interceptors.request.use(
 		if (token) {
 			config.headers.Authorization = `Bearer ${token}`;
 		}
+		const apiKey = localStorage.getItem("google_maps_api_key");
+		if (apiKey) {
+			config.headers["google_maps_api_key"] = apiKey;
+		}
 		return config;
 	},
 	(error) => Promise.reject(error)
