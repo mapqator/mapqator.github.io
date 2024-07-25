@@ -33,6 +33,7 @@ export default function MapComponent() {
 	};
 
 	return (
+		
 		<GoogleMap
 			mapContainerStyle={mapStyles}
 			zoom={12}
