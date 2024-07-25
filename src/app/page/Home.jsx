@@ -71,7 +71,8 @@ export default function Home() {
 				<></>
 			)}
 
-			{isAuthenticated && <KeyStoreButton />}
+			{/* {isAuthenticated && <KeyStoreButton />} */}
+			<KeyStoreButton />
 		</Container>
 	);
 }

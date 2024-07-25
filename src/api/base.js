@@ -47,8 +47,8 @@ export const getUserName = () => {
 };
 
 export const getGoogleMapsApiKey = () => {
-	const token = localStorage.getItem("token");
-	if (!token) return null;
+	// const token = localStorage.getItem("token");
+	// if (!token) return null;
 	const key = localStorage.getItem("google_maps_api_key");
 	return key;
 };
@@ -74,7 +74,7 @@ axios.interceptors.request.use(
 			config.headers.Authorization = `Bearer ${token}`;
 		}
 		const apiKey = localStorage.getItem("google_maps_api_key");
-		if (token && apiKey) {
+		if (apiKey) {
 			config.headers["google_maps_api_key"] = apiKey;
 		}
 		return config;
