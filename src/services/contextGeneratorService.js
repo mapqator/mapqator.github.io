@@ -38,17 +38,6 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 		}\n`;
 	}
 
-	if (attributes.includes("reviews")) {
-		text += `- Reviews: \n${place.reviews
-			.map((review, index) => {
-				console.log(review.text);
-				return `   ${index + 1}. ${review.author_name} (Rating: ${
-					review.rating
-				}): ${review.text}\n`;
-			})
-			.join("")} `; // Use .join('') to concatenate without commas
-	}
-	console.log(text);
 	if (attributes.includes("price_level")) {
 		// - 0 Free
 		// - 1 Inexpensive
@@ -95,6 +84,17 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 		text += place.wheelchair_accessible_entrance
 			? "- Wheelchair Accessible Entrance.\n"
 			: "- Not Wheelchair Accessible Entrance.\n";
+	}
+
+	if (attributes.includes("reviews")) {
+		text += `- Reviews: \n${place.reviews
+			.map((review, index) => {
+				console.log(review.text);
+				return `   ${index + 1}. ${review.author_name} (Rating: ${
+					review.rating
+				}): ${review.text}\n`;
+			})
+			.join("")} `; // Use .join('') to concatenate without commas
 	}
 
 	return text;
