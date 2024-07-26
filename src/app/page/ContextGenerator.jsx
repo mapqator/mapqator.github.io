@@ -92,6 +92,7 @@ export default function ContextGenerator({
 		setCurrentInformation(initCurrentInformation);
 		setDirectionInformation(initDirectionInformation);
 		setSelectedPlacesMap(initSelectedPlacesMap);
+		setSavedPlacesMap({});
 		setActiveStep(1);
 		setContext([]);
 	};
@@ -120,16 +121,17 @@ export default function ContextGenerator({
 		}
 	};
 
-	const handleExample = async () => {
+	const handleExample = () => {
 		// setSelectedPlacesMap(exampleSelectedPlacesMap);
 		// setNearbyPlacesMap(exampleNearbyPlacesMap);
 		// setPoisMap(examplePoisMap);
 		// setDistanceMatrix(exampleDistanceMatrix);
 		// setDirectionInformation(exampleDirectionInformation);
 		// setCurrentInformation(exampleCurrentInformation);
-		for (let place_id in example.places) {
-			await handleSave(place_id);
-		}
+		// for (let place_id in example.places) {
+		// 	await handleSave(place_id);
+		// }
+		setSavedPlacesMap(example.saved_places ?? {});
 		setSelectedPlacesMap(example.places ?? {});
 		setDistanceMatrix(example.distance_matrix ?? {});
 		setDirectionInformation(example.directions ?? {});

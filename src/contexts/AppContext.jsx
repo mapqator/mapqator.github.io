@@ -510,7 +510,7 @@ export default function AppContextProvider({ children }) {
 			},
 		},
 	];
-	const [savedPlacesMap, setSavedPlacesMap] = useState(initSavedPlacesMap);
+	const [savedPlacesMap, setSavedPlacesMap] = useState({});
 	const [queries, setQueries] = useState([]);
 
 	const fetchQueries = async () => {

@@ -154,7 +154,7 @@ function ContextStep({
 								<LoadingButton
 									onClick={async () => {
 										setLoading(true);
-										await loadExample();
+										loadExample();
 										setLoading(false);
 									}}
 									sx={{ mt: 1, mr: 1 }}
@@ -194,8 +194,8 @@ export default function ContextStepper({
 		setActiveStep((prevActiveStep) => prevActiveStep - 1);
 	};
 
-	const loadExample = async () => {
-		await handleExample();
+	const loadExample = () => {
+		handleExample();
 		handleNext();
 	};
 	const steps = [

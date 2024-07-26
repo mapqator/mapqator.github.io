@@ -14,13 +14,12 @@ export default function QueryEditButton({ onEdit, query }) {
 		setNearbyPlacesMap,
 		setCurrentInformation,
 		setDirectionInformation,
-		setSavedPlacesMap,
 		setContext,
 		setQuery,
 		setPoisMap,
 	} = useContext(GlobalContext);
 
-	const { savedPlacesMap } = useContext(AppContext);
+	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 
 	const handleSave = async (place_id) => {
 		if (savedPlacesMap[place_id]) return;
@@ -38,8 +37,12 @@ export default function QueryEditButton({ onEdit, query }) {
 	};
 
 	const handleEdit = async () => {
-		for (let place_id in query.context_json.places) {
-			await handleSave(place_id);
+		if (query.context_json.saved_places) {
+			setSavedPlacesMap(query.context_json.saved_places);
+		} else {
+			for (let place_id in query.context_json.places) {
+				await handleSave(place_id);
+			}
 		}
 		setSelectedPlacesMap(query.context_json.places ?? {});
 		setDistanceMatrix(query.context_json.distance_matrix ?? {});

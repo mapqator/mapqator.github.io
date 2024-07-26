@@ -26,14 +26,14 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 		initQuery,
 	} = useContext(GlobalContext);
 
-	const { queries, setQueries } = useContext(AppContext);
+	const { queries, setQueries, savedPlacesMap } = useContext(AppContext);
 	const { isAuthenticated } = useAuth();
 
 	const handleReset = () => {
 		setQuery((prev) => ({
 			...initQuery,
 			context: prev.context,
-			context_json: prev.context,
+			context_json: prev.context_json,
 		}));
 	};
 
@@ -43,6 +43,7 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 			...query,
 			context: ContextGeneratorService.convertContextToText(context),
 			context_json: {
+				saved_places: savedPlacesMap,
 				distance_matrix: distanceMatrix,
 				places: selectedPlacesMap,
 				nearby_places: nearbyPlacesMap,
@@ -51,6 +52,7 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 				directions: directionInformation,
 			},
 		};
+		console.log(newQuery);
 		if (isAuthenticated) {
 			if (query.id === undefined) {
 				const res = await queryApi.createQuery(newQuery);
