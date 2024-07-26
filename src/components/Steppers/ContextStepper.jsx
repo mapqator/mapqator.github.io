@@ -214,7 +214,7 @@ export default function ContextStepper({
 		},
 		{
 			label: "Add Places",
-			description: `Start by searching for a location. Type in a place name or address in the search bar below. While typing, recently searched places matched with the search query will be shown. On pressing enter, places will be fetched from the Google Map!!`,
+			description: `Start by searching for a location. Type in a place name or address in the search bar below. On pressing enter, places will be fetched from the Google Map!!`,
 			icon: <SearchIcon />,
 			component: (
 				<div className="flex flex-col gap-2">
