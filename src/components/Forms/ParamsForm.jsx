@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import DaySelectionField from "../InputFields/DaySelectionField";
 import TimeSelectionField from "../InputFields/TimeSelectionField";
+import CurrentLocationSelectionField from "../InputFields/CurrentLocationSelectionField";
 
 function ClearButton({ onClick }) {
 	return (
@@ -14,7 +15,7 @@ function ClearButton({ onClick }) {
 	);
 }
 
-export default function ParamsForm() {
+export default function ParamsForm({ handlePlaceAdd }) {
 	const { currentInformation, setCurrentInformation } =
 		useContext(GlobalContext);
 	return (
@@ -64,25 +65,38 @@ export default function ParamsForm() {
 				/>
 			</div>
 
-			<div className="flex flex-row items-center w-full gap-2">
-				<PlaceSelectionField
-					label="Current location"
-					value={currentInformation.location}
-					onChange={(event) => {
-						setCurrentInformation((prev) => ({
-							...prev,
-							location: event.target.value,
-						}));
-					}}
-				/>
-				<ClearButton
-					onClick={() => {
-						setCurrentInformation((prev) => ({
-							...prev,
-							location: "",
-						}));
-					}}
-				/>
+			<div>
+				<div className="flex flex-row items-center w-full gap-2">
+					<CurrentLocationSelectionField
+						label="Current location"
+						value={currentInformation.location}
+						onChange={(event) => {
+							setCurrentInformation((prev) => ({
+								...prev,
+								location: event.target.value,
+							}));
+						}}
+					/>
+
+					<ClearButton
+						onClick={() => {
+							setCurrentInformation((prev) => ({
+								...prev,
+								location: "",
+							}));
+						}}
+					/>
+				</div>
+				<h6 className="px-2 text-sm">
+					If your current location is not listed here, you need to{" "}
+					<a
+						className="underline font-semibold cursor-pointer hover:text-blue-500"
+						onClick={handlePlaceAdd}
+					>
+						add it
+					</a>{" "}
+					first.
+				</h6>
 			</div>
 		</Box>
 	);

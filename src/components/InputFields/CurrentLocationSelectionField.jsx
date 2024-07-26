@@ -1,11 +1,11 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import { Select, MenuItem, Box, Chip } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { AppContext } from "@/contexts/AppContext";
-import areaTypes from "@/database/area.json";
-export default function PoiSelectionField({
+
+export default function CurrentLocationSelectionField({
 	label,
 	onChange,
 	value,
@@ -15,9 +15,6 @@ export default function PoiSelectionField({
 	const { selectedPlacesMap } = useContext(GlobalContext);
 	const { savedPlacesMap } = useContext(AppContext);
 
-	useEffect(() => {
-		console.log(areaTypes);
-	}, []);
 	return (
 		<>
 			<FormControl fullWidth size="small">
@@ -51,32 +48,13 @@ export default function PoiSelectionField({
 							: undefined
 					}
 				>
-					{Object.keys(selectedPlacesMap)
-						.filter(
-							(place_id) =>
-								!areaTypes.some((type) =>
-									savedPlacesMap[place_id].types.includes(
-										type
-									)
-								)
-						)
-						.map((place_id) => (
-							<MenuItem key={place_id} value={place_id}>
-								{savedPlacesMap[place_id].name}
-							</MenuItem>
-						))}
+					{Object.keys(selectedPlacesMap).map((place_id) => (
+						<MenuItem key={place_id} value={place_id}>
+							{savedPlacesMap[place_id].name}
+						</MenuItem>
+					))}
 				</Select>
 			</FormControl>
-			<h6 className="px-2  text-sm">
-				If your desired location is not listed here, you need to{" "}
-				<a
-					className="underline font-semibold cursor-pointer hover:text-blue-500"
-					onClick={handlePlaceAdd}
-				>
-					add it
-				</a>{" "}
-				first.
-			</h6>
 		</>
 	);
 }

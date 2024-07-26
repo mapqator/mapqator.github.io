@@ -10,6 +10,7 @@ export default function AreaSelectionField({
 	onChange,
 	value,
 	multiple,
+	handlePlaceAdd,
 }) {
 	const { selectedPlacesMap } = useContext(GlobalContext);
 	const { savedPlacesMap } = useContext(AppContext);
@@ -18,47 +19,61 @@ export default function AreaSelectionField({
 		console.log(areaTypes);
 	}, []);
 	return (
-		<FormControl fullWidth size="small">
-			<InputLabel>{label}</InputLabel>
-			<Select
-				value={value}
-				onChange={onChange}
-				label={label}
-				multiple={multiple}
-				renderValue={
-					multiple
-						? (selected) => (
-								<Box
-									sx={{
-										display: "flex",
-										flexWrap: "wrap",
-										gap: 0.5,
-									}}
-								>
-									{selected.map((value) => (
-										<Chip
-											key={value}
-											label={savedPlacesMap[value].name}
-											size="small"
-										/>
-									))}
-								</Box>
-						  )
-						: undefined
-				}
-			>
-				{Object.keys(selectedPlacesMap)
-					.filter((place_id) =>
-						areaTypes.some((type) =>
-							savedPlacesMap[place_id].types.includes(type)
+		<>
+			<FormControl fullWidth size="small">
+				<InputLabel>{label}</InputLabel>
+				<Select
+					value={value}
+					onChange={onChange}
+					label={label}
+					multiple={multiple}
+					renderValue={
+						multiple
+							? (selected) => (
+									<Box
+										sx={{
+											display: "flex",
+											flexWrap: "wrap",
+											gap: 0.5,
+										}}
+									>
+										{selected.map((value) => (
+											<Chip
+												key={value}
+												label={
+													savedPlacesMap[value].name
+												}
+												size="small"
+											/>
+										))}
+									</Box>
+							  )
+							: undefined
+					}
+				>
+					{Object.keys(selectedPlacesMap)
+						.filter((place_id) =>
+							areaTypes.some((type) =>
+								savedPlacesMap[place_id].types.includes(type)
+							)
 						)
-					)
-					.map((place_id) => (
-						<MenuItem key={place_id} value={place_id}>
-							{savedPlacesMap[place_id].name}
-						</MenuItem>
-					))}
-			</Select>
-		</FormControl>
+						.map((place_id) => (
+							<MenuItem key={place_id} value={place_id}>
+								{savedPlacesMap[place_id].name}
+							</MenuItem>
+						))}
+				</Select>
+			</FormControl>
+			<h6 className="px-2  text-sm">
+				If your desired area is not listed here, you need to{" "}
+				<a
+					className="underline font-semibold cursor-pointer hover:text-blue-500"
+					onClick={handlePlaceAdd}
+				>
+					add it
+				</a>{" "}
+				first.
+			</h6>
+		</>
 	);
 }

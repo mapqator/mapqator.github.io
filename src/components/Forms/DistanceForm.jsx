@@ -8,7 +8,7 @@ import TravelSelectionField from "@/components/InputFields/TravelSelectionField.
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { showError } from "@/contexts/ToastProvider";
 
-export default function DistanceForm() {
+export default function DistanceForm({ handlePlaceAdd }) {
 	const { selectedPlacesMap, distanceMatrix, setDistanceMatrix } =
 		useContext(GlobalContext);
 	const [newDistance, setNewDistance] = useState({
@@ -95,6 +95,7 @@ export default function DistanceForm() {
 						}));
 					}}
 					value={newDistance.from}
+					handlePlaceAdd={handlePlaceAdd}
 				/>
 			</Grid>
 
@@ -109,6 +110,7 @@ export default function DistanceForm() {
 							to: event.target.value,
 						}));
 					}}
+					handlePlaceAdd={handlePlaceAdd}
 				/>
 			</Grid>
 

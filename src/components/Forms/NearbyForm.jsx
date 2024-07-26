@@ -27,7 +27,7 @@ import {
 } from "@react-google-maps/api";
 import PoiSelectionField from "../InputFields/PoiSelectionField";
 
-export default function NearbyForm() {
+export default function NearbyForm({ handlePlaceAdd }) {
 	const { selectedPlacesMap, nearbyPlacesMap, setNearbyPlacesMap } =
 		useContext(GlobalContext);
 	const { savedPlacesMap } = useContext(AppContext);
@@ -168,6 +168,7 @@ export default function NearbyForm() {
 						}))
 					}
 					value={newNearbyPlaces.location}
+					handlePlaceAdd={handlePlaceAdd}
 				/>
 			</Grid>
 

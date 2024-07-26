@@ -8,7 +8,7 @@ import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { showError } from "@/contexts/ToastProvider";
 
-export default function DirectionForm() {
+export default function DirectionForm({ handlePlaceAdd }) {
 	const { selectedPlacesMap, directionInformation, setDirectionInformation } =
 		useContext(GlobalContext);
 	const [newDirection, setNewDirection] = useState({
@@ -88,6 +88,7 @@ export default function DirectionForm() {
 							from: event.target.value,
 						}));
 					}}
+					handlePlaceAdd={handlePlaceAdd}
 				/>
 			</Grid>
 
@@ -101,6 +102,7 @@ export default function DirectionForm() {
 							to: event.target.value,
 						}));
 					}}
+					handlePlaceAdd={handlePlaceAdd}
 				/>
 			</Grid>
 

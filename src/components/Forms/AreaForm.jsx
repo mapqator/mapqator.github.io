@@ -10,7 +10,7 @@ import { showError } from "@/contexts/ToastProvider";
 import AreaSelectionField from "../InputFields/AreaSelectionField";
 import { AppContext } from "@/contexts/AppContext";
 
-export default function AreaForm() {
+export default function AreaForm({ handlePlaceAdd }) {
 	const [newPois, setNewPois] = useState({ location: "", type: "" });
 	const [loading, setLoading] = useState(false);
 	const { poisMap, setPoisMap } = useContext(GlobalContext);
@@ -55,6 +55,7 @@ export default function AreaForm() {
 				<AreaSelectionField
 					label="Place"
 					value={newPois.location}
+					handlePlaceAdd={handlePlaceAdd}
 					onChange={(event) => {
 						setNewPois((prev) => ({
 							...prev,

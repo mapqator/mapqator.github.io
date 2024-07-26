@@ -198,6 +198,10 @@ export default function ContextStepper({
 		handleExample();
 		handleNext();
 	};
+
+	const handlePlaceAdd = () => {
+		setActiveStep(1);
+	};
 	const steps = [
 		{
 			label: "Guidelines",
@@ -241,7 +245,7 @@ export default function ContextStepper({
 			description: `Use the Nearby Search Tool to discover points of interest around your selected location. You just need to select a location and the type of poi you are looking for.
 			You can choose a type from the given list or a custom type. It is recommended to choose from the given list for better result.`,
 			icon: <PlaceIcon />,
-			form: <NearbyForm />,
+			form: <NearbyForm {...{ handlePlaceAdd }} />,
 			grid: Object.keys(nearbyPlacesMap).length > 0 && <NearbyGrid />,
 			context: context.nearby,
 		},
@@ -249,7 +253,7 @@ export default function ContextStepper({
 			label: "Explore POIs inside Places",
 			description: `Explore various Points of Interest (POIs) within a larger area. Select a region like a city or neighborhood, then choose a type (e.g., restaurants, museums, parks) to see POIs within that area.`,
 			icon: <ExploreIcon />,
-			form: <AreaForm />,
+			form: <AreaForm {...{ handlePlaceAdd }} />,
 			grid: Object.keys(poisMap).length > 0 && <AreaGrid />,
 			context: context.area,
 		},
@@ -257,7 +261,7 @@ export default function ContextStepper({
 			label: "Get Alternative Routes",
 			description: `Utilize the Directions API to find routes between two points. Choose origin, destination and travel mode to find possible routes between them.`,
 			icon: <DirectionsIcon />,
-			form: <DirectionForm />,
+			form: <DirectionForm {...{ handlePlaceAdd }} />,
 			grid: Object.keys(directionInformation).length > 0 && (
 				<DirectionGrid />
 			),
@@ -267,7 +271,7 @@ export default function ContextStepper({
 			label: "Get Duration of Recommended Route",
 			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Choose origins, destinations and travel mode to find distance and durations.`,
 			icon: <MapIcon />,
-			form: <DistanceForm />,
+			form: <DistanceForm {...{ handlePlaceAdd }} />,
 			grid: Object.keys(distanceMatrix).length > 0 && <DistanceGrid />,
 			context: context.distance,
 		},
@@ -281,7 +285,7 @@ export default function ContextStepper({
 					<Divider />
 					<Box className="w-full md:w-[30rem] mx-auto">
 						<CardContent>
-							<ParamsForm />
+							<ParamsForm {...{ handlePlaceAdd }} />
 						</CardContent>
 					</Box>
 					<Divider />
