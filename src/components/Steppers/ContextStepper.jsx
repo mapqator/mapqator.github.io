@@ -143,7 +143,7 @@ function ContextStep({
 									? "Start"
 									: "Continue"}
 							</Button>
-							{index > 0 ? (
+							{/* {index > 0 ? (
 								<Button
 									onClick={handleBack}
 									sx={{ mt: 1, mr: 1 }}
@@ -162,6 +162,14 @@ function ContextStep({
 								>
 									Start with Example
 								</LoadingButton>
+							)} */}
+							{index > 0 && (
+								<Button
+									onClick={handleBack}
+									sx={{ mt: 1, mr: 1 }}
+								>
+									Back
+								</Button>
 							)}
 						</div>
 					</Box>
@@ -213,7 +221,7 @@ export default function ContextStepper({
 			3. Get Directions & Distances: Find routes between places and calculate distances.
 			4. Generate Context: Review and finalize your place-related information.
 
-			You can start from scratch or with an example. Let's begin!`,
+			Let's begin!`,
 			icon: <Flag />,
 		},
 		{
