@@ -28,6 +28,7 @@ export default function KeyStoreButton({ onClick }) {
 	const [showKey, setShowKey] = useState(false);
 	const handleClose = () => {
 		setOpen(false);
+		localStorage.setItem("google_maps_api_key", key);
 	};
 	const handleSave = () => {
 		localStorage.setItem("google_maps_api_key", key);
