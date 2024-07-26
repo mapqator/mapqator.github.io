@@ -20,6 +20,7 @@ export default function PlaceAddButton({ place_id }) {
 			const res = await mapApi.getDetails(place_id);
 			if (res.success) {
 				details = res.data.result;
+				console.log(res.data.result);
 				setSavedPlacesMap((prev) => ({
 					...prev,
 					[place_id]: details,
@@ -27,6 +28,7 @@ export default function PlaceAddButton({ place_id }) {
 			} else {
 				console.error("Error fetching data: ", res.error);
 				showError(res.error);
+				setLoading(false);
 				return;
 			}
 		}

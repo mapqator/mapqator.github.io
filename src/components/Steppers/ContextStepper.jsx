@@ -226,7 +226,7 @@ export default function ContextStepper({
 								<Divider sx={{ my: 1, color: "#888" }}>
 									Already added
 								</Divider>
-								<MapComponent />
+								{/* <MapComponent /> */}
 								<PlaceInformation />
 							</>
 						)}

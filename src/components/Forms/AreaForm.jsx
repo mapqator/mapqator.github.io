@@ -7,6 +7,7 @@ import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
 import TypeSelectionField from "@/components/InputFields/TypeSelectionField";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { showError } from "@/contexts/ToastProvider";
+import AreaSelectionField from "../InputFields/AreaSelectionField";
 
 export default function AreaForm() {
 	const [newPois, setNewPois] = useState({ location: "", type: "" });
@@ -49,7 +50,7 @@ export default function AreaForm() {
 	return (
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
-				<PlaceSelectionField
+				<AreaSelectionField
 					label="Location"
 					value={newPois.location}
 					onChange={(event) => {
@@ -60,6 +61,25 @@ export default function AreaForm() {
 					}}
 				/>
 			</Grid>
+			{newPois.location && (
+				<Grid item xs={12}>
+					<iframe
+						width="100%"
+						height="450"
+						// style="border:0"
+						style={{
+							border: 0,
+						}}
+						loading="lazy"
+						allowfullscreen
+						referrerpolicy="no-referrer-when-downgrade"
+						src={
+							"https://www.google.com/maps/embed/v1/place?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=place_id:" +
+							newPois.location
+						}
+					></iframe>
+				</Grid>
+			)}
 			<Grid item xs={12}>
 				<TypeSelectionField
 					type={newPois.type}
@@ -71,7 +91,6 @@ export default function AreaForm() {
 					}
 				/>
 			</Grid>
-
 			<Grid item xs={12}>
 				<LoadingButton
 					variant="contained"
