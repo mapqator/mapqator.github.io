@@ -62,7 +62,7 @@ export default function KeyStoreButton({ onClick }) {
 								endAdornment: (
 									<InputAdornment position="end">
 										<EyeIcon
-											isVisible={key.length > 0}
+											isVisible={key?.length > 0}
 											showPassword={showKey}
 											setShowPassword={setShowKey}
 										/>
