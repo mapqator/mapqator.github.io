@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import mapApi from "@/api/mapApi";
 import {
 	TextField,
@@ -8,6 +8,7 @@ import {
 	FormControlLabel,
 	RadioGroup,
 	Radio,
+	Typography,
 } from "@mui/material";
 import placeTypes from "@/database/types.json";
 import { LoadingButton } from "@mui/lab";
@@ -18,6 +19,12 @@ import { useContext } from "react";
 import TypeSelectionField from "@/components/InputFields/TypeSelectionField";
 import { AppContext } from "@/contexts/AppContext";
 import { showError } from "@/contexts/ToastProvider";
+import {
+	GoogleMap,
+	LoadScript,
+	useJsApiLoader,
+	Marker,
+} from "@react-google-maps/api";
 
 export default function NearbyForm() {
 	const { selectedPlacesMap, nearbyPlacesMap, setNearbyPlacesMap } =
@@ -108,6 +115,46 @@ export default function NearbyForm() {
 		}
 		setLoading(false);
 	};
+
+	const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
+	const centerRef = useRef({ lat: 0, lng: 0 });
+
+	const mapRef = useRef();
+	const onLoad = useCallback((map) => {
+		mapRef.current = map;
+	}, []);
+	// const { isLoaded } = useJsApiLoader({
+	// 	id: "google-map-script",
+	// 	googleMapsApiKey: "AIzaSyCNtIajO-Xwpocu9ARrah2khQF-tG8vWok",
+	// });
+
+	const onCenterChanged = useCallback(() => {
+		if (mapRef.current) {
+			const newCenter = mapRef.current.getCenter();
+			centerRef.current = {
+				lat: newCenter.lat(),
+				lng: newCenter.lng(),
+			};
+		}
+	}, []);
+
+	useEffect(() => {
+		const intervalId = setInterval(() => {
+			setMapCenter(centerRef.current);
+		}, 1000); // Update displayed coordinates every second
+
+		return () => clearInterval(intervalId);
+	}, []);
+
+	const [locationCoords, setLocationCoords] = useState(null);
+	useEffect(() => {
+		if (newNearbyPlaces.location === "") return;
+		const loc = savedPlacesMap[newNearbyPlaces.location].geometry.location;
+		const lat = typeof loc.lat === "function" ? loc.lat() : loc.lat;
+		const lng = typeof loc.lng === "function" ? loc.lng() : loc.lng;
+		setLocationCoords({ lat, lng });
+	}, [newNearbyPlaces.location]);
+
 	return (
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
@@ -122,6 +169,38 @@ export default function NearbyForm() {
 					value={newNearbyPlaces.location}
 				/>
 			</Grid>
+			<Grid item xs={12}>
+				{true && (
+					<>
+						{/* <Typography>Mark a location</Typography>
+						<GoogleMap
+							mapContainerStyle={{
+								width: "100%",
+								height: "400px",
+							}}
+							center={mapCenter}
+							zoom={15}
+							onLoad={onLoad}
+							onCenterChanged={onCenterChanged}
+						>
+							<Marker position={mapCenter} />
+						</GoogleMap> */}
+						{locationCoords && (
+							<GoogleMap
+								mapContainerStyle={{
+									width: "100%",
+									height: "400px",
+								}}
+								center={locationCoords}
+								zoom={15}
+							>
+								<Marker position={locationCoords} />
+							</GoogleMap>
+						)}
+					</>
+				)}
+			</Grid>
+
 			<Grid item xs={12}>
 				<TypeSelectionField
 					type={newNearbyPlaces.type}

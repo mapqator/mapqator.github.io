@@ -17,7 +17,7 @@ export default function GoogleMapWrapper({ children }) {
 
 	return googleMapsApiKey ? (
 		<LoadScript
-			googleMapsApiKey={"AIzaSyA8FR4zPdFgUNu4Rr_iuMYgcOb6gCCr21M"}
+			googleMapsApiKey={"AIzaSyCNtIajO-Xwpocu9ARrah2khQF-tG8vWok"}
 		>
 			{children}
 		</LoadScript>

@@ -214,7 +214,7 @@ export default function ContextStepper({
 		},
 		{
 			label: "Add Places",
-			description: `Start by searching for a location. Type in a place name or address in the search bar below. On pressing enter, places will be fetched from the Google Map!!`,
+			description: `Start by searching for a location. Type in a place name or address in the search bar below.`,
 			icon: <SearchIcon />,
 			component: (
 				<div className="flex flex-col gap-2">
@@ -336,7 +336,7 @@ export default function ContextStepper({
 						Create Question
 					</Button>
 					<Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-						Reset
+						Start new context
 					</Button>
 				</Paper>
 			)}
