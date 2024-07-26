@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import { AppContext } from "@/contexts/AppContext";
 
 export default function PlaceDeleteButton({ placeId }) {
 	const {
@@ -18,6 +19,8 @@ export default function PlaceDeleteButton({ placeId }) {
 		setSelectedPlacesMap,
 		setPoisMap,
 	} = useContext(GlobalContext);
+
+	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 
 	const deletePlaceFromDistanceMatrix = (place_id) => {
 		const newDistanceMatrix = { ...distanceMatrix };
@@ -50,6 +53,12 @@ export default function PlaceDeleteButton({ placeId }) {
 		setPoisMap(newPoisMap);
 	};
 
+	const deletePlaceFromSaved = (place_id) => {
+		const tmp = { ...savedPlacesMap };
+		delete tmp[place_id];
+		setSavedPlacesMap(tmp);
+	};
+
 	const deletePlace = (place_id) => {
 		deletePlaceFromDistanceMatrix(place_id);
 		deletePlaceFromDirections(place_id);
@@ -58,6 +67,7 @@ export default function PlaceDeleteButton({ placeId }) {
 		const newSelectedPlacesMap = { ...selectedPlacesMap };
 		delete newSelectedPlacesMap[place_id];
 		setSelectedPlacesMap(newSelectedPlacesMap);
+		deletePlaceFromSaved(place_id);
 	};
 	return (
 		<IconButton onClick={() => deletePlace(placeId)}>
