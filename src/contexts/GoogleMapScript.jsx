@@ -9,7 +9,7 @@ export default function GoogleMapWrapper({ children }) {
 	const { isAuthenticated } = useAuth();
 	useEffect(() => {
 		const key = getGoogleMapsApiKey();
-		if (!loaded && key) {
+		if (!loaded) {
 			setGoogleMapsApiKey(key);
 			setLoaded(true);
 		}
@@ -21,6 +21,8 @@ export default function GoogleMapWrapper({ children }) {
 		>
 			{children}
 		</LoadScript>
+	) : googleMapsApiKey !== undefined ? (
+		<LoadScript>{children}</LoadScript>
 	) : (
 		<>{children}</>
 	);
