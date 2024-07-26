@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import placeTypes from "@/database/types.json";
 import { LoadingButton } from "@mui/lab";
-import { Search } from "@mui/icons-material";
+import { Add, Search } from "@mui/icons-material";
 import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { useContext } from "react";
@@ -25,6 +25,7 @@ import {
 	useJsApiLoader,
 	Marker,
 } from "@react-google-maps/api";
+import PoiSelectionField from "../InputFields/PoiSelectionField";
 
 export default function NearbyForm() {
 	const { selectedPlacesMap, nearbyPlacesMap, setNearbyPlacesMap } =
@@ -158,7 +159,7 @@ export default function NearbyForm() {
 	return (
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
-				<PlaceSelectionField
+				<PoiSelectionField
 					label="Location"
 					onChange={(e) =>
 						setNewNearbyPlaces((prev) => ({
@@ -169,10 +170,28 @@ export default function NearbyForm() {
 					value={newNearbyPlaces.location}
 				/>
 			</Grid>
-			<Grid item xs={12}>
+
+			{newNearbyPlaces.location && (
+				<Grid item xs={12}>
+					<iframe
+						width="100%"
+						height="450"
+						// style="border:0"
+						style={{
+							border: 0,
+						}}
+						loading="lazy"
+						// allowfullscreen
+						referrerpolicy="no-referrer-when-downgrade"
+						src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=place_id:${newNearbyPlaces.location}`}
+					></iframe>
+				</Grid>
+			)}
+
+			{/* <Grid item xs={12}>
 				{true && (
 					<>
-						{/* <Typography>Mark a location</Typography>
+						<Typography>Mark a location</Typography>
 						<GoogleMap
 							mapContainerStyle={{
 								width: "100%",
@@ -184,8 +203,8 @@ export default function NearbyForm() {
 							onCenterChanged={onCenterChanged}
 						>
 							<Marker position={mapCenter} />
-						</GoogleMap> */}
-						{/* {locationCoords && (
+						</GoogleMap>
+						{locationCoords && (
 							<GoogleMap
 								mapContainerStyle={{
 									width: "100%",
@@ -196,27 +215,10 @@ export default function NearbyForm() {
 							>
 								<Marker position={locationCoords} />
 							</GoogleMap>
-						)} */}
-						{newNearbyPlaces.location && (
-							<iframe
-								width="100%"
-								height="450"
-								// style="border:0"
-								style={{
-									border: 0,
-								}}
-								loading="lazy"
-								allowfullscreen
-								referrerpolicy="no-referrer-when-downgrade"
-								src={
-									"https://www.google.com/maps/embed/v1/place?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=place_id:" +
-									newNearbyPlaces.location
-								}
-							></iframe>
 						)}
 					</>
 				)}
-			</Grid>
+			</Grid> */}
 
 			<Grid item xs={12}>
 				<TypeSelectionField
@@ -229,6 +231,28 @@ export default function NearbyForm() {
 					}
 				/>
 			</Grid>
+
+			{newNearbyPlaces.location && newNearbyPlaces.type && (
+				<Grid item xs={12}>
+					<iframe
+						width="100%"
+						height="450"
+						// style="border:0"
+						style={{
+							border: 0,
+						}}
+						loading="lazy"
+						allowfullscreen
+						referrerpolicy="no-referrer-when-downgrade"
+						src={`https://www.google.com/maps/embed/v1/search?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=${
+							newNearbyPlaces.type
+						}s near ${
+							savedPlacesMap[newNearbyPlaces.location].name
+						}`}
+					></iframe>
+				</Grid>
+			)}
+
 			<Grid item xs={12}>
 				<RadioGroup
 					row
@@ -274,11 +298,11 @@ export default function NearbyForm() {
 					variant="contained"
 					fullWidth
 					onClick={searchNearbyPlaces}
-					startIcon={<Search />}
+					startIcon={<Add />}
 					loading={loading}
 					loadingPosition="start"
 				>
-					Search Nearby Places
+					Add Nearby Places
 				</LoadingButton>
 			</Grid>
 		</Grid>

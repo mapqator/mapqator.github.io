@@ -213,7 +213,7 @@ export default function ContextStepper({
 			icon: <Flag />,
 		},
 		{
-			label: "Add Places",
+			label: "Add Information of Places/POIs	",
 			description: `Start by searching for a location. Type in a place name or address in the search bar below.`,
 			icon: <SearchIcon />,
 			component: (
@@ -237,7 +237,7 @@ export default function ContextStepper({
 			context: context.places,
 		},
 		{
-			label: "Explore Nearby Places",
+			label: "Explore Nearby POIs",
 			description: `Use the Nearby Search Tool to discover points of interest around your selected location. You just need to select a location and the type of poi you are looking for.
 			You can choose a type from the given list or a custom type. It is recommended to choose from the given list for better result.`,
 			icon: <PlaceIcon />,
@@ -246,7 +246,7 @@ export default function ContextStepper({
 			context: context.nearby,
 		},
 		{
-			label: "Discover Area POIs",
+			label: "Explore POIs inside Places",
 			description: `Explore various Points of Interest (POIs) within a larger area. Select a region like a city or neighborhood, then choose a type (e.g., restaurants, museums, parks) to see POIs within that area.`,
 			icon: <ExploreIcon />,
 			form: <AreaForm />,
@@ -254,15 +254,7 @@ export default function ContextStepper({
 			context: context.area,
 		},
 		{
-			label: "Calculate Distances",
-			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Choose origins, destinations and travel mode to find distance and durations.`,
-			icon: <MapIcon />,
-			form: <DistanceForm />,
-			grid: Object.keys(distanceMatrix).length > 0 && <DistanceGrid />,
-			context: context.distance,
-		},
-		{
-			label: "Get Directions",
+			label: "Get Alternative Routes",
 			description: `Utilize the Directions API to find routes between two points. Choose origin, destination and travel mode to find possible routes between them.`,
 			icon: <DirectionsIcon />,
 			form: <DirectionForm />,
@@ -271,6 +263,15 @@ export default function ContextStepper({
 			),
 			context: context.direction,
 		},
+		{
+			label: "Get Duration of Recommended Route",
+			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Choose origins, destinations and travel mode to find distance and durations.`,
+			icon: <MapIcon />,
+			form: <DistanceForm />,
+			grid: Object.keys(distanceMatrix).length > 0 && <DistanceGrid />,
+			context: context.distance,
+		},
+
 		{
 			label: "Set Context Parameters",
 			description: `Set the time, day, and location that should be used as a basis for answering questions. This will help provide more accurate and context-specific responses.`,
