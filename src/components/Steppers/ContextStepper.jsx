@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import {
 	Box,
 	Typography,
@@ -32,6 +32,8 @@ import NearbyForm from "@/components/Forms/NearbyForm";
 import AutocompleteSearchBox from "@/components/InputFields/AutocompleteSearchBox";
 import MapComponent from "@/components/GoogleMap/MapComponent";
 import PlaceInformation from "@/components/Grids/PlacesGrid";
+import { LoadingButton } from "@mui/lab";
+import { setLoading } from "@/app/home/page";
 
 function ContextStep({
 	step,
@@ -43,6 +45,7 @@ function ContextStep({
 	handleBack,
 	loadExample,
 }) {
+	const [loading, setLoading] = useState(false);
 	return (
 		<>
 			<StepLabel
@@ -148,12 +151,17 @@ function ContextStep({
 									Back
 								</Button>
 							) : (
-								<Button
-									onClick={loadExample}
+								<LoadingButton
+									onClick={async () => {
+										setLoading(true);
+										await loadExample();
+										setLoading(false);
+									}}
 									sx={{ mt: 1, mr: 1 }}
+									loading={loading}
 								>
 									Start with Example
-								</Button>
+								</LoadingButton>
 							)}
 						</div>
 					</Box>

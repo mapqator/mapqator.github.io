@@ -39,15 +39,17 @@ export default function MapComponent() {
 		width: "100%",
 	};
 
-	return googleMapsApiKey && (
-		<GoogleMap
-			mapContainerStyle={mapStyles}
-			zoom={12}
-			center={locations[locations.length - 1]}
-		>
-			{locations.map((location, index) => (
-				<Marker key={index} position={location} />
-			))}
-		</GoogleMap>
+	return (
+		locations.length > 0 && (
+			<GoogleMap
+				mapContainerStyle={mapStyles}
+				zoom={12}
+				center={locations[locations.length - 1]}
+			>
+				{locations.map((location, index) => (
+					<Marker key={index} position={location} />
+				))}
+			</GoogleMap>
+		)
 	);
 }
