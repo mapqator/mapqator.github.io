@@ -185,7 +185,7 @@ export default function NearbyForm() {
 						>
 							<Marker position={mapCenter} />
 						</GoogleMap> */}
-						{locationCoords && (
+						{/* {locationCoords && (
 							<GoogleMap
 								mapContainerStyle={{
 									width: "100%",
@@ -196,6 +196,23 @@ export default function NearbyForm() {
 							>
 								<Marker position={locationCoords} />
 							</GoogleMap>
+						)} */}
+						{newNearbyPlaces.location && (
+							<iframe
+								width="100%"
+								height="450"
+								// style="border:0"
+								style={{
+									border: 0,
+								}}
+								loading="lazy"
+								allowfullscreen
+								referrerpolicy="no-referrer-when-downgrade"
+								src={
+									"https://www.google.com/maps/embed/v1/place?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=place_id:" +
+									newNearbyPlaces.location
+								}
+							></iframe>
 						)}
 					</>
 				)}

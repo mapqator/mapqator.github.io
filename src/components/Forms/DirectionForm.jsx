@@ -116,6 +116,23 @@ export default function DirectionForm() {
 				/>
 			</Grid>
 
+			{newDirection.from && newDirection.to && (
+				<Grid item xs={12}>
+					<iframe
+						width="100%"
+						height="450"
+						// style="border:0"
+						style={{
+							border: 0,
+						}}
+						loading="lazy"
+						allowfullscreen
+						referrerpolicy="no-referrer-when-downgrade"
+						src={`https://www.google.com/maps/embed/v1/directions?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&origin=place_id:${newDirection.from}&destination=place_id:${newDirection.to}&mode=${newDirection.travelMode}`}
+					/>
+				</Grid>
+			)}
+
 			<Grid item xs={12}>
 				<LoadingButton
 					variant="contained"
@@ -125,7 +142,7 @@ export default function DirectionForm() {
 					loadingPosition="start"
 					startIcon={<Add />}
 				>
-					Find alternative routes
+					Add alternative routes
 				</LoadingButton>
 			</Grid>
 		</Grid>

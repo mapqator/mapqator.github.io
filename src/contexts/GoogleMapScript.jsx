@@ -15,9 +15,14 @@ export default function GoogleMapWrapper({ children }) {
 		}
 	}, [isAuthenticated]);
 
+	// const { isLoaded } = useJsApiLoader({
+	// 	id: "google-map-script",
+	// 	googleMapsApiKey: "AIzaSyCNtIajO-Xwpocu9ARrah2khQF-tG8vWok",
+	// });
+
 	return googleMapsApiKey ? (
 		<LoadScript
-			googleMapsApiKey={"AIzaSyCNtIajO-Xwpocu9ARrah2khQF-tG8vWok"}
+			googleMapsApiKey={"AIzaSyA8FR4zPdFgUNu4Rr_iuMYgcOb6gCCr21M"}
 		>
 			{children}
 		</LoadScript>
@@ -31,7 +36,7 @@ export default function GoogleMapWrapper({ children }) {
 	// 		{children}
 	// 	</LoadScript>
 	// );
-	// return <>{children}</>;
+	return <>{children}</>;
 	// return googleMapsApiKey ? (
 	// 	<LoadScript googleMapsApiKey={googleMapsApiKey}>{children}</LoadScript>
 	// ) : googleMapsApiKey !== undefined ? (

@@ -15,11 +15,12 @@ export default function RoutesList({ routes, showSteps }) {
 										<h1 className="w-[60%] text-wrap">
 											{"Via " + route.label}
 										</h1>
-										<h1 className="w-[40%] text-right">
-											{route.duration +
-												" | " +
-												route.distance}
-										</h1>
+										<div className="flex flex-col w-[40%] text-right">
+											<h1>{route.duration}</h1>
+											<h1 className="text-zinc-600">
+												{route.distance}
+											</h1>
+										</div>
 									</div>
 								}
 								secondary={
