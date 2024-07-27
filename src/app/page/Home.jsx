@@ -33,11 +33,7 @@ export default function Home() {
 	}, [selected]);
 
 	return (
-		<Container
-			maxWidth="md"
-			sx={{ mt: 4, mb: 4 }}
-			// className="gap-5 flex flex-col"
-		>
+		<Container maxWidth="md" sx={{ mt: 4, mb: 4 }} className="min-h-screen">
 			<Navbar {...{ selected, setSelected }} />
 			<Toolbar />
 			{selected === "context" ? (

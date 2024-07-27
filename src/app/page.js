@@ -10,6 +10,7 @@ export default function PageComponent() {
 	return (
 		<GlobalContextProvider>
 			<Home />
+			{/* <footer>Mahir Labib Dihan</footer> */}
 		</GlobalContextProvider>
 	);
 }

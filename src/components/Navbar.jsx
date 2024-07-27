@@ -72,7 +72,7 @@ export default function Navbar({ selected, setSelected }) {
 						>
 							MapQuest
 						</Typography>
-						<h6
+						{/* <h6
 							// sx={{ ml: 2, color: "#333", fontWeight: "bold" }}
 							className="text-xs text-gray-500 ml-8 h-3"
 							style={{
@@ -81,7 +81,7 @@ export default function Navbar({ selected, setSelected }) {
 							}}
 						>
 							by Mahir Labib Dihan
-						</h6>
+						</h6> */}
 					</div>
 				</Box>
 

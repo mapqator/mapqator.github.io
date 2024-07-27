@@ -55,7 +55,7 @@ export default function PageComponent() {
 								>
 									MapQuest
 								</Typography>
-								<Typography
+								{/* <Typography
 									variant="h6"
 									component="div"
 									sx={{
@@ -71,7 +71,7 @@ export default function PageComponent() {
 									// style={{}}
 								>
 									by Mahir Labib Dihan
-								</Typography>
+								</Typography> */}
 							</div>
 						</motion.div>
 

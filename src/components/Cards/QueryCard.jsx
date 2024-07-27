@@ -116,10 +116,10 @@ export default function QueryCard({ entry, onEdit }) {
 							</Box>
 						</Box>
 
-						<h2 className="text-base font-semibold px-1 flex flex-row gap-1 items-center">
+						{/* <h2 className="text-base font-semibold px-1 flex flex-row gap-1 items-center">
 							<FontAwesomeIcon icon={faUser} />
 							{entry.username}
-						</h2>
+						</h2> */}
 					</Box>
 					<div className="flex flex-row gap-4 justify-between items-start w-full">
 						<div className="flex-grow min-w-0">

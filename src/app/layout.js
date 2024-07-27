@@ -6,7 +6,9 @@ import AuthContextProvider from "@/contexts/AuthContext";
 import AppContextProvider from "@/contexts/AppContext";
 import GoogleMapWrapper from "@/contexts/GoogleMapScript";
 const inter = Inter({ subsets: ["latin"] });
-
+import Link from "next/link";
+import { GitHub, LinkedIn, Mail } from "@mui/icons-material";
+import Footer from "./footer";
 export const metadata = {
 	metadataBase: new URL("https://mahirlabibdihan.github.io/mapquest"),
 	title: {
@@ -35,6 +37,7 @@ export default function RootLayout({ children }) {
 						</AppContextProvider>
 					</AuthContextProvider>
 				</AppRouterCacheProvider>
+				<Footer />
 			</body>
 		</html>
 	);
