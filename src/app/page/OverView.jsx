@@ -88,7 +88,7 @@ export default function HomePage({ setSelected }) {
 								}}
 								variant="contained"
 								onClick={() => setSelected(step.key)}
-								href={`#${step.key}`}
+								// href={`#${step.key}`}
 								disabled={
 									(step.key === "question" &&
 										contextStatus !== "saved") ||
