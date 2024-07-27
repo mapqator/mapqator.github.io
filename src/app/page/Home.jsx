@@ -14,7 +14,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import KeyStoreButton from "@/components/Buttons/KeyStoreButton";
 import LeftSidebar from "@/components/LeftSidebar";
 import config from "@/config/config";
-import HomePage from "../features/page";
+import HomePage from "./OverView";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import ContextGeneratorService from "@/services/contextGeneratorService";
 import { AppContext } from "@/contexts/AppContext";

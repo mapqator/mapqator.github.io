@@ -1,36 +1,18 @@
 "use client";
-import {
-	Button,
-	Typography,
-	Box,
-	Avatar,
-	Grid,
-	Paper,
-	Container,
-} from "@mui/material";
+import { Button, Typography, Box } from "@mui/material";
 import MapIcon from "@mui/icons-material/Map";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import DatasetIcon from "@mui/icons-material/Dataset";
-import CompareIcon from "@mui/icons-material/Compare";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { useRouter } from "next/navigation";
-import config from "@/config/config";
-import { useAuth } from "@/contexts/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faArrowDown,
 	faArrowRight,
 	faRobot,
 } from "@fortawesome/free-solid-svg-icons";
-import { ArrowDownward } from "@mui/icons-material";
 import { useContext } from "react";
 import { GlobalContext } from "@/contexts/GlobalContext";
 
 export default function HomePage({ setSelected }) {
-	const router = useRouter();
-	const { isAuthenticated } = useAuth();
-	const { context, contextStatus } = useContext(GlobalContext);
-	const { query, queryStatus } = useContext(GlobalContext);
+	const { queryStatus, contextStatus } = useContext(GlobalContext);
 
 	const steps = [
 		{
