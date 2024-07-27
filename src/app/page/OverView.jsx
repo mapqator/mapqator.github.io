@@ -63,7 +63,7 @@ export default function HomePage({ setSelected }) {
 	];
 
 	return (
-		<div className="h-full flex md:items-center">
+		<div className="h-full flex md:items-center p-2 pt-5">
 			<div className="flex flex-col md:flex-row items-center mx-auto">
 				{steps.map((step, index) => (
 					<div
