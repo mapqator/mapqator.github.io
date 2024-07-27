@@ -190,7 +190,7 @@ export default function QuestionCreationPage({ handleContextEdit, onFinish }) {
 				handleReset={handleReset}
 			/>
 
-			{queries.filter((item) => item.username === getUserName()).length >
+			{/* {queries.filter((item) => item.username === getUserName()).length >
 				0 && (
 				<>
 					<Divider sx={{ my: 4 }} />
@@ -202,7 +202,7 @@ export default function QuestionCreationPage({ handleContextEdit, onFinish }) {
 						/>
 					</div>
 				</>
-			)}
+			)} */}
 		</Box>
 	);
 }

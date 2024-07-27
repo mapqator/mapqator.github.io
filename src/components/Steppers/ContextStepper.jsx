@@ -34,6 +34,7 @@ import MapComponent from "@/components/GoogleMap/MapComponent";
 import PlaceInformation from "@/components/Grids/PlacesGrid";
 import { LoadingButton } from "@mui/lab";
 import { setLoading } from "@/app/home/page";
+import { showError } from "@/contexts/ToastProvider";
 
 function ContextStep({
 	step,
@@ -356,7 +357,24 @@ export default function ContextStepper({
 			<Divider sx={{ my: 1 }} />
 			<Paper square elevation={0} className="flex">
 				<Button
-					onClick={onFinish}
+					onClick={() => {
+						// if (
+						// 	Object.keys(selectedPlacesMap).length +
+						// 		Object.keys(nearbyPlacesMap).length +
+						// 		Object.keys(poisMap).length +
+						// 		Object.keys(directionInformation).length +
+						// 		Object.keys(distanceMatrix).length ===
+						// 	0
+						// ) {
+						// 	setActiveStep(0);
+						// 	showError(
+						// 		"Please add some place information first"
+						// 	);
+						// } else
+						{
+							onFinish();
+						}
+					}}
 					variant="contained"
 					sx={{ mt: 1, mr: 1 }}
 					startIcon={<Save />}
