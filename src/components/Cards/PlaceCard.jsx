@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -103,9 +103,12 @@ function PlaceCardDetails({ placeId }) {
 		</FormControl>
 	);
 }
-export default function PlaceCard({ placeId }) {
-	const [expanded, setExpanded] = useState(false);
+export default function PlaceCard({ placeId, index }) {
+	const [expanded, setExpanded] = useState(index === 0);
 
+	useEffect(() => {
+		setExpanded(index === 0);
+	}, [index]);
 	return (
 		<Card
 			elevation={3}
@@ -131,6 +134,19 @@ export default function PlaceCard({ placeId }) {
 
 				<Collapse in={expanded} timeout="auto" unmountOnExit>
 					<PlaceCardDetails {...{ placeId }} />
+					<iframe
+						width="100%"
+						// height="350"
+						// style="border:0"
+						style={{
+							border: 0,
+							aspectRatio: "1 / 1",
+						}}
+						loading="lazy"
+						// allowfullscreen
+						referrerpolicy="no-referrer-when-downgrade"
+						src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=place_id:${placeId}`}
+					></iframe>
 				</Collapse>
 
 				<Box

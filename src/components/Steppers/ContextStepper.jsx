@@ -250,7 +250,7 @@ export default function ContextStepper({
 		},
 		{
 			label: "Explore Nearby POIs",
-			description: `Use the Nearby Search Tool to discover points of interest around your selected location. You just need to select a location and the type of poi you are looking for.
+			description: `Use the Nearby Search Tool to discover points of interest around your selected location. You just need to select a location and the type of poi you are looking for. Additionally you can specify the order in which results are listed. Possible values are Prominence and Distance. When prominence is specified, the radius parameter is required. 
 			You can choose a type from the given list or a custom type. It is recommended to choose from the given list for better result.`,
 			icon: <PlaceIcon />,
 			form: <NearbyForm {...{ handlePlaceAdd }} />,
