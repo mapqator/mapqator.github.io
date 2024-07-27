@@ -128,7 +128,7 @@ export default function LeftSidebar({ selected, setSelected, window }) {
 		<div>
 			<Toolbar className="!px-4">
 				<div
-					className="text-3xl font-bold  flex flex-row justify-center w-full gap-2 cursor-pointer"
+					className="text-3xl font-bold flex flex-row justify-center w-full gap-2 cursor-pointer"
 					onClick={() => router.push("/landing")}
 				>
 					<div className="hidden lg:flex">
@@ -143,7 +143,7 @@ export default function LeftSidebar({ selected, setSelected, window }) {
 						<Image
 							src={`${config.baseUrl}/images/logo.png`}
 							alt="MapQuest Logo"
-							width={20}
+							width={30}
 							height={20}
 						/>
 					</div>
