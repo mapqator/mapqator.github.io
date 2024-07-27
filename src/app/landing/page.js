@@ -55,23 +55,23 @@ export default function PageComponent() {
 								>
 									MapQuest
 								</Typography>
-								{/* <Typography
+								<Typography
 									variant="h6"
 									component="div"
 									sx={{
 										color: "#666",
 										fontWeight: "300",
 										ml: {
-											xs: "12rem",
-											md: "16rem",
+											xs: "2rem",
+											md: "3rem",
 										},
-										transform: "translateY(-15px)",
+										transform: "translateY(-10px)",
 									}}
 									className="h-3 font-mono"
 									// style={{}}
 								>
-									by Mahir Labib Dihan
-								</Typography> */}
+									A Tool for NLP and Geo-Spatial Researchers
+								</Typography>
 							</div>
 						</motion.div>
 
@@ -121,7 +121,8 @@ export default function PageComponent() {
 								fontWeight: "300",
 							}}
 						>
-							Discover, Navigate, and Explore with MapQuest
+							Create, Manage, and Evaluate Geo-Spatial QnA from
+							Map Services
 						</Typography>
 					</motion.div>
 					<motion.div
