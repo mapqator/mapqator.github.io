@@ -26,18 +26,12 @@ export default function Home() {
 	const { setContextStatus, setQueryStatus } = useContext(GlobalContext);
 	const {
 		selectedPlacesMap,
-		setSelectedPlacesMap,
 		distanceMatrix,
-		setDistanceMatrix,
 		directionInformation,
-		setDirectionInformation,
 		nearbyPlacesMap,
-		setNearbyPlacesMap,
 		poisMap,
-		setPoisMap,
 		setContext,
 		currentInformation,
-		setCurrentInformation,
 	} = useContext(GlobalContext);
 
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
@@ -127,7 +121,7 @@ export default function Home() {
 						onFinish={() => {
 							setContextStatus("saved");
 							setSelected("home");
-							router.push("/#home");
+							// router.push("/#home");
 							window.scrollTo(0, 0);
 						}}
 						{...{ activeStep, setActiveStep }}
@@ -136,13 +130,13 @@ export default function Home() {
 					<QuestionCreationPage
 						handleContextEdit={() => {
 							setSelected("context");
-							router.push("/#context");
+							// router.push("/#context");
 							window.scrollTo(0, 0);
 						}}
 						onFinish={() => {
 							setSelected("home");
 							setQueryStatus("saved");
-							router.push("/#home");
+							// router.push("/#home");
 							window.scrollTo(0, 0);
 						}}
 					/>
@@ -150,7 +144,7 @@ export default function Home() {
 					<DatasetPage
 						onEdit={() => {
 							setSelected("question");
-							router.push("/#question");
+							// router.push("/#question");
 							window.scrollTo(0, 0);
 						}}
 					/>
