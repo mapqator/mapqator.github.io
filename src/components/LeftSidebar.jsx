@@ -159,14 +159,6 @@ export default function LeftSidebar({ selected, setSelected, window }) {
 						key: "home",
 					},
 					{
-						/* { name: "Context", key: "context", icon: <MapIcon /> },
-					{
-						name: "Question",
-						key: "question",
-						icon: <QuestionAnswerIcon />,
-					}, */
-					},
-					{
 						name: "Dataset",
 						key: "dataset",
 						icon: <DatasetIcon />,
