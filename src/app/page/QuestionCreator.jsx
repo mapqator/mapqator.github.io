@@ -116,7 +116,7 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 	};
 
 	return (
-		<>
+		<Box sx={{ mt: 4, mb: 4 }}>
 			<h1 className="text-3xl md:text-4xl font-normal pb-5">
 				Create MCQ Question based on the Context
 			</h1>
@@ -200,6 +200,6 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 					</div>
 				</>
 			)}
-		</>
+		</Box>
 	);
 }

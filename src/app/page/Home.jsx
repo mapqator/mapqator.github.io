@@ -14,6 +14,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import KeyStoreButton from "@/components/Buttons/KeyStoreButton";
 import LeftSidebar from "@/components/LeftSidebar";
 import config from "@/config/config";
+import HomePage from "../features/page";
 export default function Home() {
 	const [activeStep, setActiveStep] = useState(null);
 	const [selected, setSelected] = useState("home");
@@ -45,7 +46,7 @@ export default function Home() {
 
 			<Container
 				maxWidth="md"
-				sx={{ mt: 4, mb: 4 }}
+				// sx={{ mt: 4, mb: 4 }}
 				className="min-h-screen"
 			>
 				{/* <Navbar {...{ selected, setSelected }} /> */}
@@ -80,7 +81,7 @@ export default function Home() {
 				) : selected === "evaluation" ? (
 					<EvaluationResultsPage />
 				) : (
-					<></>
+					selected === "home" && <HomePage {...{ setSelected }} />
 				)}
 
 				{/* {isAuthenticated && <KeyStoreButton />} */}

@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import ContextGeneratorService from "@/services/contextGeneratorService";
 import ContextStepper from "@/components/Steppers/ContextStepper";
@@ -198,7 +198,7 @@ export default function ContextGenerator({
 	// }, []);
 
 	return (
-		<>
+		<Box sx={{ mt: 4, mb: 4 }}>
 			<h1 className="text-3xl md:text-4xl font-normal pb-5">
 				Create Geo-Spatial Context Using Map Services
 			</h1>
@@ -212,6 +212,6 @@ export default function ContextGenerator({
 				}}
 			/>
 			<KeyStoreButton />
-		</>
+		</Box>
 	);
 }

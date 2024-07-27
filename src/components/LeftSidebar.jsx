@@ -38,7 +38,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import AuthService from "@/services/authService";
-import { Login, Logout } from "@mui/icons-material";
+import { AccountTree, Login, Logout } from "@mui/icons-material";
 const drawerWidth = config.drawerWidth;
 function NavButton({ icon, name, navkey, setSelected, selected }) {
 	const pathname = usePathname();
@@ -156,8 +156,8 @@ export default function LeftSidebar({ selected, setSelected, window }) {
 			<List>
 				{[
 					{
-						name: "Home",
-						icon: <HomeIcon />,
+						name: "Overview",
+						icon: <AccountTree />,
 						key: "home",
 					},
 					{ name: "Context", key: "context", icon: <MapIcon /> },

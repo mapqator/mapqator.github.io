@@ -16,138 +16,126 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useRouter } from "next/navigation";
 import config from "@/config/config";
 import { useAuth } from "@/contexts/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRobot } from "@fortawesome/free-solid-svg-icons";
 
-export default function HomePage() {
+export default function HomePage({ setSelected }) {
 	const router = useRouter();
 	const { isAuthenticated } = useAuth();
 
 	const steps = [
 		{
-			icon: <MapIcon />,
+			icon: (
+				<MapIcon
+					style={{
+						fontSize: "2rem",
+					}}
+				/>
+			),
 			label: "Generate Context",
-			description: "Create rich, place-related contexts",
+			description:
+				"Generate rich, place-related contexts using our intuitive interface with Map Services.",
+			key: "context",
 		},
 		{
-			icon: <QuestionAnswerIcon />,
-			label: "Create Questions",
-			description: "Formulate relevant questions",
+			icon: (
+				<QuestionAnswerIcon
+					style={{
+						fontSize: "2rem",
+					}}
+				/>
+			),
+			label: "Create Question",
+			description:
+				"Easily create relevant questions based on the map contexts you've generated.",
+			key: "question",
 		},
+		// {
+		// 	icon: <DatasetIcon />,
+		// 	label: "Manage Datasets",
+		// 	description: "Organize and version your QnA datasets",
+		// },
 		{
-			icon: <DatasetIcon />,
-			label: "Manage Datasets",
-			description: "Organize and version your QnA datasets",
-		},
-		{
-			icon: <CompareIcon />,
-			label: "Compare LLMs",
-			description: "Evaluate GPT, Gemini, Mistral, Phi3, and more",
+			icon: (
+				<FontAwesomeIcon
+					icon={faRobot}
+					style={{
+						fontSize: "2rem",
+					}}
+				/>
+			),
+			label: "Evaluate Models",
+			description:
+				"Evaluate open-source (Phi 3, Mistral, Qwen2) or closed-source (GPT, Gemini) models.",
+			key: "evaluation",
 		},
 	];
 
 	return (
-		<Box
-			sx={{ flexGrow: 1, bgcolor: "#f5f5f5", minHeight: "100vh", py: 4 }}
-		>
-			<Container maxWidth="lg">
-				<Typography
-					variant="h3"
-					align="center"
-					sx={{ mb: 6, fontWeight: "bold", color: "#333" }}
-				>
-					MapQuest Workflow
-				</Typography>
-				<Paper elevation={3} sx={{ p: 4, mb: 4 }}>
-					<Grid
-						container
-						spacing={2}
-						alignItems="center"
-						justifyContent="center"
-					>
-						{steps.map((step, index) => (
-							<>
-								<Grid
-									item
-									key={step.label}
-									xs={12}
-									sm={6}
-									md={2.5}
+		<div className="h-full flex items-center">
+			<Grid
+				container
+				spacing={2}
+				alignItems="center"
+				justifyContent="center"
+			>
+				{steps.map((step, index) => (
+					<>
+						<Grid item key={step.label} xs={12} sm={6} md={2.5}>
+							<Box
+								sx={{
+									display: "flex",
+									flexDirection: "column",
+									alignItems: "center",
+									textAlign: "center",
+								}}
+							>
+								<Button
+									sx={{
+										width: 80,
+										height: 80,
+										mb: 2,
+										borderRadius: "50%",
+										color: "white",
+									}}
+									variant="contained"
+									onClick={() => setSelected(step.key)}
+									href={`#${step.key}`}
 								>
-									<Box
-										sx={{
-											display: "flex",
-											flexDirection: "column",
-											alignItems: "center",
-											textAlign: "center",
-										}}
-									>
-										<Avatar
-											sx={{
-												width: 80,
-												height: 80,
-												bgcolor: "primary.main",
-												mb: 2,
-											}}
-										>
-											{step.icon}
-										</Avatar>
-										<Typography variant="h6" sx={{ mb: 1 }}>
-											{step.label}
-										</Typography>
-										<Typography
-											variant="body2"
-											color="text.secondary"
-										>
-											{step.description}
-										</Typography>
-									</Box>
-								</Grid>
-								{/* {index < steps.length - 1 && (
-									<Grid
-										item
-										xs={12}
-										sm={6}
-										md={1}
-										sx={{
-											display: "flex",
-											justifyContent: "center",
-											alignItems: "center",
-										}}
-									>
-										<ArrowForwardIcon
-											color="action"
-											sx={{ fontSize: 40 }}
-										/>
-									</Grid>
-								)} */}
-							</>
-						))}
-					</Grid>
-				</Paper>
-				<Box sx={{ textAlign: "center" }}>
-					<Button
-						variant="contained"
-						size="large"
-						sx={{
-							px: 4,
-							py: 1.5,
-							fontSize: "1.1rem",
-							backgroundColor: "#4285F4",
-							"&:hover": {
-								backgroundColor: "#3367D6",
-							},
-						}}
-						onClick={() =>
-							router.push(
-								isAuthenticated
-									? config.loginRedirect + "#onboard"
-									: config.logoutRedirect
-							)
-						}
-					>
-						Start Your Journey
-					</Button>
-				</Box>
-			</Container>
-		</Box>
+									{step.icon}
+								</Button>
+								<Typography variant="h6" sx={{ mb: 1 }}>
+									{step.label}
+								</Typography>
+								<Typography
+									variant="body2"
+									color="text.secondary"
+								>
+									{step.description}
+								</Typography>
+							</Box>
+						</Grid>
+						{index < steps.length - 1 && (
+							<Grid
+								item
+								xs={12}
+								sm={6}
+								md={1}
+								sx={{
+									display: "flex",
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+							>
+								<ArrowForwardIcon
+									color="action"
+									sx={{ fontSize: 40 }}
+								/>
+							</Grid>
+						)}
+					</>
+				))}
+			</Grid>
+		</div>
 	);
 }
