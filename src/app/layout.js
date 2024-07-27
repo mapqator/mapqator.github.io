@@ -37,7 +37,7 @@ export default function RootLayout({ children }) {
 						</AppContextProvider>
 					</AuthContextProvider>
 				</AppRouterCacheProvider>
-				<Footer />
+				{/* <Footer /> */}
 			</body>
 		</html>
 	);

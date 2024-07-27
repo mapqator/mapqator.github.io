@@ -3,120 +3,130 @@ import {
 	Button,
 	Typography,
 	Box,
+	Avatar,
 	Grid,
 	Paper,
-	Icon,
 	Container,
 } from "@mui/material";
 import MapIcon from "@mui/icons-material/Map";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import DatasetIcon from "@mui/icons-material/Dataset";
-import AssessmentIcon from "@mui/icons-material/Assessment";
+import CompareIcon from "@mui/icons-material/Compare";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useRouter } from "next/navigation";
 import config from "@/config/config";
-import { useContext } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+
 export default function HomePage() {
 	const router = useRouter();
 	const { isAuthenticated } = useAuth();
-	const features = [
+
+	const steps = [
 		{
-			icon: <MapIcon fontSize="large" />,
-			title: "Context Generation",
-			description:
-				"Generate rich, place-related contexts using our intuitive interface with Google Maps API.",
+			icon: <MapIcon />,
+			label: "Generate Context",
+			description: "Create rich, place-related contexts",
 		},
 		{
-			icon: <QuestionAnswerIcon fontSize="large" />,
-			title: "Question Creation",
-			description:
-				"Easily create relevant questions based on the map contexts you've generated.",
+			icon: <QuestionAnswerIcon />,
+			label: "Create Questions",
+			description: "Formulate relevant questions",
 		},
 		{
-			icon: <DatasetIcon fontSize="large" />,
-			title: "Dataset Management",
-			description:
-				"Organize, edit, and version your QnA datasets efficiently with our comprehensive tools.",
+			icon: <DatasetIcon />,
+			label: "Manage Datasets",
+			description: "Organize and version your QnA datasets",
 		},
 		{
-			icon: <AssessmentIcon fontSize="large" />,
-			title: "Evaluation Results",
-			description:
-				"Showcase your model's performance using our built-in visualization tools.",
+			icon: <CompareIcon />,
+			label: "Compare LLMs",
+			description: "Evaluate GPT, Gemini, Mistral, Phi3, and more",
 		},
 	];
 
 	return (
 		<Box
 			sx={{ flexGrow: 1, bgcolor: "#f5f5f5", minHeight: "100vh", py: 4 }}
-			className="flex flex-row items-center"
 		>
 			<Container maxWidth="lg">
 				<Typography
-					gutterBottom
+					variant="h3"
 					align="center"
-					sx={{
-						fontSize: { xs: "2.4rem", md: "3.5rem" },
-						mb: 1,
-						fontWeight: "bold",
-						color: "#333",
-					}}
+					sx={{ mb: 6, fontWeight: "bold", color: "#333" }}
 				>
-					MapQuest for NLP Researchers
+					MapQuest Workflow
 				</Typography>
-				<Typography
-					variant="h6"
-					align="center"
-					sx={{ mb: 6, color: "#666" }}
-				>
-					Create, manage, and evaluate QnA datasets with place-related
-					contexts
-				</Typography>
-
-				<Grid container spacing={4}>
-					{features.map((feature, index) => (
-						<Grid item xs={12} sm={6} md={3} key={index}>
-							<Paper
-								elevation={3}
-								sx={{
-									p: 3,
-									height: "100%",
-									display: "flex",
-									flexDirection: "column",
-									alignItems: "center",
-									textAlign: "center",
-								}}
-							>
-								<Icon
-									color="primary"
-									sx={{ fontSize: 40, mb: 2 }}
+				<Paper elevation={3} sx={{ p: 4, mb: 4 }}>
+					<Grid
+						container
+						spacing={2}
+						alignItems="center"
+						justifyContent="center"
+					>
+						{steps.map((step, index) => (
+							<>
+								<Grid
+									item
+									key={step.label}
+									xs={12}
+									sm={6}
+									md={2.5}
 								>
-									{feature.icon}
-								</Icon>
-								<Typography
-									variant="h6"
-									component="h3"
-									gutterBottom
-									sx={{ fontWeight: "bold" }}
-								>
-									{feature.title}
-								</Typography>
-								<Typography
-									variant="body2"
-									color="text.secondary"
-								>
-									{feature.description}
-								</Typography>
-							</Paper>
-						</Grid>
-					))}
-				</Grid>
-
-				<Box sx={{ mt: 8, textAlign: "center" }}>
+									<Box
+										sx={{
+											display: "flex",
+											flexDirection: "column",
+											alignItems: "center",
+											textAlign: "center",
+										}}
+									>
+										<Avatar
+											sx={{
+												width: 80,
+												height: 80,
+												bgcolor: "primary.main",
+												mb: 2,
+											}}
+										>
+											{step.icon}
+										</Avatar>
+										<Typography variant="h6" sx={{ mb: 1 }}>
+											{step.label}
+										</Typography>
+										<Typography
+											variant="body2"
+											color="text.secondary"
+										>
+											{step.description}
+										</Typography>
+									</Box>
+								</Grid>
+								{/* {index < steps.length - 1 && (
+									<Grid
+										item
+										xs={12}
+										sm={6}
+										md={1}
+										sx={{
+											display: "flex",
+											justifyContent: "center",
+											alignItems: "center",
+										}}
+									>
+										<ArrowForwardIcon
+											color="action"
+											sx={{ fontSize: 40 }}
+										/>
+									</Grid>
+								)} */}
+							</>
+						))}
+					</Grid>
+				</Paper>
+				<Box sx={{ textAlign: "center" }}>
 					<Button
 						variant="contained"
 						size="large"
-						// href="/home"
 						sx={{
 							px: 4,
 							py: 1.5,
@@ -134,7 +144,7 @@ export default function HomePage() {
 							)
 						}
 					>
-						Get Started
+						Start Your Journey
 					</Button>
 				</Box>
 			</Container>

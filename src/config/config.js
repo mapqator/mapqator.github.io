@@ -4,7 +4,7 @@ const config = {
 		: process.env.NODE_ENV === "development"
 		? ""
 		: "https://mahirlabibdihan.github.io/mapquest",
-	drawerWidth: 270,
+	drawerWidth: 230,
 	topbarHeight: 64,
 	loginRedirect: "/",
 	logoutRedirect: "/login",

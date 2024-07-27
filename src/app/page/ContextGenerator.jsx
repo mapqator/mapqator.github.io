@@ -7,6 +7,7 @@ import { AppContext } from "@/contexts/AppContext";
 import example from "./example.json";
 import mapApi from "@/api/mapApi";
 import dayjs from "dayjs";
+import KeyStoreButton from "@/components/Buttons/KeyStoreButton";
 export default function ContextGenerator({
 	onFinish,
 	activeStep,
@@ -210,6 +211,7 @@ export default function ContextGenerator({
 					setActiveStep,
 				}}
 			/>
+			<KeyStoreButton />
 		</>
 	);
 }

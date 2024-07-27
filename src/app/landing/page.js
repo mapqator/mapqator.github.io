@@ -3,8 +3,17 @@ import { Button, Typography, Box, Fade } from "@mui/material";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { Grid, Paper, Icon, Container } from "@mui/material";
+import MapIcon from "@mui/icons-material/Map";
+import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
+import DatasetIcon from "@mui/icons-material/Dataset";
+import AssessmentIcon from "@mui/icons-material/Assessment";
+import config from "@/config/config";
+import { useAuth } from "@/contexts/AuthContext";
+import Footer from "../footer";
 
 export default function PageComponent() {
+	const { isAuthenticated } = useAuth();
 	const [baseUrl, setBaseUrl] = useState(
 		process.env.REACT_APP_BASE_URL
 			? process.env.REACT_APP_BASE_URL
@@ -17,6 +26,34 @@ export default function PageComponent() {
 	useEffect(() => {
 		setShowContent(true);
 	}, []);
+
+	const features = [
+		{
+			icon: <MapIcon fontSize="large" />,
+			title: "Context Generation",
+			description:
+				"Generate rich, place-related contexts using our intuitive interface with Google Maps API.",
+		},
+		{
+			icon: <QuestionAnswerIcon fontSize="large" />,
+			title: "Question Creation",
+			description:
+				"Easily create relevant questions based on the map contexts you've generated.",
+		},
+		{
+			icon: <DatasetIcon fontSize="large" />,
+			title: "Dataset Management",
+			description:
+				"Organize, edit, and version your QnA datasets efficiently with our comprehensive tools.",
+		},
+		{
+			icon: <AssessmentIcon fontSize="large" />,
+			title: "Evaluation Results",
+			description:
+				"Showcase your model's performance using our built-in visualization tools.",
+		},
+	];
+
 	console.log("url", `${process.env.REACT_APP_BASE_URL}/images/logo.png`);
 	return (
 		<Box
@@ -25,7 +62,7 @@ export default function PageComponent() {
 		>
 			<Fade in={showContent} timeout={1000}>
 				<Box className="text-center">
-					<Box className="flex flex-col md:flex-row items-center md:items-end gap-0 md:gap-5">
+					<Box className="flex flex-col md:flex-row items-center justify-center md:items-end gap-0 md:gap-5">
 						<motion.img
 							src={`${baseUrl}/images/logo.png`}
 							alt="Google Maps Logo"
@@ -145,7 +182,13 @@ export default function PageComponent() {
 									backgroundColor: "#2E8B57", // Darker shade of green
 								},
 							}}
-							onClick={() => router.push("/features")}
+							onClick={() =>
+								router.push(
+									isAuthenticated
+										? config.loginRedirect + "#onboard"
+										: config.logoutRedirect
+								)
+							}
 						>
 							Start Your Adventure
 						</Button>

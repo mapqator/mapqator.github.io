@@ -138,7 +138,7 @@ function ContextStep({
 								sx={{ mt: 1, mr: 1 }}
 							>
 								{index === totalSteps - 1
-									? "Finish"
+									? "Create Question"
 									: index === 0
 									? "Start"
 									: "Continue"}
@@ -195,7 +195,8 @@ export default function ContextStepper({
 	} = useContext(GlobalContext);
 
 	const handleNext = () => {
-		setActiveStep((prevActiveStep) => prevActiveStep + 1);
+		if (activeStep === steps.length - 1) onFinish();
+		else setActiveStep((prevActiveStep) => prevActiveStep + 1);
 	};
 
 	const handleBack = () => {
@@ -286,7 +287,7 @@ export default function ContextStepper({
 		},
 
 		{
-			label: "Set Context Parameters",
+			label: "Set Query Parameters",
 			description: `Set the time, day, and location that should be used as a basis for answering questions. This will help provide more accurate and context-specific responses.`,
 			icon: <Settings />,
 			component: (
@@ -304,7 +305,7 @@ export default function ContextStepper({
 		},
 		{
 			label: "Preview Full Context",
-			description: `Review the information gathered and click on "Finish" when you are done.`,
+			description: `Review the information gathered and then you can proceed to create a question based on the context you have generated.`,
 			icon: <RemoveRedEye />,
 			component: (
 				<>

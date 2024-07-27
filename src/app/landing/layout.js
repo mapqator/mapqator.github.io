@@ -1,7 +1,14 @@
+import Footer from "../footer";
+
 export const metadata = {
 	title: "Landing",
 	description: "Landing page of Mapquest",
 };
 export default function RootLayout({ children }) {
-	return <>{children}</>;
+	return (
+		<>
+			{children}
+			<Footer />
+		</>
+	);
 }
