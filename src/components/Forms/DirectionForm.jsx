@@ -129,7 +129,7 @@ export default function DirectionForm({ handlePlaceAdd }) {
 						}}
 						loading="lazy"
 						allowfullscreen
-						referrerpolicy="no-referrer-when-downgrade"
+						referrerPolicy="no-referrer-when-downgrade"
 						src={`https://www.google.com/maps/embed/v1/directions?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&origin=place_id:${newDirection.from}&destination=place_id:${newDirection.to}&mode=${newDirection.travelMode}`}
 					/>
 				</Grid>

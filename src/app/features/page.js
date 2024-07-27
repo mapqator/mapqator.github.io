@@ -17,11 +17,20 @@ import { useRouter } from "next/navigation";
 import config from "@/config/config";
 import { useAuth } from "@/contexts/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRobot } from "@fortawesome/free-solid-svg-icons";
+import {
+	faArrowDown,
+	faArrowRight,
+	faRobot,
+} from "@fortawesome/free-solid-svg-icons";
+import { ArrowDownward } from "@mui/icons-material";
+import { useContext } from "react";
+import { GlobalContext } from "@/contexts/GlobalContext";
 
 export default function HomePage({ setSelected }) {
 	const router = useRouter();
 	const { isAuthenticated } = useAuth();
+	const { context, contextStatus } = useContext(GlobalContext);
+	const { query, queryStatus } = useContext(GlobalContext);
 
 	const steps = [
 		{
@@ -64,78 +73,87 @@ export default function HomePage({ setSelected }) {
 					}}
 				/>
 			),
-			label: "Evaluate Models",
+			label: "Evaluate LLMs",
 			description:
-				"Evaluate open-source (Phi 3, Mistral, Qwen2) or closed-source (GPT, Gemini) models.",
+				"Context + Question pair will be used to evaluate the performance of closed-source LLMs.",
 			key: "evaluation",
 		},
 	];
 
 	return (
 		<div className="h-full flex items-center">
-			<Grid
-				container
-				spacing={2}
-				alignItems="center"
-				justifyContent="center"
-			>
+			<div className="flex flex-col md:flex-row items-center mx-auto">
 				{steps.map((step, index) => (
-					<>
-						<Grid item key={step.label} xs={12} sm={6} md={2.5}>
-							<Box
+					<div
+						key={index}
+						className="flex flex-col md:flex-row items-center"
+					>
+						<Box
+							sx={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: "center",
+								textAlign: "center",
+							}}
+						>
+							<Button
 								sx={{
-									display: "flex",
-									flexDirection: "column",
-									alignItems: "center",
-									textAlign: "center",
+									width: 80,
+									height: 80,
+									mb: 2,
+									borderRadius: "50%",
+									color: "white",
 								}}
+								variant="contained"
+								onClick={() => setSelected(step.key)}
+								href={`#${step.key}`}
+								disabled={
+									(step.key === "question" &&
+										contextStatus !== "saved") ||
+									(step.key === "evaluation" &&
+										queryStatus !== "saved")
+								}
+								color={
+									(step.key === "context" &&
+										contextStatus === "saved") ||
+									(step.key === "question" &&
+										queryStatus === "saved")
+										? "success"
+										: "primary"
+								}
 							>
-								<Button
-									sx={{
-										width: 80,
-										height: 80,
-										mb: 2,
-										borderRadius: "50%",
-										color: "white",
-									}}
-									variant="contained"
-									onClick={() => setSelected(step.key)}
-									href={`#${step.key}`}
-								>
-									{step.icon}
-								</Button>
-								<Typography variant="h6" sx={{ mb: 1 }}>
-									{step.label}
-								</Typography>
-								<Typography
-									variant="body2"
-									color="text.secondary"
-								>
-									{step.description}
-								</Typography>
-							</Box>
-						</Grid>
+								{step.icon}
+							</Button>
+							<Typography variant="h6" sx={{ mb: 1 }}>
+								{step.label}
+							</Typography>
+							<Typography variant="body2" color="text.secondary">
+								{step.description}
+							</Typography>
+						</Box>
 						{index < steps.length - 1 && (
-							<Grid
-								item
-								xs={12}
-								sm={6}
-								md={1}
-								sx={{
-									display: "flex",
-									justifyContent: "center",
-									alignItems: "center",
-								}}
-							>
-								<ArrowForwardIcon
-									color="action"
-									sx={{ fontSize: 40 }}
-								/>
-							</Grid>
+							<>
+								<div className="hidden md:flex">
+									<FontAwesomeIcon
+										icon={faArrowRight}
+										style={{
+											fontSize: "2rem",
+										}}
+									/>
+								</div>
+								<div className="flex md:hidden p-4">
+									<FontAwesomeIcon
+										icon={faArrowDown}
+										style={{
+											fontSize: "2rem",
+										}}
+									/>
+								</div>
+							</>
 						)}
-					</>
+					</div>
 				))}
-			</Grid>
+			</div>
 		</div>
 	);
 }

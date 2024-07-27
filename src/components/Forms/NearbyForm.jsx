@@ -244,7 +244,7 @@ export default function NearbyForm({ handlePlaceAdd }) {
 						}}
 						loading="lazy"
 						allowfullscreen
-						referrerpolicy="no-referrer-when-downgrade"
+						referrerPolicy="no-referrer-when-downgrade"
 						src={`https://www.google.com/maps/embed/v1/search?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=${
 							newNearbyPlaces.type
 						}s near ${

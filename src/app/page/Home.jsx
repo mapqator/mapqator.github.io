@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Box, Container } from "@mui/material";
 
 import { Toolbar } from "@mui/material";
@@ -15,11 +15,80 @@ import KeyStoreButton from "@/components/Buttons/KeyStoreButton";
 import LeftSidebar from "@/components/LeftSidebar";
 import config from "@/config/config";
 import HomePage from "../features/page";
+import { GlobalContext } from "@/contexts/GlobalContext";
+import ContextGeneratorService from "@/services/contextGeneratorService";
+import { AppContext } from "@/contexts/AppContext";
 export default function Home() {
 	const [activeStep, setActiveStep] = useState(null);
 	const [selected, setSelected] = useState("home");
 	const { isAuthenticated } = useAuth();
 	const router = useRouter();
+	const { setContextStatus, setQueryStatus } = useContext(GlobalContext);
+	const {
+		selectedPlacesMap,
+		setSelectedPlacesMap,
+		distanceMatrix,
+		setDistanceMatrix,
+		directionInformation,
+		setDirectionInformation,
+		nearbyPlacesMap,
+		setNearbyPlacesMap,
+		poisMap,
+		setPoisMap,
+		setContext,
+		currentInformation,
+		setCurrentInformation,
+	} = useContext(GlobalContext);
+
+	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
+
+	const { context, contextStatus } = useContext(GlobalContext);
+
+	useEffect(() => {
+		setContext({
+			places: ContextGeneratorService.getPlacesContext(
+				selectedPlacesMap,
+				savedPlacesMap
+			),
+			nearby: ContextGeneratorService.getNearbyContext(
+				nearbyPlacesMap,
+				savedPlacesMap
+			),
+			area: ContextGeneratorService.getAreaContext(
+				poisMap,
+				savedPlacesMap
+			),
+			distance: ContextGeneratorService.getDistanceContext(
+				distanceMatrix,
+				savedPlacesMap
+			),
+			direction: ContextGeneratorService.getDirectionContext(
+				directionInformation,
+				savedPlacesMap
+			),
+			params: ContextGeneratorService.getParamsContext(
+				currentInformation,
+				savedPlacesMap
+			),
+		});
+	}, [
+		savedPlacesMap,
+		selectedPlacesMap,
+		nearbyPlacesMap,
+		poisMap,
+		distanceMatrix,
+		directionInformation,
+		currentInformation,
+	]);
+
+	useEffect(() => {
+		if (contextStatus === "saved") {
+			setContextStatus("edited");
+			console.error(
+				"################# Context Edited ####################"
+			);
+		}
+	}, [context]);
 
 	useEffect(() => {
 		const page = window.location.hash.substring(1);
@@ -56,8 +125,9 @@ export default function Home() {
 				{selected === "context" ? (
 					<ContextGenerator
 						onFinish={() => {
-							setSelected("question");
-							router.push("/#question");
+							setContextStatus("saved");
+							setSelected("home");
+							router.push("/#home");
 							window.scrollTo(0, 0);
 						}}
 						{...{ activeStep, setActiveStep }}
@@ -67,6 +137,12 @@ export default function Home() {
 						handleContextEdit={() => {
 							setSelected("context");
 							router.push("/#context");
+							window.scrollTo(0, 0);
+						}}
+						onFinish={() => {
+							setSelected("home");
+							setQueryStatus("saved");
+							router.push("/#home");
 							window.scrollTo(0, 0);
 						}}
 					/>

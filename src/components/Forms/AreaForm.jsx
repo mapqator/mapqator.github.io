@@ -105,7 +105,7 @@ export default function AreaForm({ handlePlaceAdd }) {
 						}}
 						loading="lazy"
 						allowfullscreen
-						referrerpolicy="no-referrer-when-downgrade"
+						referrerPolicy="no-referrer-when-downgrade"
 						src={`https://www.google.com/maps/embed/v1/search?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=${
 							newPois.type
 						}s in ${savedPlacesMap[newPois.location].name}`}

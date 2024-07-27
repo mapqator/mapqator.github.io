@@ -144,7 +144,7 @@ export default function PlaceCard({ placeId, index }) {
 						}}
 						loading="lazy"
 						// allowfullscreen
-						referrerpolicy="no-referrer-when-downgrade"
+						referrerPolicy="no-referrer-when-downgrade"
 						src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=place_id:${placeId}`}
 					></iframe>
 				</Collapse>

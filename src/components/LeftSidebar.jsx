@@ -38,11 +38,9 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import AuthService from "@/services/authService";
-import { AccountTree, Login, Logout } from "@mui/icons-material";
+import { AccountTree, Home, Login, Logout } from "@mui/icons-material";
 const drawerWidth = config.drawerWidth;
 function NavButton({ icon, name, navkey, setSelected, selected }) {
-	const pathname = usePathname();
-	console.log("Selected: ", selected);
 	return (
 		<ListItem key={navkey} disablePadding>
 			<ListItemButton
@@ -156,15 +154,17 @@ export default function LeftSidebar({ selected, setSelected, window }) {
 			<List>
 				{[
 					{
-						name: "Overview",
-						icon: <AccountTree />,
+						name: "Home",
+						icon: <Home />,
 						key: "home",
 					},
-					{ name: "Context", key: "context", icon: <MapIcon /> },
+					{
+						/* { name: "Context", key: "context", icon: <MapIcon /> },
 					{
 						name: "Question",
 						key: "question",
 						icon: <QuestionAnswerIcon />,
+					}, */
 					},
 					{
 						name: "Dataset",

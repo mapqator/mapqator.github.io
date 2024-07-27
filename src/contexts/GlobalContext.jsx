@@ -190,6 +190,9 @@ export default function GlobalContextProvider({ children }) {
 		params: [],
 	});
 
+	const [contextStatus, setContextStatus] = useState("empty");
+	const [queryStatus, setQueryStatus] = useState("empty");
+
 	const [selectedPlacesMap, setSelectedPlacesMap] = useState(
 		initSelectedPlacesMap
 	);
@@ -249,6 +252,10 @@ export default function GlobalContextProvider({ children }) {
 				initDistanceMatrix,
 				initDirectionInformation,
 				initCurrentInformation,
+				contextStatus,
+				setContextStatus,
+				queryStatus,
+				setQueryStatus,
 			}}
 		>
 			{children}

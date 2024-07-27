@@ -12,7 +12,7 @@ import ContextGeneratorService from "@/services/contextGeneratorService";
 import { useAuth } from "@/contexts/AuthContext";
 import { AppContext } from "@/contexts/AppContext";
 
-export default function QuestionCreationPage({ handleContextEdit }) {
+export default function QuestionCreationPage({ handleContextEdit, onFinish }) {
 	const {
 		context,
 		query,
@@ -64,7 +64,8 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 					newQueries.unshift(res.data[0]);
 					setQueries(newQueries);
 					window.scrollTo(document.getElementById("questions"));
-					handleReset();
+					// handleReset();
+					onFinish();
 				} else {
 					showError("Can't save this query");
 					window.scrollTo(0, 0);
@@ -79,7 +80,8 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 					);
 					// update the queries
 					showSuccess("Query edited successfully");
-					handleReset();
+					// handleReset();
+					onFinish();
 				} else {
 					showError("Can't update this query");
 					window.scrollTo(0, 0);
@@ -111,7 +113,8 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 				);
 				showSuccess("Query edited successfully");
 			}
-			handleReset();
+			// handleReset();
+			onFinish();
 		}
 	};
 

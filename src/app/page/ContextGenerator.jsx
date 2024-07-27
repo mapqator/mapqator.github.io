@@ -32,15 +32,6 @@ export default function ContextGenerator({
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 
 	const {
-		exampleSelectedPlacesMap,
-		exampleNearbyPlacesMap,
-		examplePoisMap,
-		exampleDistanceMatrix,
-		exampleDirectionInformation,
-		exampleCurrentInformation,
-	} = useContext(GlobalContext);
-
-	const {
 		initSelectedPlacesMap,
 		initNearbyPlacesMap,
 		initPoisMap,
@@ -48,43 +39,6 @@ export default function ContextGenerator({
 		initDirectionInformation,
 		initCurrentInformation,
 	} = useContext(GlobalContext);
-
-	useEffect(() => {
-		setContext({
-			places: ContextGeneratorService.getPlacesContext(
-				selectedPlacesMap,
-				savedPlacesMap
-			),
-			nearby: ContextGeneratorService.getNearbyContext(
-				nearbyPlacesMap,
-				savedPlacesMap
-			),
-			area: ContextGeneratorService.getAreaContext(
-				poisMap,
-				savedPlacesMap
-			),
-			distance: ContextGeneratorService.getDistanceContext(
-				distanceMatrix,
-				savedPlacesMap
-			),
-			direction: ContextGeneratorService.getDirectionContext(
-				directionInformation,
-				savedPlacesMap
-			),
-			params: ContextGeneratorService.getParamsContext(
-				currentInformation,
-				savedPlacesMap
-			),
-		});
-	}, [
-		savedPlacesMap,
-		selectedPlacesMap,
-		nearbyPlacesMap,
-		poisMap,
-		distanceMatrix,
-		directionInformation,
-		currentInformation,
-	]);
 
 	const handleReset = () => {
 		setPoisMap(initPoisMap);
