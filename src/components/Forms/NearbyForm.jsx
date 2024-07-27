@@ -172,7 +172,7 @@ export default function NearbyForm({ handlePlaceAdd }) {
 				/>
 			</Grid>
 
-			{newNearbyPlaces.location && (
+			{/* {newNearbyPlaces.location && (
 				<Grid item xs={12}>
 					<iframe
 						width="100%"
@@ -187,7 +187,7 @@ export default function NearbyForm({ handlePlaceAdd }) {
 						src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=place_id:${newNearbyPlaces.location}`}
 					></iframe>
 				</Grid>
-			)}
+			)} */}
 
 			{/* <Grid item xs={12}>
 				{true && (
@@ -303,8 +303,11 @@ export default function NearbyForm({ handlePlaceAdd }) {
 					loading={loading}
 					loadingPosition="start"
 				>
-					Add Nearby Places
+					Add Nearby POIs
 				</LoadingButton>
+				<h6 className="px-2  text-sm text-center">
+					Note: Added pois may differ from what is shown in the map.
+				</h6>
 			</Grid>
 		</Grid>
 	);

@@ -118,7 +118,7 @@ export default function QuestionCreationPage({ handleContextEdit }) {
 	return (
 		<>
 			<h1 className="text-3xl md:text-4xl font-normal pb-5">
-				Create MCQ Question based on Context
+				Create MCQ Question based on the Context
 			</h1>
 			<Paper elevation={2} sx={{ p: 3, mb: 4 }}>
 				<Box

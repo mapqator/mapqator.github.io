@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import mapApi from "@/api/mapApi";
 import { Grid } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { Search } from "@mui/icons-material";
+import { Add, Search } from "@mui/icons-material";
 import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
 import TypeSelectionField from "@/components/InputFields/TypeSelectionField";
 import { GlobalContext } from "@/contexts/GlobalContext";
@@ -64,7 +64,7 @@ export default function AreaForm({ handlePlaceAdd }) {
 					}}
 				/>
 			</Grid>
-			{newPois.location && (
+			{/* {newPois.location && (
 				<Grid item xs={12}>
 					<iframe
 						width="100%"
@@ -82,7 +82,7 @@ export default function AreaForm({ handlePlaceAdd }) {
 						}
 					></iframe>
 				</Grid>
-			)}
+			)} */}
 			<Grid item xs={12}>
 				<TypeSelectionField
 					type={newPois.type}
@@ -117,12 +117,15 @@ export default function AreaForm({ handlePlaceAdd }) {
 					variant="contained"
 					fullWidth
 					onClick={searchInsidePlaces}
-					startIcon={<Search />}
+					startIcon={<Add />}
 					loading={loading}
 					loadingPosition="start"
 				>
-					Search Places in Area
+					Add POIs in Area
 				</LoadingButton>
+				<h6 className="px-2  text-sm text-center">
+					Note: Added pois may differ from what is shown in the map.
+				</h6>
 			</Grid>
 		</Grid>
 	);
