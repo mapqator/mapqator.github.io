@@ -193,8 +193,10 @@ export default function GlobalContextProvider({ children }) {
 		params: [],
 	});
 
+	const [llmResults, setLlmResults] = useState({});
 	const [contextStatus, setContextStatus] = useState("empty");
 	const [queryStatus, setQueryStatus] = useState("empty");
+	const [evaluationStatus, setEvaluationStatus] = useState("empty");
 
 	const [selectedPlacesMap, setSelectedPlacesMap] = useState(
 		initSelectedPlacesMap
@@ -273,12 +275,14 @@ export default function GlobalContextProvider({ children }) {
 	useEffect(() => {
 		if (queryStatus === "saved") {
 			setQueryStatus("edited");
+			setLlmResults({});
 		}
 	}, [query]);
 
 	useEffect(() => {
 		if (contextStatus === "saved") {
 			setContextStatus("edited");
+			setLlmResults({});
 		}
 	}, [context]);
 
@@ -318,6 +322,10 @@ export default function GlobalContextProvider({ children }) {
 				setContextStatus,
 				queryStatus,
 				setQueryStatus,
+				evaluationStatus,
+				setEvaluationStatus,
+				llmResults,
+				setLlmResults,
 			}}
 		>
 			{children}

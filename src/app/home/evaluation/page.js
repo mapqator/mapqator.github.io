@@ -23,20 +23,33 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import LoginPrompt from "@/components/LoginPrompts";
+import { useAuth } from "@/contexts/AuthContext";
+import SaveQuery from "@/components/SaveQuery";
+import { useRouter } from "next/navigation";
+import config from "@/config/config";
 
 const llmApis = {
-	gpt4: gptApi.askGPTLive,
-	gpt3: gptApi.askGPTLive,
+	gpt4: {
+		id: 6,
+		name: "GPT-4",
+		func: gptApi.askGPTLive,
+	},
+	gpt3: {
+		id: 7,
+		name: "GPT-3.5",
+		func: gptApi.askGPTLive,
+	},
 	// Add more LLMs here
 };
 
 export default function LiveEvaluation() {
 	const { query, context } = useContext(GlobalContext);
 	const [stage, setStage] = useState(0);
-	const [llmResults, setLlmResults] = useState({});
+	const { llmResults, setLlmResults } = useContext(GlobalContext);
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [showLoginPrompt, setShowLoginPrompt] = useState(false);
-
+	const { isAuthenticated } = useAuth();
+	const { setEvaluationStatus } = useContext(GlobalContext);
 	const extract = (s) => {
 		for (let char of s) {
 			if (/\d/.test(char)) {
@@ -51,7 +64,7 @@ export default function LiveEvaluation() {
 		return match ? match[1] : null;
 	};
 
-	const evaluateLLM = async (llmName, llmFunction) => {
+	const evaluateLLM = async (llm, llmFunction) => {
 		const res = await llmFunction(
 			ContextGeneratorService.convertContextToText(context),
 			query
@@ -65,19 +78,20 @@ export default function LiveEvaluation() {
 					: "wrong";
 			setLlmResults((prev) => ({
 				...prev,
-				[llmName]: { option, explanation, verdict },
+				[llm]: { answer: res.data, option, explanation, verdict },
 			}));
 		}
 	};
 
+	const router = useRouter();
+
 	const handleLogin = () => {
-		// Implement your login logic here
-		console.log("Login clicked");
+		router.push(config.logoutRedirect);
 	};
 
-	useEffect(() => {
-		const runEvaluation = async () => {
-			setStage(0);
+	const runEvaluation = async () => {
+		setStage(0);
+		if (Object.keys(llmResults).length === 0) {
 			setLlmResults({});
 			await new Promise((resolve) => setTimeout(resolve, 1000));
 			setStage(1);
@@ -85,16 +99,80 @@ export default function LiveEvaluation() {
 			setStage(2);
 			setIsProcessing(true);
 			const evaluationPromises = Object.entries(llmApis).map(
-				([name, func]) => evaluateLLM(name, func)
+				([name, entry]) => evaluateLLM(name, entry.func)
 			);
 			await Promise.all(evaluationPromises);
 			setIsProcessing(false);
-			setStage(3);
-			setShowLoginPrompt(true);
-		};
+		}
+		setStage(3);
+		setShowLoginPrompt(true);
+		setEvaluationStatus("evaluated");
+	};
 
+	useEffect(() => {
 		runEvaluation();
 	}, [query, context]);
+
+	const handleSave = async () => {
+		const newQuery = {
+			...query,
+			context: ContextGeneratorService.convertContextToText(context),
+			context_json: {
+				saved_places: savedPlacesMap,
+				distance_matrix: distanceMatrix,
+				places: selectedPlacesMap,
+				nearby_places: nearbyPlacesMap,
+				current_information: currentInformation,
+				pois: poisMap,
+				directions: directionInformation,
+			},
+			evaluation: Object.entries(llmResults).map(([llm, result]) => ({
+				model_id: llmApis[llm].id,
+				answer: result.answer,
+				verdict: result.verdict,
+			})),
+		};
+
+		if (query.id === undefined) {
+			const res = await queryApi.createQueryWithEvaluation(newQuery);
+			if (res.success) {
+				// update the queries
+				showSuccess("Query saved successfully");
+				console.log("Saved query: ", res.data[0]);
+				const newQueries = [...queries];
+				newQueries.unshift(res.data[0]);
+				setQueries(newQueries);
+				window.scrollTo(document.getElementById("questions"));
+				// handleReset();
+				onFinish();
+			} else {
+				showError("Can't save this query");
+				window.scrollTo(0, 0);
+			}
+		} else {
+			const res = await queryApi.updateQueryWithEvaluation(
+				query.id,
+				newQuery
+			);
+			if (res.success) {
+				setQueries((prev) =>
+					prev.map((q) => (q.id === res.data[0].id ? res.data[0] : q))
+				);
+				// update the queries
+				showSuccess("Query edited successfully");
+				// handleReset();
+				onFinish();
+			} else {
+				showError("Can't update this query");
+				window.scrollTo(0, 0);
+			}
+		}
+	};
+
+	const handleDiscard = () => {
+		console.log("Discarding query");
+		setShowSavePrompt(false);
+	};
 
 	return (
 		<Box className="h-full flex flex-col justify-center p-4 w-full pt-10">
@@ -216,9 +294,9 @@ export default function LiveEvaluation() {
 					</motion.div>
 				)}
 
-				{Object.entries(llmResults).map(([llmName, result], index) => (
+				{Object.entries(llmResults).map(([llm, result], index) => (
 					<motion.div
-						key={llmName}
+						key={llm}
 						initial={{ x: -50, opacity: 0 }}
 						animate={{ x: 0, opacity: 1 }}
 						transition={{ duration: 0.5, delay: index * 0.2 }}
@@ -230,7 +308,7 @@ export default function LiveEvaluation() {
 										<SmartToyIcon />
 									</Avatar>
 									<Typography variant="h6">
-										{llmName} Answer
+										{llmApis[llm].name} Answer
 									</Typography>
 								</Box>
 								<Typography
@@ -272,7 +350,14 @@ export default function LiveEvaluation() {
 						animate={{ y: 0, opacity: 1 }}
 						transition={{ duration: 0.5 }}
 					>
-						<LoginPrompt onLogin={handleLogin} />
+						{isAuthenticated ? (
+							<SaveQuery
+								onSave={handleSave}
+								onDiscard={handleDiscard}
+							/>
+						) : (
+							<LoginPrompt onLogin={handleLogin} />
+						)}
 					</motion.div>
 				)}
 			</motion.div>

@@ -9,6 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 import Link from "next/link";
 import { GitHub, LinkedIn, Mail } from "@mui/icons-material";
 import Footer from "./footer";
+import GlobalContextProvider from "@/contexts/GlobalContext";
 export const metadata = {
 	metadataBase: new URL("https://mahirlabibdihan.github.io/mapquest"),
 	title: {
@@ -32,7 +33,11 @@ export default function RootLayout({ children }) {
 					<AuthContextProvider>
 						<AppContextProvider>
 							<ToastProvider>
-								<GoogleMapWrapper>{children}</GoogleMapWrapper>
+								<GoogleMapWrapper>
+									<GlobalContextProvider>
+										{children}
+									</GlobalContextProvider>
+								</GoogleMapWrapper>
 							</ToastProvider>
 						</AppContextProvider>
 					</AuthContextProvider>

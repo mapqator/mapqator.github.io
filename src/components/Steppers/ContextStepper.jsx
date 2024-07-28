@@ -379,7 +379,7 @@ export default function ContextStepper({
 					sx={{ mt: 1, mr: 1 }}
 					startIcon={<Save />}
 				>
-					Save
+					Finish
 				</Button>
 				<Button
 					onClick={handleReset}

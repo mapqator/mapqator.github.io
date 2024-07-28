@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
 	Button,
 	Card,
@@ -17,14 +17,19 @@ import { useAuth } from "@/contexts/AuthContext";
 import { RemoveRedEye } from "@mui/icons-material";
 import Confirmation from "@/components/Dialogs/Confirmation";
 import LoginForm from "@/components/Forms/LoginForm";
+import { GlobalContext } from "@/contexts/GlobalContext";
 
 const Login = () => {
 	const { isAuthenticated } = useAuth();
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
+	const { llmResults } = useContext(GlobalContext);
 	useEffect(() => {
 		if (isAuthenticated) {
-			router.push(config.loginRedirect + "#onboard");
+			router.push(
+				config.loginRedirect +
+					(Object.keys(llmResults).length > 0 ? "/evaluation" : "")
+			);
 		}
 	}, [isAuthenticated]);
 
@@ -35,7 +40,12 @@ const Login = () => {
 					open={open}
 					setOpen={setOpen}
 					onConfirm={() => {
-						router.push(config.loginRedirect + "#onboard");
+						router.push(
+							config.loginRedirect +
+								(Object.keys(llmResults).length > 0
+									? "/evaluation"
+									: "")
+						);
 					}}
 					text="As a guest, you can explore different features of our platform. But your changes won't be saved in our database."
 				/>

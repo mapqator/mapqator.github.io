@@ -8,9 +8,5 @@ export const metadata = {
 	description: "Home page of Mapquest",
 };
 export default function RootLayout({ children }) {
-	return (
-		<GlobalContextProvider>
-			<PrimaryLayout>{children}</PrimaryLayout>
-		</GlobalContextProvider>
-	);
+	return <PrimaryLayout>{children}</PrimaryLayout>;
 }
