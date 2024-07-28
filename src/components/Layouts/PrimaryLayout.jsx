@@ -35,9 +35,12 @@ const PrimaryLayout = ({ children }) => {
 				// sx={{ mt: 4, mb: 4 }}
 				className="min-h-screen "
 			>
-				<div className="md:hidden">
-					<Toolbar />
-				</div>
+				{isAuthenticated && (
+					<div className="md:hidden">
+						<Toolbar />
+					</div>
+				)}
+
 				{children}
 			</Container>
 		</Box>
