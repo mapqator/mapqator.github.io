@@ -27,6 +27,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import SaveQuery from "@/components/SaveQuery";
 import { useRouter } from "next/navigation";
 import config from "@/config/config";
+import queryApi from "@/api/queryApi";
+import { AppContext } from "@/contexts/AppContext";
+import { showError, showSuccess } from "@/contexts/ToastProvider";
 
 const llmApis = {
 	gpt4: {
@@ -43,13 +46,26 @@ const llmApis = {
 };
 
 export default function LiveEvaluation() {
-	const { query, context } = useContext(GlobalContext);
+	const {
+		query,
+		initQuery,
+		setQuery,
+		context,
+		selectedPlacesMap,
+		nearbyPlacesMap,
+		poisMap,
+		directionInformation,
+		distanceMatrix,
+		currentInformation,
+	} = useContext(GlobalContext);
 	const [stage, setStage] = useState(0);
 	const { llmResults, setLlmResults } = useContext(GlobalContext);
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 	const { isAuthenticated } = useAuth();
 	const { setEvaluationStatus } = useContext(GlobalContext);
+	const { queries, setQueries, savedPlacesMap } = useContext(AppContext);
+
 	const extract = (s) => {
 		for (let char of s) {
 			if (/\d/.test(char)) {
@@ -113,6 +129,15 @@ export default function LiveEvaluation() {
 		runEvaluation();
 	}, [query, context]);
 
+	const handleReset = () => {
+		setQuery((prev) => ({
+			...initQuery,
+			context: prev.context,
+			context_json: prev.context_json,
+		}));
+		setLlmResults({});
+	};
+
 	const handleSave = async () => {
 		const newQuery = {
 			...query,
@@ -138,16 +163,14 @@ export default function LiveEvaluation() {
 			if (res.success) {
 				// update the queries
 				showSuccess("Query saved successfully");
-				console.log("Saved query: ", res.data[0]);
 				const newQueries = [...queries];
 				newQueries.unshift(res.data[0]);
 				setQueries(newQueries);
-				window.scrollTo(document.getElementById("questions"));
-				// handleReset();
-				onFinish();
+				handleReset();
+				router.push("/home");
 			} else {
 				showError("Can't save this query");
-				window.scrollTo(0, 0);
+				// window.scrollTo(0, 0);
 			}
 		} else {
 			const res = await queryApi.updateQueryWithEvaluation(
@@ -160,11 +183,11 @@ export default function LiveEvaluation() {
 				);
 				// update the queries
 				showSuccess("Query edited successfully");
-				// handleReset();
-				onFinish();
+				handleReset();
+				router.push("/home");
 			} else {
 				showError("Can't update this query");
-				window.scrollTo(0, 0);
+				// window.scrollTo(0, 0);
 			}
 		}
 	};

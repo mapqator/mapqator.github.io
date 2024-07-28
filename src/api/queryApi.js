@@ -19,6 +19,9 @@ class QueryApi extends Api {
 	updateQuery = async (id, body) => {
 		return await this.put(`/queries/${id}`, body);
 	};
+	updateQueryWithEvaluation = async (id, body) => {
+		return await this.put(`/queries/${id}/evaluate`, body);
+	};
 	deleteQuery = async (id) => {
 		return await this.delete(`/queries/${id}`);
 	};
