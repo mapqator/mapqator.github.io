@@ -105,7 +105,7 @@ export default function Home() {
 	];
 
 	return (
-		<div className="h-full flex md:items-center p-2 pt-10 md:pt-2">
+		<div className="h-full flex md:items-center justify-center p-2 pt-5 md:pt-2">
 			<div className="flex flex-col md:flex-row items-center mx-auto">
 				{steps.map((step, index) => (
 					<div
