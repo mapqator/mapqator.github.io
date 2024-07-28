@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Box, Typography, Button, Paper, Divider } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { GlobalContext } from "@/contexts/GlobalContext";
@@ -24,6 +24,8 @@ export default function QuestionCreationPage({ handleContextEdit, onFinish }) {
 		poisMap,
 		directionInformation,
 		initQuery,
+		queryStatus,
+		setQueryStatus,
 	} = useContext(GlobalContext);
 
 	const { queries, setQueries, savedPlacesMap } = useContext(AppContext);
@@ -39,6 +41,10 @@ export default function QuestionCreationPage({ handleContextEdit, onFinish }) {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
+		setQueryStatus("saved");
+		onFinish();
+		return;
+
 		const newQuery = {
 			...query,
 			context: ContextGeneratorService.convertContextToText(context),

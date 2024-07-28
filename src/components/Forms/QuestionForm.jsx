@@ -8,7 +8,7 @@ import CorrectAnswerEditor from "../InputFields/CorrectAnswerEditor";
 import QuestionEditor from "../InputFields/QuestionEditor";
 import { GlobalContext } from "@/contexts/GlobalContext";
 
-export default function QuestionForm({ handleSubmit,  handleReset }) {
+export default function QuestionForm({ handleSubmit, handleReset }) {
 	const { query, setQuery } = useContext(GlobalContext);
 	const [loading, setLoading] = useState(false);
 
@@ -33,7 +33,7 @@ export default function QuestionForm({ handleSubmit,  handleReset }) {
 					loading={loading}
 					loadingPosition="start"
 				>
-					{query.id === undefined ? "Submit" : "Save #" + query.id}
+					{query.id === undefined ? "Save" : "Save #" + query.id}
 				</LoadingButton>
 				<Button
 					onClick={() => {

@@ -23,7 +23,7 @@ export default function Home() {
 	const [selected, setSelected] = useState("home");
 	const { isAuthenticated } = useAuth();
 	const router = useRouter();
-	const { setContextStatus, setQueryStatus } = useContext(GlobalContext);
+
 	const {
 		selectedPlacesMap,
 		distanceMatrix,
@@ -36,7 +36,14 @@ export default function Home() {
 
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 
-	const { context, contextStatus } = useContext(GlobalContext);
+	const {
+		context,
+		contextStatus,
+		setContextStatus,
+		query,
+		queryStatus,
+		setQueryStatus,
+	} = useContext(GlobalContext);
 
 	useEffect(() => {
 		setContext({
@@ -76,11 +83,14 @@ export default function Home() {
 	]);
 
 	useEffect(() => {
+		if (queryStatus === "saved") {
+			setQueryStatus("edited");
+		}
+	}, [query]);
+
+	useEffect(() => {
 		if (contextStatus === "saved") {
 			setContextStatus("edited");
-			console.error(
-				"################# Context Edited ####################"
-			);
 		}
 	}, [context]);
 
