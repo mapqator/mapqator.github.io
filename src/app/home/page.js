@@ -175,7 +175,8 @@ export default function Home() {
 										(step.key === "question" &&
 											contextStatus !== "saved") ||
 										(step.key === "live_evaluation" &&
-											queryStatus !== "saved")
+											(queryStatus !== "saved" ||
+												contextStatus !== "saved"))
 									}
 									color={
 										(step.key === "context" &&

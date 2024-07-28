@@ -152,9 +152,9 @@ export default function ContextGenerator() {
 		});
 	};
 
-	useEffect(() => {
-		handleExample();
-	}, []);
+	// useEffect(() => {
+	// 	handleExample();
+	// }, []);
 
 	return (
 		<Box sx={{ mt: 4, mb: 4 }}>
