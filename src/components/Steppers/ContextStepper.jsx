@@ -355,7 +355,7 @@ export default function ContextStepper({
 				</Paper>
 			)}
 			<Divider sx={{ my: 1 }} />
-			<Paper square elevation={0} className="flex">
+			<div className="flex">
 				<Button
 					onClick={() => {
 						// if (
@@ -389,7 +389,7 @@ export default function ContextStepper({
 				>
 					Clear
 				</Button>
-			</Paper>
+			</div>
 		</>
 	);
 }

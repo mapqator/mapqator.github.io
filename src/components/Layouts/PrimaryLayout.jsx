@@ -33,7 +33,7 @@ const PrimaryLayout = ({ children }) => {
 			<Container
 				maxWidth="md"
 				// sx={{ mt: 4, mb: 4 }}
-				className="min-h-screen"
+				className="min-h-screen "
 			>
 				<div className="md:hidden">
 					<Toolbar />

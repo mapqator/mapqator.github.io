@@ -210,16 +210,13 @@ export default function GlobalContextProvider({ children }) {
 	);
 
 	const initQuery = {
-		question: "",
+		question: "Time to go from Louvre to Eiffel Tower by car?",
 		answer: {
 			type: "mcq",
-			options: ["", "", "", ""],
-			correct: -1,
+			options: ["15 mins", "16 mins", "17 mins", "18 mins"],
+			correct: 2,
 		},
-		context: "",
-		context_json: {},
-		context_gpt: "",
-		classification: "",
+		classification: "poi",
 	};
 	const [query, setQuery] = useState(initQuery);
 
