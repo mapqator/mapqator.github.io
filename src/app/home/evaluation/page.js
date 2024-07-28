@@ -22,6 +22,7 @@ import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
+import LoginPrompt from "@/components/LoginPrompts";
 
 const llmApis = {
 	gpt4: gptApi.askGPTLive,
@@ -34,6 +35,7 @@ export default function LiveEvaluation() {
 	const [stage, setStage] = useState(0);
 	const [llmResults, setLlmResults] = useState({});
 	const [isProcessing, setIsProcessing] = useState(false);
+	const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
 	const extract = (s) => {
 		for (let char of s) {
@@ -68,6 +70,11 @@ export default function LiveEvaluation() {
 		}
 	};
 
+	const handleLogin = () => {
+		// Implement your login logic here
+		console.log("Login clicked");
+	};
+
 	useEffect(() => {
 		const runEvaluation = async () => {
 			setStage(0);
@@ -83,6 +90,7 @@ export default function LiveEvaluation() {
 			await Promise.all(evaluationPromises);
 			setIsProcessing(false);
 			setStage(3);
+			setShowLoginPrompt(true);
 		};
 
 		runEvaluation();
@@ -95,6 +103,7 @@ export default function LiveEvaluation() {
 				value={(stage / 3) * 100}
 				className="mb-4"
 			/>
+
 			<motion.div
 				initial={{ opacity: 0 }}
 				animate={{ opacity: 1 }}
@@ -256,6 +265,16 @@ export default function LiveEvaluation() {
 						</Card>
 					</motion.div>
 				))}
+
+				{showLoginPrompt && (
+					<motion.div
+						initial={{ y: 50, opacity: 0 }}
+						animate={{ y: 0, opacity: 1 }}
+						transition={{ duration: 0.5 }}
+					>
+						<LoginPrompt onLogin={handleLogin} />
+					</motion.div>
+				)}
 			</motion.div>
 		</Box>
 	);
