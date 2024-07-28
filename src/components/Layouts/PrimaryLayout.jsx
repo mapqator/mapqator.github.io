@@ -26,6 +26,9 @@ const PrimaryLayout = ({ children }) => {
 						},
 					}}
 				>
+					<div className="md:hidden">
+						<Toolbar />
+					</div>{" "}
 					<LeftSidebar />
 				</Box>
 			)}
