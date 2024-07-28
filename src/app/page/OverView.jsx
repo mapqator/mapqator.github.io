@@ -1,5 +1,5 @@
 "use client";
-import { Button, Typography, Box } from "@mui/material";
+import { Button, Typography, Box, Tooltip, Zoom } from "@mui/material";
 import MapIcon from "@mui/icons-material/Map";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,11 +8,18 @@ import {
 	faArrowRight,
 	faRobot,
 } from "@fortawesome/free-solid-svg-icons";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "@/contexts/GlobalContext";
 
 export default function HomePage({ setSelected }) {
 	const { queryStatus, contextStatus } = useContext(GlobalContext);
+	const [showTooltip, setShowTooltip] = useState(false);
+	const [contextClicked, setContextClicked] = useState(false);
+	useEffect(() => {
+		// Show the tooltip after a short delay
+		const timer = setTimeout(() => setShowTooltip(true), 2000);
+		return () => clearTimeout(timer);
+	}, []);
 
 	const steps = [
 		{
@@ -78,34 +85,75 @@ export default function HomePage({ setSelected }) {
 								textAlign: "center",
 							}}
 						>
-							<Button
-								sx={{
-									width: 80,
-									height: 80,
-									mb: 2,
-									borderRadius: "50%",
-									color: "white",
-								}}
-								variant="contained"
-								onClick={() => setSelected(step.key)}
-								// href={`#${step.key}`}
-								disabled={
-									(step.key === "question" &&
-										contextStatus !== "saved") ||
-									(step.key === "evaluation" &&
-										queryStatus !== "saved")
+							<Tooltip
+								title={
+									step.key === "context" && !contextClicked
+										? "Start here!"
+										: ""
 								}
-								color={
-									(step.key === "context" &&
-										contextStatus === "saved") ||
-									(step.key === "question" &&
-										queryStatus === "saved")
-										? "success"
-										: "primary"
+								open={
+									step.key === "context" &&
+									showTooltip &&
+									contextStatus === "empty"
 								}
+								arrow
+								TransitionComponent={Zoom}
+								placement="top"
 							>
-								{step.icon}
-							</Button>
+								<Button
+									sx={{
+										width: 80,
+										height: 80,
+										mb: 2,
+										borderRadius: "50%",
+										color: "white",
+										animation:
+											step.key === "context" &&
+											showTooltip &&
+											contextStatus === "empty"
+												? "pulse 2s infinite"
+												: "none",
+										"@keyframes pulse": {
+											"0%": {
+												boxShadow:
+													"0 0 0 0 rgba(0, 123, 255, 0.7)",
+											},
+											"70%": {
+												boxShadow:
+													"0 0 0 10px rgba(0, 123, 255, 0)",
+											},
+											"100%": {
+												boxShadow:
+													"0 0 0 0 rgba(0, 123, 255, 0)",
+											},
+										},
+									}}
+									variant="contained"
+									onClick={() => {
+										setSelected(step.key);
+										setShowTooltip(false);
+										if (step.key === "context") {
+											setContextClicked(true);
+										}
+									}}
+									disabled={
+										(step.key === "question" &&
+											contextStatus !== "saved") ||
+										(step.key === "evaluation" &&
+											queryStatus !== "saved")
+									}
+									color={
+										(step.key === "context" &&
+											contextStatus === "saved") ||
+										(step.key === "question" &&
+											queryStatus === "saved")
+											? "success"
+											: "primary"
+									}
+								>
+									{step.icon}
+								</Button>
+							</Tooltip>
 							<Typography variant="h6" sx={{ mb: 1 }}>
 								{step.label}
 							</Typography>
