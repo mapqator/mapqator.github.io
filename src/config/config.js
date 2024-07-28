@@ -6,7 +6,7 @@ const config = {
 		: "https://mahirlabibdihan.github.io/mapquest",
 	drawerWidth: 230,
 	topbarHeight: 64,
-	loginRedirect: "/",
+	loginRedirect: "/home",
 	logoutRedirect: "/login",
 };
 

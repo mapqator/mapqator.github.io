@@ -7,7 +7,11 @@ class GptApi extends Api {
 	translate = async (context) => {
 		return await this.post("/gpt/translate", { content: context });
 	};
+	askGPTLive = async (context, query) => {
+		console.log(context, query);
+		return await this.post("/gpt/ask", { context, query });
+	};
 }
 
 const gptApi = new GptApi();
-export default GptApi;
+export default gptApi;

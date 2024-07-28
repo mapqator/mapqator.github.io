@@ -1,5 +1,13 @@
+"use client";
 import React, { useContext, useEffect } from "react";
-import { Box, Typography, Button, Paper, Divider } from "@mui/material";
+import {
+	Box,
+	Typography,
+	Button,
+	Paper,
+	Divider,
+	Container,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import queryApi from "@/api/queryApi";
@@ -28,9 +36,11 @@ export default function QuestionCreationPage() {
 		queryStatus,
 		setQueryStatus,
 	} = useContext(GlobalContext);
+
 	const router = useRouter();
 	const { queries, setQueries, savedPlacesMap } = useContext(AppContext);
 	const { isAuthenticated } = useAuth();
+
 	const handleContextEdit = () => {
 		router.push("/home/context");
 	};
@@ -133,34 +143,39 @@ export default function QuestionCreationPage() {
 	};
 
 	return (
-		<Box sx={{ mt: 4, mb: 4 }}>
-			<h1 className="text-3xl md:text-4xl font-normal pb-5">
-				Create MCQ Question based on the Context
-			</h1>
-			<Paper elevation={2} sx={{ p: 3, mb: 4 }}>
-				<Box
-					sx={{
-						display: "flex",
-						justifyContent: "space-between",
-						alignItems: "center",
-					}}
-				>
-					<Typography variant="h6">Context:</Typography>
-					<Button
-						startIcon={<EditIcon />}
-						onClick={handleContextEdit}
+		<Container
+			maxWidth="md"
+			// sx={{ mt: 4, mb: 4 }}
+			className="min-h-screen"
+		>
+			<Box sx={{ mt: 4, mb: 4 }}>
+				<h1 className="text-3xl md:text-4xl font-normal pb-5">
+					Create MCQ Question based on the Context
+				</h1>
+				<Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+					<Box
+						sx={{
+							display: "flex",
+							justifyContent: "space-between",
+							alignItems: "center",
+						}}
 					>
-						Edit Context
-					</Button>
-				</Box>
-				<Divider sx={{ my: 2 }} />
-				<Box>
-					<CollapsedContext
-						context={ContextGeneratorService.convertContextToText(
-							context
-						)}
-					/>
-					{/* <React.Fragment>
+						<Typography variant="h6">Context:</Typography>
+						<Button
+							startIcon={<EditIcon />}
+							onClick={handleContextEdit}
+						>
+							Edit Context
+						</Button>
+					</Box>
+					<Divider sx={{ my: 2 }} />
+					<Box>
+						<CollapsedContext
+							context={ContextGeneratorService.convertContextToText(
+								context
+							)}
+						/>
+						{/* <React.Fragment>
 						<p
 							className="w-full text-left"
 							dangerouslySetInnerHTML={{
@@ -186,10 +201,10 @@ export default function QuestionCreationPage() {
 							{expanded ? "Show Less" : "Read More"}
 						</Button>
 					)} */}
-				</Box>
-			</Paper>
+					</Box>
+				</Paper>
 
-			{/* <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+				{/* <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
 				<Typography variant="h6">AI Generated Questions</Typography>
 				<Divider sx={{ my: 2 }} />
 				<ul className="list-disc pl-4">
@@ -199,12 +214,12 @@ export default function QuestionCreationPage() {
 					<li>Dummy Question 4</li>
 				</ul>
 			</Paper> */}
-			<QuestionForm
-				handleSubmit={handleSubmit}
-				handleReset={handleReset}
-			/>
+				<QuestionForm
+					handleSubmit={handleSubmit}
+					handleReset={handleReset}
+				/>
 
-			{/* {queries.filter((item) => item.username === getUserName()).length >
+				{/* {queries.filter((item) => item.username === getUserName()).length >
 				0 && (
 				<>
 					<Divider sx={{ my: 4 }} />
@@ -217,6 +232,7 @@ export default function QuestionCreationPage() {
 					</div>
 				</>
 			)} */}
-		</Box>
+			</Box>
+		</Container>
 	);
 }

@@ -1,10 +1,11 @@
-import { useContext, useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+"use client";
+import { useContext, useEffect, useState } from "react";
+import { Box, Container, Typography } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import ContextGeneratorService from "@/services/contextGeneratorService";
 import ContextStepper from "@/components/Steppers/ContextStepper";
 import { AppContext } from "@/contexts/AppContext";
-import example from "./example.json";
+import example from "@/database/example.json";
 import mapApi from "@/api/mapApi";
 import dayjs from "dayjs";
 import KeyStoreButton from "@/components/Buttons/KeyStoreButton";
@@ -29,6 +30,7 @@ export default function ContextGenerator() {
 	} = useContext(GlobalContext);
 
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
+
 	const router = useRouter();
 	const {
 		initSelectedPlacesMap,
@@ -59,11 +61,11 @@ export default function ContextGenerator() {
 	// 	setDirectionInformation(exampleDirectionInformation);
 	// 	setCurrentInformation(exampleCurrentInformation);
 	// };
-
 	const onFinish = () => {
 		setContextStatus("saved");
 		router.push("/home");
 	};
+
 	const handleSave = async (place_id) => {
 		if (savedPlacesMap[place_id]) return;
 		const res = await mapApi.getDetails(place_id);

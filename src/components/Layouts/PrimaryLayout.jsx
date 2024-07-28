@@ -1,3 +1,4 @@
+"use client";
 import {
 	Container,
 	CssBaseline,
@@ -7,39 +8,38 @@ import {
 	Divider,
 } from "@mui/material";
 import React from "react";
-import DrawerBar from "../Sidebars/DrawerBar";
-import LeftSidebar from "../Sidebars/LeftSidebar";
-import Breadcrumb from "../Breadcrumb";
-import ToggleMode from "../Buttons/ToggleButton";
-import config from "../../config.json";
-const drawerWidth = config.drawerWidth;
-const PrimaryLayout = (props) => {
-	const theme = useTheme();
+
+import { useAuth } from "@/contexts/AuthContext";
+import LeftSidebar from "../LeftSidebar";
+import config from "@/config/config";
+
+const PrimaryLayout = ({ children }) => {
+	const { isAuthenticated } = useAuth();
 	return (
 		<Box sx={{ display: "flex" }}>
-			<CssBaseline />
-			<Box sx={{ width: { xs: "0px", md: `calc(${drawerWidth}px)` } }}>
-				<LeftSidebar />
-			</Box>
-
-			<div className="w-full relative">
+			{isAuthenticated && (
 				<Box
-					className="fixed z-50 flex-col"
 					sx={{
-						backgroundColor: theme.palette.background.default,
-						width: { xs: 0, md: `calc(100% - ${drawerWidth}px)` },
-						display: { xs: "none", md: "flex" },
+						width: {
+							xs: "0px",
+							md: `calc(${config.drawerWidth}px)`,
+						},
 					}}
 				>
-					<Toolbar className="flex flex-row items-center justify-between pr-3">
-						<Breadcrumb />
-						<ToggleMode />
-					</Toolbar>
-					<Divider />
+					<LeftSidebar />
 				</Box>
-				<Toolbar />
-				<div>{props.children}</div>
-			</div>
+			)}
+
+			<Container
+				maxWidth="md"
+				// sx={{ mt: 4, mb: 4 }}
+				className="min-h-screen"
+			>
+				<div className="md:hidden">
+					<Toolbar />
+				</div>
+				{children}
+			</Container>
 		</Box>
 	);
 };

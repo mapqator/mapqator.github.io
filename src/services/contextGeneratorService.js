@@ -89,7 +89,7 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 	if (attributes.includes("reviews")) {
 		text += `- Reviews: \n${place.reviews
 			.map((review, index) => {
-				console.log(review.text);
+				// console.log(review.text);
 				return `   ${index + 1}. ${review.author_name} (Rating: ${
 					review.rating
 				}): ${review.text}\n`;

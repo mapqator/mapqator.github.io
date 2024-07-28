@@ -67,7 +67,7 @@ export default function PageComponent() {
 							src={`${baseUrl}/images/logo.png`}
 							alt="Google Maps Logo"
 							style={{
-								width: "160px",
+								width: "140px",
 								marginBottom: "30px",
 							}}
 							initial={{ y: -50, opacity: 0 }}
@@ -81,7 +81,7 @@ export default function PageComponent() {
 						>
 							<div className="hidden md:flex flex-col items-start justify-center mb-16">
 								<Typography
-									variant="h2"
+									variant="h3"
 									component="div"
 									sx={{
 										// ml: 2,
@@ -136,7 +136,7 @@ export default function PageComponent() {
 							sx={{
 								fontSize: {
 									xs: "2rem",
-									md: "3rem",
+									md: "2.5rem",
 								},
 								fontWeight: "600",
 								color: "#555",
@@ -150,8 +150,8 @@ export default function PageComponent() {
 							variant="h6"
 							sx={{
 								fontSize: {
-									xs: "1.2rem",
-									md: "1.5rem",
+									xs: "1rem",
+									md: "1.2rem",
 								},
 								color: "#666",
 								mb: 6,
@@ -184,9 +184,10 @@ export default function PageComponent() {
 							}}
 							onClick={() =>
 								router.push(
-									isAuthenticated
-										? config.loginRedirect + "#onboard"
-										: config.logoutRedirect
+									// isAuthenticated
+									// 	?
+									config.loginRedirect + "#onboard"
+									// : config.logoutRedirect
 								)
 							}
 						>

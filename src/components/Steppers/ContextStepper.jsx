@@ -33,7 +33,7 @@ import AutocompleteSearchBox from "@/components/InputFields/AutocompleteSearchBo
 import MapComponent from "@/components/GoogleMap/MapComponent";
 import PlaceInformation from "@/components/Grids/PlacesGrid";
 import { LoadingButton } from "@mui/lab";
-import { setLoading } from "@/app/home/page";
+import { setLoading } from "@/app/old-home/page";
 import { showError } from "@/contexts/ToastProvider";
 
 function ContextStep({

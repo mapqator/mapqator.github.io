@@ -10,6 +10,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import {
+	ArrowRight,
+	KeyboardArrowRight,
+	KeyboardDoubleArrowDown,
+	KeyboardDoubleArrowRight,
+} from "@mui/icons-material";
 
 export default function HomePage({ setSelected }) {
 	const { queryStatus, contextStatus } = useContext(GlobalContext);
@@ -65,7 +71,7 @@ export default function HomePage({ setSelected }) {
 			label: "Evaluate LLMs",
 			description:
 				"Context + Question pair will be used to evaluate the performance of closed-source LLMs.",
-			key: "evaluation",
+			key: "live_evaluation",
 		},
 	];
 
@@ -139,7 +145,7 @@ export default function HomePage({ setSelected }) {
 									disabled={
 										(step.key === "question" &&
 											contextStatus !== "saved") ||
-										(step.key === "evaluation" &&
+										(step.key === "live_evaluation" &&
 											queryStatus !== "saved")
 									}
 									color={
@@ -164,20 +170,22 @@ export default function HomePage({ setSelected }) {
 						{index < steps.length - 1 && (
 							<>
 								<div className="hidden md:flex">
-									<FontAwesomeIcon
+									{/* <FontAwesomeIcon
 										icon={faArrowRight}
 										style={{
 											fontSize: "2rem",
 										}}
-									/>
+									/> */}
+									<KeyboardDoubleArrowRight />
 								</div>
 								<div className="flex md:hidden p-4">
-									<FontAwesomeIcon
+									{/* <FontAwesomeIcon
 										icon={faArrowDown}
 										style={{
 											fontSize: "2rem",
 										}}
-									/>
+									/> */}
+									<KeyboardDoubleArrowDown />
 								</div>
 							</>
 						)}

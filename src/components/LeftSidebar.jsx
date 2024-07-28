@@ -1,3 +1,4 @@
+"use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faArrowRightFromBracket,
@@ -40,18 +41,16 @@ import { useAuth } from "@/contexts/AuthContext";
 import AuthService from "@/services/authService";
 import { AccountTree, Home, Login, Logout } from "@mui/icons-material";
 const drawerWidth = config.drawerWidth;
-function NavButton({ icon, name, navkey, setSelected, selected }) {
+function NavButton({ icon, name, navkey }) {
+	const router = useRouter();
+	const pathname = usePathname();
 	return (
 		<ListItem key={navkey} disablePadding>
 			<ListItemButton
 				className={`text-[1.25rem] px-4 ${
-					selected === navkey ? "!bg-zinc-300 " : ""
+					pathname === navkey ? "!bg-zinc-300 " : ""
 				}`}
-				onClick={() => {
-					// console.log("Setting selected to: ", key);
-					setSelected(navkey);
-				}}
-				href={"#" + navkey}
+				onClick={() => {}}
 			>
 				<ListItemIcon sx={{ minWidth: "0px", width: "15%" }}>
 					{icon}
@@ -98,7 +97,7 @@ function LogoutButton() {
 	);
 }
 
-export default function LeftSidebar({ selected, setSelected, window }) {
+export default function LeftSidebar({ window }) {
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const [isClosing, setIsClosing] = useState(false);
 	const pathname = usePathname();
@@ -122,7 +121,7 @@ export default function LeftSidebar({ selected, setSelected, window }) {
 		if (mobileOpen) {
 			setMobileOpen(false);
 		}
-	}, [selected]);
+	}, [pathname]);
 
 	const drawer = (
 		<div>
@@ -169,14 +168,7 @@ export default function LeftSidebar({ selected, setSelected, window }) {
 						icon: <AssessmentIcon />,
 					},
 				].map(({ name, icon, key }) => (
-					<NavButton
-						icon={icon}
-						name={name}
-						navkey={key}
-						key={key}
-						setSelected={setSelected}
-						selected={selected}
-					/>
+					<NavButton icon={icon} name={name} navkey={key} key={key} />
 				))}
 			</List>
 			<Divider />

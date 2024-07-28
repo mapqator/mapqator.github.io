@@ -18,6 +18,7 @@ import HomePage from "./OverView";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import ContextGeneratorService from "@/services/contextGeneratorService";
 import { AppContext } from "@/contexts/AppContext";
+import LiveEvaluation from "./LiveEvaluation";
 export default function Home() {
 	const [activeStep, setActiveStep] = useState(null);
 	const [selected, setSelected] = useState("home");
@@ -82,17 +83,7 @@ export default function Home() {
 		currentInformation,
 	]);
 
-	useEffect(() => {
-		if (queryStatus === "saved") {
-			setQueryStatus("edited");
-		}
-	}, [query]);
-
-	useEffect(() => {
-		if (contextStatus === "saved") {
-			setContextStatus("edited");
-		}
-	}, [context]);
+	
 
 	useEffect(() => {
 		const page = window.location.hash.substring(1);
@@ -109,13 +100,18 @@ export default function Home() {
 
 	return (
 		<Box sx={{ display: "flex" }}>
-			<Box
-				sx={{
-					width: { xs: "0px", md: `calc(${config.drawerWidth}px)` },
-				}}
-			>
-				<LeftSidebar {...{ selected, setSelected }} />
-			</Box>
+			{isAuthenticated && (
+				<Box
+					sx={{
+						width: {
+							xs: "0px",
+							md: `calc(${config.drawerWidth}px)`,
+						},
+					}}
+				>
+					<LeftSidebar {...{ selected, setSelected }} />
+				</Box>
+			)}
 
 			<Container
 				maxWidth="md"
@@ -160,8 +156,10 @@ export default function Home() {
 					/>
 				) : selected === "evaluation" ? (
 					<EvaluationResultsPage />
+				) : selected === "home" ? (
+					<HomePage {...{ setSelected }} />
 				) : (
-					selected === "home" && <HomePage {...{ setSelected }} />
+					selected === "live_evaluation" && <LiveEvaluation />
 				)}
 
 				{/* {isAuthenticated && <KeyStoreButton />} */}

@@ -1,5 +1,8 @@
+"use client";
 import React, { createContext, useState, useContext, useEffect } from "react";
 import dayjs from "dayjs";
+import { AppContext } from "./AppContext";
+import ContextGeneratorService from "@/services/contextGeneratorService";
 export const GlobalContext = createContext();
 
 export default function GlobalContextProvider({ children }) {
@@ -219,6 +222,57 @@ export default function GlobalContextProvider({ children }) {
 		classification: "",
 	};
 	const [query, setQuery] = useState(initQuery);
+
+	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
+
+	useEffect(() => {
+		setContext({
+			places: ContextGeneratorService.getPlacesContext(
+				selectedPlacesMap,
+				savedPlacesMap
+			),
+			nearby: ContextGeneratorService.getNearbyContext(
+				nearbyPlacesMap,
+				savedPlacesMap
+			),
+			area: ContextGeneratorService.getAreaContext(
+				poisMap,
+				savedPlacesMap
+			),
+			distance: ContextGeneratorService.getDistanceContext(
+				distanceMatrix,
+				savedPlacesMap
+			),
+			direction: ContextGeneratorService.getDirectionContext(
+				directionInformation,
+				savedPlacesMap
+			),
+			params: ContextGeneratorService.getParamsContext(
+				currentInformation,
+				savedPlacesMap
+			),
+		});
+	}, [
+		savedPlacesMap,
+		selectedPlacesMap,
+		nearbyPlacesMap,
+		poisMap,
+		distanceMatrix,
+		directionInformation,
+		currentInformation,
+	]);
+
+	useEffect(() => {
+		if (queryStatus === "saved") {
+			setQueryStatus("edited");
+		}
+	}, [query]);
+
+	useEffect(() => {
+		if (contextStatus === "saved") {
+			setContextStatus("edited");
+		}
+	}, [context]);
 
 	return (
 		<GlobalContext.Provider
