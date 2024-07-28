@@ -209,15 +209,26 @@ export default function GlobalContextProvider({ children }) {
 		initCurrentInformation
 	);
 
+	// const initQuery = {
+	// 	question: "Time to go from Louvre to Eiffel Tower by car?",
+	// 	answer: {
+	// 		type: "mcq",
+	// 		options: ["15 mins", "16 mins", "17 mins", "18 mins"],
+	// 		correct: 2,
+	// 	},
+	// 	classification: "poi",
+	// };
+
 	const initQuery = {
-		question: "Time to go from Louvre to Eiffel Tower by car?",
+		question: "",
 		answer: {
 			type: "mcq",
-			options: ["15 mins", "16 mins", "17 mins", "18 mins"],
-			correct: 2,
+			options: ["", "", "", ""],
+			correct: -1,
 		},
-		classification: "poi",
+		classification: "",
 	};
+
 	const [query, setQuery] = useState(initQuery);
 
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
