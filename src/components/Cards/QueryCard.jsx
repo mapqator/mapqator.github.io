@@ -34,7 +34,7 @@ import categories from "@/database/categories.json";
 import { convertFromSnake } from "@/services/utils";
 import { AppContext } from "@/contexts/AppContext";
 
-export default function QueryCard({ entry, onEdit }) {
+export default function QueryCard({ entry, onEdit, isPersonal }) {
 	const [flag, setFlag] = useState(false);
 	const { setQueries } = useContext(AppContext);
 	const { isAuthenticated } = useAuth();
@@ -170,7 +170,8 @@ export default function QueryCard({ entry, onEdit }) {
 					</Box>
 					<OptionsPreview answer={entry.answer} />
 					<LLMAnswers evaluation={entry.evaluation} />
-					<Annotation query={entry} />
+					{!isPersonal && <Annotation query={entry} />}
+
 					{/* Only creator can edit his question */}
 					{(entry.username === getUserName() ||
 						getUserName() === "admin") && (

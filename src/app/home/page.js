@@ -34,16 +34,6 @@ export default function Home() {
 	const { isAuthenticated } = useAuth();
 	const router = useRouter();
 
-	const {
-		selectedPlacesMap,
-		distanceMatrix,
-		directionInformation,
-		nearbyPlacesMap,
-		poisMap,
-		setContext,
-		currentInformation,
-	} = useContext(GlobalContext);
-
 	const { queryStatus, contextStatus } = useContext(GlobalContext);
 	const [showTooltip, setShowTooltip] = useState(false);
 	const [contextClicked, setContextClicked] = useState(false);
@@ -52,6 +42,12 @@ export default function Home() {
 		const timer = setTimeout(() => setShowTooltip(true), 2000);
 		return () => clearTimeout(timer);
 	}, []);
+
+	useEffect(() => {
+		if (contextStatus === "empty") {
+			router.push("/home");
+		}
+	}, [contextStatus]);
 
 	const steps = [
 		{

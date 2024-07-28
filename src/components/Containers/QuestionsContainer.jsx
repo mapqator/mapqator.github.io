@@ -86,7 +86,12 @@ export default function QuestionsContainer({ title, isPersonal, onEdit }) {
 
 			<div className="flex flex-col gap-5">
 				{data.map((entry) => (
-					<QueryCard key={entry.id} entry={entry} onEdit={onEdit} />
+					<QueryCard
+						key={entry.id}
+						entry={entry}
+						onEdit={onEdit}
+						isPersonal={isPersonal}
+					/>
 				))}
 			</div>
 			<div className="flex justify-center bottom-0 left-0 right-0 pt-4">

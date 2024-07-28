@@ -20,16 +20,21 @@ import LoginForm from "@/components/Forms/LoginForm";
 import { GlobalContext } from "@/contexts/GlobalContext";
 
 const Login = () => {
-	const { isAuthenticated } = useAuth();
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
 	const { llmResults } = useContext(GlobalContext);
+
+	const { isAuthenticated } = useAuth();
+
+	const handleLogin = () => {
+		router.push(
+			config.loginRedirect +
+				(Object.keys(llmResults).length > 0 ? "/evaluation" : "")
+		);
+	};
 	useEffect(() => {
 		if (isAuthenticated) {
-			router.push(
-				config.loginRedirect +
-					(Object.keys(llmResults).length > 0 ? "/evaluation" : "")
-			);
+			handleLogin();
 		}
 	}, [isAuthenticated]);
 
@@ -40,12 +45,7 @@ const Login = () => {
 					open={open}
 					setOpen={setOpen}
 					onConfirm={() => {
-						router.push(
-							config.loginRedirect +
-								(Object.keys(llmResults).length > 0
-									? "/evaluation"
-									: "")
-						);
+						handleLogin();
 					}}
 					text="As a guest, you can explore different features of our platform. But your changes won't be saved in our database."
 				/>
@@ -129,9 +129,9 @@ const Login = () => {
 								<Button
 									type="submit"
 									className="w-full rounded-lg text-sm px-5 py-2.5 text-center font-medium bg-orange-400"
-									onClick={() =>
-										// router.push(config.loginRedirect)
-										setOpen(true)
+									onClick={
+										() => handleLogin()
+										// setOpen(true)
 									}
 									// color="orange"
 									startIcon={<RemoveRedEye />}

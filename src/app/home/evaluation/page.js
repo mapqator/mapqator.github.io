@@ -14,6 +14,7 @@ import {
 	Grid,
 	Avatar,
 	LinearProgress,
+	Button,
 } from "@mui/material";
 import ContextPreview from "@/components/Cards/ContextPreview";
 import CollapsedContext from "@/components/Cards/CollapsedContext";
@@ -30,6 +31,7 @@ import config from "@/config/config";
 import queryApi from "@/api/queryApi";
 import { AppContext } from "@/contexts/AppContext";
 import { showError, showSuccess } from "@/contexts/ToastProvider";
+import EditIcon from "@mui/icons-material/Edit";
 
 const llmApis = {
 	gpt4: {
@@ -63,8 +65,14 @@ export default function LiveEvaluation() {
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 	const { isAuthenticated } = useAuth();
-	const { setEvaluationStatus } = useContext(GlobalContext);
+	const { setEvaluationStatus, queryStatus } = useContext(GlobalContext);
 	const { queries, setQueries, savedPlacesMap } = useContext(AppContext);
+
+	useEffect(() => {
+		if (queryStatus === "empty") {
+			router.push("/home");
+		}
+	}, [queryStatus]);
 
 	const extract = (s) => {
 		for (let char of s) {
@@ -194,7 +202,13 @@ export default function LiveEvaluation() {
 
 	const handleDiscard = () => {
 		console.log("Discarding query");
-		setShowSavePrompt(false);
+		// setShowSavePrompt(false);
+		handleReset();
+		router.push("/home");
+	};
+
+	const handleEditQuestion = () => {
+		router.push("/home/question");
 	};
 
 	return (
@@ -212,11 +226,29 @@ export default function LiveEvaluation() {
 			>
 				<Card elevation={3} className="mb-4 w-full bg-blue-50">
 					<CardContent>
-						<Box display="flex" alignItems="center" mb={2}>
-							<Avatar className="bg-blue-500 mr-2">
-								<DescriptionIcon />
-							</Avatar>
-							<Typography variant="h6">Context</Typography>
+						<Box
+							display="flex"
+							justifyContent="space-between"
+							alignItems="center"
+							mb={2}
+						>
+							<Box display="flex" alignItems="center">
+								<Avatar
+									className="mr-2"
+									sx={{ backgroundColor: "#3b82f6" }}
+								>
+									<DescriptionIcon />
+								</Avatar>
+								<Typography variant="h6">Context</Typography>
+							</Box>
+							<Button
+								variant="outlined"
+								color="primary"
+								startIcon={<EditIcon />}
+								onClick={() => router.push("/home/context")}
+							>
+								Edit
+							</Button>
 						</Box>
 						<CollapsedContext
 							context={ContextGeneratorService.convertContextToText(
@@ -235,11 +267,31 @@ export default function LiveEvaluation() {
 				>
 					<Card elevation={3} className="mb-4 w-full bg-green-50">
 						<CardContent>
-							<Box display="flex" alignItems="center" mb={2}>
-								<Avatar className="bg-green-500 mr-2">
-									<QuestionMarkIcon />
-								</Avatar>
-								<Typography variant="h6">Question</Typography>
+							<Box
+								display="flex"
+								justifyContent="space-between"
+								alignItems="center"
+								mb={2}
+							>
+								<Box display="flex" alignItems="center">
+									<Avatar
+										className="mr-2"
+										sx={{ backgroundColor: "#22c55e" }}
+									>
+										<QuestionMarkIcon />
+									</Avatar>
+									<Typography variant="h6">
+										Question
+									</Typography>
+								</Box>
+								<Button
+									variant="outlined"
+									color="primary"
+									startIcon={<EditIcon />}
+									onClick={handleEditQuestion}
+								>
+									Edit
+								</Button>
 							</Box>
 							<Typography
 								variant="body1"
@@ -258,6 +310,14 @@ export default function LiveEvaluation() {
 											<CardContent>
 												<Typography variant="body2">
 													Option {index + 1}: {option}
+													{index ===
+														query.answer
+															.correct && (
+														<CheckCircleIcon
+															className="text-green-500 ml-2"
+															fontSize="small"
+														/>
+													)}
 												</Typography>
 											</CardContent>
 										</Card>
@@ -282,7 +342,7 @@ export default function LiveEvaluation() {
 					)}
 				</AnimatePresence>
 
-				{stage >= 3 && (
+				{/* {stage >= 3 && (
 					<motion.div
 						initial={{ x: -50, opacity: 0 }}
 						animate={{ x: 0, opacity: 1 }}
@@ -291,7 +351,10 @@ export default function LiveEvaluation() {
 						<Card elevation={3} className="mb-4 bg-purple-50">
 							<CardContent>
 								<Box display="flex" alignItems="center" mb={2}>
-									<Avatar className="bg-purple-500 mr-2">
+									<Avatar
+										className="bg-purple-500 mr-2"
+										sx={{ backgroundColor: "#a855f7" }}
+									>
 										<CheckCircleIcon />
 									</Avatar>
 									<Typography variant="h6">
@@ -315,7 +378,7 @@ export default function LiveEvaluation() {
 							</CardContent>
 						</Card>
 					</motion.div>
-				)}
+				)} */}
 
 				{Object.entries(llmResults).map(([llm, result], index) => (
 					<motion.div
@@ -324,10 +387,13 @@ export default function LiveEvaluation() {
 						animate={{ x: 0, opacity: 1 }}
 						transition={{ duration: 0.5, delay: index * 0.2 }}
 					>
-						<Card elevation={3} className="mb-4 bg-yellow-50">
+						<Card elevation={3} className="mb-4 bg-yellow-500">
 							<CardContent>
 								<Box display="flex" alignItems="center" mb={2}>
-									<Avatar className="bg-yellow-500 mr-2">
+									<Avatar
+										className="bg-yellow-500 mr-2"
+										sx={{ backgroundColor: "#eab308" }}
+									>
 										<SmartToyIcon />
 									</Avatar>
 									<Typography variant="h6">

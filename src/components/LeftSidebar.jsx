@@ -1,21 +1,10 @@
 "use client";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faArrowRightFromBracket,
-	faBell,
-	faFishFins,
-	faHardDrive,
-	faHouse,
-	faMailBulk,
-	faUsers,
-} from "@fortawesome/free-solid-svg-icons";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
 	AppBar,
 	Box,
-	CssBaseline,
 	Divider,
 	Drawer,
 	IconButton,
@@ -41,16 +30,16 @@ import { useAuth } from "@/contexts/AuthContext";
 import AuthService from "@/services/authService";
 import { AccountTree, Home, Login, Logout } from "@mui/icons-material";
 const drawerWidth = config.drawerWidth;
-function NavButton({ icon, name, navkey }) {
+function NavButton({ icon, name, to }) {
 	const router = useRouter();
 	const pathname = usePathname();
 	return (
-		<ListItem key={navkey} disablePadding>
+		<ListItem key={to} disablePadding>
 			<ListItemButton
 				className={`text-[1.25rem] px-4 ${
-					pathname === navkey ? "!bg-zinc-300 " : ""
+					pathname === to ? "!bg-zinc-300 " : ""
 				}`}
-				onClick={() => {}}
+				onClick={() => router.push(to)}
 			>
 				<ListItemIcon sx={{ minWidth: "0px", width: "15%" }}>
 					{icon}
@@ -78,6 +67,7 @@ function LogoutButton() {
 				onClick={async () => {
 					if (isAuthenticated) {
 						AuthService.logout();
+						router.push(config.logoutRedirect);
 					} else {
 						router.push(config.logoutRedirect);
 					}
@@ -155,20 +145,27 @@ export default function LeftSidebar({ window }) {
 					{
 						name: "Home",
 						icon: <Home />,
-						key: "home",
+						to: "/home",
 					},
 					{
+						name: "My Queries",
+						icon: <QuestionAnswerIcon />,
+						to: "/home/my-queries",
+					},
+					{
+						/* {
 						name: "Dataset",
-						key: "dataset",
+						to: "/home/dataset",
 						icon: <DatasetIcon />,
 					},
 					{
 						name: "Evaluation",
-						key: "evaluation",
+						to: "/home/evaluation",
 						icon: <AssessmentIcon />,
+					}, */
 					},
-				].map(({ name, icon, key }) => (
-					<NavButton icon={icon} name={name} navkey={key} key={key} />
+				].map(({ name, icon, to }) => (
+					<NavButton icon={icon} name={name} to={to} key={to} />
 				))}
 			</List>
 			<Divider />
