@@ -10,9 +10,17 @@ import {
 import { GlobalContext } from "@/contexts/GlobalContext";
 import categories from "@/database/categories.json";
 import { convertFromSnake } from "@/services/utils";
+import InfoIcon from "@mui/icons-material/Info";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import { useRouter } from "next/navigation";
 
 export default function CategorySelectionField() {
 	const { query, setQuery } = useContext(GlobalContext);
+	const router = useRouter();
+	const navigateToHelpPage = () => {
+		router.push("/home/categories");
+	};
 	return (
 		<FormControl
 			variant="outlined"
@@ -42,6 +50,20 @@ export default function CategorySelectionField() {
 					</MenuItem>
 				))}
 			</Select>
+			<Tooltip title="Learn more about categories">
+				<IconButton
+					size="small"
+					sx={{
+						position: "absolute",
+						right: 30,
+						top: "50%",
+						transform: "translateY(-50%)",
+					}}
+					onClick={navigateToHelpPage}
+				>
+					<InfoIcon />
+				</IconButton>
+			</Tooltip>
 		</FormControl>
 	);
 }

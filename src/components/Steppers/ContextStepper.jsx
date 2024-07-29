@@ -17,7 +17,16 @@ import DirectionsIcon from "@mui/icons-material/Directions";
 import PlaceIcon from "@mui/icons-material/Place";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import ContextPreview from "@/components/Cards/ContextPreview";
-import { Clear, Flag, RemoveRedEye, Save, Settings } from "@mui/icons-material";
+import {
+	Clear,
+	Flag,
+	KeyboardArrowRight,
+	KeyboardDoubleArrowRight,
+	NextPlanTwoTone,
+	RemoveRedEye,
+	Save,
+	Settings,
+} from "@mui/icons-material";
 import ExploreIcon from "@mui/icons-material/Explore";
 import ContextGeneratorService from "@/services/contextGeneratorService";
 import ParamsForm from "@/components/Forms/ParamsForm";
@@ -377,9 +386,9 @@ export default function ContextStepper({
 					}}
 					variant="contained"
 					sx={{ mt: 1, mr: 1 }}
-					startIcon={<Save />}
+					endIcon={<KeyboardDoubleArrowRight />}
 				>
-					Finish
+					Next
 				</Button>
 				<Button
 					onClick={handleReset}

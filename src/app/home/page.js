@@ -39,7 +39,7 @@ export default function Home() {
 	const [contextClicked, setContextClicked] = useState(false);
 	useEffect(() => {
 		// Show the tooltip after a short delay
-		const timer = setTimeout(() => setShowTooltip(true), 2000);
+		const timer = setTimeout(() => setShowTooltip(true), 1000);
 		return () => clearTimeout(timer);
 	}, []);
 
@@ -122,15 +122,17 @@ export default function Home() {
 							}}
 						>
 							<Tooltip
-								title={
-									step.key === "context" && !contextClicked
-										? "Start here!"
-										: ""
-								}
+								title={"Click here!"}
 								open={
-									step.key === "context" &&
 									showTooltip &&
-									contextStatus === "empty"
+									((step.key === "context" &&
+										contextStatus === "empty") ||
+										(step.key === "question" &&
+											contextStatus === "saved" &&
+											queryStatus !== "saved") ||
+										(step.key === "live_evaluation" &&
+											contextStatus === "saved" &&
+											queryStatus === "saved"))
 								}
 								arrow
 								TransitionComponent={Zoom}
@@ -144,9 +146,16 @@ export default function Home() {
 										borderRadius: "50%",
 										color: "white",
 										animation:
-											step.key === "context" &&
 											showTooltip &&
-											contextStatus === "empty"
+											((step.key === "context" &&
+												contextStatus === "empty") ||
+												(step.key === "question" &&
+													contextStatus === "saved" &&
+													queryStatus !== "saved") ||
+												(step.key ===
+													"live_evaluation" &&
+													contextStatus === "saved" &&
+													queryStatus === "saved"))
 												? "pulse 2s infinite"
 												: "none",
 										"@keyframes pulse": {

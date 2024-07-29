@@ -53,7 +53,7 @@ export default function QuestionCreationPage() {
 	};
 
 	const onFinish = () => {
-		router.push("/home");
+		router.push("/home/evaluation");
 		setQueryStatus("saved");
 	};
 

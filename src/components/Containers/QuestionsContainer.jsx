@@ -13,6 +13,7 @@ import { getUserName } from "@/api/base";
 import categories from "@/database/categories.json";
 import QueryCard from "@/components/Cards/QueryCard";
 import { AppContext } from "@/contexts/AppContext";
+import { convertFromSnake } from "@/services/utils";
 const itemsPerPage = 10;
 export default function QuestionsContainer({ title, isPersonal, onEdit }) {
 	const { queries } = useContext(AppContext);
@@ -76,7 +77,7 @@ export default function QuestionsContainer({ title, isPersonal, onEdit }) {
 						>
 							{allCategories.map((category) => (
 								<MenuItem key={category} value={category}>
-									{category}
+									{convertFromSnake(category)}
 								</MenuItem>
 							))}
 						</Select>

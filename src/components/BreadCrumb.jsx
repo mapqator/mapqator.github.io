@@ -20,11 +20,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {
 	Assessment,
+	Category,
 	Dataset,
 	Home,
+	List,
 	Map,
 	QuestionAnswer,
 } from "@mui/icons-material";
+import { Grid } from "@mui/material";
 
 // Utility function to format breadcrumb text
 function formatBreadcrumbText(text) {
@@ -45,6 +48,8 @@ function getIcon(value) {
 			return <Assessment />;
 		case "my-dataset":
 			return <Dataset />;
+		case "categories":
+			return <List />;
 		default:
 			return <Home />;
 	}
