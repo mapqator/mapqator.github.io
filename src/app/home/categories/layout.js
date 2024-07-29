@@ -15,9 +15,9 @@ const CategoryHelpPage = () => {
 				Understanding Question Categories
 			</Typography>
 			<Typography variant="body1" paragraph>
-				Our location-based geospatial questions are divided into three
-				main categories to help you better understand the type of
-				information you'll be working with.
+				{
+					"Our location-based geospatial questions are divided into three main categories to help you better understand the type of information you'll be working with."
+				}
 			</Typography>
 
 			<Paper elevation={3} sx={{ padding: 3, marginBottom: 4 }}>
