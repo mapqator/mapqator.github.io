@@ -33,6 +33,7 @@ export default function QuestionCreationPage() {
 		poisMap,
 		directionInformation,
 		initQuery,
+		contextStatus,
 		queryStatus,
 		setQueryStatus,
 	} = useContext(GlobalContext);
@@ -41,9 +42,16 @@ export default function QuestionCreationPage() {
 	const { queries, setQueries, savedPlacesMap } = useContext(AppContext);
 	const { isAuthenticated } = useAuth();
 
+	useEffect(() => {
+		if (contextStatus === "empty") {
+			router.push("/home");
+		}
+	}, [contextStatus]);
+
 	const handleContextEdit = () => {
 		router.push("/home/context");
 	};
+
 	const onFinish = () => {
 		router.push("/home");
 		setQueryStatus("saved");

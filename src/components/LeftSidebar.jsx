@@ -29,6 +29,7 @@ import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import AuthService from "@/services/authService";
 import { AccountTree, Home, Login, Logout } from "@mui/icons-material";
+import Breadcrumb from "./BreadCrumb";
 const drawerWidth = config.drawerWidth;
 function NavButton({ icon, name, to }) {
 	const router = useRouter();
@@ -148,21 +149,14 @@ export default function LeftSidebar({ window }) {
 						to: "/home",
 					},
 					{
-						name: "My Queries",
-						icon: <QuestionAnswerIcon />,
-						to: "/home/my-queries",
-					},
-					{
-						/* {
-						name: "Dataset",
-						to: "/home/dataset",
+						name: "My Dataset",
 						icon: <DatasetIcon />,
+						to: "/home/my-dataset",
 					},
 					{
-						name: "Evaluation",
-						to: "/home/evaluation",
+						name: "My Evaluations",
+						to: "/home/my-evaluations",
 						icon: <AssessmentIcon />,
-					}, */
 					},
 				].map(({ name, icon, to }) => (
 					<NavButton icon={icon} name={name} to={to} key={to} />
@@ -216,6 +210,7 @@ export default function LeftSidebar({ window }) {
 						>
 							<MenuIcon />
 						</IconButton>
+						<Breadcrumb />
 					</div>
 				</Toolbar>
 			</AppBar>

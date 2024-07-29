@@ -101,7 +101,12 @@ export default function Home() {
 	];
 
 	return (
-		<div className="h-full flex md:items-center p-2 pt-5 md:pt-2">
+		<Box
+			className="p-5 mx-auto flex flex-col justify-center items-center gap-5 w-full"
+			sx={{
+				minHeight: `calc(100vh - ${config.topbarHeight}px)`,
+			}}
+		>
 			<div className="flex flex-col md:flex-row items-center justify-center  mx-auto">
 				{steps.map((step, index) => (
 					<div
@@ -218,6 +223,6 @@ export default function Home() {
 					</div>
 				))}
 			</div>
-		</div>
+		</Box>
 	);
 }

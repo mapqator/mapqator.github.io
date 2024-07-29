@@ -168,7 +168,7 @@ export default function ContextGenerator() {
 					setActiveStep,
 				}}
 			/>
-			<KeyStoreButton />
+			{/* <KeyStoreButton /> */}
 		</Box>
 	);
 }
