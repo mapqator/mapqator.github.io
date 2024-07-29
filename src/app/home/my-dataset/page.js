@@ -3,13 +3,15 @@
 import QuestionsContainer from "@/components/Containers/QuestionsContainer";
 import config from "@/config/config";
 import { useAuth } from "@/contexts/AuthContext";
+import { GlobalContext } from "@/contexts/GlobalContext";
 import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 export default function MyQueriesPage() {
 	const { isAuthenticated } = useAuth();
 	const router = useRouter();
+	const { setContextStatus, setQueryStatus } = useContext(GlobalContext);
 	useEffect(() => {
 		if (!isAuthenticated) {
 			router.push(config.logoutRedirect);
@@ -21,7 +23,9 @@ export default function MyQueriesPage() {
 			<QuestionsContainer
 				title="My Queries"
 				isPersonal={true}
-				onEdit={() => window.scrollTo(0, 0)}
+				onEdit={() => {
+					router.push("/home/context");
+				}}
 			/>
 		</Box>
 	);

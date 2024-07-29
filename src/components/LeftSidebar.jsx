@@ -141,6 +141,11 @@ export default function LeftSidebar({ window }) {
 				</div>
 			</Toolbar>
 			<Divider />
+			{/* {
+						name: "My Evaluations",
+						to: "/home/my-evaluations",
+						icon: <AssessmentIcon />,
+				}, */}
 			<List>
 				{[
 					{
@@ -152,11 +157,6 @@ export default function LeftSidebar({ window }) {
 						name: "My Dataset",
 						icon: <DatasetIcon />,
 						to: "/home/my-dataset",
-					},
-					{
-						name: "My Evaluations",
-						to: "/home/my-evaluations",
-						icon: <AssessmentIcon />,
 					},
 				].map(({ name, icon, to }) => (
 					<NavButton icon={icon} name={name} to={to} key={to} />

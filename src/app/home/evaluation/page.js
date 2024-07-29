@@ -32,6 +32,7 @@ import queryApi from "@/api/queryApi";
 import { AppContext } from "@/contexts/AppContext";
 import { showError, showSuccess } from "@/contexts/ToastProvider";
 import EditIcon from "@mui/icons-material/Edit";
+import Confirmation from "@/components/Dialogs/Confirmation";
 
 const llmApis = {
 	gpt4: {
@@ -175,7 +176,7 @@ export default function LiveEvaluation() {
 				newQueries.unshift(res.data[0]);
 				setQueries(newQueries);
 				handleReset();
-				router.push("/home");
+			router.push("/home/my-dataset");
 			} else {
 				showError("Can't save this query");
 				// window.scrollTo(0, 0);
@@ -192,7 +193,7 @@ export default function LiveEvaluation() {
 				// update the queries
 				showSuccess("Query edited successfully");
 				handleReset();
-				router.push("/home");
+				router.push("/home/my-dataset");
 			} else {
 				showError("Can't update this query");
 				// window.scrollTo(0, 0);
@@ -207,12 +208,21 @@ export default function LiveEvaluation() {
 		router.push("/home");
 	};
 
+	const [open, setOpen] = useState(false);
 	const handleEditQuestion = () => {
 		router.push("/home/question");
 	};
 
 	return (
 		<Box className="h-full flex flex-col justify-center p-4 w-full pt-10">
+			<Confirmation
+				open={open}
+				setOpen={setOpen}
+				onConfirm={() => {
+					handleDiscard();
+				}}
+				text="Your query and evaluation will be lost. Are you sure you want to discard?"
+			/>
 			<LinearProgress
 				variant="determinate"
 				value={(stage / 3) * 100}
@@ -442,7 +452,7 @@ export default function LiveEvaluation() {
 						{isAuthenticated ? (
 							<SaveQuery
 								onSave={handleSave}
-								onDiscard={handleDiscard}
+								onDiscard={setOpen}
 							/>
 						) : (
 							<LoginPrompt onLogin={handleLogin} />

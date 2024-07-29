@@ -35,13 +35,13 @@ const SaveQuery = ({ onSave, onDiscard }) => {
 					Discard
 				</Button>
 			</Box>
-			<Snackbar
+			{/* <Snackbar
 				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
 				open={showSnackbar}
 				autoHideDuration={3000}
 				onClose={() => setShowSnackbar(false)}
 				message="Query saved successfully!"
-			/>
+			/> */}
 		</Box>
 	);
 };

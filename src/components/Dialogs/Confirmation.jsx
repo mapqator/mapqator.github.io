@@ -13,7 +13,7 @@ const Confirmation = ({ open, setOpen, onConfirm, text }) => {
 	return (
 		<Dialog open={open} onClose={handleClose}>
 			<DialogTitle>
-				{text + (text && " ") + "Are you sure you want to continue?"}
+				{text || "Are you sure you want to continue?"}
 			</DialogTitle>
 			<DialogActions>
 				<Button onClick={handleClose} variant="contained" color="error">
