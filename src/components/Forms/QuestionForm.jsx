@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Box, Button } from "@mui/material";
-import { Clear, Save } from "@mui/icons-material";
+import { Clear, KeyboardDoubleArrowRight, Save } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import OptionsEditor from "../InputFields/OptionsEditor";
 import CategorySelectionField from "../InputFields/CategorySelectionField";
@@ -29,11 +29,11 @@ export default function QuestionForm({ handleSubmit, handleReset }) {
 					type="submit"
 					variant="contained"
 					color="primary"
-					startIcon={<Save />}
+					startIcon={<KeyboardDoubleArrowRight />}
 					loading={loading}
 					loadingPosition="start"
 				>
-					{query.id === undefined ? "Finish" : "Finish #" + query.id}
+					{query.id === undefined ? "Next" : "Next #" + query.id}
 				</LoadingButton>
 				<Button
 					onClick={() => {

@@ -1,10 +1,1 @@
-[
-	"nearby_poi",
-	"planning",
-	"time_calculation",
-	"location_finding",
-	"opinion",
-	"routing",
-	"poi",
-	"trip"
-]
+["routing", "poi", "trip"]
