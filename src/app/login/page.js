@@ -105,7 +105,7 @@ const Login = () => {
 							</Box>
 						</div>
 						<Card
-							sx={{ maxWidth: 600, width: "100%" }}
+							sx={{ maxWidth: 400, width: "100%" }}
 							className="rounded-lg"
 							// variant="elevation"
 						>
