@@ -31,6 +31,10 @@ export default function ContextGenerator() {
 
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 
+	useEffect(() => {
+		const page = window.location.hash.substring(1);
+	setActiveStep(page === "edit" ? 1 : 0);
+	}, []);
 	const router = useRouter();
 	const {
 		initSelectedPlacesMap,

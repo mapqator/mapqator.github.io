@@ -102,7 +102,7 @@ export default function Home() {
 
 	return (
 		<Box
-			className="p-5 mx-auto flex flex-col justify-center items-center gap-5 w-full"
+			className="p-5 mx-auto flex flex-col justify-center items-center gap-5 w-full relative"
 			sx={{
 				minHeight: `calc(100vh - ${config.topbarHeight}px)`,
 			}}
@@ -232,6 +232,18 @@ export default function Home() {
 					</div>
 				))}
 			</div>
+
+			<Button
+				onClick={() => router.push("/home/explore")}
+				variant="outlined"
+				className="absolute bottom-0"
+				sx={{
+					position: "absolute",
+					bottom: "10vh",
+				}}
+			>
+				Explore
+			</Button>
 		</Box>
 	);
 }

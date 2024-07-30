@@ -24,7 +24,7 @@ export default function MyQueriesPage() {
 				title="My Queries"
 				isPersonal={true}
 				onEdit={() => {
-					router.push("/home/context");
+					router.push("/home/context#edit");
 				}}
 			/>
 		</Box>

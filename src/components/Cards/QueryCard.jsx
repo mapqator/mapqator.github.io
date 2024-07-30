@@ -26,7 +26,7 @@ import OptionsPreview from "../Lists/OptionsPreview";
 import { getUserName } from "@/api/base";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import queryApi from "@/api/queryApi";
-import { Delete, Save } from "@mui/icons-material";
+import { Delete, Save, GetApp } from "@mui/icons-material";
 import { useAuth } from "@/contexts/AuthContext";
 import { showError, showSuccess } from "@/contexts/ToastProvider";
 import { FormControl, Select, MenuItem, InputLabel } from "@mui/material";
@@ -34,7 +34,7 @@ import categories from "@/database/categories.json";
 import { convertFromSnake } from "@/services/utils";
 import { AppContext } from "@/contexts/AppContext";
 
-export default function QueryCard({ entry, onEdit, isPersonal }) {
+export default function QueryCard({ entry, onEdit, isPersonal, mode }) {
 	const [flag, setFlag] = useState(false);
 	const { setQueries } = useContext(AppContext);
 	const { isAuthenticated } = useAuth();
@@ -70,6 +70,20 @@ export default function QueryCard({ entry, onEdit, isPersonal }) {
 	}, [entry]);
 
 	const toggleAccordion = () => setExpanded(!expanded);
+
+	const handleDownloadQuery = () => {
+		const jsonString = JSON.stringify(entry, null, 2);
+		const blob = new Blob([jsonString], { type: "application/json" });
+		const href = URL.createObjectURL(blob);
+		const link = document.createElement("a");
+		link.href = href;
+		link.download = `query_${entry.id}.json`;
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+		URL.revokeObjectURL(href);
+	};
+
 	return (
 		<Card elevation={2}>
 			<div
@@ -170,7 +184,9 @@ export default function QueryCard({ entry, onEdit, isPersonal }) {
 					</Box>
 					<OptionsPreview answer={entry.answer} />
 					<LLMAnswers evaluation={entry.evaluation} />
-					{!isPersonal && <Annotation query={entry} />}
+					{!isPersonal && mode !== "explore" && (
+						<Annotation query={entry} />
+					)}
 
 					{/* Only creator can edit his question */}
 					{(entry.username === getUserName() ||
@@ -240,15 +256,36 @@ export default function QueryCard({ entry, onEdit, isPersonal }) {
 								</div>
 							)}
 
-							<Button
-								// variant="contained"
-								color="error"
-								startIcon={<Delete />}
-								onClick={() => handleDelete()}
-							>
-								Delete
-							</Button>
-							<QueryEditButton {...{ onEdit }} query={entry} />
+							{mode === "explore" ? (
+								<>
+									<QueryEditButton
+										{...{ onEdit }}
+										query={entry}
+									/>
+								</>
+							) : (
+								<>
+									<Button
+										color="primary"
+										startIcon={<GetApp />}
+										onClick={handleDownloadQuery}
+									>
+										Download Query
+									</Button>
+									<Button
+										// variant="contained"
+										color="error"
+										startIcon={<Delete />}
+										onClick={() => handleDelete()}
+									>
+										Delete
+									</Button>
+									<QueryEditButton
+										{...{ onEdit }}
+										query={entry}
+									/>
+								</>
+							)}
 						</div>
 					)}
 				</div>
