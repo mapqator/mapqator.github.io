@@ -373,7 +373,7 @@ export default function QueryCard({
 													key={index}
 													value={index + 1}
 												>
-													{value}
+													{"Option " + (index + 1)}
 												</MenuItem>
 											)
 										)}
