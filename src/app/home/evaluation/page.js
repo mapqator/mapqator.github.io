@@ -33,6 +33,7 @@ import { AppContext } from "@/contexts/AppContext";
 import { showError, showSuccess } from "@/contexts/ToastProvider";
 import EditIcon from "@mui/icons-material/Edit";
 import Confirmation from "@/components/Dialogs/Confirmation";
+import geminiApi from "@/api/geminiApi";
 
 const llmApis = {
 	gpt4: {
@@ -40,14 +41,14 @@ const llmApis = {
 		name: "GPT-4",
 		func: gptApi.askGPTLive,
 	},
-	gpt3: {
+	geminiPro: {
 		id: 7,
-		name: "GPT-3.5",
-		func: gptApi.askGPTLive,
+		name: "Gemini 1.0 Pro",
+		func: geminiApi.askGeminiLive,
 	},
-	// Add more LLMs here
 };
 
+const n_stages = Object.keys(llmApis).length + 2;
 export default function LiveEvaluation() {
 	const {
 		query,
@@ -90,6 +91,7 @@ export default function LiveEvaluation() {
 	};
 
 	const evaluateLLM = async (llm, llmFunction) => {
+		console.log("Hit Evaluate");
 		const res = await llmFunction(
 			ContextGeneratorService.convertContextToText(context),
 			query
@@ -116,20 +118,20 @@ export default function LiveEvaluation() {
 
 	const runEvaluation = async () => {
 		setStage(0);
+		console.log("Evaluation Run");
+		let s = 2;
 		if (Object.keys(llmResults).length === 0) {
 			setLlmResults({});
-			await new Promise((resolve) => setTimeout(resolve, 1000));
 			setStage(1);
-			await new Promise((resolve) => setTimeout(resolve, 1000));
-			setStage(2);
 			setIsProcessing(true);
-			const evaluationPromises = Object.entries(llmApis).map(
-				([name, entry]) => evaluateLLM(name, entry.func)
-			);
-			await Promise.all(evaluationPromises);
+			for (const [name, entry] of Object.entries(llmApis)) {
+				await evaluateLLM(name, entry.func);
+				setStage(s);
+				s = s + 1;
+			}
 			setIsProcessing(false);
 		}
-		setStage(3);
+		setStage(s);
 		setShowLoginPrompt(true);
 		setEvaluationStatus("evaluated");
 	};
@@ -176,7 +178,7 @@ export default function LiveEvaluation() {
 				newQueries.unshift(res.data[0]);
 				setQueries(newQueries);
 				handleReset();
-			router.push("/home/my-dataset");
+				router.push("/home/my-dataset");
 			} else {
 				showError("Can't save this query");
 				// window.scrollTo(0, 0);
@@ -225,7 +227,7 @@ export default function LiveEvaluation() {
 			/>
 			<LinearProgress
 				variant="determinate"
-				value={(stage / 3) * 100}
+				value={(stage / n_stages) * 100}
 				className="mb-4"
 			/>
 
