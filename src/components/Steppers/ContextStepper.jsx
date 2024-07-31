@@ -151,7 +151,7 @@ function ContextStep({
 								{index === 0 ? "Start" : "Continue"}
 							</Button>
 
-							{index > 0 ? (
+							{/* {index > 0 ? (
 								<Button
 									onClick={handleBack}
 									sx={{ mt: 1, mr: 1 }}
@@ -170,15 +170,15 @@ function ContextStep({
 								>
 									Start with Example
 								</LoadingButton>
-							)}
-							{/* {index > 0 && (
+							)} */}
+							{index > 0 && (
 								<Button
 									onClick={handleBack}
 									sx={{ mt: 1, mr: 1 }}
 								>
 									Back
 								</Button>
-							)} */}
+							)}
 						</div>
 					</Box>
 				</div>
