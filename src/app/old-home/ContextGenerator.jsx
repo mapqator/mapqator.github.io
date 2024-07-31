@@ -280,28 +280,28 @@ export default function ContextGenerator({
 			});
 		});
 
-		if (currentInformation.time && currentInformation.day !== "") {
-			newContext.push(
-				`Current time is ${currentInformation.time.format(
-					"h:mm a"
-				)} on ${currentInformation.day}.`
-			);
-		} else if (currentInformation.time) {
-			newContext.push(
-				`Current time is ${currentInformation.time.format("h:mm a")}.`
-			);
-		} else if (currentInformation.day !== "") {
-			newContext.push(`Today is ${currentInformation.day}.`);
-		}
+		// if (currentInformation.time && currentInformation.day !== "") {
+		// 	newContext.push(
+		// 		`Current time is ${currentInformation.time.format(
+		// 			"h:mm a"
+		// 		)} on ${currentInformation.day}.`
+		// 	);
+		// } else if (currentInformation.time) {
+		// 	newContext.push(
+		// 		`Current time is ${currentInformation.time.format("h:mm a")}.`
+		// 	);
+		// } else if (currentInformation.day !== "") {
+		// 	newContext.push(`Today is ${currentInformation.day}.`);
+		// }
 
-		if (currentInformation.location !== "") {
-			newContext.push(
-				`Current location of user is <b>${
-					// selectedPlacesMap[currentInformation.location]?.alias ||
-					savedPlacesMap[currentInformation.location]?.name
-				}</b>.`
-			);
-		}
+		// if (currentInformation.location !== "") {
+		// 	newContext.push(
+		// 		`Current location of user is <b>${
+		// 			// selectedPlacesMap[currentInformation.location]?.alias ||
+		// 			savedPlacesMap[currentInformation.location]?.name
+		// 		}</b>.`
+		// 	);
+		// }
 
 		setContext(newContext);
 
@@ -516,14 +516,14 @@ export default function ContextGenerator({
 				}}
 			/>
 
-			<CurrentInformation
+			{/* <CurrentInformation
 				{...{
 					selectedPlacesMap,
 					currentInformation,
 					setCurrentInformation,
 					savedPlacesMap,
 				}}
-			/>
+			/> */}
 
 			{/* <ContextPreview
 				{...{
