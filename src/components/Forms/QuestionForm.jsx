@@ -29,11 +29,13 @@ export default function QuestionForm({ handleSubmit, handleReset }) {
 					type="submit"
 					variant="contained"
 					color="primary"
-					startIcon={<KeyboardDoubleArrowRight />}
+					endIcon={<KeyboardDoubleArrowRight />}
 					loading={loading}
 					loadingPosition="start"
 				>
-					{query.id === undefined ? "Next" : "Next #" + query.id}
+					{query.id === undefined
+						? "Evaluate"
+						: "Evaluate #" + query.id}
 				</LoadingButton>
 				<Button
 					onClick={() => {

@@ -388,7 +388,7 @@ export default function ContextStepper({
 					sx={{ mt: 1, mr: 1 }}
 					endIcon={<KeyboardDoubleArrowRight />}
 				>
-					Next
+					Create Question
 				</Button>
 				<Button
 					onClick={handleReset}

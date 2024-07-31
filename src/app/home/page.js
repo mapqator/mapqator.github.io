@@ -242,7 +242,7 @@ export default function Home() {
 					bottom: "10vh",
 				}}
 			>
-				Explore
+				See Examples
 			</Button>
 		</Box>
 	);

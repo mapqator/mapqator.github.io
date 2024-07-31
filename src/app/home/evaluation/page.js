@@ -131,7 +131,7 @@ export default function LiveEvaluation() {
 			}
 			setIsProcessing(false);
 		}
-		setStage(s);
+		setStage(n_stages);
 		setShowLoginPrompt(true);
 		setEvaluationStatus("evaluated");
 	};
@@ -417,8 +417,14 @@ export default function LiveEvaluation() {
 									className="font-bold"
 									gutterBottom
 								>
-									Option {result.option}:{" "}
-									{query.answer.options[result.option - 1]}
+									{result.option === 0
+										? "No answer"
+										: "Option " +
+										  result.option +
+										  ": " +
+										  query.answer.options[
+												result.option - 1
+										  ]}
 								</Typography>
 								<Box display="flex" alignItems="center" mt={1}>
 									{result.verdict === "right" ? (

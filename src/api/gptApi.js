@@ -11,6 +11,9 @@ class GptApi extends Api {
 		console.log(context, query);
 		return await this.post("/gpt/ask", { context, query });
 	};
+	generateQuestion = async (context) => {
+		return await this.post("/gpt/generate-question", { context });
+	};
 }
 
 const gptApi = new GptApi();
