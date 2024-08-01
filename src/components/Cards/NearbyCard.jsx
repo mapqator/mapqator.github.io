@@ -13,6 +13,8 @@ import { Delete, ExpandMore } from "@mui/icons-material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { AppContext } from "@/contexts/AppContext";
 import PoiList from "@/components/Lists/PoiList";
+import Pluralize from "pluralize";
+import { convertFromSnake } from "@/services/utils";
 
 function NearbyCardDetails({ index, place_id, entry }) {
 	const { nearbyPlacesMap, setNearbyPlacesMap } = useContext(GlobalContext);
@@ -61,29 +63,28 @@ function NearbyCardSummary({ index, place_id, entry, expanded }) {
 			<Box display="flex" justifyContent="space-between">
 				<Box display="flex" flexWrap="wrap" gap={1} mt={1}>
 					<Chip
-						label={
-							entry.type === "any" ? entry.keyword : entry.type
-						}
+						label={Pluralize(
+							convertFromSnake(
+								entry.type === "any"
+									? entry.keyword
+									: entry.type
+							),
+							nearbyPlacesMap[place_id]
+								? nearbyPlacesMap[place_id][
+										index
+								  ].places.filter((place) => place.selected)
+										.length
+								: 0,
+							true
+						)}
 						color="primary"
 						size="small"
 					/>
 					<Chip
 						label={
-							(nearbyPlacesMap[place_id]
-								? nearbyPlacesMap[place_id][
-										index
-								  ].places.filter((place) => place.selected)
-										.length
-								: 0) + " POIs"
-						}
-						color="secondary"
-						size="small"
-					/>
-					<Chip
-						label={
 							entry.rankBy === "prominence"
-								? `${entry.radius} m`
-								: "Distance"
+								? `Inside ${entry.radius} m`
+								: "Rankby distance"
 						}
 						color="success"
 						size="small"
@@ -102,8 +103,8 @@ function NearbyCardSummary({ index, place_id, entry, expanded }) {
 		</>
 	);
 }
-export default function NearbyCard({ index, place_id, entry }) {
-	const [expanded, setExpanded] = useState(false);
+export default function NearbyCard({ index, place_id, entry, i }) {
+	const [expanded, setExpanded] = useState(i === 0);
 
 	return (
 		<Card variant="outlined">

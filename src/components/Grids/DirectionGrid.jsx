@@ -7,9 +7,9 @@ export default function DirectionGrid() {
 	const { directionInformation } = useContext(GlobalContext);
 
 	return (
-		<Grid container spacing={2}>
-			{Object.keys(directionInformation).map((from_id) =>
-				Object.keys(directionInformation[from_id]).map((to_id) => (
+		<Grid container spacing={2} sx={{ mt: 0, mb: 2 }}>
+			{Object.keys(directionInformation).map((from_id, i) =>
+				Object.keys(directionInformation[from_id]).map((to_id, j) => (
 					<Grid
 						item
 						xs={12}
@@ -17,7 +17,7 @@ export default function DirectionGrid() {
 						md={6}
 						key={from_id + "-" + to_id}
 					>
-						<DirectionCard from_id={from_id} to_id={to_id} />
+						<DirectionCard {...{ from_id, to_id }} index={i + j} />
 					</Grid>
 				))
 			)}

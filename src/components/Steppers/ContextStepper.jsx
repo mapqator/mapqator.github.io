@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
 	Box,
 	Typography,
@@ -40,7 +40,7 @@ import NearbyGrid from "@/components/Grids/NearbyGrid";
 import NearbyForm from "@/components/Forms/NearbyForm";
 import AutocompleteSearchBox from "@/components/InputFields/AutocompleteSearchBox";
 import MapComponent from "@/components/GoogleMap/MapComponent";
-import PlaceInformation from "@/components/Grids/PlacesGrid";
+import PlacesGrid from "@/components/Grids/PlacesGrid";
 import { LoadingButton } from "@mui/lab";
 import { setLoading } from "@/app/old-home/page";
 import { showError } from "@/contexts/ToastProvider";
@@ -56,8 +56,18 @@ function ContextStep({
 	loadExample,
 }) {
 	const [loading, setLoading] = useState(false);
+	const stepRef = useRef(null);
+
+	// useEffect(() => {
+	// 	if (index === activeStep && stepRef.current) {
+	// 		stepRef.current.scrollIntoView({
+	// 			behavior: "smooth",
+	// 			block: "start",
+	// 		});
+	// 	}
+	// }, [activeStep, index]);
 	return (
-		<>
+		<div ref={stepRef}>
 			<StepLabel
 				icon={
 					<div
@@ -81,10 +91,11 @@ function ContextStep({
 				</Typography>
 			</StepLabel>
 			<StepContent>
-				<div className="flex flex-col gap-2">
+				<div className="flex flex-col">
 					<Typography
 						sx={{
 							whiteSpace: "pre-line",
+							paddingBottom: "8px",
 						}}
 					>
 						{step.description}
@@ -95,32 +106,30 @@ function ContextStep({
 								<>
 									<Divider />
 									<Box>
-										<CardContent>
-											<Box className="mx-auto w-full md:w-[30rem]">
-												{step.form}
-											</Box>
-										</CardContent>
+										<Box className="mx-auto w-full md:w-[30rem] p-5">
+											{step.form}
+										</Box>
 										{step.grid && (
 											<>
-												<Divider
+												<Divider />
+												{/* Already added
+												</Divider> */}
+												<Typography
 													sx={{
-														mt: 2,
-														mb: 1,
-														color: "#888",
+														whiteSpace: "pre-line",
+														paddingTop: "8px",
 													}}
 												>
-													Already added
-												</Divider>
-												<CardContent>
-													{step.grid}
-												</CardContent>
+													{step.additional}
+												</Typography>
+												<Box>{step.grid}</Box>
 											</>
 										)}
 									</Box>
 									<Divider />
 								</>
 						  )}
-					{step.context !== undefined && (
+					{/* {step.context !== undefined && (
 						<>
 							<Typography
 								sx={{
@@ -138,9 +147,9 @@ function ContextStep({
 								<ContextPreview context={step.context} />
 							</Paper>
 						</>
-					)}
+					)} */}
 
-					<Box sx={{ mb: 2 }}>
+					<Box sx={{ my: 1 }}>
 						<div>
 							<Button
 								variant="contained"
@@ -150,8 +159,7 @@ function ContextStep({
 							>
 								{index === 0 ? "Start" : "Continue"}
 							</Button>
-
-							{/* {index > 0 ? (
+							{index > 0 ? (
 								<Button
 									onClick={handleBack}
 									sx={{ mt: 1, mr: 1 }}
@@ -170,20 +178,20 @@ function ContextStep({
 								>
 									Start with Example
 								</LoadingButton>
-							)} */}
-							{index > 0 && (
+							)}
+							{/* {index > 0 && (
 								<Button
 									onClick={handleBack}
 									sx={{ mt: 1, mr: 1 }}
 								>
 									Back
 								</Button>
-							)}
+							)} */}
 						</div>
 					</Box>
 				</div>
 			</StepContent>
-		</>
+		</div>
 	);
 }
 export default function ContextStepper({
@@ -237,24 +245,27 @@ export default function ContextStepper({
 			label: "Add Information of Places/POIs	",
 			description: `Start by searching for a location. Type in a place name or address in the search bar below.`,
 			icon: <SearchIcon />,
-			component: (
-				<div className="flex flex-col gap-2">
-					<Divider />
-					<CardContent>
-						<AutocompleteSearchBox />
-						{Object.keys(selectedPlacesMap).length > 0 && (
-							<>
-								<Divider sx={{ my: 1, color: "#888" }}>
-									Already added
-								</Divider>
-								{/* <MapComponent /> */}
-								<PlaceInformation />
-							</>
-						)}
-					</CardContent>
-					<Divider />
-				</div>
-			),
+			additional: "Places you have added to the context.",
+			// component: (
+			// 	<div className="flex flex-col gap-2">
+			// 		<Divider />
+			// 		<CardContent>
+			// 			<AutocompleteSearchBox />
+			// 			{Object.keys(selectedPlacesMap).length > 0 && (
+			// 				<>
+			// 					<Divider sx={{ my: 1, color: "#888" }}>
+			// 						Already added
+			// 					</Divider>
+			// 					{/* <MapComponent /> */}
+			// 					<PlacesGrid />
+			// 				</>
+			// 			)}
+			// 		</CardContent>
+			// 		<Divider />
+			// 	</div>
+			// ),
+			form: <AutocompleteSearchBox />,
+			grid: Object.keys(selectedPlacesMap).length > 0 && <PlacesGrid />,
 			context: context.places,
 		},
 		{
@@ -262,6 +273,8 @@ export default function ContextStepper({
 			description: `Use the Nearby Search Tool to discover points of interest around your selected location. You just need to select a location and the type of poi you are looking for. 
 			Additionally you can specify the order in which results are listed. Possible values are Prominence and Distance. When prominence is specified, the radius parameter is required. 
 			You can choose a type from the given list or a custom type. It is recommended to choose from the given list for better result.`,
+			additional:
+				"List of places whose nearby pois are added to the context",
 			icon: <PlaceIcon />,
 			form: <NearbyForm {...{ handlePlaceAdd }} />,
 			grid: Object.keys(nearbyPlacesMap).length > 0 && <NearbyGrid />,
@@ -270,6 +283,8 @@ export default function ContextStepper({
 		{
 			label: "Explore POIs inside Places",
 			description: `Explore various Points of Interest (POIs) within a larger area. Select a region like a city or neighborhood, then choose a type (e.g., restaurants, museums, parks) to see POIs within that area.`,
+			additional:
+				"List of areas whose internals pois are added to the context",
 			icon: <ExploreIcon />,
 			form: <AreaForm {...{ handlePlaceAdd }} />,
 			grid: Object.keys(poisMap).length > 0 && <AreaGrid />,
@@ -278,6 +293,8 @@ export default function ContextStepper({
 		{
 			label: "Get Alternative Routes",
 			description: `Utilize the Directions API to find routes between two points. Choose origin, destination and travel mode to find possible routes between them.`,
+			additional:
+				"List of origin - destination pairs whose alternative routes are added to the context",
 			icon: <DirectionsIcon />,
 			form: <DirectionForm {...{ handlePlaceAdd }} />,
 			grid: Object.keys(directionInformation).length > 0 && (
@@ -288,29 +305,30 @@ export default function ContextStepper({
 		{
 			label: "Get Duration of Recommended Route",
 			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Choose origins, destinations and travel mode to find distance and durations.`,
+			additional:
+				"List of origin - destination pairs whose fastest route is added to the context",
 			icon: <MapIcon />,
 			form: <DistanceForm {...{ handlePlaceAdd }} />,
 			grid: Object.keys(distanceMatrix).length > 0 && <DistanceGrid />,
 			context: context.distance,
 		},
-
-		{
-			label: "Set Query Parameters",
-			description: `Set the time, day, and location that should be used as a basis for answering questions. This will help provide more accurate and context-specific responses.`,
-			icon: <Settings />,
-			component: (
-				<>
-					<Divider />
-					<Box className="w-full md:w-[30rem] mx-auto">
-						<CardContent>
-							<ParamsForm {...{ handlePlaceAdd }} />
-						</CardContent>
-					</Box>
-					<Divider />
-				</>
-			),
-			context: context.params,
-		},
+		// {
+		// 	label: "Set Query Parameters",
+		// 	description: `Set the time, day, and location that should be used as a basis for answering questions. This will help provide more accurate and context-specific responses.`,
+		// 	icon: <Settings />,
+		// 	component: (
+		// 		<>
+		// 			<Divider />
+		// 			<Box className="w-full md:w-[30rem] mx-auto">
+		// 				<CardContent>
+		// 					<ParamsForm {...{ handlePlaceAdd }} />
+		// 				</CardContent>
+		// 			</Box>
+		// 			<Divider />
+		// 		</>
+		// 	),
+		// 	context: context.params,
+		// },
 		{
 			label: "Preview Full Context",
 			description: `Review the information gathered and then you can proceed to create a question based on the context you have generated.`,

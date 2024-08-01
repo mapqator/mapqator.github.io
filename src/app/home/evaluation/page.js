@@ -417,7 +417,7 @@ export default function LiveEvaluation() {
 									className="font-bold"
 									gutterBottom
 								>
-									{result.option === 0
+									{result.option === "0"
 										? "No answer"
 										: "Option " +
 										  result.option +

@@ -216,8 +216,8 @@ function DirectionCardSummary({ from_id, to_id, expanded }) {
 		</>
 	);
 }
-export default function DirectionCard({ from_id, to_id }) {
-	const [expanded, setExpanded] = useState(false);
+export default function DirectionCard({ from_id, to_id, index }) {
+	const [expanded, setExpanded] = useState(index === 0);
 	return (
 		<Card variant="outlined">
 			<CardContent

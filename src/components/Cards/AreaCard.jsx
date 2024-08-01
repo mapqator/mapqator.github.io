@@ -13,6 +13,8 @@ import { Delete, ExpandMore } from "@mui/icons-material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { AppContext } from "@/contexts/AppContext";
 import PoiList from "@/components/Lists/PoiList";
+import Pluralize from "pluralize";
+import { convertFromSnake } from "@/services/utils";
 
 function AreaCardDetails({ entry, place_id, index }) {
 	const { poisMap, setPoisMap } = useContext(GlobalContext);
@@ -62,8 +64,20 @@ function AreaCardSummary({ entry, place_id, index, expanded }) {
 			</Box>
 			<Box display="flex" justifyContent="space-between">
 				<Box display="flex" flexWrap="wrap" gap={1} mt={1}>
-					<Chip label={entry.type} color="primary" size="small" />
 					<Chip
+						label={Pluralize(
+							convertFromSnake(entry.type),
+							poisMap[place_id]
+								? poisMap[place_id][index].places.filter(
+										(place) => place.selected
+								  ).length
+								: 0,
+							true
+						)}
+						color="primary"
+						size="small"
+					/>
+					{/* <Chip
 						label={
 							(poisMap[place_id]
 								? poisMap[place_id][index].places.filter(
@@ -73,7 +87,7 @@ function AreaCardSummary({ entry, place_id, index, expanded }) {
 						}
 						color="secondary"
 						size="small"
-					/>
+					/> */}
 				</Box>
 				<IconButton
 					size="small"
@@ -89,8 +103,8 @@ function AreaCardSummary({ entry, place_id, index, expanded }) {
 	);
 }
 
-export default function AreaCard({ entry, index, place_id }) {
-	const [expanded, setExpanded] = useState(false);
+export default function AreaCard({ entry, index, place_id, i }) {
+	const [expanded, setExpanded] = useState(index === 0);
 	return (
 		<Card variant="outlined">
 			<CardContent

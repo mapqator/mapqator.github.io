@@ -132,7 +132,6 @@ const ContextGeneratorService = {
 		} else if (currentInformation.day !== "") {
 			newContext += `Current day is ${currentInformation.day}.\n`;
 		}
-
 		if (currentInformation.location !== "") {
 			newContext += `Current location of user is <b>${
 				savedPlacesMap[currentInformation.location]?.name
@@ -177,9 +176,9 @@ const ContextGeneratorService = {
 				} ${e.type === "any" ? "" : 'of type "' + e.type + '"'} ${
 					e.keyword !== "" ? 'with keyword "' + e.keyword + '"' : ""
 				} are (${
-					e.hasRadius
-						? "in " + e.radius + " m radius"
-						: "sorted by distance in ascending order"
+					e.rankBy === "distance"
+						? "sorted by distance in ascending order"
+						: "in " + e.radius + " m radius"
 				}):\n`;
 				let counter = 1;
 				e.places.forEach((near_place) => {
@@ -292,10 +291,10 @@ const ContextGeneratorService = {
 			context.direction !== ""
 				? (text !== "" ? "\n" : "") + context.direction
 				: "";
-		text +=
-			context.params !== ""
-				? (text !== "" ? "\n" : "") + context.params
-				: "";
+		// text +=
+		// 	context.params !== ""
+		// 		? (text !== "" ? "\n" : "") + context.params
+		// 		: "";
 		return text;
 	},
 };

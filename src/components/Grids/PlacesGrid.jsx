@@ -3,7 +3,7 @@ import { Grid } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import PlaceCard from "@/components/Cards/PlaceCard";
 
-export default function PlaceInformation() {
+export default function PlacesGrid() {
 	const { selectedPlacesMap } = useContext(GlobalContext);
 
 	return (
