@@ -6,10 +6,7 @@ export default function ContextPreview({ context }) {
 	const [contextExpanded, setContextExpanded] = useState(false);
 
 	return (
-		<div
-			onClick={() => setContextExpanded((prev) => !prev)}
-			className="cursor-pointer"
-		>
+		<div>
 			{context.split("\n").map(
 				(line, index) =>
 					(contextExpanded || index < 5) && (
@@ -38,7 +35,10 @@ export default function ContextPreview({ context }) {
 			)}
 
 			{context.split("\n").length > 5 && (
-				<Button sx={{ mt: 1, textTransform: "none" }}>
+				<Button
+					sx={{ mt: 1, textTransform: "none" }}
+					onClick={() => setContextExpanded((prev) => !prev)}
+				>
 					<div className="flex flex-row gap-1 items-end">
 						{!contextExpanded && (
 							<FontAwesomeIcon icon={faEllipsis} />

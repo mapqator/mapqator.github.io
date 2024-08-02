@@ -69,7 +69,7 @@ const PrimaryLayout = ({ children }) => {
 					<Divider />
 				</Box>
 
-				<Container maxWidth="md" className="min-h-screen">
+				<Container className="min-h-screen">
 					<Toolbar />
 					{children}
 				</Container>

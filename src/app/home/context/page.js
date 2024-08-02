@@ -27,14 +27,21 @@ export default function ContextGenerator() {
 		currentInformation,
 		setCurrentInformation,
 		setContextStatus,
+		queryStatus,
 	} = useContext(GlobalContext);
 
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 
 	useEffect(() => {
 		const page = window.location.hash.substring(1);
-	setActiveStep(page === "edit" ? 1 : 0);
+		setActiveStep(page === "edit" ? 1 : 0);
 	}, []);
+	useEffect(() => {
+		if (queryStatus === "empty") {
+			router.push("/home");
+		}
+	}, [queryStatus]);
+
 	const router = useRouter();
 	const {
 		initSelectedPlacesMap,
@@ -67,7 +74,7 @@ export default function ContextGenerator() {
 	// };
 	const onFinish = () => {
 		setContextStatus("saved");
-		router.push("/home/question");
+		router.push("/home");
 	};
 
 	const handleSave = async (place_id) => {
@@ -161,20 +168,22 @@ export default function ContextGenerator() {
 	// }, []);
 
 	return (
-		<Box sx={{ mt: 4, mb: 4 }}>
-			<h1 className="text-3xl md:text-4xl font-normal pb-5">
-				Create Geo-Spatial Context Using Map Services
-			</h1>
-			<ContextStepper
-				{...{
-					handleReset,
-					onFinish,
-					handleExample,
-					activeStep,
-					setActiveStep,
-				}}
-			/>
-			{/* <KeyStoreButton /> */}
-		</Box>
+		<Container maxWidth="md">
+			<Box sx={{ mt: 4, mb: 4 }}>
+				<h1 className="text-3xl md:text-4xl font-normal pb-5">
+					Create Geo-Spatial Context Using Map Services
+				</h1>
+				<ContextStepper
+					{...{
+						handleReset,
+						onFinish,
+						handleExample,
+						activeStep,
+						setActiveStep,
+					}}
+				/>
+				{/* <KeyStoreButton /> */}
+			</Box>
+		</Container>
 	);
 }

@@ -6,10 +6,7 @@ export default function CollapsedContext({ context }) {
 	const [contextExpanded, setContextExpanded] = useState(false);
 
 	return (
-		<div
-			onClick={() => setContextExpanded((prev) => !prev)}
-			className="cursor-pointer"
-		>
+		<div>
 			{context.split("\n").map(
 				(line, index) =>
 					(contextExpanded || index < 5) && (
@@ -33,12 +30,15 @@ export default function CollapsedContext({ context }) {
 
 			{context === "" && (
 				<p className="text-center py-2 my-auto text-lg md:text-xl text-zinc-400">
-					No context provided.
+					No information provided.
 				</p>
 			)}
 
 			{context.split("\n").length > 5 && (
-				<Button sx={{ mt: 1, textTransform: "none" }}>
+				<Button
+					sx={{ mt: 1, textTransform: "none" }}
+					onClick={() => setContextExpanded((prev) => !prev)}
+				>
 					<div className="flex flex-row gap-1 items-end">
 						{!contextExpanded && (
 							<FontAwesomeIcon icon={faEllipsis} />

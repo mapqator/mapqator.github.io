@@ -15,6 +15,7 @@ import {
 	Avatar,
 	LinearProgress,
 	Button,
+	Container,
 } from "@mui/material";
 import ContextPreview from "@/components/Cards/ContextPreview";
 import CollapsedContext from "@/components/Cards/CollapsedContext";
@@ -216,68 +217,28 @@ export default function LiveEvaluation() {
 	};
 
 	return (
-		<Box className="h-full flex flex-col justify-center p-4 w-full pt-10">
-			<Confirmation
-				open={open}
-				setOpen={setOpen}
-				onConfirm={() => {
-					handleDiscard();
-				}}
-				text="Your query and evaluation will be lost. Are you sure you want to discard?"
-			/>
-			<LinearProgress
-				variant="determinate"
-				value={(stage / n_stages) * 100}
-				className="mb-4"
-			/>
-
-			<motion.div
-				initial={{ opacity: 0 }}
-				animate={{ opacity: 1 }}
-				transition={{ duration: 0.5 }}
-			>
-				<Card elevation={3} className="mb-4 w-full bg-blue-50">
-					<CardContent>
-						<Box
-							display="flex"
-							justifyContent="space-between"
-							alignItems="center"
-							mb={2}
-						>
-							<Box display="flex" alignItems="center">
-								<Avatar
-									className="mr-2"
-									sx={{ backgroundColor: "#3b82f6" }}
-								>
-									<DescriptionIcon />
-								</Avatar>
-								<Typography variant="h6">Context</Typography>
-							</Box>
-							<Button
-								variant="outlined"
-								color="primary"
-								startIcon={<EditIcon />}
-								onClick={() => router.push("/home/context")}
-							>
-								Edit
-							</Button>
-						</Box>
-						<CollapsedContext
-							context={ContextGeneratorService.convertContextToText(
-								context
-							)}
-						/>
-					</CardContent>
-				</Card>
+		<Container maxWidth="md">
+			<Box className="h-full flex flex-col justify-center p-4 w-full pt-10">
+				<Confirmation
+					open={open}
+					setOpen={setOpen}
+					onConfirm={() => {
+						handleDiscard();
+					}}
+					text="Your query and evaluation will be lost. Are you sure you want to discard?"
+				/>
+				<LinearProgress
+					variant="determinate"
+					value={(stage / n_stages) * 100}
+					className="mb-4"
+				/>
 
 				<motion.div
-					animate={{
-						y: stage >= 1 ? 0 : 50,
-						opacity: stage >= 1 ? 1 : 0,
-					}}
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
 					transition={{ duration: 0.5 }}
 				>
-					<Card elevation={3} className="mb-4 w-full bg-green-50">
+					<Card elevation={3} className="mb-4 w-full bg-blue-50">
 						<CardContent>
 							<Box
 								display="flex"
@@ -288,73 +249,124 @@ export default function LiveEvaluation() {
 								<Box display="flex" alignItems="center">
 									<Avatar
 										className="mr-2"
-										sx={{ backgroundColor: "#22c55e" }}
+										sx={{ backgroundColor: "#3b82f6" }}
 									>
-										<QuestionMarkIcon />
+										<DescriptionIcon />
 									</Avatar>
 									<Typography variant="h6">
-										Question
+										Context
 									</Typography>
 								</Box>
 								<Button
 									variant="outlined"
 									color="primary"
 									startIcon={<EditIcon />}
-									onClick={handleEditQuestion}
+									onClick={() => router.push("/home/context")}
 								>
 									Edit
 								</Button>
 							</Box>
-							<Typography
-								variant="body1"
-								gutterBottom
-								className="font-bold"
-							>
-								{query.question}
-							</Typography>
-							<Grid container spacing={2} className="mt-2">
-								{query.answer.options.map((option, index) => (
-									<Grid item xs={12} sm={6} key={index}>
-										<Card
-											variant="outlined"
-											className="bg-white"
-										>
-											<CardContent>
-												<Typography variant="body2">
-													Option {index + 1}: {option}
-													{index ===
-														query.answer
-															.correct && (
-														<CheckCircleIcon
-															className="text-green-500 ml-2"
-															fontSize="small"
-														/>
-													)}
-												</Typography>
-											</CardContent>
-										</Card>
-									</Grid>
-								))}
-							</Grid>
+							<CollapsedContext
+								context={ContextGeneratorService.convertContextToText(
+									context
+								)}
+							/>
 						</CardContent>
 					</Card>
-				</motion.div>
 
-				<AnimatePresence>
-					{isProcessing && (
-						<motion.div
-							initial={{ scale: 0 }}
-							animate={{ scale: 1 }}
-							exit={{ scale: 0 }}
-							transition={{ duration: 0.5 }}
-							className="flex justify-center mb-4"
-						>
-							<CircularProgress />
-						</motion.div>
-					)}
-				</AnimatePresence>
+					<motion.div
+						animate={{
+							y: stage >= 1 ? 0 : 50,
+							opacity: stage >= 1 ? 1 : 0,
+						}}
+						transition={{ duration: 0.5 }}
+					>
+						<Card elevation={3} className="mb-4 w-full bg-green-50">
+							<CardContent>
+								<Box
+									display="flex"
+									justifyContent="space-between"
+									alignItems="center"
+									mb={2}
+								>
+									<Box display="flex" alignItems="center">
+										<Avatar
+											className="mr-2"
+											sx={{ backgroundColor: "#22c55e" }}
+										>
+											<QuestionMarkIcon />
+										</Avatar>
+										<Typography variant="h6">
+											Question
+										</Typography>
+									</Box>
+									<Button
+										variant="outlined"
+										color="primary"
+										startIcon={<EditIcon />}
+										onClick={handleEditQuestion}
+									>
+										Edit
+									</Button>
+								</Box>
+								<Typography
+									variant="body1"
+									gutterBottom
+									className="font-bold"
+								>
+									{query.question}
+								</Typography>
+								<Grid container spacing={2} className="mt-2">
+									{query.answer.options.map(
+										(option, index) => (
+											<Grid
+												item
+												xs={12}
+												sm={6}
+												key={index}
+											>
+												<Card
+													variant="outlined"
+													className="bg-white"
+												>
+													<CardContent>
+														<Typography variant="body2">
+															Option {index + 1}:{" "}
+															{option}
+															{index ===
+																query.answer
+																	.correct && (
+																<CheckCircleIcon
+																	className="text-green-500 ml-2"
+																	fontSize="small"
+																/>
+															)}
+														</Typography>
+													</CardContent>
+												</Card>
+											</Grid>
+										)
+									)}
+								</Grid>
+							</CardContent>
+						</Card>
+					</motion.div>
 
-				{/* {stage >= 3 && (
+					<AnimatePresence>
+						{isProcessing && (
+							<motion.div
+								initial={{ scale: 0 }}
+								animate={{ scale: 1 }}
+								exit={{ scale: 0 }}
+								transition={{ duration: 0.5 }}
+								className="flex justify-center mb-4"
+							>
+								<CircularProgress />
+							</motion.div>
+						)}
+					</AnimatePresence>
+
+					{/* {stage >= 3 && (
 					<motion.div
 						initial={{ x: -50, opacity: 0 }}
 						animate={{ x: 0, opacity: 1 }}
@@ -392,82 +404,91 @@ export default function LiveEvaluation() {
 					</motion.div>
 				)} */}
 
-				{Object.entries(llmResults).map(([llm, result], index) => (
-					<motion.div
-						key={llm}
-						initial={{ x: -50, opacity: 0 }}
-						animate={{ x: 0, opacity: 1 }}
-						transition={{ duration: 0.5, delay: index * 0.2 }}
-					>
-						<Card elevation={3} className="mb-4 bg-yellow-500">
-							<CardContent>
-								<Box display="flex" alignItems="center" mb={2}>
-									<Avatar
-										className="bg-yellow-500 mr-2"
-										sx={{ backgroundColor: "#eab308" }}
+					{Object.entries(llmResults).map(([llm, result], index) => (
+						<motion.div
+							key={llm}
+							initial={{ x: -50, opacity: 0 }}
+							animate={{ x: 0, opacity: 1 }}
+							transition={{ duration: 0.5, delay: index * 0.2 }}
+						>
+							<Card elevation={3} className="mb-4 bg-yellow-500">
+								<CardContent>
+									<Box
+										display="flex"
+										alignItems="center"
+										mb={2}
 									>
-										<SmartToyIcon />
-									</Avatar>
-									<Typography variant="h6">
-										{llmApis[llm].name} Answer
+										<Avatar
+											className="bg-yellow-500 mr-2"
+											sx={{ backgroundColor: "#eab308" }}
+										>
+											<SmartToyIcon />
+										</Avatar>
+										<Typography variant="h6">
+											{llmApis[llm].name} Answer
+										</Typography>
+									</Box>
+									<Typography
+										variant="body1"
+										className="font-bold"
+										gutterBottom
+									>
+										{result.option === "0"
+											? "No answer"
+											: "Option " +
+											  result.option +
+											  ": " +
+											  query.answer.options[
+													result.option - 1
+											  ]}
 									</Typography>
-								</Box>
-								<Typography
-									variant="body1"
-									className="font-bold"
-									gutterBottom
-								>
-									{result.option === "0"
-										? "No answer"
-										: "Option " +
-										  result.option +
-										  ": " +
-										  query.answer.options[
-												result.option - 1
-										  ]}
-								</Typography>
-								<Box display="flex" alignItems="center" mt={1}>
-									{result.verdict === "right" ? (
-										<CheckCircleIcon className="text-green-500 mr-2" />
-									) : (
-										<CancelIcon className="text-red-500 mr-2" />
-									)}
-									<Chip
-										label={
-											result.verdict === "right"
-												? "Correct"
-												: "Incorrect"
-										}
-										color={
-											result.verdict === "right"
-												? "success"
-												: "error"
-										}
-										size="small"
-									/>
-								</Box>
-							</CardContent>
-						</Card>
-					</motion.div>
-				))}
+									<Box
+										display="flex"
+										alignItems="center"
+										mt={1}
+									>
+										{result.verdict === "right" ? (
+											<CheckCircleIcon className="text-green-500 mr-2" />
+										) : (
+											<CancelIcon className="text-red-500 mr-2" />
+										)}
+										<Chip
+											label={
+												result.verdict === "right"
+													? "Correct"
+													: "Incorrect"
+											}
+											color={
+												result.verdict === "right"
+													? "success"
+													: "error"
+											}
+											size="small"
+										/>
+									</Box>
+								</CardContent>
+							</Card>
+						</motion.div>
+					))}
 
-				{showLoginPrompt && (
-					<motion.div
-						initial={{ y: 50, opacity: 0 }}
-						animate={{ y: 0, opacity: 1 }}
-						transition={{ duration: 0.5 }}
-					>
-						{isAuthenticated ? (
-							<SaveQuery
-								onSave={handleSave}
-								onDiscard={setOpen}
-							/>
-						) : (
-							<LoginPrompt onLogin={handleLogin} />
-						)}
-					</motion.div>
-				)}
-			</motion.div>
-		</Box>
+					{showLoginPrompt && (
+						<motion.div
+							initial={{ y: 50, opacity: 0 }}
+							animate={{ y: 0, opacity: 1 }}
+							transition={{ duration: 0.5 }}
+						>
+							{isAuthenticated ? (
+								<SaveQuery
+									onSave={handleSave}
+									onDiscard={setOpen}
+								/>
+							) : (
+								<LoginPrompt onLogin={handleLogin} />
+							)}
+						</motion.div>
+					)}
+				</motion.div>
+			</Box>
+		</Container>
 	);
 }

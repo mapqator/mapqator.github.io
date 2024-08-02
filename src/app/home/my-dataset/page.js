@@ -4,7 +4,7 @@ import QuestionsContainer from "@/components/Containers/QuestionsContainer";
 import config from "@/config/config";
 import { useAuth } from "@/contexts/AuthContext";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import { Box } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 
@@ -19,14 +19,16 @@ export default function MyQueriesPage() {
 	}, [isAuthenticated]);
 
 	return (
-		<Box className="py-5">
-			<QuestionsContainer
-				title="My Queries"
-				isPersonal={true}
-				onEdit={() => {
-					router.push("/home/context#edit");
-				}}
-			/>
-		</Box>
+		<Container maxWidth="md">
+			<Box className="py-5">
+				<QuestionsContainer
+					title="My Queries"
+					isPersonal={true}
+					onEdit={() => {
+						router.push("/home/question");
+					}}
+				/>
+			</Box>
+		</Container>
 	);
 }

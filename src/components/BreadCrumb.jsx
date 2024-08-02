@@ -22,10 +22,14 @@ import {
 	Assessment,
 	Category,
 	Dataset,
+	Description,
 	Home,
+	Info,
+	Lightbulb,
 	List,
 	Map,
 	QuestionAnswer,
+	QuestionMark,
 } from "@mui/icons-material";
 import { Grid } from "@mui/material";
 
@@ -41,15 +45,17 @@ function getIcon(value) {
 	// Switch case to return the correct icon based on the value
 	switch (value) {
 		case "context":
-			return <Map />;
+			return <Description />;
 		case "question":
-			return <QuestionAnswer />;
+			return <QuestionMark />;
 		case "evaluation":
 			return <Assessment />;
 		case "my-dataset":
 			return <Dataset />;
 		case "categories":
 			return <List />;
+		case "answer":
+			return <Lightbulb />;
 		default:
 			return <Home />;
 	}

@@ -25,6 +25,7 @@ import {
 	NextPlanTwoTone,
 	RemoveRedEye,
 	Save,
+	Send,
 	Settings,
 } from "@mui/icons-material";
 import ExploreIcon from "@mui/icons-material/Explore";
@@ -404,9 +405,9 @@ export default function ContextStepper({
 					}}
 					variant="contained"
 					sx={{ mt: 1, mr: 1 }}
-					endIcon={<KeyboardDoubleArrowRight />}
+					endIcon={<Send />}
 				>
-					Create Question
+					Submit Context
 				</Button>
 				<Button
 					onClick={handleReset}

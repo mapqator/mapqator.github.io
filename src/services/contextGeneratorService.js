@@ -1,3 +1,5 @@
+import Pluralize from "pluralize";
+import { convertFromSnake } from "./utils";
 const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 	let place = savedPlacesMap[place_id];
 	if (!place) return "";
@@ -170,11 +172,11 @@ const ContextGeneratorService = {
 				if (newContext.length > 0) {
 					newContext += "\n";
 				}
-				newContext += `Nearby places of ${
+				newContext += `Nearby ${Pluralize(
+					e.type === "any" ? e.keyword : convertFromSnake(e.type)
+				)} of ${
 					// selectedPlacesMap[place_id].alias ||
 					savedPlacesMap[place_id]?.name
-				} ${e.type === "any" ? "" : 'of type "' + e.type + '"'} ${
-					e.keyword !== "" ? 'with keyword "' + e.keyword + '"' : ""
 				} are (${
 					e.rankBy === "distance"
 						? "sorted by distance in ascending order"

@@ -6,7 +6,11 @@ import {
 	List,
 	ListItem,
 	ListItemText,
+	Grid,
+	Card,
+	CardContent,
 } from "@mui/material";
+import { CheckCircle } from "@mui/icons-material";
 
 export default function OptionsPreview({ answer }) {
 	useEffect(() => {
@@ -17,7 +21,26 @@ export default function OptionsPreview({ answer }) {
 			<Typography variant="h6" gutterBottom>
 				Options:
 			</Typography>
-			<List dense>
+			<Grid container spacing={2} className="mt-2">
+				{answer.options.map((option, index) => (
+					<Grid item xs={12} sm={6} key={index}>
+						<Card variant="outlined" className="bg-white">
+							<CardContent>
+								<Typography variant="body2">
+									Option {index + 1}: {option}
+									{index === answer.correct && (
+										<CheckCircle
+											className="text-green-500 ml-2"
+											fontSize="small"
+										/>
+									)}
+								</Typography>
+							</CardContent>
+						</Card>
+					</Grid>
+				))}
+			</Grid>
+			{/* <List dense>
 				{answer.options.map(
 					(option, index) =>
 						option !== "" && (
@@ -49,7 +72,7 @@ export default function OptionsPreview({ answer }) {
 							</ListItem>
 						)
 				)}
-			</List>
+			</List> */}
 		</Box>
 	);
 }
