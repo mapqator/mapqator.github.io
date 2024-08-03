@@ -12,6 +12,9 @@ import { faRobot } from "@fortawesome/free-solid-svg-icons";
 import {
 	KeyboardDoubleArrowDown,
 	KeyboardDoubleArrowRight,
+	QuestionMark,
+	Description,
+	Lightbulb,
 } from "@mui/icons-material";
 
 export default function WorkFlow() {
