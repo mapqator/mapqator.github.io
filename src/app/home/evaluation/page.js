@@ -62,6 +62,7 @@ export default function LiveEvaluation() {
 		directionInformation,
 		distanceMatrix,
 		currentInformation,
+		setQueryStatus,
 	} = useContext(GlobalContext);
 	const [stage, setStage] = useState(0);
 	const { llmResults, setLlmResults } = useContext(GlobalContext);
@@ -71,11 +72,11 @@ export default function LiveEvaluation() {
 	const { setEvaluationStatus, queryStatus } = useContext(GlobalContext);
 	const { queries, setQueries, savedPlacesMap } = useContext(AppContext);
 
-	useEffect(() => {
-		if (queryStatus === "empty") {
-			router.push("/home");
-		}
-	}, [queryStatus]);
+	// useEffect(() => {
+	// 	if (queryStatus === "empty") {
+	// 		router.push("/home");
+	// 	}
+	// }, [queryStatus]);
 
 	const extract = (s) => {
 		for (let char of s) {
@@ -147,6 +148,7 @@ export default function LiveEvaluation() {
 			context: prev.context,
 			context_json: prev.context_json,
 		}));
+		setQueryStatus("empty");
 		setLlmResults({});
 	};
 
@@ -178,8 +180,8 @@ export default function LiveEvaluation() {
 				const newQueries = [...queries];
 				newQueries.unshift(res.data[0]);
 				setQueries(newQueries);
-				handleReset();
 				router.push("/home/my-dataset");
+				handleReset();
 			} else {
 				showError("Can't save this query");
 				// window.scrollTo(0, 0);
@@ -195,8 +197,8 @@ export default function LiveEvaluation() {
 				);
 				// update the queries
 				showSuccess("Query edited successfully");
-				handleReset();
 				router.push("/home/my-dataset");
+				handleReset();
 			} else {
 				showError("Can't update this query");
 				// window.scrollTo(0, 0);

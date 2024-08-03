@@ -215,11 +215,11 @@ const ContextGeneratorService = {
 				}</b> is:\n`;
 				Object.keys(distanceMatrix[from_id][to_id]).forEach((mode) => {
 					newContext += `- ${
-						mode === "transit"
+						mode.toLowerCase() === "transit"
 							? "By public transport"
-							: mode === "walking"
+							: mode.toLowerCase() === "walking"
 							? "On foot"
-							: mode === "driving"
+							: mode.toLowerCase() === "driving"
 							? "By car"
 							: "By cycle"
 					}: ${distanceMatrix[from_id][to_id][mode].duration} (${
@@ -245,11 +245,11 @@ const ContextGeneratorService = {
 						} routes from <b>${
 							savedPlacesMap[from_id]?.name
 						}</b> to <b>${savedPlacesMap[to_id]?.name}</b> ${
-							mode === "transit"
+							mode.toLowerCase() === "transit"
 								? "by public transport"
-								: mode === "walking"
+								: mode.toLowerCase() === "walking"
 								? "on foot"
-								: mode === "driving"
+								: mode.toLowerCase() === "driving"
 								? "by car"
 								: "by cycle"
 						}. They are:\n`;

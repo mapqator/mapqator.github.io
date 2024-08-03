@@ -62,7 +62,7 @@ export default function ContextGenerator() {
 
 	const onFinish = () => {
 		setContextStatus("saved");
-		router.push("/home");
+		router.push("/home/question");
 	};
 	const handleSave = async (place_id) => {
 		if (savedPlacesMap[place_id]) return;

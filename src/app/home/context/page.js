@@ -36,11 +36,11 @@ export default function ContextGenerator() {
 		const page = window.location.hash.substring(1);
 		setActiveStep(page === "edit" ? 1 : 0);
 	}, []);
-	useEffect(() => {
-		if (queryStatus === "empty") {
-			router.push("/home");
-		}
-	}, [queryStatus]);
+	// useEffect(() => {
+	// 	if (queryStatus === "empty") {
+	// 		router.push("/home");
+	// 	}
+	// }, [queryStatus]);
 
 	const router = useRouter();
 	const {
@@ -74,7 +74,7 @@ export default function ContextGenerator() {
 	// };
 	const onFinish = () => {
 		setContextStatus("saved");
-		router.push("/home");
+		router.push("/home/question");
 	};
 
 	const handleSave = async (place_id) => {

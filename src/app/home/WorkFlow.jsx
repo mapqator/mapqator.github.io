@@ -10,11 +10,12 @@ import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRobot } from "@fortawesome/free-solid-svg-icons";
 import {
+	Description,
 	KeyboardDoubleArrowDown,
 	KeyboardDoubleArrowRight,
 } from "@mui/icons-material";
 
-export default function Home() {
+export default function WorkFlow() {
 	const router = useRouter();
 	const { queryStatus, contextStatus } = useContext(GlobalContext);
 	const [showTooltip, setShowTooltip] = useState(false);
@@ -34,7 +35,7 @@ export default function Home() {
 	const steps = [
 		{
 			icon: (
-				<MapIcon
+				<Description
 					style={{
 						fontSize: "2rem",
 					}}

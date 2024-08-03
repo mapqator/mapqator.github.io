@@ -7,6 +7,8 @@ import TravelSelectionField from "@/components/InputFields/TravelSelectionField.
 import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { showError } from "@/contexts/ToastProvider";
+import DepartureTimeField from "../InputFields/DepartureTimeField";
+import dayjs from "dayjs";
 
 export default function DirectionForm({ handlePlaceAdd }) {
 	const { selectedPlacesMap, directionInformation, setDirectionInformation } =
@@ -15,6 +17,12 @@ export default function DirectionForm({ handlePlaceAdd }) {
 		from: "",
 		to: "",
 		travelMode: "walking",
+		departureTime: {
+			type: "now",
+			date: dayjs(),
+			time: dayjs(),
+			departureTimestamp: new Date(),
+		},
 	});
 	const [loading, setLoading] = useState(false);
 	// { from, to, mode, routes: [{label, duration, distance, steps:[]}]}
@@ -23,6 +31,12 @@ export default function DirectionForm({ handlePlaceAdd }) {
 			from: "",
 			to: "",
 			travelMode: "walking",
+			departureTime: {
+				type: "now",
+				time: new Date(),
+				date: new Date(),
+				departureTimestamp: new Date(),
+			},
 		});
 	}, [selectedPlacesMap]);
 	const handleDirectionAdd = async () => {
@@ -118,6 +132,20 @@ export default function DirectionForm({ handlePlaceAdd }) {
 				/>
 			</Grid>
 
+			{(newDirection.travelMode === "transit" ||
+				newDirection.travelMode === "driving") && (
+				<Grid item xs={12}>
+					<DepartureTimeField
+						value={newDirection.departureTime}
+						onChange={(newValue) => {
+							setNewDirection((prev) => ({
+								...prev,
+								departureTime: newValue,
+							}));
+						}}
+					/>
+				</Grid>
+			)}
 			{newDirection.from && newDirection.to && (
 				<Grid item xs={12}>
 					<iframe

@@ -47,7 +47,7 @@ function getIcon(value) {
 		case "context":
 			return <Description />;
 		case "question":
-			return <QuestionMark />;
+			return <QuestionAnswer />;
 		case "evaluation":
 			return <Assessment />;
 		case "my-dataset":

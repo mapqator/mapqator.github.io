@@ -130,7 +130,7 @@ function ContextStep({
 									<Divider />
 								</>
 						  )}
-					{/* {step.context !== undefined && (
+					{step.context !== undefined && (
 						<>
 							<Typography
 								sx={{
@@ -148,7 +148,7 @@ function ContextStep({
 								<ContextPreview context={step.context} />
 							</Paper>
 						</>
-					)} */}
+					)}
 
 					<Box sx={{ my: 1 }}>
 						<div>
@@ -160,7 +160,7 @@ function ContextStep({
 							>
 								{index === 0 ? "Start" : "Continue"}
 							</Button>
-							{index > 0 ? (
+							{/* {index > 0 ? (
 								<Button
 									onClick={handleBack}
 									sx={{ mt: 1, mr: 1 }}
@@ -179,15 +179,15 @@ function ContextStep({
 								>
 									Start with Example
 								</LoadingButton>
-							)}
-							{/* {index > 0 && (
+							)} */}
+							{index > 0 && (
 								<Button
 									onClick={handleBack}
 									sx={{ mt: 1, mr: 1 }}
 								>
 									Back
 								</Button>
-							)} */}
+							)}
 						</div>
 					</Box>
 				</div>
@@ -407,7 +407,7 @@ export default function ContextStepper({
 					sx={{ mt: 1, mr: 1 }}
 					endIcon={<Send />}
 				>
-					Submit Context
+					Create Question
 				</Button>
 				<Button
 					onClick={handleReset}
@@ -415,7 +415,7 @@ export default function ContextStepper({
 					color="error"
 					startIcon={<Clear />}
 				>
-					Clear
+					Clear Context
 				</Button>
 			</div>
 		</>

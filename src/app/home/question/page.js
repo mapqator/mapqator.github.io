@@ -20,14 +20,41 @@ import ContextGeneratorService from "@/services/contextGeneratorService";
 import { useAuth } from "@/contexts/AuthContext";
 import { AppContext } from "@/contexts/AppContext";
 import { useRouter } from "next/navigation";
+import QuestionAnswerForm from "@/components/Forms/QuestionAnswerForm";
 
 export default function QuestionCreationPage() {
-	const { setQuery, initQuery, setQueryStatus } = useContext(GlobalContext);
+	const {
+		context,
+		query,
+		setQuery,
+		distanceMatrix,
+		selectedPlacesMap,
+		nearbyPlacesMap,
+		currentInformation,
+		poisMap,
+		directionInformation,
+		initQuery,
+		contextStatus,
+		queryStatus,
+		setQueryStatus,
+	} = useContext(GlobalContext);
 
 	const router = useRouter();
+	const { queries, setQueries, savedPlacesMap } = useContext(AppContext);
+	const { isAuthenticated } = useAuth();
+
+	// useEffect(() => {
+	// 	if (contextStatus === "empty") {
+	// 		router.push("/home");
+	// 	}
+	// }, [contextStatus]);
+
+	const handleContextEdit = () => {
+		router.push("/home/context");
+	};
 
 	const onFinish = () => {
-		router.push("/home");
+		router.push("/home/evaluation");
 		setQueryStatus("saved");
 	};
 
@@ -43,22 +70,177 @@ export default function QuestionCreationPage() {
 		event.preventDefault();
 		setQueryStatus("saved");
 		onFinish();
+		return;
+
+		const newQuery = {
+			...query,
+			context: ContextGeneratorService.convertContextToText(context),
+			context_json: {
+				saved_places: savedPlacesMap,
+				distance_matrix: distanceMatrix,
+				places: selectedPlacesMap,
+				nearby_places: nearbyPlacesMap,
+				current_information: currentInformation,
+				pois: poisMap,
+				directions: directionInformation,
+			},
+		};
+		console.log(newQuery);
+		if (isAuthenticated) {
+			if (query.id === undefined) {
+				const res = await queryApi.createQuery(newQuery);
+				if (res.success) {
+					// update the queries
+					showSuccess("Query saved successfully");
+					console.log("Saved query: ", res.data[0]);
+					const newQueries = [...queries];
+					newQueries.unshift(res.data[0]);
+					setQueries(newQueries);
+					window.scrollTo(document.getElementById("questions"));
+					// handleReset();
+					onFinish();
+				} else {
+					showError("Can't save this query");
+					window.scrollTo(0, 0);
+				}
+			} else {
+				const res = await queryApi.updateQuery(query.id, newQuery);
+				if (res.success) {
+					setQueries((prev) =>
+						prev.map((q) =>
+							q.id === res.data[0].id ? res.data[0] : q
+						)
+					);
+					// update the queries
+					showSuccess("Query edited successfully");
+					// handleReset();
+					onFinish();
+				} else {
+					showError("Can't update this query");
+					window.scrollTo(0, 0);
+				}
+			}
+		} else {
+			if (query.id === undefined) {
+				const new_id =
+					"G-" +
+					queries.filter((item) => item.username === getUserName())
+						.length;
+				const newQueries = [...queries];
+				newQueries.unshift({
+					...newQuery,
+					id: new_id,
+					username: getUserName(),
+					human: {
+						answer: "",
+						explanation: "",
+						username: "",
+					},
+				});
+				setQueries(newQueries);
+				window.scrollTo(document.getElementById("questions"));
+				showSuccess("Query saved successfully");
+			} else {
+				setQueries((prev) =>
+					prev.map((q) => (q.id === query.id ? newQuery : q))
+				);
+				showSuccess("Query edited successfully");
+			}
+			// handleReset();
+			onFinish();
+		}
 	};
 
 	return (
-		<Container maxWidth="md">
+		<Container
+			maxWidth="md"
+			// sx={{ mt: 4, mb: 4 }}
+			className="min-h-screen"
+		>
 			<Box sx={{ mt: 4, mb: 4 }}>
-				<Typography variant="h4" component="h1" gutterBottom>
-					Create a Question
-				</Typography>
-				<Typography variant="body1" paragraph>
-					Select a category and write your location-based question
-					below. You can view example questions for inspiration.
-				</Typography>
-				<QuestionForm
+				<h1 className="text-3xl md:text-4xl font-normal pb-5">
+					Create MCQ Questions based on the Context
+				</h1>
+				<Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+					<Box
+						sx={{
+							display: "flex",
+							justifyContent: "space-between",
+							alignItems: "center",
+						}}
+					>
+						<Typography variant="h6">Context:</Typography>
+						<Button
+							startIcon={<EditIcon />}
+							onClick={handleContextEdit}
+						>
+							Edit Context
+						</Button>
+					</Box>
+					<Divider sx={{ my: 2 }} />
+					<Box>
+						<CollapsedContext
+							context={ContextGeneratorService.convertContextToText(
+								context
+							)}
+						/>
+						{/* <React.Fragment>
+						<p
+							className="w-full text-left"
+							dangerouslySetInnerHTML={{
+								__html: expanded
+									? text
+									: text.substring(0, 200) + " ...",
+							}}
+							style={{
+								whiteSpace: "pre-line",
+							}}
+						/>
+					</React.Fragment>
+					{text === "" && (
+						<p className="text-center my-auto text-lg md:text-xl text-zinc-400">
+							No context provided.
+						</p>
+					)}
+					{text.length > 200 && (
+						<Button
+							onClick={() => setExpanded((prev) => !prev)}
+							sx={{ mt: 1, textTransform: "none" }}
+						>
+							{expanded ? "Show Less" : "Read More"}
+						</Button>
+					)} */}
+					</Box>
+				</Paper>
+
+				{/* <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+				<Typography variant="h6">AI Generated Questions</Typography>
+				<Divider sx={{ my: 2 }} />
+				<ul className="list-disc pl-4">
+					<li>Dummy Question 1</li>
+					<li>Dummy Question 2</li>
+					<li>Dummy Question 3</li>
+					<li>Dummy Question 4</li>
+				</ul>
+			</Paper> */}
+				<QuestionAnswerForm
 					handleSubmit={handleSubmit}
 					handleReset={handleReset}
 				/>
+
+				{/* {queries.filter((item) => item.username === getUserName()).length >
+				0 && (
+				<>
+					<Divider sx={{ my: 4 }} />
+					<div id="questions">
+						<QuestionsContainer
+							title="My Questions"
+							isPersonal={true}
+							onEdit={() => window.scrollTo(0, 0)}
+						/>
+					</div>
+				</>
+			)} */}
 			</Box>
 		</Container>
 	);
