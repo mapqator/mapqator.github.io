@@ -132,7 +132,7 @@ export default function DirectionForm({ handlePlaceAdd }) {
 				/>
 			</Grid>
 
-			{(newDirection.travelMode === "transit" ||
+			{/* {(newDirection.travelMode === "transit" ||
 				newDirection.travelMode === "driving") && (
 				<Grid item xs={12}>
 					<DepartureTimeField
@@ -145,7 +145,7 @@ export default function DirectionForm({ handlePlaceAdd }) {
 						}}
 					/>
 				</Grid>
-			)}
+			)} */}
 			{newDirection.from && newDirection.to && (
 				<Grid item xs={12}>
 					<iframe

@@ -35,7 +35,7 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 	if (attributes.includes("rating")) {
 		text += `- Rating: ${place.rating}. ${
 			place.user_ratings_total
-				? "Total " + place.user_ratings_total + " ratings)"
+				? "(Total " + place.user_ratings_total + " ratings)"
 				: ""
 		}\n`;
 	}
