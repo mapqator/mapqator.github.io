@@ -86,7 +86,7 @@ export default function DistanceForm({ handlePlaceAdd }) {
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
 				<PlaceSelectionField
-					label="Origins"
+					label="Origins (Multiple allowed)"
 					multiple={true}
 					onChange={(event) => {
 						setNewDistance((prev) => ({
@@ -101,7 +101,7 @@ export default function DistanceForm({ handlePlaceAdd }) {
 
 			<Grid item xs={12}>
 				<PlaceSelectionField
-					label="Destinations"
+					label="Destinations (Multiple allowed)"
 					multiple={true}
 					value={newDistance.to}
 					onChange={(event) => {
