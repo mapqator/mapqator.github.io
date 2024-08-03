@@ -52,19 +52,11 @@ export default function PoiSelectionField({
 					}
 				>
 					{Object.keys(selectedPlacesMap)
-						.filter(
-							(place_id) =>
-								!areaTypes.some((type) =>
-									savedPlacesMap[place_id].types.includes(
-										type
-									)
-								)
-						)
-						.map((place_id) => (
-							<MenuItem key={place_id} value={place_id}>
-								{savedPlacesMap[place_id].name}
-							</MenuItem>
-						))}
+					.map((place_id) => (
+						<MenuItem key={place_id} value={place_id}>
+							{savedPlacesMap[place_id].name}
+						</MenuItem>
+					))}
 				</Select>
 			</FormControl>
 			<h6 className="px-2  text-sm">

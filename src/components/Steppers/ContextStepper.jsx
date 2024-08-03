@@ -160,7 +160,7 @@ function ContextStep({
 							>
 								{index === 0 ? "Start" : "Continue"}
 							</Button>
-							{/* {index > 0 ? (
+							{index > 0 ? (
 								<Button
 									onClick={handleBack}
 									sx={{ mt: 1, mr: 1 }}
@@ -179,15 +179,15 @@ function ContextStep({
 								>
 									Start with Example
 								</LoadingButton>
-							)} */}
-							{index > 0 && (
+							)}
+							{/* {index > 0 && (
 								<Button
 									onClick={handleBack}
 									sx={{ mt: 1, mr: 1 }}
 								>
 									Back
 								</Button>
-							)}
+							)} */}
 						</div>
 					</Box>
 				</div>
@@ -243,7 +243,7 @@ export default function ContextStepper({
 			icon: <Flag />,
 		},
 		{
-			label: "Add Information of Places/POIs	",
+			label: "Add Information of Places",
 			description: `Start by searching for a location. Type in a place name or address in the search bar below.`,
 			icon: <SearchIcon />,
 			additional: "Places you have added to the context.",
@@ -270,7 +270,7 @@ export default function ContextStepper({
 			context: context.places,
 		},
 		{
-			label: "Explore Nearby POIs",
+			label: "Search for Nearby places or Explore the area",
 			description: `Use the Nearby Search Tool to discover points of interest around your selected location. You just need to select a location and the type of poi you are looking for. 
 			Additionally you can specify the order in which results are listed. Possible values are Prominence and Distance. When prominence is specified, the radius parameter is required. 
 			You can choose a type from the given list or a custom type. It is recommended to choose from the given list for better result.`,
@@ -281,16 +281,16 @@ export default function ContextStepper({
 			grid: Object.keys(nearbyPlacesMap).length > 0 && <NearbyGrid />,
 			context: context.nearby,
 		},
-		{
-			label: "Explore POIs inside Places",
-			description: `Explore various Points of Interest (POIs) within a larger area. Select a region like a city or neighborhood, then choose a type (e.g., restaurants, museums, parks) to see POIs within that area.`,
-			additional:
-				"List of areas whose internals pois are added to the context",
-			icon: <ExploreIcon />,
-			form: <AreaForm {...{ handlePlaceAdd }} />,
-			grid: Object.keys(poisMap).length > 0 && <AreaGrid />,
-			context: context.area,
-		},
+		// {
+		// 	label: "Explore POIs inside Places",
+		// 	description: `Explore various Points of Interest (POIs) within a larger area. Select a region like a city or neighborhood, then choose a type (e.g., restaurants, museums, parks) to see POIs within that area.`,
+		// 	additional:
+		// 		"List of areas whose internals pois are added to the context",
+		// 	icon: <ExploreIcon />,
+		// 	form: <AreaForm {...{ handlePlaceAdd }} />,
+		// 	grid: Object.keys(poisMap).length > 0 && <AreaGrid />,
+		// 	context: context.area,
+		// },
 		{
 			label: "Get Alternative Routes",
 			description: `Utilize the Directions API to find routes between two points. Choose origin, destination and travel mode to find possible routes between them.`,
@@ -304,7 +304,7 @@ export default function ContextStepper({
 			context: context.direction,
 		},
 		{
-			label: "Get Duration of Recommended Route",
+			label: "Get Distance Matrix",
 			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Choose origins, destinations and travel mode to find distance and durations.`,
 			additional:
 				"List of origin - destination pairs whose fastest route is added to the context",
