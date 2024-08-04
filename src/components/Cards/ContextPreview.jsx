@@ -29,7 +29,7 @@ export default function ContextPreview({ context }) {
 			)}
 
 			{context === "" && (
-				<p className="text-center py-2 my-auto text-lg md:text-xl text-zinc-400">
+				<p className="text-center py-2 my-auto text-base md:text-lg text-zinc-300">
 					No context generated. Add information first.
 				</p>
 			)}

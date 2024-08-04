@@ -91,7 +91,7 @@ export default function PageComponent() {
 											fontSize: "5rem",
 										}}
 									>
-										MapQuest
+										MapQaTor
 									</Typography>
 									<Typography
 										variant="h6"
@@ -125,7 +125,7 @@ export default function PageComponent() {
 								textShadow: "2px 2px 4px rgba(0,0,0,0.1)",
 							}}
 						>
-							MapQuest
+							MapQaTor
 						</Typography> */}
 						</Box>
 

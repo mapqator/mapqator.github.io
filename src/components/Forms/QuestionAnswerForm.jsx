@@ -38,9 +38,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 					loading={loading}
 					loadingPosition="start"
 				>
-					{query.id === undefined
-						? "Evaluate Query"
-						: "Evaluate Query #" + query.id}
+					{query.id === undefined ? "Submit" : "Submit #" + query.id}
 				</LoadingButton>
 				<Button
 					onClick={() => {

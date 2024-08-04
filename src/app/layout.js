@@ -13,8 +13,8 @@ import GlobalContextProvider from "@/contexts/GlobalContext";
 export const metadata = {
 	metadataBase: new URL("https://mahirlabibdihan.github.io/mapquest"),
 	title: {
-		template: "%s | MapQuest",
-		default: "MapQuest",
+		template: "%s | MapQaTor",
+		default: "MapQaTor",
 	},
 
 	description: "Map dataset creator",

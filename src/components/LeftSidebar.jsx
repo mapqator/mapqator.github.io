@@ -124,7 +124,7 @@ export default function LeftSidebar({ window }) {
 					<div className="hidden lg:flex">
 						<Image
 							src={`${config.baseUrl}/images/logo.png`}
-							alt="MapQuest Logo"
+							alt="MapQaTor Logo"
 							width={30}
 							height={30}
 						/>
@@ -132,12 +132,12 @@ export default function LeftSidebar({ window }) {
 					<div className="flex lg:hidden">
 						<Image
 							src={`${config.baseUrl}/images/logo.png`}
-							alt="MapQuest Logo"
+							alt="MapQaTor Logo"
 							width={30}
 							height={20}
 						/>
 					</div>
-					MapQuest
+					MapQaTor
 				</div>
 			</Toolbar>
 			<Divider />

@@ -131,7 +131,7 @@ function ContextStep({
 								</>
 						  )}
 					{step.context !== undefined && (
-						<>
+						<div className="flex flex-col gap-2">
 							<Typography
 								sx={{
 									whiteSpace: "pre-line",
@@ -147,7 +147,7 @@ function ContextStep({
 							>
 								<ContextPreview context={step.context} />
 							</Paper>
-						</>
+						</div>
 					)}
 
 					<Box sx={{ my: 1 }}>
@@ -160,7 +160,7 @@ function ContextStep({
 							>
 								{index === 0 ? "Start" : "Continue"}
 							</Button>
-							{/* {index > 0 ? (
+							{index > 0 ? (
 								<Button
 									onClick={handleBack}
 									sx={{ mt: 1, mr: 1 }}
@@ -179,15 +179,15 @@ function ContextStep({
 								>
 									Start with Example
 								</LoadingButton>
-							)} */}
-							{index > 0 && (
+							)}
+							{/* {index > 0 && (
 								<Button
 									onClick={handleBack}
 									sx={{ mt: 1, mr: 1 }}
 								>
 									Back
 								</Button>
-							)}
+							)} */}
 						</div>
 					</Box>
 				</div>
@@ -407,7 +407,7 @@ export default function ContextStepper({
 					sx={{ mt: 1, mr: 1 }}
 					endIcon={<Send />}
 				>
-					Create Question
+					Submit
 				</Button>
 				<Button
 					onClick={handleReset}
@@ -415,7 +415,7 @@ export default function ContextStepper({
 					color="error"
 					startIcon={<Clear />}
 				>
-					Clear Context
+					Clear
 				</Button>
 			</div>
 		</>

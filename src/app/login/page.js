@@ -85,7 +85,7 @@ const Login = () => {
 								<div className="flex">
 									<Image
 										src={`${config.baseUrl}/images/logo.png`}
-										alt="MapQuest Logo"
+										alt="MapQaTor Logo"
 										width={30}
 										height={30}
 									/>
@@ -100,7 +100,7 @@ const Login = () => {
 										fontWeight: "bold",
 									}}
 								>
-									MapQuest
+									MapQaTor
 								</Typography>
 							</Box>
 						</div>

@@ -50,7 +50,7 @@ export default function Navbar({ selected, setSelected }) {
 					<div className="hidden lg:flex">
 						<Image
 							src={`${baseUrl}/images/logo.png`}
-							alt="MapQuest Logo"
+							alt="MapQaTor Logo"
 							width={30}
 							height={30}
 						/>
@@ -58,7 +58,7 @@ export default function Navbar({ selected, setSelected }) {
 					<div className="flex lg:hidden">
 						<Image
 							src={`${baseUrl}/images/logo.png`}
-							alt="MapQuest Logo"
+							alt="MapQaTor Logo"
 							width={20}
 							height={20}
 						/>
@@ -70,7 +70,7 @@ export default function Navbar({ selected, setSelected }) {
 							component="div"
 							sx={{ ml: 2, color: "#333", fontWeight: "bold" }}
 						>
-							MapQuest
+							MapQaTor
 						</Typography>
 						{/* <h6
 							// sx={{ ml: 2, color: "#333", fontWeight: "bold" }}

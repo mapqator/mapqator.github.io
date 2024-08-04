@@ -90,7 +90,7 @@ export default function PageComponent() {
 										fontSize: "5rem",
 									}}
 								>
-									MapQuest
+									MapQaTor
 								</Typography>
 								<Typography
 									variant="h6"
