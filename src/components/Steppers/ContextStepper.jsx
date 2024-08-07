@@ -292,6 +292,16 @@ export default function ContextStepper({
 		// 	context: context.area,
 		// },
 		{
+			label: "Get Distance Matrix",
+			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Choose origins, destinations and travel mode to find distance and durations.`,
+			additional:
+				"List of origin - destination pairs whose fastest route is added to the context",
+			icon: <MapIcon />,
+			form: <DistanceForm {...{ handlePlaceAdd }} />,
+			grid: Object.keys(distanceMatrix).length > 0 && <DistanceGrid />,
+			context: context.distance,
+		},
+		{
 			label: "Get Alternative Routes",
 			description: `Utilize the Directions API to find routes between two points. Choose origin, destination and travel mode to find possible routes between them.`,
 			additional:
@@ -303,16 +313,7 @@ export default function ContextStepper({
 			),
 			context: context.direction,
 		},
-		{
-			label: "Get Distance Matrix",
-			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Choose origins, destinations and travel mode to find distance and durations.`,
-			additional:
-				"List of origin - destination pairs whose fastest route is added to the context",
-			icon: <MapIcon />,
-			form: <DistanceForm {...{ handlePlaceAdd }} />,
-			grid: Object.keys(distanceMatrix).length > 0 && <DistanceGrid />,
-			context: context.distance,
-		},
+
 		// {
 		// 	label: "Set Query Parameters",
 		// 	description: `Set the time, day, and location that should be used as a basis for answering questions. This will help provide more accurate and context-specific responses.`,

@@ -35,6 +35,7 @@ import { showError, showSuccess } from "@/contexts/ToastProvider";
 import EditIcon from "@mui/icons-material/Edit";
 import Confirmation from "@/components/Dialogs/Confirmation";
 import geminiApi from "@/api/geminiApi";
+import { getUserName } from "@/api/base";
 
 const llmApis = {
 	gpt4: {
@@ -167,6 +168,7 @@ export default function LiveEvaluation() {
 			},
 			evaluation: Object.entries(llmResults).map(([llm, result]) => ({
 				model_id: llmApis[llm].id,
+				model: llmApis[llm].name,
 				answer: result.answer,
 				verdict: result.verdict,
 			})),

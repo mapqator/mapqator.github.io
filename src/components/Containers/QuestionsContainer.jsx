@@ -120,12 +120,13 @@ export default function QuestionsContainer({ title, isPersonal, onEdit }) {
 				on your own machine.
 			</Typography>
 			<div className="flex flex-col gap-5">
-				{data.map((entry) => (
+				{data.map((entry, index) => (
 					<QueryCard
 						key={entry.id}
 						entry={entry}
 						onEdit={onEdit}
 						isPersonal={isPersonal}
+						index={index}
 					/>
 				))}
 			</div>

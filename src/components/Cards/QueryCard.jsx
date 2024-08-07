@@ -34,11 +34,11 @@ import categories from "@/database/categories.json";
 import { convertFromSnake } from "@/services/utils";
 import { AppContext } from "@/contexts/AppContext";
 
-export default function QueryCard({ entry, onEdit, isPersonal, mode }) {
+export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 	const [flag, setFlag] = useState(false);
 	const { setQueries } = useContext(AppContext);
 	const { isAuthenticated } = useAuth();
-	const [expanded, setExpanded] = useState(false);
+	const [expanded, setExpanded] = useState(index === 0);
 	const [category, setCategory] = useState(entry.classification);
 
 	const handleDelete = async () => {
