@@ -26,7 +26,13 @@ export default function PoiList({ places, handleTogglePlace }) {
 							/>
 							<ListItemText
 								primary={place.name}
-								secondary={place.formatted_address}
+								secondary={`${place.rating}* (${
+									place.userRatingCount
+								}) ${
+									place.priceLevel
+										? `| ${place.priceLevel}`
+										: ""
+								}`}
 								primaryTypographyProps={{ noWrap: true }}
 								secondaryTypographyProps={{ noWrap: true }}
 							/>

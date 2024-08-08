@@ -6,32 +6,34 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-	export function convertFromSnake(text) {
-		return text
-			.replace(/_/g, " ") // Replace underscores with spaces
-			.split(" ") // Split the string into an array of words
-			.map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize the first letter of each word
-			.join(" ");
-	}
+export function convertFromSnake(text) {
+	return text
+		.replace(/_/g, " ") // Replace underscores with spaces
+		.split(" ") // Split the string into an array of words
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize the first letter of each word
+		.join(" ");
+}
 
 export function convertTravelModeToLabel(mode) {
-	return mode === "walking"
+	return mode === "WALK"
 		? "Walking"
-		: mode === "driving"
+		: mode === "DRIVE"
 		? "Driving"
-		: mode === "bicycling"
+		: mode === "BICYCLE"
 		? "Bicycling"
-		: "Public transport";
+		: mode === "TRANSIT"
+		? "Transit"
+		: "Unknown";
 }
 
 export function convertTravelModeToIcon(mode) {
-	return mode === "walking" ? (
+	return mode === "WALK" ? (
 		<FontAwesomeIcon icon={faWalking} />
-	) : mode === "driving" ? (
+	) : mode === "DRIVE" ? (
 		<FontAwesomeIcon icon={faCar} />
-	) : mode === "bicycling" ? (
+	) : mode === "BICYCLE" ? (
 		<FontAwesomeIcon icon={faBicycle} />
-	) : (
+	) : mode === "TRANSIT" ? (
 		<FontAwesomeIcon icon={faBus} />
-	);
+	) : null;
 }

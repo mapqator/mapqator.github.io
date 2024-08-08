@@ -25,10 +25,10 @@ export default function TravelSelectionField({ mode, setMode }) {
 				input={<OutlinedInput label={"Travel mode"} />}
 			>
 				{[
-					{ value: "walking", label: "Walking" },
-					{ value: "driving", label: "Driving" },
-					{ value: "bicycling", label: "Bicycling" },
-					{ value: "transit", label: "Public Transport" },
+					{ value: "WALK", label: "Walking" },
+					{ value: "DRIVE", label: "Driving" },
+					{ value: "BICYCLE", label: "Bicycling" },
+					{ value: "TWO_WHEELER", label: "Two Wheeler" },
 				].map((mode, index) => (
 					<MenuItem key={index} value={mode.value}>
 						{mode.label}

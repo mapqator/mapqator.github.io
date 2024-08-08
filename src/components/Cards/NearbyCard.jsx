@@ -51,8 +51,7 @@ function NearbyCardSummary({ index, place_id, entry, expanded }) {
 				className="gap-1"
 			>
 				<Typography variant="h6" component="div">
-					{savedPlacesMap[place_id].name ||
-						selectedPlacesMap[place_id].alias}
+					{savedPlacesMap[place_id].displayName.text}
 				</Typography>
 				<Box className="flex flex-col items-end justify-start">
 					<IconButton onClick={handleDelete} size="small">
@@ -64,11 +63,7 @@ function NearbyCardSummary({ index, place_id, entry, expanded }) {
 				<Box display="flex" flexWrap="wrap" gap={1} mt={1}>
 					<Chip
 						label={Pluralize(
-							convertFromSnake(
-								entry.type === "any"
-									? entry.keyword
-									: entry.type
-							),
+							convertFromSnake(entry.type),
 							nearbyPlacesMap[place_id]
 								? nearbyPlacesMap[place_id][
 										index
@@ -81,11 +76,7 @@ function NearbyCardSummary({ index, place_id, entry, expanded }) {
 						size="small"
 					/>
 					<Chip
-						label={
-							entry.rankBy === "prominence"
-								? `Inside ${entry.radius} m`
-								: "Rankby distance"
-						}
+						label={"Rankby " + entry.rankBy}
 						color="success"
 						size="small"
 					/>

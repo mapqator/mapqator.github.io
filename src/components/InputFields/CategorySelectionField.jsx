@@ -74,7 +74,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { useRouter } from "next/navigation";
 
-export default function CategorySelectionField() {
+export default function CategorySelectionField({ index }) {
 	const { query, setQuery } = useContext(GlobalContext);
 	const router = useRouter();
 	const navigateToHelpPage = () => {
@@ -95,12 +95,14 @@ export default function CategorySelectionField() {
 				placeholder="Choose a category of the question"
 				id="outlined-adornment"
 				className="outlined-input"
-				value={query.classification}
+				value={query.questions[index].classification}
 				onChange={(e) => {
-					setQuery((prev) => ({
-						...prev,
-						classification: e.target.value,
-					}));
+					setQuery((prev) => {
+						const newQuery = { ...prev };
+						newQuery.questions[index].classification =
+							e.target.value;
+						return newQuery;
+					});
 				}}
 			>
 				{categories.map((value, index) => (

@@ -177,7 +177,7 @@ export default function GlobalContextProvider({ children }) {
 	const initNearbyPlacesMap = {};
 	const initPoisMap = {};
 	const initDistanceMatrix = {};
-	const initDirectionInformation = {};
+	const initDirectionInformation = [];
 	const initCurrentInformation = {
 		time: null,
 		day: "",
@@ -224,7 +224,7 @@ export default function GlobalContextProvider({ children }) {
 	// };
 
 	const initQuery = {
-		question: "",
+		title: "",
 		answer: {
 			type: "mcq",
 			options: ["", "", "", ""],
@@ -233,7 +233,9 @@ export default function GlobalContextProvider({ children }) {
 		classification: "",
 	};
 
-	const [query, setQuery] = useState(initQuery);
+	const [query, setQuery] = useState({
+		questions: [initQuery],
+	});
 
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 

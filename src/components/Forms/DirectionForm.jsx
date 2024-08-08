@@ -1,6 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import mapApi from "@/api/mapApi";
-import { Grid } from "@mui/material";
+import {
+	Box,
+	Checkbox,
+	FormControl,
+	Grid,
+	InputLabel,
+	ListItemText,
+	MenuItem,
+	Select,
+	Switch,
+} from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import TravelSelectionField from "@/components/InputFields/TravelSelectionField.";
@@ -10,80 +20,134 @@ import { showError } from "@/contexts/ToastProvider";
 import DepartureTimeField from "../InputFields/DepartureTimeField";
 import dayjs from "dayjs";
 
+const avoidMap = {
+	avoidTolls: "Tolls",
+	avoidHighways: "Highways",
+	avoidFerries: "Ferries",
+};
+const transitModeMap = {
+	BUS: "Bus",
+	LIGHT_RAIL: "Tram and Light rail",
+	SUBWAY: "Subway",
+	TRAIN: "Train",
+	// RAIL: "Rail", // This is equivalent to a combination of SUBWAY, TRAIN, and LIGHT_RAIL.
+};
 export default function DirectionForm({ handlePlaceAdd }) {
 	const { selectedPlacesMap, directionInformation, setDirectionInformation } =
 		useContext(GlobalContext);
-	const [newDirection, setNewDirection] = useState({
-		from: "",
-		to: "",
-		travelMode: "walking",
+
+	const initialData = {
+		origin: "",
+		destination: "",
+		intermediates: [],
+		travelMode: "WALK",
 		departureTime: {
 			type: "now",
 			date: dayjs(),
 			time: dayjs(),
 			departureTimestamp: new Date(),
 		},
-	});
+		optimizeWaypointOrder: false,
+		transitPreferences: {
+			allowedTravelModes: [],
+		},
+		routeModifiers: {
+			avoidTolls: false,
+			avoidHighways: false,
+			avoidFerries: false,
+		},
+	};
+	const [newDirection, setNewDirection] = useState(initialData);
 	const [loading, setLoading] = useState(false);
 	// { from, to, mode, routes: [{label, duration, distance, steps:[]}]}
 	useEffect(() => {
-		setNewDirection({
-			from: "",
-			to: "",
-			travelMode: "walking",
-			departureTime: {
-				type: "now",
-				time: new Date(),
-				date: new Date(),
-				departureTimestamp: new Date(),
-			},
-		});
+		setNewDirection(initialData);
 	}, [selectedPlacesMap]);
 	const handleDirectionAdd = async () => {
-		if (newDirection.from === "" || newDirection.to === "") return;
+		if (newDirection.origin === "" || newDirection.destination === "")
+			return;
 		// Fetch the direction between the two places from google maps
-
 		setLoading(true);
-		const response = await mapApi.getDirections(
-			newDirection.from,
-			newDirection.to,
-			newDirection.travelMode
-		);
-		if (response.success) {
+		const response = await mapApi.getDirectionsNew(newDirection);
+		if (response.success && response.data.routes) {
 			// console.log(response.)
 			const routes = response.data.routes;
-			const newDirectionInfo = { ...directionInformation };
+			const newDirectionInfo = [...directionInformation];
 			const all_routes = [];
 			routes.forEach((route) => {
-				const steps = [];
-				route.legs[0].steps.forEach((step) => {
-					steps.push(step.html_instructions);
+				const legs = [];
+				route.legs.forEach((leg) => {
+					const steps = [];
+					console.log("Steps: ", route.legs[0].steps);
+					leg.steps.forEach((step) => {
+						console.log(step);
+						if (step.navigationInstruction)
+							steps.push(step.navigationInstruction.instructions);
+					});
+					legs.push({
+						steps,
+					});
 				});
+				console.log("Legs: ", legs);
 				all_routes.push({
-					label: route.summary,
-					duration: route.legs[0].duration.text,
-					distance: route.legs[0].distance.text,
-					steps: steps,
+					label: route.description,
+					duration: route.localizedValues.staticDuration.text,
+					distance: route.localizedValues.distance.text,
+					legs: legs,
+					optimizedIntermediateWaypointIndex:
+						route.optimizedIntermediateWaypointIndex,
 				});
 			});
-			if (newDirectionInfo[newDirection.from])
-				newDirectionInfo[newDirection.from][newDirection.to] = {
-					...newDirectionInfo[newDirection.from][newDirection.to],
-					[newDirection.travelMode]: {
-						routes: all_routes,
-						showSteps: true,
-					},
-				};
-			else {
-				newDirectionInfo[newDirection.from] = {
-					[newDirection.to]: {
-						[newDirection.travelMode]: {
-							routes: all_routes,
-							showSteps: true,
-						},
-					},
-				};
-			}
+			const o = newDirection.origin;
+			const d = newDirection.destination;
+
+			newDirectionInfo.push({
+				origin: newDirection.origin,
+				destination: newDirection.destination,
+				intermediates: newDirection.intermediates,
+				travelMode: newDirection.travelMode,
+				optimizeWaypointOrder: newDirection.optimizeWaypointOrder,
+				transitPreferences: newDirection.transitPreferences,
+				routeModifiers: {
+					avoidTolls: ["DRIVE", "TWO_WHEELER"].includes(
+						newDirection.travelMode
+					)
+						? newDirection.routeModifiers.avoidTolls
+						: false,
+					avoidHighways: ["DRIVE", "TWO_WHEELER"].includes(
+						newDirection.travelMode
+					)
+						? newDirection.routeModifiers.avoidHighways
+						: false,
+					avoidFerries: ["DRIVE", "TWO_WHEELER"].includes(
+						newDirection.travelMode
+					)
+						? newDirection.routeModifiers.avoidFerries
+						: false,
+				},
+				routes: all_routes,
+				showSteps: false,
+			});
+
+			// if (newDirectionInfo[o])
+			// 	newDirectionInfo[o][d] = {
+			// 		...newDirectionInfo[o][d],
+			// 		[newDirection.travelMode]: {
+
+			// 			routes: all_routes,
+			// 			showSteps: true,
+			// 		},
+			// 	};
+			// else {
+			// 	newDirectionInfo[o] = {
+			// 		[d]: {
+			// 			[newDirection.travelMode]: {
+			// 				routes: all_routes,
+			// 				showSteps: true,
+			// 			},
+			// 		},
+			// 	};
+			// }
 			setDirectionInformation(newDirectionInfo);
 		} else {
 			showError("Couldn't find directions between the two places");
@@ -95,11 +159,11 @@ export default function DirectionForm({ handlePlaceAdd }) {
 			<Grid item xs={12}>
 				<PlaceSelectionField
 					label="Origin"
-					value={newDirection.from}
+					value={newDirection.origin}
 					onChange={(event) => {
 						setNewDirection((prev) => ({
 							...prev,
-							from: event.target.value,
+							origin: event.target.value,
 						}));
 					}}
 					handlePlaceAdd={handlePlaceAdd}
@@ -109,11 +173,11 @@ export default function DirectionForm({ handlePlaceAdd }) {
 			<Grid item xs={12}>
 				<PlaceSelectionField
 					label="Destination"
-					value={newDirection.to}
+					value={newDirection.destination}
 					onChange={(event) => {
 						setNewDirection((prev) => ({
 							...prev,
-							to: event.target.value,
+							destination: event.target.value,
 						}));
 					}}
 					handlePlaceAdd={handlePlaceAdd}
@@ -132,6 +196,41 @@ export default function DirectionForm({ handlePlaceAdd }) {
 				/>
 			</Grid>
 
+			{newDirection.travelMode !== "TRANSIT" && (
+				<>
+					<Grid item xs={12}>
+						<PlaceSelectionField
+							label="Intermediates"
+							value={newDirection.intermediates}
+							onChange={(event) => {
+								setNewDirection((prev) => ({
+									...prev,
+									intermediates: event.target.value,
+								}));
+							}}
+							handlePlaceAdd={handlePlaceAdd}
+							multiple={true}
+						/>
+					</Grid>
+					<Box className="w-full p-3 pb-0 flex flex-row justify-start items-center gap-2">
+						<Switch
+							onChange={() => {
+								setNewDirection((prev) => ({
+									...prev,
+									optimizeWaypointOrder:
+										!prev.optimizeWaypointOrder,
+								}));
+							}}
+							checked={newDirection.optimizeWaypointOrder}
+							size="small"
+						/>
+						<h6 className="text-base">
+							Optimize intermediates order
+						</h6>
+					</Box>
+				</>
+			)}
+
 			{/* {(newDirection.travelMode === "transit" ||
 				newDirection.travelMode === "driving") && (
 				<Grid item xs={12}>
@@ -146,7 +245,8 @@ export default function DirectionForm({ handlePlaceAdd }) {
 					/>
 				</Grid>
 			)} */}
-			{newDirection.from && newDirection.to && (
+
+			{/* {newDirection.from && newDirection.to && (
 				<Grid item xs={12}>
 					<iframe
 						width="100%"
@@ -160,6 +260,102 @@ export default function DirectionForm({ handlePlaceAdd }) {
 						referrerPolicy="no-referrer-when-downgrade"
 						src={`https://www.google.com/maps/embed/v1/directions?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&origin=place_id:${newDirection.from}&destination=place_id:${newDirection.to}&mode=${newDirection.travelMode}`}
 					/>
+				</Grid>
+			)} */}
+
+			{["DRIVE", "TWO_WHEELER"].includes(newDirection.travelMode) && (
+				<Grid item xs={12}>
+					<FormControl fullWidth size="small">
+						<InputLabel>Avoid</InputLabel>
+						<Select
+							// input={<OutlinedInput label="Tag" />}
+							value={Object.entries(newDirection.routeModifiers)
+								.map(([key, value]) => (value ? key : null))
+								.filter((x) => x)}
+							onChange={(e) => {
+								const newOptions = {
+									...newDirection.routeModifiers,
+								};
+								Object.keys(avoidMap).forEach((key) => {
+									newOptions[key] =
+										e.target.value.includes(key);
+								});
+								setNewDirection((prev) => ({
+									...prev,
+									routeModifiers: newOptions,
+								}));
+							}}
+							label={"Avoid"}
+							multiple
+							renderValue={(selected) => {
+								if (selected.length === 0) {
+									return <em>Any</em>; // Custom label for empty array
+								}
+								return selected
+									.map((value) => avoidMap[value])
+									.join(", ");
+							}}
+						>
+							{Object.keys(avoidMap).map((key) => (
+								<MenuItem key={key} value={key}>
+									<Checkbox
+										checked={
+											newDirection.routeModifiers[key]
+										}
+									/>
+									<ListItemText primary={avoidMap[key]} />
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				</Grid>
+			)}
+
+			{newDirection.travelMode === "TRANSIT" && (
+				<Grid item xs={12}>
+					<FormControl fullWidth size="small">
+						<InputLabel>Prefer</InputLabel>
+						<Select
+							// input={<OutlinedInput label="Tag" />}
+							value={
+								newDirection.transitPreferences
+									.allowedTravelModes
+							}
+							onChange={(e) => {
+								setNewDirection((prev) => ({
+									...prev,
+									transitPreferences: {
+										allowedTravelModes: e.target.value,
+									},
+								}));
+							}}
+							label={"Prefer"}
+							multiple
+							renderValue={(selected) => {
+								if (selected.length === 0) {
+									return <em>Any</em>; // Custom label for empty array
+								}
+								return selected
+									.map((value) => transitModeMap[value])
+									.join(", ");
+							}}
+						>
+							{Object.keys(transitModeMap).map((key) => (
+								<MenuItem key={key} value={key}>
+									<Checkbox
+										checked={
+											newDirection.transitPreferences.allowedTravelModes.indexOf(
+												key
+											) > -1
+										}
+									/>
+									<ListItemText
+										primary={transitModeMap[key]}
+									/>
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
 				</Grid>
 			)}
 

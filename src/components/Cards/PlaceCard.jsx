@@ -21,16 +21,15 @@ import PlaceDeleteButton from "../Buttons/PlaceDeleteButton";
 
 function PlaceCardSummary({ placeId, expanded }) {
 	const { selectedPlacesMap } = useContext(GlobalContext);
-
 	const { savedPlacesMap } = useContext(AppContext);
 
 	return (
 		<>
 			<Typography variant="h6" component="div" noWrap>
-				{savedPlacesMap[placeId].name}
+				{savedPlacesMap[placeId].displayName.text}
 			</Typography>
 			<Typography color="textSecondary" gutterBottom noWrap>
-				{savedPlacesMap[placeId].formatted_address}
+				{savedPlacesMap[placeId].shortFormattedAddress}
 			</Typography>
 			<Box
 				sx={{

@@ -11,63 +11,108 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import { set } from "lodash";
 
-export default function OptionsEditor() {
+export default function OptionsEditor({ index }) {
 	const { query, setQuery } = useContext(GlobalContext);
-	const handleOptionChange = (index, value) => {
+	const handleOptionChange = (i, value) => {
 		setQuery((prev) => {
-			const options = [...prev.answer.options];
-			options[index] = value;
+			const options = [...prev.questions[index].answer.options];
+			options[i] = value;
 			return {
 				...prev,
-				answer: {
-					...prev.answer,
-					options,
-				},
+				questions: [
+					...prev.questions.slice(0, index),
+					{
+						...prev.questions[index],
+						answer: {
+							...prev.questions[index].answer,
+							options,
+						},
+					},
+					...prev.questions.slice(index + 1),
+				],
 			};
 		});
 	};
 
 	const addOption = () => {
-		setQuery((prev) => ({
-			...prev,
-			answer: {
-				...prev.answer,
-				options: [...prev.answer.options, ""],
-			},
-		}));
-	};
-
-	const removeOption = (index) => {
-		if (query.answer.correct === index) {
-			setQuery((prev) => ({
-				...prev,
-				answer: {
-					...prev.answer,
-					correct: -1,
-				},
-			}));
-		}
 		setQuery((prev) => {
-			const options = [...prev.answer.options];
-			options.splice(index, 1);
+			const options = [...prev.questions[index].answer.options, ""];
 			return {
 				...prev,
-				answer: {
-					...prev.answer,
-					options,
-				},
+				questions: [
+					...prev.questions.slice(0, index),
+					{
+						...prev.questions[index],
+						answer: {
+							...prev.questions[index].answer,
+							options,
+						},
+					},
+					...prev.questions.slice(index + 1),
+				],
 			};
 		});
+	};
+
+	const removeOption = (i) => {
+		if (query.questions[index].answer.correct === i) {
+			setQuery((prev) => {
+				const answer = [...prev.questions[index].answer];
+				answer.correct = -1;
+				return {
+					...prev,
+					questions: [
+						...prev.questions.slice(0, index),
+						{
+							...prev.questions[index],
+							answer,
+						},
+						...prev.questions.slice(index + 1),
+					],
+				};
+			});
+		}
+
+		setQuery((prev) => {
+			const options = [...prev.questions[index].answer.options];
+			options.splice(i, 1);
+			return {
+				...prev,
+				questions: [
+					...prev.questions.slice(0, index),
+					{
+						...prev.questions[index],
+						answer: {
+							...prev.questions[index].answer,
+							options,
+						},
+					},
+					...prev.questions.slice(index + 1),
+				],
+			};
+		});
+		// setQuery((prev) => {
+		// 	const options = [...prev.answer.options];
+		// 	options.splice(i, 1);
+		// 	return {
+		// 		...prev,
+		// 		answer: {
+		// 			...prev.answer,
+		// 			options,
+		// 		},
+		// 	};
+		// });
 	};
 	return (
 		<FormControl component="fieldset" fullWidth>
 			<Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
 				Options:
 			</Typography>
-			{query.answer.options.map((option, index) => (
+			{query.questions[index].answer.options.map((option, i) => (
 				<Box
-					key={index}
+					key={i}
 					sx={{
 						display: "flex",
 						alignItems: "center",
@@ -77,17 +122,15 @@ export default function OptionsEditor() {
 					<TextField
 						fullWidth
 						autoComplete="off"
-						label={`Option ${index + 1}`}
+						label={`Option ${i + 1}`}
 						value={option}
-						onChange={(e) =>
-							handleOptionChange(index, e.target.value)
-						}
+						onChange={(e) => handleOptionChange(i, e.target.value)}
 						required
 						InputProps={{
 							endAdornment: (
 								<InputAdornment position="end">
 									<IconButton
-										onClick={() => removeOption(index)}
+										onClick={() => removeOption(i)}
 										sx={{ ml: 1 }}
 									>
 										<DeleteIcon color="error" />

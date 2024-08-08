@@ -1,7 +1,17 @@
 import React, { useContext, useState } from "react";
-import { Divider, List, ListItem, ListItemText } from "@mui/material";
+import {
+	Divider,
+	List,
+	ListItem,
+	ListItemText,
+	Typography,
+} from "@mui/material";
+import { GlobalContext } from "@/contexts/GlobalContext";
+import { ArrowForward, ArrowRight, ArrowRightAlt, DoubleArrow, KeyboardDoubleArrowRight } from "@mui/icons-material";
+import { AppContext } from "@/contexts/AppContext";
 
-export default function RoutesList({ routes, showSteps }) {
+export default function RoutesList({ routes, showSteps, waypoints }) {
+	const { savedPlacesMap } = useContext(AppContext);
 	return (
 		<List dense>
 			{routes.map((route, index) => (
@@ -26,14 +36,42 @@ export default function RoutesList({ routes, showSteps }) {
 								secondary={
 									showSteps && (
 										<div className="flex flex-col gap-0">
-											{route.steps.map((step, index1) => (
-												<p
-													key={index1}
-													// className="text-sm"
-													dangerouslySetInnerHTML={{
-														__html: "- " + step,
-													}}
-												/>
+											{route.legs.map((leg, i) => (
+												<>
+													{route.legs.length > 1 && (
+														<Typography>
+															{
+																savedPlacesMap[
+																	waypoints[i]
+																].displayName
+																	.text
+															}
+															<KeyboardDoubleArrowRight />
+															{
+																savedPlacesMap[
+																	waypoints[
+																		i + 1
+																	]
+																].displayName
+																	.text
+															}
+														</Typography>
+													)}
+
+													{leg.steps.map(
+														(step, j) => (
+															<p
+																key={i + j}
+																// className="text-sm"
+																dangerouslySetInnerHTML={{
+																	__html:
+																		"- " +
+																		step,
+																}}
+															/>
+														)
+													)}
+												</>
 											))}
 										</div>
 									)

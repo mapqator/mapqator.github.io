@@ -5,7 +5,7 @@ import LockIcon from "@mui/icons-material/Lock";
 
 const LoginPrompt = ({ onLogin }) => {
 	return (
-		<Box className="mt-4 p-4 bg-gray-100 rounded-lg text-center">
+		<Box className="mt-4 p-4 bg-gray-100 rounded-lg text-center w-full">
 			<LockIcon className="text-gray-500 mb-2" fontSize="large" />
 			<Typography variant="h6" gutterBottom>
 				Want to save this evaluation?

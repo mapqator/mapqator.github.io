@@ -11,75 +11,80 @@ import { showError } from "@/contexts/ToastProvider";
 export default function DistanceForm({ handlePlaceAdd }) {
 	const { selectedPlacesMap, distanceMatrix, setDistanceMatrix } =
 		useContext(GlobalContext);
-	const [newDistance, setNewDistance] = useState({
-		from: [],
-		to: [],
-		travelMode: "walking",
-	});
+	const initialData = {
+		origins: [],
+		destinations: [],
+		travelMode: "WALK",
+	};
+	const [newDistance, setNewDistance] = useState(initialData);
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		setNewDistance({
-			from: [],
-			to: [],
-			travelMode: "walking",
-		});
+		setNewDistance(initialData);
 	}, [selectedPlacesMap]);
 
 	const handleDistanceAdd = async () => {
 		console.log(newDistance);
-		if (newDistance.from.length === 0 || newDistance.to.length === 0)
+		if (
+			newDistance.origins.length === 0 ||
+			newDistance.destinations.length === 0
+		)
 			return;
 		setLoading(true);
 		// Fetch the distance between the two places from google maps
-		const response = await mapApi.getDistance(
-			newDistance.from,
-			newDistance.to,
-			newDistance.travelMode
-		);
+		const response = await mapApi.getDistanceNew(newDistance);
 		if (response.success) {
-			console.log(response.data.matrix);
-			const origin = newDistance.from;
-			const destination = newDistance.to;
-			const matrix = response.data.matrix;
+			const origins = newDistance.origins;
+			const destinations = newDistance.destinations;
+			const elements = response.data;
+
 			const newDistanceMatrix = { ...distanceMatrix };
-			for (let i = 0; i < origin.length; i++) {
-				const o = origin[i];
-				for (let j = 0; j < destination.length; j++) {
-					const d = destination[j];
-					if (o === d) {
-					} else if (matrix[i][j].duration && matrix[i][j].distance) {
-						console.log(matrix[i][j]);
-						if (newDistanceMatrix[o])
-							newDistanceMatrix[o][d] = {
-								...newDistanceMatrix[o][d],
-								[newDistance.travelMode]: {
-									duration: matrix[i][j].duration.text,
-									distance: matrix[i][j].distance.text,
-								},
-							};
-						else {
-							newDistanceMatrix[o] = {
-								[d]: {
-									[newDistance.travelMode]: {
-										duration: matrix[i][j].duration.text,
-										distance: matrix[i][j].distance.text,
-									},
-								},
-							};
-						}
-					}
+			// distanceMatrix[origin][destination][travelMode] = { duration, distance }
+			for (const route of elements) {
+				const {
+					originIndex,
+					destinationIndex,
+					condition,
+					localizedValues,
+				} = route;
+
+				if (
+					origins[originIndex] === destinations[destinationIndex] ||
+					condition === "ROUTE_NOT_FOUND"
+				) {
+					continue;
+				}
+				const distance = localizedValues.distance.text;
+				const duration = localizedValues.staticDuration.text;
+				const o = origins[originIndex];
+				const d = destinations[destinationIndex];
+				if (newDistanceMatrix[o])
+					newDistanceMatrix[o][d] = {
+						...newDistanceMatrix[o][d],
+						[newDistance.travelMode]: {
+							duration,
+							distance,
+						},
+					};
+				else {
+					newDistanceMatrix[o] = {
+						[d]: {
+							[newDistance.travelMode]: {
+								duration,
+								distance,
+							},
+						},
+					};
 				}
 			}
 			setDistanceMatrix(newDistanceMatrix);
 		} else {
 			showError("Couldn't find the distance between the places");
 		}
-		setNewDistance((prev) => ({
-			from: [],
-			to: [],
-			travelMode: prev.travelMode,
-		}));
+		// setNewDistance((prev) => ({
+		// 	...initialData,
+		// 	travelMode: prev.travelMode,
+		// }));
 		setLoading(false);
 	};
 	return (
@@ -91,10 +96,10 @@ export default function DistanceForm({ handlePlaceAdd }) {
 					onChange={(event) => {
 						setNewDistance((prev) => ({
 							...prev,
-							from: event.target.value,
+							origins: event.target.value,
 						}));
 					}}
-					value={newDistance.from}
+					value={newDistance.origins}
 					handlePlaceAdd={handlePlaceAdd}
 				/>
 			</Grid>
@@ -103,11 +108,11 @@ export default function DistanceForm({ handlePlaceAdd }) {
 				<PlaceSelectionField
 					label="Destinations (Multiple allowed)"
 					multiple={true}
-					value={newDistance.to}
+					value={newDistance.destinations}
 					onChange={(event) => {
 						setNewDistance((prev) => ({
 							...prev,
-							to: event.target.value,
+							destinations: event.target.value,
 						}));
 					}}
 					handlePlaceAdd={handlePlaceAdd}

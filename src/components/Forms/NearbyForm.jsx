@@ -9,8 +9,15 @@ import {
 	RadioGroup,
 	Radio,
 	Typography,
+	FormControl,
+	InputLabel,
+	Select,
+	MenuItem,
+	ListItemText,
+	Checkbox,
+	OutlinedInput,
 } from "@mui/material";
-import placeTypes from "@/database/types.json";
+import types from "@/database/newtypes.json";
 import { LoadingButton } from "@mui/lab";
 import { Add, Search } from "@mui/icons-material";
 import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
@@ -27,75 +34,103 @@ import {
 } from "@react-google-maps/api";
 import PoiSelectionField from "../InputFields/PoiSelectionField";
 
+const placeTypes = [];
+for (const category in types) {
+	placeTypes.push(...types[category]);
+}
+console.log(placeTypes);
+
+//  PRICE_LEVEL_FREE is not allowed in a request. It is only used to populate the response.
+const priceMap = {
+	PRICE_LEVEL_INEXPENSIVE: "Inexpensive",
+	PRICE_LEVEL_MODERATE: "Moderate",
+	PRICE_LEVEL_EXPENSIVE: "Expensive",
+	PRICE_LEVEL_VERY_EXPENSIVE: "Very Expensive",
+};
+
 export default function NearbyForm({ handlePlaceAdd }) {
 	const { selectedPlacesMap, nearbyPlacesMap, setNearbyPlacesMap } =
 		useContext(GlobalContext);
 	const { savedPlacesMap } = useContext(AppContext);
-
-	const [newNearbyPlaces, setNewNearbyPlaces] = useState({
-		location: "",
+	const initialData = {
+		locationBias: "",
+		searchBy: "type",
 		type: "",
 		keyword: "",
-		radius: 1000,
-		rankBy: "distance",
-	});
-	useEffect(() => {
-		setNewNearbyPlaces((prev) => ({
-			location: "",
-			type: "",
-			keyword: "",
-			radius: 1000,
-			rankBy: "distance",
-		}));
-	}, [selectedPlacesMap]);
+		rankPreference: "DISTANCE",
+		minRating: 0, // Values are rounded up to the nearest 0.5.
+		priceLevels: [],
+	};
+	const [newNearbyPlaces, setNewNearbyPlaces] = useState(initialData);
+
+	// useEffect(() => {
+	// 	setNewNearbyPlaces(initialData);
+	// }, [selectedPlacesMap]);
+
 	const [loading, setLoading] = useState(false);
 	const searchNearbyPlaces = async () => {
-		if (newNearbyPlaces.location === "" || newNearbyPlaces.type === "")
+		if (newNearbyPlaces.locationBias === "" || newNearbyPlaces.type === "")
 			return;
 		setLoading(true);
-		const loc = savedPlacesMap[newNearbyPlaces.location].geometry.location;
-		const lat = typeof loc.lat === "function" ? loc.lat() : loc.lat;
-		const lng = typeof loc.lng === "function" ? loc.lng() : loc.lng;
+		const location = savedPlacesMap[newNearbyPlaces.locationBias].location;
+		const lat = location.latitude;
+		const lng = location.longitude;
+
 		if (!placeTypes.includes(newNearbyPlaces.type)) {
 			newNearbyPlaces.keyword = newNearbyPlaces.type;
 			newNearbyPlaces.type = "";
+		} else {
+			newNearbyPlaces.keyword = "";
 		}
 
-		const response = await mapApi.getNearby({
-			location: newNearbyPlaces.location,
+		const response = await mapApi.getNearbyNew({
 			lat,
 			lng,
-			radius: newNearbyPlaces.radius,
+			locationBias: newNearbyPlaces.locationBias,
+			searchBy: newNearbyPlaces.searchBy,
 			type: newNearbyPlaces.type,
 			keyword: newNearbyPlaces.keyword,
-			rankBy: newNearbyPlaces.rankBy,
+			rankPreference: newNearbyPlaces.rankPreference,
+			minRating: newNearbyPlaces.minRating,
+			priceLevels: newNearbyPlaces.priceLevels,
 		});
 
 		if (response.success) {
-			const places = response.data.results;
+			const places = response.data.places;
 			console.log("Nearby Places: ", response.data);
 			const newNearbyPlacesMap = { ...nearbyPlacesMap };
-			if (newNearbyPlacesMap[newNearbyPlaces.location] === undefined) {
-				newNearbyPlacesMap[newNearbyPlaces.location] = [];
+			if (
+				newNearbyPlacesMap[newNearbyPlaces.locationBias] === undefined
+			) {
+				newNearbyPlacesMap[newNearbyPlaces.locationBias] = [];
 			}
 
+			const resPriceMap = {
+				...priceMap,
+				PRICE_LEVEL_FREE: "Free",
+				PRICE_LEVEL_UNSPECIFIED: "Unspecified",
+			};
 			const placesWithSelection = places.map((place) => ({
 				selected: true,
-				place_id: place.place_id,
-				name: place.name,
-				formatted_address: place.vicinity,
+				place_id: place.id,
+				name: place.displayName.text,
+				formatted_address: place.shortFormattedAddress,
+				rating: place.rating,
+				priceLevel: place.priceLevel
+					? resPriceMap[place.priceLevel]
+					: null,
+				userRatingCount: place.userRatingCount,
 			}));
 
-			newNearbyPlacesMap[newNearbyPlaces.location].push({
-				type: placeTypes.includes(newNearbyPlaces.type)
-					? newNearbyPlaces.type
-					: "any",
+			newNearbyPlacesMap[newNearbyPlaces.locationBias].push({
+				type:
+					newNearbyPlaces.searchBy === "type"
+						? newNearbyPlaces.type
+						: newNearbyPlaces.keyword,
+				minRating: newNearbyPlaces.minRating,
+				priceLevels: newNearbyPlaces.priceLevels,
+				rankBy: newNearbyPlaces.rankPreference,
 				places: placesWithSelection,
-				keyword: placeTypes.includes(newNearbyPlaces.type)
-					? ""
-					: newNearbyPlaces.keyword,
-				radius: newNearbyPlaces.radius,
-				rankBy: newNearbyPlaces.rankBy,
 			});
 
 			setNearbyPlacesMap(newNearbyPlacesMap);
@@ -117,167 +152,183 @@ export default function NearbyForm({ handlePlaceAdd }) {
 		setLoading(false);
 	};
 
-	const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
-	const centerRef = useRef({ lat: 0, lng: 0 });
-
-	const mapRef = useRef();
-	const onLoad = useCallback((map) => {
-		mapRef.current = map;
-	}, []);
-	// const { isLoaded } = useJsApiLoader({
-	// 	id: "google-map-script",
-	// 	googleMapsApiKey: "AIzaSyCNtIajO-Xwpocu9ARrah2khQF-tG8vWok",
-	// });
-
-	const onCenterChanged = useCallback(() => {
-		if (mapRef.current) {
-			const newCenter = mapRef.current.getCenter();
-			centerRef.current = {
-				lat: newCenter.lat(),
-				lng: newCenter.lng(),
-			};
-		}
-	}, []);
-
-	useEffect(() => {
-		const intervalId = setInterval(() => {
-			setMapCenter(centerRef.current);
-		}, 1000); // Update displayed coordinates every second
-
-		return () => clearInterval(intervalId);
-	}, []);
-
-	const [locationCoords, setLocationCoords] = useState(null);
-	useEffect(() => {
-		if (newNearbyPlaces.location === "") return;
-		const loc = savedPlacesMap[newNearbyPlaces.location].geometry.location;
-		const lat = typeof loc.lat === "function" ? loc.lat() : loc.lat;
-		const lng = typeof loc.lng === "function" ? loc.lng() : loc.lng;
-		setLocationCoords({ lat, lng });
-	}, [newNearbyPlaces.location]);
-
 	return (
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
-				<PoiSelectionField
+				<PlaceSelectionField
 					label="Location"
+					value={newNearbyPlaces.locationBias}
 					onChange={(e) =>
 						setNewNearbyPlaces((prev) => ({
 							...prev,
-							location: e.target.value,
+							locationBias: e.target.value,
 						}))
 					}
-					value={newNearbyPlaces.location}
 					handlePlaceAdd={handlePlaceAdd}
 				/>
 			</Grid>
 
-			{/* {newNearbyPlaces.location && (
-				<Grid item xs={12}>
-					<iframe
-						width="100%"
-						height="450"
-						// style="border:0"
-						style={{
-							border: 0,
-						}}
-						loading="lazy"
-						// allowfullscreen
-						referrerpolicy="no-referrer-when-downgrade"
-						src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=place_id:${newNearbyPlaces.location}`}
-					></iframe>
-				</Grid>
-			)} */}
-
-			{/* <Grid item xs={12}>
-				{true && (
-					<>
-						<Typography>Mark a location</Typography>
-						<GoogleMap
-							mapContainerStyle={{
-								width: "100%",
-								height: "400px",
-							}}
-							center={mapCenter}
-							zoom={15}
-							onLoad={onLoad}
-							onCenterChanged={onCenterChanged}
-						>
-							<Marker position={mapCenter} />
-						</GoogleMap>
-						{locationCoords && (
-							<GoogleMap
-								mapContainerStyle={{
-									width: "100%",
-									height: "400px",
-								}}
-								center={locationCoords}
-								zoom={15}
-							>
-								<Marker position={locationCoords} />
-							</GoogleMap>
-						)}
-					</>
-				)}
-			</Grid> */}
-
-			<Grid item xs={12}>
-				<TypeSelectionField
-					type={newNearbyPlaces.type}
-					setType={(newValue) =>
-						setNewNearbyPlaces((prev) => ({
-							...prev,
-							type: newValue,
-						}))
-					}
-				/>
-			</Grid>
-
-			{newNearbyPlaces.location && newNearbyPlaces.type && (
-				<Grid item xs={12}>
-					<iframe
-						width="100%"
-						height="450"
-						// style="border:0"
-						style={{
-							border: 0,
-						}}
-						loading="lazy"
-						allowfullscreen
-						referrerPolicy="no-referrer-when-downgrade"
-						src={`https://www.google.com/maps/embed/v1/search?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=${
-							newNearbyPlaces.type
-						}s near ${
-							savedPlacesMap[newNearbyPlaces.location].name
-						}`}
-					></iframe>
-				</Grid>
-			)}
-
 			<Grid item xs={12}>
 				<RadioGroup
 					row
-					value={newNearbyPlaces.rankBy}
+					value={newNearbyPlaces.searchBy}
 					onChange={(e) =>
 						setNewNearbyPlaces((prev) => ({
 							...prev,
-							rankBy: e.target.value,
+							searchBy: e.target.value,
 						}))
 					}
 				>
 					<FormControlLabel
-						value="distance"
+						value="type"
+						control={<Radio />}
+						label="Search by type"
+					/>
+					<FormControlLabel
+						value="keyword"
+						control={<Radio />}
+						label="Search by keyword"
+					/>
+				</RadioGroup>
+			</Grid>
+
+			<Grid item xs={12}>
+				{newNearbyPlaces.searchBy === "type" ? (
+					<TypeSelectionField
+						type={newNearbyPlaces.type}
+						setType={(newValue) => {
+							console.log("New Value: ", newValue);
+							setNewNearbyPlaces((prev) => ({
+								...prev,
+								type: newValue,
+							}));
+						}}
+					/>
+				) : (
+					<TextField
+						fullWidth
+						size="small"
+						label="Keyword"
+						value={newNearbyPlaces.keyword}
+						onChange={(e) =>
+							setNewNearbyPlaces((prev) => ({
+								...prev,
+								keyword: e.target.value,
+							}))
+						}
+					/>
+				)}
+			</Grid>
+
+			{newNearbyPlaces.locationBias &&
+				((newNearbyPlaces.searchBy === "type" &&
+					newNearbyPlaces.type) ||
+					(newNearbyPlaces.searchBy === "keyword" &&
+						newNearbyPlaces.keyword)) && (
+					<Grid item xs={12}>
+						<iframe
+							width="100%"
+							height="450"
+							// style="border:0"
+							style={{
+								border: 0,
+							}}
+							loading="lazy"
+							allowfullscreen
+							referrerPolicy="no-referrer-when-downgrade"
+							src={`https://www.google.com/maps/embed/v1/search?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=${
+								newNearbyPlaces.searchBy === "type"
+									? newNearbyPlaces.type
+									: newNearbyPlaces.keyword
+							}s near ${
+								savedPlacesMap[newNearbyPlaces.locationBias]
+									.displayName.text
+							}`}
+						></iframe>
+					</Grid>
+				)}
+
+			<Grid item xs={12}>
+				<TextField
+					type="number"
+					value={newNearbyPlaces.minRating}
+					label="Min Rating"
+					onChange={(e) =>
+						setNewNearbyPlaces((prev) => ({
+							...prev,
+							minRating: e.target.value,
+						}))
+					}
+					inputProps={{ step: 0.5, min: 0, max: 5 }}
+					size="small"
+					fullWidth
+				/>
+			</Grid>
+			<Grid item xs={12}>
+				<FormControl fullWidth size="small">
+					<InputLabel>Price</InputLabel>
+					<Select
+						// input={<OutlinedInput label="Tag" />}
+						value={newNearbyPlaces.priceLevels}
+						onChange={(e) =>
+							setNewNearbyPlaces((prev) => ({
+								...prev,
+								priceLevels: e.target.value,
+							}))
+						}
+						label={"Price"}
+						multiple
+						renderValue={(selected) => {
+							if (selected.length === 0) {
+								return <em>Any</em>; // Custom label for empty array
+							}
+							return selected
+								.map((value) => priceMap[value] || value)
+								.join(", ");
+						}}
+					>
+						{Object.keys(priceMap).map((key) => (
+							<MenuItem key={key} value={key}>
+								<Checkbox
+									checked={
+										newNearbyPlaces.priceLevels.indexOf(
+											key
+										) > -1
+									}
+								/>
+								<ListItemText primary={priceMap[key]} />
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+				<Typography variant="caption">
+					The default is to select all price levels.
+				</Typography>
+			</Grid>
+			<Grid item xs={12}>
+				<RadioGroup
+					row
+					value={newNearbyPlaces.rankPreference}
+					onChange={(e) =>
+						setNewNearbyPlaces((prev) => ({
+							...prev,
+							rankPreference: e.target.value,
+						}))
+					}
+				>
+					<FormControlLabel
+						value="DISTANCE"
 						control={<Radio />}
 						label="Rank by Distance"
 					/>
 					<FormControlLabel
-						value="prominence"
+						value="RELEVANCE"
 						control={<Radio />}
-						label="Rank by Prominence"
+						label="Rank by Relevance"
 					/>
 				</RadioGroup>
 			</Grid>
-			{newNearbyPlaces.rankBy === "prominence" && (
+			{/* {newNearbyPlaces.rankPreference === "prominence" && (
 				<Grid item xs={12}>
 					<TextField
 						fullWidth
@@ -293,7 +344,7 @@ export default function NearbyForm({ handlePlaceAdd }) {
 						}
 					/>
 				</Grid>
-			)}
+			)} */}
 			<Grid item xs={12}>
 				<LoadingButton
 					variant="contained"

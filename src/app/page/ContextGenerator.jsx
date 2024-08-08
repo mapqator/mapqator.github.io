@@ -4,7 +4,7 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 import ContextGeneratorService from "@/services/contextGeneratorService";
 import ContextStepper from "@/components/Steppers/ContextStepper";
 import { AppContext } from "@/contexts/AppContext";
-import example from "./example.json";
+import example from "./newexample.json";
 import mapApi from "@/api/mapApi";
 import dayjs from "dayjs";
 import KeyStoreButton from "@/components/Buttons/KeyStoreButton";

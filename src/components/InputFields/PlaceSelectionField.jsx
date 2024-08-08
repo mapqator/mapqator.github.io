@@ -17,7 +17,7 @@ export default function PlaceSelectionField({
 
 	return (
 		<>
-			<FormControl fullWidth size="small">
+			<FormControl fullWidth size="small" required>
 				<InputLabel>{label}</InputLabel>
 				<Select
 					value={value}
@@ -38,7 +38,8 @@ export default function PlaceSelectionField({
 											<Chip
 												key={value}
 												label={
-													savedPlacesMap[value].name
+													savedPlacesMap[value]
+														.displayName.text
 												}
 												size="small"
 											/>
@@ -50,7 +51,7 @@ export default function PlaceSelectionField({
 				>
 					{Object.keys(selectedPlacesMap).map((place_id) => (
 						<MenuItem key={place_id} value={place_id}>
-							{savedPlacesMap[place_id].name}
+							{savedPlacesMap[place_id].displayName.text}
 						</MenuItem>
 					))}
 				</Select>

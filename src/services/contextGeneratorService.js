@@ -7,48 +7,37 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 	let attributes = selectedPlacesMap[place_id].selectedAttributes;
 	let text = "";
 
-	if (
-		attributes.includes("formatted_address") ||
-		(attributes.includes("geometry") && place.geometry?.location)
-	) {
-		const lat =
-			typeof place.geometry?.location.lat === "function"
-				? place.geometry?.location.lat()
-				: place.geometry?.location.lat;
-		const lng =
-			typeof place.geometry?.location.lng === "function"
-				? place.geometry?.location.lng()
-				: place.geometry?.location.lng;
-		text += `- Location: ${
-			attributes.includes("formatted_address")
-				? place.formatted_address
+	if (attributes.includes("formatted_address")) {
+		text += `- Location: ${place.shortFormattedAddress}${
+			attributes.includes("location")
+				? " (" +
+				  place.location.latitude +
+				  ", " +
+				  place.location.longitude +
+				  ")"
 				: ""
-		}${
-			attributes.includes("geometry") ? " (" + lat + ", " + lng + ")" : ""
 		}.\n`;
 	}
-	if (attributes.includes("opening_hours")) {
-		text += `- Opening hours: ${place.opening_hours.weekday_text.join(
+	if (attributes.includes("regularOpeningHours")) {
+		text += `- Opening hours: ${place.regularOpeningHours.weekdayDescriptions.join(
 			", "
 		)}.\n`;
 	}
 	if (attributes.includes("rating")) {
 		text += `- Rating: ${place.rating}. ${
 			place.user_ratings_total
-				? "(Total " + place.user_ratings_total + " ratings)"
+				? "(Total " + place.userRatingCount + " ratings)"
 				: ""
 		}\n`;
 	}
 
-	if (attributes.includes("price_level")) {
+	if (attributes.includes("priceLevel")) {
 		// - 0 Free
 		// - 1 Inexpensive
 		// - 2 Moderate
 		// - 3 Expensive
 		// - 4 Very Expensive
 		// Convert price level from number to string
-
-		let priceLevel = "";
 		const priceMap = [
 			"Free",
 			"Inexpensive",
@@ -56,45 +45,38 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 			"Expensive",
 			"Very Expensive",
 		];
-
-		text += `- Price Level: ${priceMap[place.price_level]}.\n`;
+		text += `- place.priceLevel.\n`;
 	}
-
 	if (attributes.includes("delivery")) {
 		text += place.delivery
 			? "- Delivery Available.\n"
 			: "- Delivery Not Available.\n";
 	}
-
-	if (attributes.includes("dine_in")) {
-		text += place.dine_in
+	if (attributes.includes("dineIn")) {
+		text += place.dineIn
 			? "- Dine In Available.\n"
 			: "- Dine In Not Available.\n";
 	}
-
 	if (attributes.includes("takeaway")) {
 		text += place.takeaway
 			? "- Takeaway Available.\n"
 			: "- Takeaway Not Available.\n";
 	}
-
 	if (attributes.includes("reservable")) {
 		text += place.reservable ? "- Reservable.\n" : "- Not Reservable.\n";
 	}
-
-	if (attributes.includes("wheelchair_accessible_entrance")) {
-		text += place.wheelchair_accessible_entrance
+	if (attributes.includes("accessibilityOptions")) {
+		text += place.accessibilityOptions.wheelchairAccessibleEntrance
 			? "- Wheelchair Accessible Entrance.\n"
 			: "- Not Wheelchair Accessible Entrance.\n";
 	}
-
 	if (attributes.includes("reviews")) {
 		text += `- Reviews: \n${place.reviews
 			.map((review, index) => {
 				// console.log(review.text);
-				return `   ${index + 1}. ${review.author_name} (Rating: ${
-					review.rating
-				}): ${review.text}\n`;
+				return `   ${index + 1}. ${
+					review.authorAttribution.displayName
+				} (Rating: ${review.rating}): ${review.text.text}\n`;
 			})
 			.join("")} `; // Use .join('') to concatenate without commas
 	}
@@ -115,8 +97,9 @@ const ContextGeneratorService = {
 					newContext += "\n";
 				}
 				newContext +=
-					`Information of <b>${savedPlacesMap[place_id]?.name}</b>:\n` +
-					text;
+					`Information of <b>${savedPlacesMap[place_id]?.displayName.text}</b>:\n` +
+					text +
+					"\n";
 			}
 		}
 		return newContext;
@@ -173,21 +156,17 @@ const ContextGeneratorService = {
 					newContext += "\n";
 				}
 				newContext += `Nearby ${Pluralize(
-					e.type === "any" ? e.keyword : convertFromSnake(e.type)
+					convertFromSnake(e.type)
 				)} of ${
 					// selectedPlacesMap[place_id].alias ||
-					savedPlacesMap[place_id]?.name
-				} are (${
-					e.rankBy === "distance"
-						? "sorted by distance in ascending order"
-						: "in " + e.radius + " m radius"
-				}):\n`;
+					savedPlacesMap[place_id]?.displayName.text
+				} are (${"sorted by " + e.rankBy + " in ascending order"}):\n`;
 				let counter = 1;
 				e.places.forEach((near_place) => {
 					if (near_place.selected) {
 						newContext += `${counter}. <b>${
-							savedPlacesMap[near_place.place_id]?.name ||
-							near_place.name
+							savedPlacesMap[near_place.place_id]?.displayName
+								.text || near_place.name
 						}</b> (${
 							near_place.formatted_address ||
 							savedPlacesMap[near_place.place_id]?.vicinity
@@ -208,18 +187,18 @@ const ContextGeneratorService = {
 				}
 				newContext += `Travel time from <b>${
 					// selectedPlacesMap[from_id].alias ||
-					savedPlacesMap[from_id]?.name
+					savedPlacesMap[from_id]?.displayName.text
 				}</b> to <b>${
 					// selectedPlacesMap[to_id].alias ||
-					savedPlacesMap[to_id]?.name
+					savedPlacesMap[to_id]?.displayName.text
 				}</b> is:\n`;
 				Object.keys(distanceMatrix[from_id][to_id]).forEach((mode) => {
 					newContext += `- ${
 						mode.toLowerCase() === "transit"
 							? "By public transport"
-							: mode.toLowerCase() === "walking"
+							: mode.toLowerCase() === "walk"
 							? "On foot"
-							: mode.toLowerCase() === "driving"
+							: mode.toLowerCase() === "drive"
 							? "By car"
 							: "By cycle"
 					}: ${distanceMatrix[from_id][to_id][mode].duration} (${
@@ -232,6 +211,44 @@ const ContextGeneratorService = {
 	},
 	getDirectionContext: (directionInformation, savedPlacesMap) => {
 		let newContext = "";
+
+		directionInformation.forEach((direction) => {
+			if (newContext.length > 0) {
+				newContext += "\n";
+			}
+			newContext += `There are ${
+				direction.routes.length
+			} routes from <b>${
+				savedPlacesMap[direction.origin]?.displayName.text
+			}</b> to <b>${
+				savedPlacesMap[direction.destination]?.displayName.text
+			}</b> by ${
+				direction.travelMode.toLowerCase() === "transit"
+					? "public transport"
+					: direction.travelMode.toLowerCase() === "walking" ||
+					  direction.travelMode.toLowerCase() === "walk"
+					? "foot"
+					: direction.travelMode.toLowerCase() === "driving" ||
+					  direction.travelMode.toLowerCase() === "drive"
+					? "car"
+					: "cycle"
+			}. They are:\n`;
+
+			direction.routes.forEach((route, index) => {
+				newContext += `${index + 1}. Via ${route.label} | ${
+					route.duration
+				} | ${route.distance}\n`;
+				if (direction.showSteps) {
+					route.legs.forEach((leg) =>
+						leg.steps.map((step) => {
+							newContext += ` - ${step}\n`;
+						})
+					);
+				}
+			});
+		});
+		return newContext;
+
 		Object.keys(directionInformation).forEach((from_id) => {
 			Object.keys(directionInformation[from_id]).forEach((to_id) => {
 				Object.keys(directionInformation[from_id][to_id]).forEach(

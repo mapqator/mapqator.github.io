@@ -4,6 +4,9 @@ class MapApi extends Api {
 	getDetails = async (place_id) => {
 		return await this.get("/map/details/" + place_id);
 	};
+	getDetailsNew = async (place_id) => {
+		return await this.get("/map/details/new/" + place_id);
+	};
 	getNearby = async (params) => {
 		return await this.get(
 			"/map/nearby?lat=" +
@@ -21,6 +24,9 @@ class MapApi extends Api {
 				params.location
 		);
 	};
+	getNearbyNew = async (params) => {
+		return await this.post("/map/nearby/new", params);
+	};
 	getInside = async (params) => {
 		if (params.type === "") return;
 		return await this.get(
@@ -34,6 +40,9 @@ class MapApi extends Api {
 	search = async (query) => {
 		return await this.get("/map/search?query=" + query);
 	};
+	searchNew = async (query) => {
+		return await this.post("/map/search/new", { query });
+	};
 	getDistance = async (origin, destination, mode) => {
 		return await this.get(
 			"/map/distance?origin=" +
@@ -44,6 +53,10 @@ class MapApi extends Api {
 				mode
 		);
 	};
+	getDistanceNew = async (params) => {
+		console.log(params);
+		return await this.post("/map/distance/new", params);
+	};
 	getDirections = async (origin, destination, mode) => {
 		return await this.get(
 			"/map/directions?origin=" +
@@ -53,6 +66,12 @@ class MapApi extends Api {
 				"&mode=" +
 				mode
 		);
+	};
+	getDirectionsNew = async (params) => {
+		console.log(">", params);
+		const response = await this.post("/map/directions/new", params);
+		console.log("<", response);
+		return response;
 	};
 }
 const mapApi = new MapApi();

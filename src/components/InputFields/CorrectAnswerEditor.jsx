@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 
-export default function CorrectAnswerEditor() {
+export default function CorrectAnswerEditor({ index }) {
 	const { query, setQuery } = useContext(GlobalContext);
 	return (
 		<FormControl component="fieldset" sx={{ display: "block", mb: 2 }}>
@@ -16,16 +16,25 @@ export default function CorrectAnswerEditor() {
 				Correct Answer:
 			</Typography>
 			<RadioGroup
-				value={query.answer.correct}
+				value={query.questions[index].answer.correct}
 				onChange={(e) => {
-					console.log(e.target.value, typeof e.target.value);
-					setQuery((prev) => ({
-						...prev,
-						answer: {
-							...prev.answer,
-							correct: parseInt(e.target.value),
-						},
-					}));
+					// console.log(e.target.value, typeof e.target.value);
+
+					setQuery((prev) => {
+						const newQuery = { ...prev };
+						newQuery.questions[index].answer.correct = parseInt(
+							e.target.value
+						);
+						return newQuery;
+					});
+					
+					// setQuery((prev) => ({
+					// 	...prev,
+					// 	answer: {
+					// 		...prev.answer,
+					// 		correct: parseInt(e.target.value),
+					// 	},
+					// }));
 				}}
 			>
 				<FormControlLabel
@@ -34,7 +43,7 @@ export default function CorrectAnswerEditor() {
 					control={<Radio />}
 					label={`None`}
 				/>
-				{query.answer.options.map((option, index) => (
+				{query.questions[index].answer.options.map((option, index) => (
 					<FormControlLabel
 						key={index}
 						value={index}

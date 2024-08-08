@@ -13,7 +13,7 @@ const SaveQuery = ({ onSave, onDiscard }) => {
 	};
 
 	return (
-		<Box className="mt-4 p-4 bg-blue-50 rounded-lg">
+		<Box className="mt-4 p-4 bg-blue-50 rounded-lg w-full">
 			<Typography variant="h6" gutterBottom>
 				Save this evaluation?
 			</Typography>

@@ -6,7 +6,7 @@ import { Add } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Button } from "@mui/material";
 import { useContext, useState } from "react";
-
+import textualFields from "@/database/textualFields.json";
 export default function PlaceAddButton({ place_id }) {
 	const { selectedPlacesMap, setSelectedPlacesMap } =
 		useContext(GlobalContext);
@@ -17,10 +17,10 @@ export default function PlaceAddButton({ place_id }) {
 		setLoading(true);
 		let details = savedPlacesMap[place_id];
 		if (details === undefined) {
-			const res = await mapApi.getDetails(place_id);
+			const res = await mapApi.getDetailsNew(place_id);
 			if (res.success) {
-				details = res.data.result;
-				console.log(res.data.result);
+				details = res.data;
+				console.log(details);
 				setSavedPlacesMap((prev) => ({
 					...prev,
 					[place_id]: details,
@@ -37,32 +37,18 @@ export default function PlaceAddButton({ place_id }) {
 	};
 
 	const handleAdd = (details) => {
-		const place_id = details["place_id"];
+		const place_id = details["id"];
 		if (place_id === "" || selectedPlacesMap[place_id]) return;
 		setSelectedPlacesMap((prev) => ({
 			...prev,
 			[place_id]: {
 				selectedAttributes: Object.keys(details).filter(
 					(key) =>
-						details[key] !== null &&
-						key !== "place_id" &&
-						key !== "name" &&
-						key !== "last_updated" &&
-						key !== "user_ratings_total" &&
-						key !== "types" &&
-						key !== "search_vector" &&
-						key !== "vicinity"
+						details[key] !== null && textualFields.includes(key)
 				),
 				attributes: Object.keys(details).filter(
 					(key) =>
-						details[key] !== null &&
-						key !== "place_id" &&
-						key !== "name" &&
-						key !== "last_updated" &&
-						key !== "user_ratings_total" &&
-						key !== "types" &&
-						key !== "search_vector" &&
-						key !== "vicinity"
+						details[key] !== null && textualFields.includes(key)
 				),
 			},
 		}));

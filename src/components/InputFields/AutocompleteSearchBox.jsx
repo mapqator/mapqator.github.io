@@ -26,11 +26,11 @@ function SearchPlaceCard({ place, index, length }) {
 		<React.Fragment key={index}>
 			<Box className="flex gap-1 justify-between w-full items-center px-2">
 				<ListItemText
-					primary={place.name}
-					secondary={place.formatted_address}
+					primary={place.displayName.text}
+					secondary={place.shortFormattedAddress}
 				/>
 				<Box className="ml-auto">
-					<PlaceAddButton place_id={place.place_id} />
+					<PlaceAddButton place_id={place.id} />
 				</Box>
 			</Box>
 			<Divider component="li" />
@@ -64,14 +64,11 @@ export default function AutocompleteSearchBox() {
 
 	const searchMap = async (query) => {
 		setLoading(true);
-		const response = await mapApi.search(query);
+		const response = await mapApi.searchNew(query);
 		if (response.success) {
-			setMapResults([...response.data.results]);
-			// setCache((prev) => ({
-			// 	...prev,
-			// 	[query]: response.data.results,
-			// }));
-			if (response.data.results.length === 0) {
+			setMapResults([...response.data.places]);
+			console.log("Map Results: ", response.data);
+			if (response.data.places.length === 0) {
 				setNotFound(true);
 			}
 		} else {

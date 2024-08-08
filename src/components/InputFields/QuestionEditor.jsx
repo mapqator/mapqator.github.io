@@ -12,7 +12,7 @@ import ContextGeneratorService from "@/services/contextGeneratorService";
 import { showError } from "@/contexts/ToastProvider";
 import gptApi from "@/api/gptApi";
 
-export default function QuestionEditor() {
+export default function QuestionEditor({ index }) {
 	const { query, setQuery } = useContext(GlobalContext);
 	const [isGenerating, setIsGenerating] = useState(false);
 	const { context } = useContext(GlobalContext);
@@ -24,10 +24,11 @@ export default function QuestionEditor() {
 		} else {
 			const res = await gptApi.generateQuestion(text);
 			if (res.success) {
-				setQuery((prev) => ({
-					...prev,
-					question: res.data,
-				}));
+				setQuery((prev) => {
+					const newQuery = { ...prev };
+					newQuery.questions[index].title = res.data;
+					return newQuery;
+				});
 			} else {
 				showError(res.message);
 			}
@@ -44,12 +45,13 @@ export default function QuestionEditor() {
 				<TextField
 					fullWidth
 					placeholder="Write a question based on context..."
-					value={query.question}
+					value={query.questions[index].title}
 					onChange={(e) =>
-						setQuery((prev) => ({
-							...prev,
-							question: e.target.value,
-						}))
+						setQuery((prev) => {
+							const newQuery = { ...prev };
+							newQuery.questions[index].title = e.target.value;
+							return newQuery;
+						})
 					}
 					multiline
 					required

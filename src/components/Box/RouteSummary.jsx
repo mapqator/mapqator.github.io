@@ -4,19 +4,62 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box } from "@mui/material";
 import { useContext } from "react";
 
-export default function RouteSummary({ from_id, to_id }) {
+export default function RouteSummary({
+	from_id,
+	to_id,
+	intermediates,
+	optimized,
+}) {
 	const { savedPlacesMap } = useContext(AppContext);
 	return (
-		<Box className="flex flex-col w-full">
-			<h6 className="text-base md:text-xl text-center md:font-semibold">
-				{savedPlacesMap[from_id].name}
-			</h6>
+		<Box className="flex flex-row w-full gap-8 justify-center">
+			<Box className="flex flex-col">
+				<h6 className="text-base md:text-xl text-center md:font-semibold">
+					{savedPlacesMap[from_id].displayName.text}
+				</h6>
+				<FontAwesomeIcon icon={faArrowDown} />
+				{intermediates?.length > 0 &&
+					intermediates.map((intermediate, index) => (
+						<>
+							<h6 className="text-base md:text-xl text-center md:font-semibold">
+								{savedPlacesMap[intermediate].displayName.text}
+							</h6>
+							<FontAwesomeIcon icon={faArrowDown} />
+						</>
+					))}
+				<h6 className="text-base md:text-xl text-center md:font-semibold">
+					{savedPlacesMap[to_id].displayName.text}
+				</h6>
+			</Box>
 
-			<FontAwesomeIcon icon={faArrowDown} />
-
-			<h6 className="text-base md:text-xl text-center md:font-semibold">
-				{savedPlacesMap[to_id].name}
-			</h6>
+			{optimized && (
+				<Box
+					className="flex flex-col"
+					sx={{
+						color: "primary.main",
+					}}
+				>
+					<h6 className="text-base md:text-xl text-center md:font-semibold">
+						{savedPlacesMap[from_id].displayName.text}
+					</h6>
+					<FontAwesomeIcon icon={faArrowDown} />
+					{optimized?.length > 0 &&
+						optimized.map((intermediate, index) => (
+							<>
+								<h6 className="text-base md:text-xl text-center md:font-semibold">
+									{
+										savedPlacesMap[intermediate].displayName
+											.text
+									}
+								</h6>
+								<FontAwesomeIcon icon={faArrowDown} />
+							</>
+						))}
+					<h6 className="text-base md:text-xl text-center md:font-semibold">
+						{savedPlacesMap[to_id].displayName.text}
+					</h6>
+				</Box>
+			)}
 		</Box>
 	);
 }
