@@ -1,8 +1,12 @@
 import Api from "./base";
 
 class QueryApi extends Api {
-	getQueries = async (query) => {
-		return await this.get("/queries", query);
+	getQueries = async () => {
+		return await this.get("/queries");
+	};
+	getNewQueries = async () => {
+		console.log("getNewQueries");
+		return await this.get("/queries/new");
 	};
 	getQuery = async (id) => {
 		return await this.get(`/queries/${id}`);

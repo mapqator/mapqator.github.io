@@ -516,7 +516,7 @@ export default function AppContextProvider({ children }) {
 	const fetchQueries = async () => {
 		// setLoading(true);
 		try {
-			const res = await queryApi.getQueries();
+			const res = await queryApi.getNewQueries();
 			if (res.success) {
 				console.log("Data: ", res.data);
 				setQueries(res.data);
@@ -548,7 +548,8 @@ export default function AppContextProvider({ children }) {
 	};
 
 	useEffect(() => {
-		if (process.env.NODE_ENV === "production") {
+		// if (process.env.NODE_ENV === "production")
+		{
 			fetchQueries();
 			// fetchPlaces();
 		}

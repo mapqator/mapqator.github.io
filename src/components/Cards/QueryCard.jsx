@@ -39,7 +39,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 	const { setQueries } = useContext(AppContext);
 	const { isAuthenticated } = useAuth();
 	const [expanded, setExpanded] = useState(index === 0);
-	const [category, setCategory] = useState(entry.classification);
+	// const [category, setCategory] = useState(entry.classification);
 
 	const handleDelete = async () => {
 		if (isAuthenticated) {
@@ -56,18 +56,18 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 		}
 	};
 
-	useEffect(() => {
-		const invalid = entry.evaluation?.find(
-			(e) =>
-				e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
-				e.verdict === "invalid"
-		);
-		if (invalid) {
-			setFlag(true);
-		} else {
-			setFlag(entry.human.answer === 0);
-		}
-	}, [entry]);
+	// useEffect(() => {
+	// 	const invalid = entry.evaluation?.find(
+	// 		(e) =>
+	// 			e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
+	// 			e.verdict === "invalid"
+	// 	);
+	// 	if (invalid) {
+	// 		setFlag(true);
+	// 	} else {
+	// 		setFlag(entry.human.answer === 0);
+	// 	}
+	// }, [entry]);
 
 	const toggleAccordion = () => setExpanded(!expanded);
 
@@ -117,7 +117,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 								#{entry.id}
 							</Typography>
 
-							<Box className="flex gap-2">
+							{/* <Box className="flex gap-2">
 								{entry.classification
 									.split(",")
 									.map((label, index) => (
@@ -127,7 +127,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 											color="primary"
 										/>
 									))}
-							</Box>
+							</Box> */}
 						</Box>
 
 						{/* <h2 className="text-base font-semibold px-1 flex flex-row gap-1 items-center">
@@ -144,7 +144,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 										: "truncate"
 								}`}
 							>
-								{entry.question}
+								{entry.name}
 							</h6>
 						</div>
 						{flag && (
@@ -182,11 +182,34 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 							<CollapsedContext context={entry.context} />
 						</Paper>
 					</Box>
-					<OptionsPreview answer={entry.answer} />
-					<LLMAnswers evaluation={entry.evaluation} />
-					{!isPersonal && mode !== "explore" && (
+					<div className="flex flex-col gap-4">
+						{entry.questions.map((question, index) => (
+							<div key={index}>
+								<Typography variant="h6" gutterBottom>
+									Question {index + 1}:
+								</Typography>
+								<Paper
+									elevation={1}
+									sx={{ p: 2, bgcolor: "grey.100" }}
+								>
+									<Box sx={{ mb: 2 }}>
+										<h6
+											className={`${"whitespace-pre-line"}`}
+										>
+											{question.title}
+										</h6>
+									</Box>
+									<OptionsPreview answer={question.answer} />
+								</Paper>
+							</div>
+						))}
+					</div>
+
+					{/* <OptionsPreview answer={entry.answer} /> */}
+					{/* <LLMAnswers evaluation={entry.evaluation} /> */}
+					{/* {!isPersonal && mode !== "explore" && (
 						<Annotation query={entry} />
-					)}
+					)} */}
 
 					{/* Only creator can edit his question */}
 					{(entry.username === getUserName() ||
@@ -194,7 +217,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 						<div className="w-full flex flex-row justify-end gap-2 mt-2">
 							{getUserName() === "admin" && (
 								<div className="flex flex-row gap-2 mr-auto">
-									<FormControl
+									{/* <FormControl
 										variant="outlined"
 										className="w-[20rem]"
 										size="small"
@@ -221,7 +244,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 												</MenuItem>
 											))}
 										</Select>
-									</FormControl>
+									</FormControl> */}
 									<Button
 										variant="contained"
 										color="primary"

@@ -42,9 +42,10 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 	const [loading, setLoading] = useState(false);
 	const { isAuthenticated } = useAuth();
 
-	const handleSave = async () => {
+	const handleSave = async (queryName) => {
 		const newQuery = {
 			...query,
+			name: queryName,
 			context: ContextGeneratorService.convertContextToText(context),
 			context_json: {
 				saved_places: savedPlacesMap,
@@ -62,11 +63,12 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 			if (res.success) {
 				// update the queries
 				showSuccess("Query saved successfully");
+				console.log(res.data);
 				const newQueries = [...queries];
 				newQueries.unshift(res.data[0]);
 				setQueries(newQueries);
 				handleDiscard();
-				// router.push("/home/my-dataset");
+				router.push("/home/my-dataset");
 			} else {
 				showError("Can't save this query");
 				// window.scrollTo(0, 0);
@@ -80,7 +82,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 				// update the queries
 				showSuccess("Query edited successfully");
 				handleDiscard();
-				// router.push("/home/my-dataset");
+				router.push("/home/my-dataset");
 			} else {
 				showError("Can't update this query");
 				// window.scrollTo(0, 0);
