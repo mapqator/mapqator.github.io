@@ -212,12 +212,14 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 					)} */}
 
 					{/* Only creator can edit his question */}
-					{(entry.username === getUserName() ||
-						getUserName() === "admin") && (
-						<div className="w-full flex flex-row justify-end gap-2 mt-2">
-							{getUserName() === "admin" && (
-								<div className="flex flex-row gap-2 mr-auto">
-									{/* <FormControl
+				</div>
+			)}
+			{(entry.username === getUserName() ||
+				getUserName() === "admin") && (
+				<div className="w-full flex flex-row justify-end gap-2 p-2">
+					{getUserName() === "admin" && (
+						<div className="flex flex-row gap-2 mr-auto">
+							{/* <FormControl
 										variant="outlined"
 										className="w-[20rem]"
 										size="small"
@@ -245,71 +247,63 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 											))}
 										</Select>
 									</FormControl> */}
-									<Button
-										variant="contained"
-										color="primary"
-										size="small"
-										onClick={async () => {
-											const result =
-												await queryApi.updateCategory(
-													entry.id,
-													category
-												);
-											if (result.success) {
-												setQueries((prev) =>
-													prev.map((q) =>
-														q.id === entry.id
-															? {
-																	...entry,
-																	classification:
-																		category,
-															  }
-															: q
-													)
-												);
-												showSuccess(
-													"Category updated successfully"
-												);
-											}
-										}}
-										startIcon={<Save />}
-									>
-										Save
-									</Button>
-								</div>
-							)}
-
-							{mode === "explore" ? (
-								<>
-									<QueryEditButton
-										{...{ onEdit }}
-										query={entry}
-									/>
-								</>
-							) : (
-								<>
-									<Button
-										color="primary"
-										startIcon={<GetApp />}
-										onClick={handleDownloadQuery}
-									>
-										Download Query
-									</Button>
-									<Button
-										// variant="contained"
-										color="error"
-										startIcon={<Delete />}
-										onClick={() => handleDelete()}
-									>
-										Delete
-									</Button>
-									<QueryEditButton
-										{...{ onEdit }}
-										query={entry}
-									/>
-								</>
-							)}
+							<Button
+								variant="contained"
+								color="primary"
+								size="small"
+								onClick={async () => {
+									const result =
+										await queryApi.updateCategory(
+											entry.id,
+											category
+										);
+									if (result.success) {
+										setQueries((prev) =>
+											prev.map((q) =>
+												q.id === entry.id
+													? {
+															...entry,
+															classification:
+																category,
+													  }
+													: q
+											)
+										);
+										showSuccess(
+											"Category updated successfully"
+										);
+									}
+								}}
+								startIcon={<Save />}
+							>
+								Save
+							</Button>
 						</div>
+					)}
+
+					{mode === "explore" ? (
+						<>
+							<QueryEditButton {...{ onEdit }} query={entry} />
+						</>
+					) : (
+						<>
+							<Button
+								color="primary"
+								startIcon={<GetApp />}
+								onClick={handleDownloadQuery}
+							>
+								Download Query
+							</Button>
+							<Button
+								// variant="contained"
+								color="error"
+								startIcon={<Delete />}
+								onClick={() => handleDelete()}
+							>
+								Delete
+							</Button>
+							<QueryEditButton {...{ onEdit }} query={entry} />
+						</>
 					)}
 				</div>
 			)}

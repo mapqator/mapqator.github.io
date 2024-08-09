@@ -59,15 +59,38 @@ export default function OptionsEditor({ index }) {
 	const removeOption = (i) => {
 		if (query.questions[index].answer.correct === i) {
 			setQuery((prev) => {
-				const answer = [...prev.questions[index].answer];
-				answer.correct = -1;
+				const options = [...prev.questions[index].answer.options];
+				options.splice(i, 1);
 				return {
 					...prev,
 					questions: [
 						...prev.questions.slice(0, index),
 						{
 							...prev.questions[index],
-							answer,
+							answer: {
+								...prev.questions[index].answer,
+								options,
+								correct: -1,
+							},
+						},
+						...prev.questions.slice(index + 1),
+					],
+				};
+			});
+		} else {
+			setQuery((prev) => {
+				const options = [...prev.questions[index].answer.options];
+				options.splice(i, 1);
+				return {
+					...prev,
+					questions: [
+						...prev.questions.slice(0, index),
+						{
+							...prev.questions[index],
+							answer: {
+								...prev.questions[index].answer,
+								options,
+							},
 						},
 						...prev.questions.slice(index + 1),
 					],
@@ -75,24 +98,6 @@ export default function OptionsEditor({ index }) {
 			});
 		}
 
-		setQuery((prev) => {
-			const options = [...prev.questions[index].answer.options];
-			options.splice(i, 1);
-			return {
-				...prev,
-				questions: [
-					...prev.questions.slice(0, index),
-					{
-						...prev.questions[index],
-						answer: {
-							...prev.questions[index].answer,
-							options,
-						},
-					},
-					...prev.questions.slice(index + 1),
-				],
-			};
-		});
 		// setQuery((prev) => {
 		// 	const options = [...prev.answer.options];
 		// 	options.splice(i, 1);

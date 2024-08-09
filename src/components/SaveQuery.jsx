@@ -13,11 +13,15 @@ const SaveQuery = ({ onSave, onDiscard }) => {
 	};
 
 	return (
-		<Box className="mt-4 p-4 bg-blue-50 rounded-lg w-full">
+		<form
+			className="mt-4 p-4 bg-blue-50 rounded-lg w-full"
+			onSubmit={handleSave}
+		>
 			<Typography variant="h6" gutterBottom>
 				Save this to dataset?
 			</Typography>
 			<TextField
+				required
 				fullWidth
 				label="Query Name"
 				variant="outlined"
@@ -27,9 +31,9 @@ const SaveQuery = ({ onSave, onDiscard }) => {
 			/>
 			<Box display="flex" className="gap-2" mt={2}>
 				<Button
+					type="submit"
 					variant="contained"
 					color="primary"
-					onClick={handleSave}
 					startIcon={<SaveIcon />}
 				>
 					Save
@@ -50,7 +54,7 @@ const SaveQuery = ({ onSave, onDiscard }) => {
 				onClose={() => setShowSnackbar(false)}
 				message="Query saved successfully!"
 			/> */}
-		</Box>
+		</form>
 	);
 };
 
