@@ -33,17 +33,19 @@ import { FormControl, Select, MenuItem, InputLabel } from "@mui/material";
 import categories from "@/database/categories.json";
 import { convertFromSnake } from "@/services/utils";
 import { AppContext } from "@/contexts/AppContext";
+import ContextGeneratorService from "@/services/contextGeneratorService";
 
 export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 	const [flag, setFlag] = useState(false);
 	const { setQueries } = useContext(AppContext);
 	const { isAuthenticated } = useAuth();
 	const [expanded, setExpanded] = useState(index === 0);
+	const [context, setContext] = useState();
 	// const [category, setCategory] = useState(entry.classification);
 
 	const handleDelete = async () => {
 		if (isAuthenticated) {
-			const res = await queryApi.deleteQuery(entry.id);
+			const res = await queryApi.deleteNewQuery(entry.id);
 			if (res.success) {
 				setQueries((prev) => prev.filter((q) => q.id !== entry.id));
 				showSuccess("Query deleted successfully");
@@ -84,6 +86,27 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 		URL.revokeObjectURL(href);
 	};
 
+	useEffect(() => {
+		const raw = {
+			places: ContextGeneratorService.getPlacesContext(
+				entry.context_json.places,
+				entry.context_json.saved_places
+			),
+			nearby: ContextGeneratorService.getNearbyContext(
+				entry.context_json.nearby_places,
+				entry.context_json.saved_places
+			),
+			distance: ContextGeneratorService.getDistanceContext(
+				entry.context_json.distance_matrix,
+				entry.context_json.saved_places
+			),
+			direction: ContextGeneratorService.getDirectionContext(
+				entry.context_json.directions,
+				entry.context_json.saved_places
+			),
+		};
+		setContext(ContextGeneratorService.convertContextToText(raw));
+	}, []);
 	return (
 		<Card elevation={2}>
 			<div
@@ -174,14 +197,20 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 			</div>
 			{expanded && (
 				<div className="p-4 bg-white">
-					<Box sx={{ mb: 2 }}>
-						<Typography variant="h6" gutterBottom>
-							Context:
-						</Typography>
-						<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
-							<CollapsedContext context={entry.context} />
-						</Paper>
-					</Box>
+					{context && (
+						<Box sx={{ mb: 2 }}>
+							<Typography variant="h6" gutterBottom>
+								Context:
+							</Typography>
+							<Paper
+								elevation={1}
+								sx={{ p: 2, bgcolor: "grey.100" }}
+							>
+								<CollapsedContext context={context} />
+							</Paper>
+						</Box>
+					)}
+
 					<div className="flex flex-col gap-4">
 						{entry.questions.map((question, index) => (
 							<div key={index}>

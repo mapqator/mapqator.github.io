@@ -35,6 +35,9 @@ class QueryApi extends Api {
 	deleteQuery = async (id) => {
 		return await this.delete(`/queries/${id}`);
 	};
+	deleteNewQuery = async (id) => {
+		return await this.delete(`/queries/new/${id}`);
+	};
 	getGPTContext = async (context) => {
 		console.log(context);
 		return await this.post("/queries/gpt/context", { content: context });

@@ -126,6 +126,7 @@ export default function OptionsEditor({ index }) {
 				>
 					<TextField
 						fullWidth
+						multiline
 						autoComplete="off"
 						label={`Option ${i + 1}`}
 						value={option}

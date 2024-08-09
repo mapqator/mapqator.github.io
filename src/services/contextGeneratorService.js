@@ -219,7 +219,7 @@ const ContextGeneratorService = {
 				if (direction.optimizeWaypointOrder) {
 					newContext += `If we want to start our journey from <b>${
 						savedPlacesMap[direction.origin]?.displayName.text
-					}</b> then visit ${direction.intermediates.map(
+					}</b>, then visit ${direction.intermediates.map(
 						(intermediate) =>
 							`<b>${savedPlacesMap[intermediate]?.displayName.text}</b>,`
 					)} and end our journey at to <b>${
@@ -400,8 +400,8 @@ const ContextGeneratorService = {
 			context.nearby !== ""
 				? (text !== "" ? "\n" : "") + context.nearby
 				: "";
-		text +=
-			context.area !== "" ? (text !== "" ? "\n" : "") + context.area : "";
+		// text +=
+		// 	context.area !== "" ? (text !== "" ? "\n" : "") + context.area : "";
 		text +=
 			context.distance !== ""
 				? (text !== "" ? "\n" : "") + context.distance
