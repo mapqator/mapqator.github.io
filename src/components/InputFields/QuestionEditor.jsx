@@ -118,7 +118,7 @@ export default function QuestionEditor({ index }) {
 		console.log("Text before mention:", textBeforeMention);
 		const textAfterCursor = currentValue.slice(cursorPosition);
 		console.log("Text after cursor:", textAfterCursor);
-		const newValue = textBeforeMention + `${name} ` + textAfterCursor;
+		const newValue = textBeforeMention + `${name}` + textAfterCursor;
 
 		setQuery((prev) => {
 			const newQuery = { ...prev };

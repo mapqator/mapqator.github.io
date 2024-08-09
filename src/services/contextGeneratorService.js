@@ -8,7 +8,7 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 	let text = "";
 
 	if (attributes.includes("formatted_address")) {
-		text += `- Location: ${place.shortFormattedAddress}${
+		text += `- Address: ${place.shortFormattedAddress}${
 			attributes.includes("location")
 				? " (" +
 				  place.location.latitude +
