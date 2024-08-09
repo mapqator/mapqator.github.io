@@ -22,6 +22,7 @@ import CorrectAnswerEditor from "@/components/InputFields/CorrectAnswerEditor";
 import { useRouter } from "next/navigation";
 
 export default function ProvideAnswerPage() {
+	return;
 	const { query, context, setAnswerStatus } = useContext(GlobalContext);
 	const [answer, setAnswer] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);

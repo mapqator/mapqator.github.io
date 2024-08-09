@@ -5,6 +5,7 @@ import { Box, Container } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 export default function ExplorePage() {
+	return;
 	const router = useRouter();
 	return (
 		<Container maxWidth="md">

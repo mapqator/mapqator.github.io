@@ -94,6 +94,7 @@ const LoginPrompt = ({ onLogin }) => {
 	);
 };
 export default function LiveEvaluation() {
+	return;
 	const {
 		query,
 		initQuery,
