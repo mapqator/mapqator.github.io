@@ -26,7 +26,7 @@ import OptionsPreview from "../Lists/OptionsPreview";
 import { getUserName } from "@/api/base";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import queryApi from "@/api/queryApi";
-import { Delete, Save, GetApp } from "@mui/icons-material";
+import { Delete, Save, GetApp, Rule } from "@mui/icons-material";
 import { useAuth } from "@/contexts/AuthContext";
 import { showError, showSuccess } from "@/contexts/ToastProvider";
 import { FormControl, Select, MenuItem, InputLabel } from "@mui/material";
@@ -107,6 +107,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 		};
 		setContext(ContextGeneratorService.convertContextToText(raw));
 	}, []);
+
 	return (
 		<Card elevation={2}>
 			<div
@@ -212,10 +213,10 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 					)}
 
 					<div className="flex flex-col gap-4">
-						{entry.questions.map((question, index) => (
-							<div key={index}>
+						{entry.questions.map((question, i) => (
+							<div key={i}>
 								<Typography variant="h6" gutterBottom>
-									Question {index + 1}:
+									Question {i + 1}:
 								</Typography>
 								<Paper
 									elevation={1}
@@ -229,13 +230,14 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 										</h6>
 									</Box>
 									<OptionsPreview answer={question.answer} />
+									<LLMAnswers entry={entry} index={i} />
 								</Paper>
 							</div>
 						))}
 					</div>
 
 					{/* <OptionsPreview answer={entry.answer} /> */}
-					{/* <LLMAnswers evaluation={entry.evaluation} /> */}
+
 					{/* {!isPersonal && mode !== "explore" && (
 						<Annotation query={entry} />
 					)} */}
@@ -316,12 +318,47 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 						</>
 					) : (
 						<>
-							<Button
+							{/* <Button
 								color="primary"
 								startIcon={<GetApp />}
 								onClick={handleDownloadQuery}
 							>
 								Download Query
+							</Button> */}
+							<Button
+								color="primary"
+								startIcon={<Rule />}
+								onClick={async () => {
+									const res =
+										await queryApi.submitForEvaluation(
+											entry.id,
+											context
+										);
+									if (res.success) {
+										showSuccess(
+											"Query submitted for evaluation"
+										);
+										console.log(res.data[0]);
+										// Update the query with the evaluation
+										setQueries((prev) =>
+											prev.map((q) =>
+												q.id === entry.id
+													? {
+															...entry,
+															evaluation:
+																res.data[0],
+													  }
+													: q
+											)
+										);
+									} else {
+										showError(
+											"Can't submit query for evaluation"
+										);
+									}
+								}}
+							>
+								Evaluate
 							</Button>
 							<Button
 								// variant="contained"

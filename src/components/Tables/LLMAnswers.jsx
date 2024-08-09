@@ -11,10 +11,42 @@ import {
 	Chip,
 } from "@mui/material";
 
-export default function LLMAnswers({ evaluation }) {
+const extract = (s) => {
+	for (let char of s) {
+		if (/\d/.test(char)) {
+			return char;
+		}
+	}
+	return null;
+};
+
+const extractSubstringInParentheses = (s) => {
+	const match = s?.match(/\(([^)]+)\)/);
+	return match ? match[1] : null;
+};
+
+export default function LLMAnswers({ entry, index }) {
+	console.log(entry.evaluation);
+	const results =
+		entry.evaluation?.length > 0 &&
+		entry.evaluation.map((e) => {
+			const responses = e.responses;
+			const response = responses[index];
+			const option = parseInt(extract(response));
+			const model = e.model;
+			const answer = entry.questions[index].answer.correct + 1;
+			const verdict = option === answer ? "right" : "wrong";
+			const explanation = response;
+			return {
+				model,
+				option,
+				verdict,
+				explanation,
+			};
+		});
 	return (
 		<>
-			{evaluation?.length > 0 && (
+			{results?.length > 0 && (
 				<Box sx={{ mb: 2 }}>
 					<Typography variant="h6" gutterBottom>
 						LLM Answers:
@@ -31,7 +63,7 @@ export default function LLMAnswers({ evaluation }) {
 								>
 									<TableCell
 										sx={{
-											width: "30%",
+											width: "10%",
 											fontWeight: "bold",
 										}}
 									>
@@ -40,7 +72,16 @@ export default function LLMAnswers({ evaluation }) {
 									<TableCell
 										align="center"
 										sx={{
-											width: "60%",
+											width: "65%",
+											fontWeight: "bold",
+										}}
+									>
+										Response
+									</TableCell>
+									<TableCell
+										align="center"
+										sx={{
+											width: "15%",
 											fontWeight: "bold",
 										}}
 									>
@@ -58,12 +99,21 @@ export default function LLMAnswers({ evaluation }) {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{evaluation.map((llmAnswer, index) => (
+								{results.map((llmAnswer, index) => (
 									<TableRow key={index}>
 										<TableCell>{llmAnswer.model}</TableCell>
-										<TableCell align="center">
-											{llmAnswer.answer}
+										<TableCell
+											align="center"
+											sx={{
+												fontSize: "0.65rem",
+											}}
+										>
+											{llmAnswer.explanation}
 										</TableCell>
+										<TableCell align="center">
+											Option {llmAnswer.option}
+										</TableCell>
+
 										<TableCell align="center">
 											{llmAnswer.verdict === "right" ? (
 												<Chip

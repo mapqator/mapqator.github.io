@@ -45,6 +45,11 @@ class QueryApi extends Api {
 	annotate = async (query_id, human) => {
 		return await this.post("/queries/annotate/" + query_id, human);
 	};
+	submitForEvaluation = async (query_id, context) => {
+		return await this.post("/queries/" + query_id + "/evaluation", {
+			context,
+		});
+	};
 }
 
 const queryApi = new QueryApi();
