@@ -45,7 +45,7 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 			"Expensive",
 			"Very Expensive",
 		];
-		text += `- place.priceLevel.\n`;
+		text += `- ${place.priceLevel}.\n`;
 	}
 	if (attributes.includes("delivery")) {
 		text += place.delivery
