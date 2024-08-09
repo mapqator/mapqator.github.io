@@ -7,7 +7,13 @@ import {
 	Typography,
 } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
-import { ArrowForward, ArrowRight, ArrowRightAlt, DoubleArrow, KeyboardDoubleArrowRight } from "@mui/icons-material";
+import {
+	ArrowForward,
+	ArrowRight,
+	ArrowRightAlt,
+	DoubleArrow,
+	KeyboardDoubleArrowRight,
+} from "@mui/icons-material";
 import { AppContext } from "@/contexts/AppContext";
 
 export default function RoutesList({ routes, showSteps, waypoints }) {
@@ -22,31 +28,33 @@ export default function RoutesList({ routes, showSteps, waypoints }) {
 							<ListItemText
 								primary={
 									<div className="flex flex-row justify-between w-full">
-										<h1 className="w-[60%] text-wrap">
+										<h1 className="w-[60%] text-wrap text-lg font-semibold">
 											{"Via " + route.label}
 										</h1>
 										<div className="flex flex-col w-[40%] text-right">
-											<h1>{route.duration}</h1>
-											<h1 className="text-zinc-600">
-												{route.distance}
+											<h1 className="font-semibold">
+												{route.duration +
+													" (" +
+													route.distance +
+													")"}
 											</h1>
 										</div>
 									</div>
 								}
 								secondary={
-									showSteps && (
-										<div className="flex flex-col gap-0">
-											{route.legs.map((leg, i) => (
-												<>
-													{route.legs.length > 1 && (
-														<Typography>
+									<div className="flex flex-col gap-0">
+										{route.legs.map((leg, i) => (
+											<>
+												{route.legs.length > 1 && (
+													<div className="flex flex-row justify-between items-center">
+														<Typography className="pt-1 text-black">
 															{
 																savedPlacesMap[
 																	waypoints[i]
 																].displayName
 																	.text
 															}
-															<KeyboardDoubleArrowRight />
+															<ArrowRightAlt />
 															{
 																savedPlacesMap[
 																	waypoints[
@@ -56,25 +64,37 @@ export default function RoutesList({ routes, showSteps, waypoints }) {
 																	.text
 															}
 														</Typography>
-													)}
+														<Typography variant="body2">
+															{leg.localizedValues
+																.staticDuration
+																.text +
+																" (" +
+																leg
+																	.localizedValues
+																	.distance
+																	.text +
+																")"}
+														</Typography>
+													</div>
+												)}
 
-													{leg.steps.map(
-														(step, j) => (
-															<p
-																key={i + j}
-																// className="text-sm"
-																dangerouslySetInnerHTML={{
-																	__html:
-																		"- " +
-																		step,
-																}}
-															/>
-														)
-													)}
-												</>
-											))}
-										</div>
-									)
+												{showSteps &&
+													leg.steps.map((step, j) => (
+														<p
+															key={i + j}
+															// className="text-sm"
+															dangerouslySetInnerHTML={{
+																__html:
+																	"- " +
+																	step
+																		.navigationInstruction
+																		.instructions,
+															}}
+														/>
+													))}
+											</>
+										))}
+									</div>
 								}
 								primaryTypographyProps={{
 									noWrap: true,

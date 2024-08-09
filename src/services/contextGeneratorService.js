@@ -98,8 +98,7 @@ const ContextGeneratorService = {
 				}
 				newContext +=
 					`Information of <b>${savedPlacesMap[place_id]?.displayName.text}</b>:\n` +
-					text +
-					"\n";
+					text;
 			}
 		}
 		return newContext;
@@ -216,36 +215,137 @@ const ContextGeneratorService = {
 			if (newContext.length > 0) {
 				newContext += "\n";
 			}
-			newContext += `There are ${
-				direction.routes.length
-			} routes from <b>${
-				savedPlacesMap[direction.origin]?.displayName.text
-			}</b> to <b>${
-				savedPlacesMap[direction.destination]?.displayName.text
-			}</b> by ${
-				direction.travelMode.toLowerCase() === "transit"
-					? "public transport"
-					: direction.travelMode.toLowerCase() === "walking" ||
-					  direction.travelMode.toLowerCase() === "walk"
-					? "foot"
-					: direction.travelMode.toLowerCase() === "driving" ||
-					  direction.travelMode.toLowerCase() === "drive"
-					? "car"
-					: "cycle"
-			}. They are:\n`;
+			if (direction.intermediates.length > 0) {
+				if (direction.optimizeWaypointOrder) {
+					newContext += `If we want to start our journey from <b>${
+						savedPlacesMap[direction.origin]?.displayName.text
+					}</b> then visit ${direction.intermediates.map(
+						(intermediate) =>
+							`<b>${savedPlacesMap[intermediate]?.displayName.text}</b>,`
+					)} and end our journey at to <b>${
+						savedPlacesMap[direction.destination]?.displayName.text
+					}</b>, the optimized order of visit by ${
+						direction.travelMode.toLowerCase() === "transit"
+							? "public transport"
+							: direction.travelMode.toLowerCase() ===
+									"walking" ||
+							  direction.travelMode.toLowerCase() === "walk"
+							? "foot"
+							: direction.travelMode.toLowerCase() ===
+									"driving" ||
+							  direction.travelMode.toLowerCase() === "drive"
+							? "car"
+							: "cycle"
+					} is:\n`;
+					newContext += `First go to <b>${
+						savedPlacesMap[
+							direction.intermediates[
+								direction.routes[0]
+									.optimizedIntermediateWaypointIndex[0]
+							]
+						]?.displayName.text
+					}</b> from <b>${
+						savedPlacesMap[direction.origin]?.displayName.text
+					}</b> which takes ${
+						direction.routes[0].legs[0].localizedValues
+							.staticDuration.text +
+						" (" +
+						direction.routes[0].legs[0].localizedValues.distance
+							.text +
+						")"
+					}.\n`;
 
-			direction.routes.forEach((route, index) => {
-				newContext += `${index + 1}. Via ${route.label} | ${
-					route.duration
-				} | ${route.distance}\n`;
-				if (direction.showSteps) {
-					route.legs.forEach((leg) =>
-						leg.steps.map((step) => {
-							newContext += ` - ${step}\n`;
-						})
-					);
+					for (let i = 1; i < direction.intermediates.length; i++) {
+						newContext += `Then go to <b>${
+							savedPlacesMap[
+								direction.intermediates[
+									direction.routes[0]
+										.optimizedIntermediateWaypointIndex[i]
+								]
+							]?.displayName.text
+						}</b> from <b>${
+							savedPlacesMap[
+								direction.intermediates[
+									direction.routes[0]
+										.optimizedIntermediateWaypointIndex[
+										i - 1
+									]
+								]
+							]?.displayName.text
+						}</b> which takes ${
+							direction.routes[0].legs[i].localizedValues
+								.staticDuration.text +
+							" (" +
+							direction.routes[0].legs[i].localizedValues.distance
+								.text +
+							")"
+						}.\n`;
+					}
+
+					newContext += `Finally go to <b>${
+						savedPlacesMap[direction.destination]?.displayName.text
+					}</b> from <b>${
+						savedPlacesMap[
+							direction.intermediates[
+								direction.routes[0]
+									.optimizedIntermediateWaypointIndex[
+									direction.intermediates.length - 1
+								]
+							]
+						]?.displayName.text
+					}</b> which takes ${
+						direction.routes[0].legs[
+							direction.routes[0].legs.length - 1
+						].localizedValues.staticDuration.text +
+						" (" +
+						direction.routes[0].legs[
+							direction.routes[0].legs.length - 1
+						].localizedValues.distance.text +
+						")"
+					}.\n`;
+
+					newContext += `The complete route is Via ${
+						direction.routes[0].label
+					} and total time taken is ${
+						direction.routes[0].duration +
+						" (" +
+						direction.routes[0].distance +
+						")"
+					}.\n`;
+				} else {
 				}
-			});
+			} else {
+				newContext += `There are ${
+					direction.routes.length
+				} routes from <b>${
+					savedPlacesMap[direction.origin]?.displayName.text
+				}</b> to <b>${
+					savedPlacesMap[direction.destination]?.displayName.text
+				}</b> by ${
+					direction.travelMode.toLowerCase() === "transit"
+						? "public transport"
+						: direction.travelMode.toLowerCase() === "walking" ||
+						  direction.travelMode.toLowerCase() === "walk"
+						? "foot"
+						: direction.travelMode.toLowerCase() === "driving" ||
+						  direction.travelMode.toLowerCase() === "drive"
+						? "car"
+						: "cycle"
+				}. They are:\n`;
+
+				direction.routes.forEach((route, index) => {
+					newContext += `${index + 1}. Via ${route.label} | ${
+						route.duration
+					} | ${route.distance}\n`;
+					if (direction.showSteps) {
+						route.legs.forEach((leg) =>
+							leg.steps.map((step) => {
+								newContext += ` - ${step}\n`;
+							})
+						);
+					}
+				});
+			}
 		});
 		return newContext;
 

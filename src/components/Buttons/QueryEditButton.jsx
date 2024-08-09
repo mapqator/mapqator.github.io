@@ -46,7 +46,7 @@ export default function QueryEditButton({ onEdit, query }) {
 		}
 		setSelectedPlacesMap(query.context_json.places ?? {});
 		setDistanceMatrix(query.context_json.distance_matrix ?? {});
-		setDirectionInformation(query.context_json.directions ?? {});
+		setDirectionInformation(query.context_json.directions ?? []);
 		setNearbyPlacesMap(query.context_json.nearby_places ?? {});
 		setCurrentInformation(
 			query.context_json.current_information
@@ -108,7 +108,7 @@ export default function QueryEditButton({ onEdit, query }) {
 			),
 		});
 		setQuery(query);
-		onEdit();
+		onEdit(query.id);
 	};
 
 	return (

@@ -113,7 +113,7 @@ function DirectionCardSummary({ direction, expanded, index }) {
 								: undefined,
 					}}
 				/>
-				<Box className="flex flex-col justify-between">
+				<Box className="flex flex-col justify-between h-full">
 					<IconButton
 						onClick={() => {
 							const newDirectionMatrix = [

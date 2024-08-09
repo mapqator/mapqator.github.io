@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 
 export default function DatasetPage({}) {
 	const router = useRouter();
-	const onEdit = () => {
-		router.push("/home/question");
+	const onEdit = (id) => {
+		router.push("/home/question#" + id);
 	};
 	return (
 		<Box sx={{ mt: 4, mb: 4 }}>

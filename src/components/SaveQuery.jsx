@@ -4,12 +4,13 @@ import { Button, Typography, Box, Snackbar, TextField } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const SaveQuery = ({ onSave, onDiscard }) => {
+const SaveQuery = ({ prevName, onSave, onDiscard }) => {
 	const [showSnackbar, setShowSnackbar] = useState(false);
-	const [queryName, setQueryName] = useState("");
-	const handleSave = () => {
+	const [queryName, setQueryName] = useState(prevName || "");
+	const handleSave = (e) => {
+		e.preventDefault();
 		onSave(queryName);
-		setShowSnackbar(true);
+		// setShowSnackbar(true);
 	};
 
 	return (

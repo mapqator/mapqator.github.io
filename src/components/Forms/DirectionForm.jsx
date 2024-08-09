@@ -75,25 +75,26 @@ export default function DirectionForm({ handlePlaceAdd }) {
 			const newDirectionInfo = [...directionInformation];
 			const all_routes = [];
 			routes.forEach((route) => {
-				const legs = [];
-				route.legs.forEach((leg) => {
-					const steps = [];
-					console.log("Steps: ", route.legs[0].steps);
-					leg.steps.forEach((step) => {
-						console.log(step);
-						if (step.navigationInstruction)
-							steps.push(step.navigationInstruction.instructions);
-					});
-					legs.push({
-						steps,
-					});
-				});
-				console.log("Legs: ", legs);
+				// const legs = [];
+				// route.legs.forEach((leg) => {
+				// 	const steps = [];
+				// 	console.log("Steps: ", route.legs[0].steps);
+				// 	leg.steps.forEach((step) => {
+				// 		console.log(step);
+				// 		if (step.navigationInstruction)
+				// 			steps.push(step.navigationInstruction.instructions);
+				// 	});
+				// 	legs.push({
+				// 		steps,
+				// 		localizedValues: leg.localizedValues,
+				// 	});
+				// });
+				// console.log("Legs: ", legs);
 				all_routes.push({
 					label: route.description,
 					duration: route.localizedValues.staticDuration.text,
 					distance: route.localizedValues.distance.text,
-					legs: legs,
+					legs: route.legs,
 					optimizedIntermediateWaypointIndex:
 						route.optimizedIntermediateWaypointIndex,
 				});

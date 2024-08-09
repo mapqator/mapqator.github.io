@@ -74,7 +74,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 				// window.scrollTo(0, 0);
 			}
 		} else {
-			const res = await queryApi.updateQuery(query.id, newQuery);
+			const res = await queryApi.updateNewQuery(query.id, newQuery);
 			if (res.success) {
 				setQueries((prev) =>
 					prev.map((q) => (q.id === res.data[0].id ? res.data[0] : q))
@@ -101,12 +101,12 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 	};
 
 	return (
-		<form
-			onSubmit={async (e) => {
-				setLoading(true);
-				await handleSubmit(e);
-				setLoading(false);
-			}}
+		<Box
+			// onSubmit={async (e) => {
+			// 	setLoading(true);
+			// 	await handleSubmit(e);
+			// 	setLoading(false);
+			// }}
 			className="flex flex-col items-center"
 		>
 			{query.questions.map((question, index) => (
@@ -178,10 +178,14 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 			</Box> */}
 
 			{isAuthenticated ? (
-				<SaveQuery onSave={handleSave} onDiscard={handleDiscard} />
+				<SaveQuery
+					prevName={query.name}
+					onSave={handleSave}
+					onDiscard={handleDiscard}
+				/>
 			) : (
 				<LoginPrompt onLogin={handleLogin} />
 			)}
-		</form>
+		</Box>
 	);
 }
