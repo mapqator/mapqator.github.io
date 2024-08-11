@@ -20,14 +20,8 @@ export default function MapComponent() {
 		const list = [];
 		Object.keys(selectedPlacesMap).map((place_id) => {
 			const place = savedPlacesMap[place_id];
-			const lat =
-				typeof place.geometry?.location.lat === "function"
-					? place.geometry?.location.lat()
-					: place.geometry?.location.lat;
-			const lng =
-				typeof place.geometry?.location.lng === "function"
-					? place.geometry?.location.lng()
-					: place.geometry?.location.lng;
+			const lat = place.location.latitude;
+			const lng = place.location.longitude;
 			list.push({ lat, lng });
 		});
 		console.log(list);

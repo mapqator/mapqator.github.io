@@ -247,26 +247,13 @@ export default function ContextStepper({
 			description: `Start by searching for a location. Type in a place name or address in the search bar below.`,
 			icon: <SearchIcon />,
 			additional: "Places you have added to the context.",
-			// component: (
-			// 	<div className="flex flex-col gap-2">
-			// 		<Divider />
-			// 		<CardContent>
-			// 			<AutocompleteSearchBox />
-			// 			{Object.keys(selectedPlacesMap).length > 0 && (
-			// 				<>
-			// 					<Divider sx={{ my: 1, color: "#888" }}>
-			// 						Already added
-			// 					</Divider>
-			// 					{/* <MapComponent /> */}
-			// 					<PlacesGrid />
-			// 				</>
-			// 			)}
-			// 		</CardContent>
-			// 		<Divider />
-			// 	</div>
-			// ),
 			form: <AutocompleteSearchBox />,
-			grid: Object.keys(selectedPlacesMap).length > 0 && <PlacesGrid />,
+			grid: Object.keys(selectedPlacesMap).length > 0 && (
+				<>
+					<MapComponent />
+					<PlacesGrid />
+				</>
+			),
 			context: context.places,
 		},
 		{

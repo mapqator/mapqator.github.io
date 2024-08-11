@@ -15,5 +15,17 @@ export default function GoogleMapWrapper({ children }) {
 		}
 	}, [isAuthenticated]);
 
+	return (
+		<LoadScript googleMapsApiKey="AIzaSyA8FR4zPdFgUNu4Rr_iuMYgcOb6gCCr21M">
+			{children}
+		</LoadScript>
+	);
 	return <>{children}</>;
+	// return googleMapsApiKey ? (
+	// 	<LoadScript googleMapsApiKey={googleMapsApiKey}>{children}</LoadScript>
+	// ) : googleMapsApiKey !== undefined ? (
+	// 	<LoadScript>{children}</LoadScript>
+	// ) : (
+	// 	<>{children}</>
+	// );
 }
