@@ -440,11 +440,12 @@ const ContextGeneratorService = {
 				direction.routes.forEach((route, index) => {
 					newContext += `${index + 1}. Via ${route.label} | ${
 						route.duration
-					} | ${route.distance}\n`;
+					} (${route.distance})\n`;
 					if (direction.showSteps) {
 						route.legs.forEach((leg) =>
 							leg.steps.map((step) => {
-								newContext += ` - ${step}\n`;
+								if (step.navigationInstruction)
+									newContext += ` - ${step.navigationInstruction.instructions}\n`;
 							})
 						);
 					}

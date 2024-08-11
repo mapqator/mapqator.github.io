@@ -79,19 +79,22 @@ export default function RoutesList({ routes, showSteps, waypoints }) {
 												)}
 
 												{showSteps &&
-													leg.steps.map((step, j) => (
-														<p
-															key={i + j}
-															// className="text-sm"
-															dangerouslySetInnerHTML={{
-																__html:
-																	"- " +
-																	step
-																		.navigationInstruction
-																		.instructions,
-															}}
-														/>
-													))}
+													leg.steps.map(
+														(step, j) =>
+															step.navigationInstruction && (
+																<p
+																	key={i + j}
+																	// className="text-sm"
+																	dangerouslySetInnerHTML={{
+																		__html:
+																			"- " +
+																			step
+																				.navigationInstruction
+																				.instructions,
+																	}}
+																/>
+															)
+													)}
 											</>
 										))}
 									</div>

@@ -73,7 +73,7 @@ export default function DirectionForm({ handlePlaceAdd }) {
 		setLoading(true);
 		const response = await mapApi.getDirectionsNew(newDirection);
 		if (response.success && response.data.routes) {
-			// console.log(response.)
+			console.log("Directions: ", response.data.routes);
 			const routes = response.data.routes;
 			const newDirectionInfo = [...directionInformation];
 			const all_routes = [];
