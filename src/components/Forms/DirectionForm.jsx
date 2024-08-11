@@ -3,6 +3,7 @@ import mapApi from "@/api/mapApi";
 import {
 	Box,
 	Checkbox,
+	Chip,
 	FormControl,
 	Grid,
 	InputLabel,
@@ -10,8 +11,9 @@ import {
 	MenuItem,
 	Select,
 	Switch,
+	Typography,
 } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { Add, ArrowRight, ArrowRightAlt } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import TravelSelectionField from "@/components/InputFields/TravelSelectionField.";
 import PlaceSelectionField from "@/components/InputFields/PlaceSelectionField";
@@ -19,6 +21,7 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 import { showError } from "@/contexts/ToastProvider";
 import DepartureTimeField from "../InputFields/DepartureTimeField";
 import dayjs from "dayjs";
+import { AppContext } from "@/contexts/AppContext";
 
 const avoidMap = {
 	avoidTolls: "Tolls",
@@ -35,7 +38,7 @@ const transitModeMap = {
 export default function DirectionForm({ handlePlaceAdd }) {
 	const { selectedPlacesMap, directionInformation, setDirectionInformation } =
 		useContext(GlobalContext);
-
+	const { savedPlacesMap } = useContext(AppContext);
 	const initialData = {
 		origin: "",
 		destination: "",
@@ -200,18 +203,92 @@ export default function DirectionForm({ handlePlaceAdd }) {
 			{newDirection.travelMode !== "TRANSIT" && (
 				<>
 					<Grid item xs={12}>
-						<PlaceSelectionField
-							label="Intermediates"
-							value={newDirection.intermediates}
-							onChange={(event) => {
-								setNewDirection((prev) => ({
-									...prev,
-									intermediates: event.target.value,
-								}));
-							}}
-							handlePlaceAdd={handlePlaceAdd}
-							multiple={true}
-						/>
+						<FormControl fullWidth size="small" required>
+							<InputLabel>Intermediates</InputLabel>
+							<Select
+								multiple
+								value={newDirection.intermediates}
+								onChange={(event) => {
+									setNewDirection((prev) => ({
+										...prev,
+										intermediates: event.target.value,
+									}));
+								}}
+								label={"Intermediates"}
+								renderValue={(selected) =>
+									!newDirection.optimizeWaypointOrder ? (
+										<Box
+											sx={{
+												display: "flex",
+												flexWrap: "wrap",
+												gap: 0.5,
+												alignItems: "center",
+											}}
+										>
+											{selected.map((value, index) => (
+												<>
+													<Typography variant="body2">
+														{
+															savedPlacesMap[
+																value
+															].displayName.text
+														}
+													</Typography>
+													{index <
+														selected.length - 1 && (
+														<ArrowRightAlt />
+													)}
+												</>
+											))}
+										</Box>
+									) : (
+										<Box
+											sx={{
+												display: "flex",
+												flexWrap: "wrap",
+												gap: 0.5,
+											}}
+										>
+											{selected.map((value) => (
+												<Chip
+													key={value}
+													label={
+														savedPlacesMap[value]
+															.displayName.text
+													}
+													size="small"
+												/>
+											))}
+										</Box>
+									)
+								}
+							>
+								{Object.keys(selectedPlacesMap).map(
+									(place_id) => (
+										<MenuItem
+											key={place_id}
+											value={place_id}
+										>
+											{
+												savedPlacesMap[place_id]
+													.displayName.text
+											}
+										</MenuItem>
+									)
+								)}
+							</Select>
+						</FormControl>
+						<h6 className="px-2  text-sm">
+							If your desired place is not listed here, you need
+							to{" "}
+							<a
+								className="underline font-semibold cursor-pointer hover:text-blue-500"
+								onClick={handlePlaceAdd}
+							>
+								add it
+							</a>{" "}
+							first.
+						</h6>
 					</Grid>
 					<Box className="w-full p-3 pb-0 flex flex-row justify-start items-center gap-2">
 						<Switch
@@ -224,6 +301,7 @@ export default function DirectionForm({ handlePlaceAdd }) {
 							}}
 							checked={newDirection.optimizeWaypointOrder}
 							size="small"
+							disabled={newDirection.intermediates.length < 2}
 						/>
 						<h6 className="text-base">
 							Optimize intermediates order

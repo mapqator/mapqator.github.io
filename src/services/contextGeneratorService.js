@@ -176,7 +176,9 @@ const ContextGeneratorService = {
 						  "price levels of " +
 						  e.priceLevels.map((p) => priceMap[p]).join(" or ")
 						: ""
-				} are:${e.rankBy === "DISTANCE" ? " (Rank by Distance)" : ""}\n`;
+				} are:${
+					e.rankBy === "DISTANCE" ? " (Rank by Distance)" : ""
+				}\n`;
 				let counter = 1;
 				e.places.forEach((near_place) => {
 					if (near_place.selected) {
@@ -239,7 +241,7 @@ const ContextGeneratorService = {
 					}</b>, then visit ${direction.intermediates.map(
 						(intermediate) =>
 							`<b>${savedPlacesMap[intermediate]?.displayName.text}</b>,`
-					)} and end our journey at to <b>${
+					)} and end our journey at <b>${
 						savedPlacesMap[direction.destination]?.displayName.text
 					}</b>, the optimized order of visit by ${
 						direction.travelMode.toLowerCase() === "transit"
@@ -330,6 +332,84 @@ const ContextGeneratorService = {
 						")"
 					}.\n`;
 				} else {
+					newContext += `If we want to start our journey from <b>${
+						savedPlacesMap[direction.origin]?.displayName.text
+					}</b>, then visit ${direction.intermediates.map(
+						(intermediate) =>
+							`<b>${savedPlacesMap[intermediate]?.displayName.text}</b>,`
+					)} and end our journey at <b>${
+						savedPlacesMap[direction.destination]?.displayName.text
+					}</b>, the route of visit by ${
+						direction.travelMode.toLowerCase() === "transit"
+							? "public transport"
+							: direction.travelMode.toLowerCase() ===
+									"walking" ||
+							  direction.travelMode.toLowerCase() === "walk"
+							? "foot"
+							: direction.travelMode.toLowerCase() ===
+									"driving" ||
+							  direction.travelMode.toLowerCase() === "drive"
+							? "car"
+							: "cycle"
+					} is:\n`;
+					newContext += `First go to <b>${
+						savedPlacesMap[direction.intermediates[0]]?.displayName
+							.text
+					}</b> from <b>${
+						savedPlacesMap[direction.origin]?.displayName.text
+					}</b> which takes ${
+						direction.routes[0].legs[0].localizedValues
+							.staticDuration.text +
+						" (" +
+						direction.routes[0].legs[0].localizedValues.distance
+							.text +
+						")"
+					}.\n`;
+
+					for (let i = 1; i < direction.intermediates.length; i++) {
+						newContext += `Then go to <b>${
+							savedPlacesMap[direction.intermediates[i]]
+								?.displayName.text
+						}</b> from <b>${
+							savedPlacesMap[direction.intermediates[i - 1]]
+								?.displayName.text
+						}</b> which takes ${
+							direction.routes[0].legs[i].localizedValues
+								.staticDuration.text +
+							" (" +
+							direction.routes[0].legs[i].localizedValues.distance
+								.text +
+							")"
+						}.\n`;
+					}
+
+					newContext += `Finally go to <b>${
+						savedPlacesMap[direction.destination]?.displayName.text
+					}</b> from <b>${
+						savedPlacesMap[
+							direction.intermediates[
+								direction.intermediates.length - 1
+							]
+						]?.displayName.text
+					}</b> which takes ${
+						direction.routes[0].legs[
+							direction.routes[0].legs.length - 1
+						].localizedValues.staticDuration.text +
+						" (" +
+						direction.routes[0].legs[
+							direction.routes[0].legs.length - 1
+						].localizedValues.distance.text +
+						")"
+					}.\n`;
+
+					newContext += `The complete route is Via ${
+						direction.routes[0].label
+					} and total time taken is ${
+						direction.routes[0].duration +
+						" (" +
+						direction.routes[0].distance +
+						")"
+					}.\n`;
 				}
 			} else {
 				newContext += `There are ${
