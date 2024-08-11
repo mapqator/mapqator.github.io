@@ -323,7 +323,7 @@ const ContextGeneratorService = {
 						")"
 					}.\n`;
 
-					newContext += `The complete route is Via ${
+					newContext += `The entire route is Via ${
 						direction.routes[0].label
 					} and total time taken is ${
 						direction.routes[0].duration +
@@ -332,32 +332,39 @@ const ContextGeneratorService = {
 						")"
 					}.\n`;
 				} else {
-					newContext += `If we want to start our journey from <b>${
+					newContext += `If we start our journey from <b>${
 						savedPlacesMap[direction.origin]?.displayName.text
-					}</b>, then visit ${direction.intermediates.map(
-						(intermediate) =>
-							`<b>${savedPlacesMap[intermediate]?.displayName.text}</b>,`
-					)} and end our journey at <b>${
+					}</b>, then visit ${direction.intermediates
+						.map(
+							(intermediate) =>
+								`<b>${savedPlacesMap[intermediate]?.displayName.text}</b>`
+						)
+						.join(", ")}, and finally end our journey at <b>${
 						savedPlacesMap[direction.destination]?.displayName.text
-					}</b>, the route of visit by ${
+					}</b>, the ${
 						direction.travelMode.toLowerCase() === "transit"
-							? "public transport"
+							? "transit"
 							: direction.travelMode.toLowerCase() ===
 									"walking" ||
 							  direction.travelMode.toLowerCase() === "walk"
-							? "foot"
+							? "walking"
 							: direction.travelMode.toLowerCase() ===
 									"driving" ||
 							  direction.travelMode.toLowerCase() === "drive"
-							? "car"
-							: "cycle"
-					} is:\n`;
-					newContext += `First go to <b>${
+							? "driving"
+							: direction.travelMode.toLowerCase() ===
+									"bicycling" ||
+							  direction.travelMode.toLowerCase() === "bicycle"
+							? "bicycling"
+							: "two-wheeler"
+					} route is as follows:\n`;
+
+					newContext += `First, go to <b>${
 						savedPlacesMap[direction.intermediates[0]]?.displayName
 							.text
 					}</b> from <b>${
 						savedPlacesMap[direction.origin]?.displayName.text
-					}</b> which takes ${
+					}</b>, which takes ${
 						direction.routes[0].legs[0].localizedValues
 							.staticDuration.text +
 						" (" +
@@ -367,13 +374,13 @@ const ContextGeneratorService = {
 					}.\n`;
 
 					for (let i = 1; i < direction.intermediates.length; i++) {
-						newContext += `Then go to <b>${
+						newContext += `Then, go to <b>${
 							savedPlacesMap[direction.intermediates[i]]
 								?.displayName.text
 						}</b> from <b>${
 							savedPlacesMap[direction.intermediates[i - 1]]
 								?.displayName.text
-						}</b> which takes ${
+						}</b>, which takes ${
 							direction.routes[0].legs[i].localizedValues
 								.staticDuration.text +
 							" (" +
@@ -383,7 +390,7 @@ const ContextGeneratorService = {
 						}.\n`;
 					}
 
-					newContext += `Finally go to <b>${
+					newContext += `Finally, go to <b>${
 						savedPlacesMap[direction.destination]?.displayName.text
 					}</b> from <b>${
 						savedPlacesMap[
@@ -391,7 +398,7 @@ const ContextGeneratorService = {
 								direction.intermediates.length - 1
 							]
 						]?.displayName.text
-					}</b> which takes ${
+					}</b>, which takes ${
 						direction.routes[0].legs[
 							direction.routes[0].legs.length - 1
 						].localizedValues.staticDuration.text +
@@ -402,9 +409,9 @@ const ContextGeneratorService = {
 						")"
 					}.\n`;
 
-					newContext += `The complete route is Via ${
+					newContext += `The entire route follows ${
 						direction.routes[0].label
-					} and total time taken is ${
+					}, with a total time of ${
 						direction.routes[0].duration +
 						" (" +
 						direction.routes[0].distance +
