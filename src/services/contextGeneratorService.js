@@ -1,5 +1,12 @@
 import Pluralize from "pluralize";
 import { convertFromSnake } from "./utils";
+const priceMap = {
+	PRICE_LEVEL_INEXPENSIVE: "Inexpensive",
+	PRICE_LEVEL_MODERATE: "Moderate",
+	PRICE_LEVEL_EXPENSIVE: "Expensive",
+	PRICE_LEVEL_VERY_EXPENSIVE: "Very Expensive",
+};
+
 const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 	let place = savedPlacesMap[place_id];
 	if (!place) return "";
@@ -159,7 +166,17 @@ const ContextGeneratorService = {
 				)} of ${
 					// selectedPlacesMap[place_id].alias ||
 					savedPlacesMap[place_id]?.displayName.text
-				} are (${"sorted by " + e.rankBy + " in ascending order"}):\n`;
+				}${
+					e.minRating > 0
+						? " with a minimum rating of " + e.minRating
+						: ""
+				}${
+					e.priceLevels.length > 0
+						? (e.minRating > 0 ? " and " : " ") +
+						  "price levels of " +
+						  e.priceLevels.map((p) => priceMap[p]).join(" or ")
+						: ""
+				} are:${e.rankBy === "DISTANCE" ? " (Rank by Distance)" : ""}\n`;
 				let counter = 1;
 				e.places.forEach((near_place) => {
 					if (near_place.selected) {

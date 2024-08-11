@@ -16,6 +16,13 @@ import PoiList from "@/components/Lists/PoiList";
 import Pluralize from "pluralize";
 import { convertFromSnake } from "@/services/utils";
 
+const priceMap = {
+	PRICE_LEVEL_INEXPENSIVE: "Inexpensive",
+	PRICE_LEVEL_MODERATE: "Moderate",
+	PRICE_LEVEL_EXPENSIVE: "Expensive",
+	PRICE_LEVEL_VERY_EXPENSIVE: "Very Expensive",
+};
+
 function NearbyCardDetails({ index, place_id, entry }) {
 	const { nearbyPlacesMap, setNearbyPlacesMap } = useContext(GlobalContext);
 	const handleTogglePlace = (e, poi_index) => {
@@ -60,26 +67,57 @@ function NearbyCardSummary({ index, place_id, entry, expanded }) {
 				</Box>
 			</Box>
 			<Box display="flex" justifyContent="space-between">
-				<Box display="flex" flexWrap="wrap" gap={1} mt={1}>
-					<Chip
-						label={Pluralize(
-							convertFromSnake(entry.type),
-							nearbyPlacesMap[place_id]
-								? nearbyPlacesMap[place_id][
-										index
-								  ].places.filter((place) => place.selected)
-										.length
-								: 0,
-							true
+				<Box
+					display="flex"
+					flexDirection={"column"}
+					flexWrap="wrap"
+					gap={1}
+					mt={1}
+				>
+					<div className="flex gap-2">
+						<Chip
+							label={Pluralize(
+								convertFromSnake(entry.type),
+								nearbyPlacesMap[place_id]
+									? nearbyPlacesMap[place_id][
+											index
+									  ].places.filter((place) => place.selected)
+											.length
+									: 0,
+								true
+							)}
+							color="primary"
+							size="small"
+						/>
+						{entry.rankBy === "DISTANCE" && (
+							<Chip
+								label={"Rankby " + entry.rankBy}
+								color="success"
+								size="small"
+							/>
 						)}
-						color="primary"
-						size="small"
-					/>
-					<Chip
-						label={"Rankby " + entry.rankBy}
-						color="success"
-						size="small"
-					/>
+						{entry.minRating > 0 && (
+							<Chip
+								label={"Rating ≥ " + entry.minRating}
+								color="secondary"
+								size="small"
+							/>
+						)}
+					</div>
+					<div className="flex gap-2">
+						{entry.priceLevels.length > 0 && (
+							<Chip
+								label={
+									"Prices: " +
+									entry.priceLevels
+										.map((p) => priceMap[p])
+										.join(", ")
+								}
+								color="primary"
+								size="small"
+							/>
+						)}
+					</div>
 				</Box>
 				<IconButton
 					size="small"

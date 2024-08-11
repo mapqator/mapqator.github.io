@@ -103,8 +103,7 @@ function PlaceCardDetails({ placeId }) {
 	);
 }
 export default function PlaceCard({ placeId, index }) {
-	const [expanded, setExpanded] = useState(index === 0);
-
+	const [expanded, setExpanded] = useState(false);
 	useEffect(() => {
 		setExpanded(index === 0);
 	}, [index]);

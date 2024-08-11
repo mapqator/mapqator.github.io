@@ -57,7 +57,7 @@ export default function NearbyForm({ handlePlaceAdd }) {
 		searchBy: "type",
 		type: "",
 		keyword: "",
-		rankPreference: "DISTANCE",
+		rankPreference: "RELEVANCE",
 		minRating: 0, // Values are rounded up to the nearest 0.5.
 		priceLevels: [],
 	};
@@ -317,14 +317,14 @@ export default function NearbyForm({ handlePlaceAdd }) {
 					}
 				>
 					<FormControlLabel
-						value="DISTANCE"
-						control={<Radio />}
-						label="Rank by Distance"
-					/>
-					<FormControlLabel
 						value="RELEVANCE"
 						control={<Radio />}
 						label="Rank by Relevance"
+					/>
+					<FormControlLabel
+						value="DISTANCE"
+						control={<Radio />}
+						label="Rank by Distance"
 					/>
 				</RadioGroup>
 			</Grid>
