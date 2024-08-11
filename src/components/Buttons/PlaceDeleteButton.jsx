@@ -32,13 +32,9 @@ export default function PlaceDeleteButton({ placeId }) {
 	};
 
 	const deletePlaceFromDirections = (place_id) => {
-		const newDirectionInformation = { ...directionInformation };
-		delete newDirectionInformation[place_id];
-
-		Object.keys(newDirectionInformation).forEach((key) => {
-			delete newDirectionInformation[key][place_id];
-		});
-		setDirectionInformation(newDirectionInformation);
+		setDirectionInformation((prev) =>
+			prev.filter((direction) => direction.place_id !== place_id)
+		);
 	};
 
 	const deletePlaceFromNearbyPlaces = (place_id) => {
