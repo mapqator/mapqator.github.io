@@ -27,10 +27,13 @@ import {
 import RoutesList from "../Lists/RoutesList";
 import RouteSummary from "../Box/RouteSummary";
 
-function DirectionCardDetails({ direction, index }) {
-	const { directionInformation, setDirectionInformation } =
-		useContext(GlobalContext);
-
+function DirectionCardDetails({
+	direction,
+	index,
+	directionInformation,
+	setDirectionInformation,
+	savedPlacesMap,
+}) {
 	return (
 		<Paper
 			// elevation={1}
@@ -70,6 +73,7 @@ function DirectionCardDetails({ direction, index }) {
 				]}
 				routes={direction.routes}
 				showSteps={direction.showSteps}
+				savedPlacesMap={savedPlacesMap}
 			/>
 		</Paper>
 	);
@@ -87,11 +91,15 @@ const transitModeMap = {
 	TRAIN: "Train",
 	// RAIL: "Rail", // This is equivalent to a combination of SUBWAY, TRAIN, and LIGHT_RAIL.
 };
-function DirectionCardSummary({ direction, expanded, index }) {
-	const { directionInformation, setDirectionInformation } =
-		useContext(GlobalContext);
-	const { savedPlacesMap } = useContext(AppContext);
-
+function DirectionCardSummary({
+	direction,
+	expanded,
+	index,
+	directionInformation,
+	setDirectionInformation,
+	savedPlacesMap,
+	mode,
+}) {
 	return (
 		<>
 			<Box
@@ -111,21 +119,24 @@ function DirectionCardSummary({ direction, expanded, index }) {
 										(i) => direction.intermediates[i]
 								  )
 								: undefined,
+						savedPlacesMap,
 					}}
 				/>
 				<Box className="flex flex-col justify-between h-full">
-					<IconButton
-						onClick={() => {
-							const newDirectionMatrix = [
-								...directionInformation,
-							];
-							newDirectionMatrix.splice(index, 1);
-							setDirectionInformation(newDirectionMatrix);
-						}}
-						size="small"
-					>
-						<Delete color="error" />
-					</IconButton>
+					{mode === "edit" && (
+						<IconButton
+							onClick={() => {
+								const newDirectionMatrix = [
+									...directionInformation,
+								];
+								newDirectionMatrix.splice(index, 1);
+								setDirectionInformation(newDirectionMatrix);
+							}}
+							size="small"
+						>
+							<Delete color="error" />
+						</IconButton>
+					)}
 					<IconButton
 						size="small"
 						sx={{
@@ -180,7 +191,14 @@ function DirectionCardSummary({ direction, expanded, index }) {
 		</>
 	);
 }
-export default function DirectionCard({ direction, index }) {
+export default function DirectionCard({
+	direction,
+	index,
+	directionInformation,
+	setDirectionInformation,
+	savedPlacesMap,
+	mode,
+}) {
 	const [expanded, setExpanded] = useState(index === 0);
 	return (
 		<Card variant="outlined">
@@ -193,6 +211,10 @@ export default function DirectionCard({ direction, index }) {
 						direction,
 						expanded,
 						index,
+						directionInformation,
+						setDirectionInformation,
+						savedPlacesMap,
+						mode,
 					}}
 				/>
 			</CardContent>
@@ -202,6 +224,10 @@ export default function DirectionCard({ direction, index }) {
 					{...{
 						direction,
 						index,
+						directionInformation,
+						setDirectionInformation,
+						savedPlacesMap,
+						mode,
 					}}
 				/>
 			</Collapse>

@@ -19,10 +19,12 @@ import { AppContext } from "@/contexts/AppContext";
 import { convertFromSnake } from "@/services/utils";
 import PlaceDeleteButton from "../Buttons/PlaceDeleteButton";
 
-function PlaceCardSummary({ placeId, expanded }) {
-	const { selectedPlacesMap } = useContext(GlobalContext);
-	const { savedPlacesMap } = useContext(AppContext);
-
+function PlaceCardSummary({
+	placeId,
+	expanded,
+	selectedPlacesMap,
+	savedPlacesMap,
+}) {
 	return (
 		<>
 			<Typography variant="h6" component="div" noWrap>
@@ -55,9 +57,11 @@ function PlaceCardSummary({ placeId, expanded }) {
 	);
 }
 
-function PlaceCardDetails({ placeId }) {
-	const { selectedPlacesMap, setSelectedPlacesMap } =
-		useContext(GlobalContext);
+function PlaceCardDetails({
+	placeId,
+	selectedPlacesMap,
+	setSelectedPlacesMap,
+}) {
 	const handleAttributeChange = (placeId, newAttributes) => {
 		setSelectedPlacesMap((prev) => ({
 			...prev,
@@ -102,20 +106,20 @@ function PlaceCardDetails({ placeId }) {
 		</FormControl>
 	);
 }
-export default function PlaceCard({ placeId, index }) {
+export default function PlaceCard({
+	placeId,
+	index,
+	selectedPlacesMap,
+	setSelectedPlacesMap,
+	savedPlacesMap,
+	mode,
+}) {
 	const [expanded, setExpanded] = useState(false);
-	useEffect(() => {
-		setExpanded(index === 0);
-	}, [index]);
+	// useEffect(() => {
+	// 	setExpanded(index === 0);
+	// }, [index]);
 	return (
-		<Card
-			elevation={3}
-			sx={{
-				// height: "100%",
-				display: "flex",
-				flexDirection: "column",
-			}}
-		>
+		<Card variant="outlined">
 			<CardContent
 				sx={{
 					flexGrow: 1,
@@ -127,11 +131,28 @@ export default function PlaceCard({ placeId, index }) {
 					onClick={() => setExpanded((prev) => !prev)}
 					className="cursor-pointer"
 				>
-					<PlaceCardSummary {...{ placeId, expanded }} />
+					<PlaceCardSummary
+						{...{
+							placeId,
+							expanded,
+							selectedPlacesMap,
+							savedPlacesMap,
+						}}
+					/>
 				</Box>
 
 				<Collapse in={expanded} timeout="auto" unmountOnExit>
-					<PlaceCardDetails {...{ placeId }} />
+					{mode === "edit" && (
+						<PlaceCardDetails
+							{...{
+								placeId,
+								selectedPlacesMap,
+								setSelectedPlacesMap,
+								mode,
+							}}
+						/>
+					)}
+
 					<iframe
 						width="100%"
 						// height="350"
@@ -147,15 +168,17 @@ export default function PlaceCard({ placeId, index }) {
 					></iframe>
 				</Collapse>
 
-				<Box
-					sx={{
-						display: "flex",
-						justifyContent: "flex-start",
-						mt: "auto",
-					}}
-				>
-					<PlaceDeleteButton placeId={placeId} />
-				</Box>
+				{mode === "edit" && (
+					<Box
+						sx={{
+							display: "flex",
+							justifyContent: "flex-start",
+							mt: "auto",
+						}}
+					>
+						<PlaceDeleteButton placeId={placeId} />
+					</Box>
+				)}
 			</CardContent>
 		</Card>
 	);

@@ -45,6 +45,7 @@ import PlacesGrid from "@/components/Grids/PlacesGrid";
 import { LoadingButton } from "@mui/lab";
 import { setLoading } from "@/app/old-home/page";
 import { showError } from "@/contexts/ToastProvider";
+import { AppContext } from "@/contexts/AppContext";
 
 function ContextStep({
 	step,
@@ -204,13 +205,18 @@ export default function ContextStepper({
 }) {
 	const {
 		selectedPlacesMap,
+		setSelectedPlacesMap,
 		nearbyPlacesMap,
+		setNearbyPlacesMap,
 		poisMap,
 		distanceMatrix,
+		setDistanceMatrix,
 		directionInformation,
+		setDirectionInformation,
 		context,
 	} = useContext(GlobalContext);
 
+	const { savedPlacesMap } = useContext(AppContext);
 	const handleNext = () => {
 		if (activeStep === steps.length - 1) onFinish();
 		else setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -250,8 +256,15 @@ export default function ContextStepper({
 			form: <AutocompleteSearchBox />,
 			grid: Object.keys(selectedPlacesMap).length > 0 && (
 				<>
-					<MapComponent />
-					<PlacesGrid />
+					{/* <MapComponent /> */}
+					<PlacesGrid
+						{...{
+							selectedPlacesMap,
+							setSelectedPlacesMap,
+							savedPlacesMap,
+						}}
+						mode="edit"
+					/>
 				</>
 			),
 			context: context.places,
@@ -264,8 +277,17 @@ export default function ContextStepper({
 			additional:
 				"List of places whose nearby pois are added to the context",
 			icon: <PlaceIcon />,
-			form: <NearbyForm {...{ handlePlaceAdd }} />,
-			grid: Object.keys(nearbyPlacesMap).length > 0 && <NearbyGrid />,
+
+			grid: Object.keys(nearbyPlacesMap).length > 0 && (
+				<NearbyGrid
+					{...{
+						nearbyPlacesMap,
+						setNearbyPlacesMap,
+						savedPlacesMap,
+					}}
+					mode="edit"
+				/>
+			),
 			context: context.nearby,
 		},
 		// {
@@ -285,7 +307,16 @@ export default function ContextStepper({
 				"List of origin - destination pairs whose fastest route is added to the context",
 			icon: <MapIcon />,
 			form: <DistanceForm {...{ handlePlaceAdd }} />,
-			grid: Object.keys(distanceMatrix).length > 0 && <DistanceGrid />,
+			grid: Object.keys(distanceMatrix).length > 0 && (
+				<DistanceGrid
+					{...{
+						distanceMatrix,
+						setDistanceMatrix,
+						savedPlacesMap,
+					}}
+					mode="edit"
+				/>
+			),
 			context: context.distance,
 		},
 		{
@@ -296,7 +327,14 @@ export default function ContextStepper({
 			icon: <DirectionsIcon />,
 			form: <DirectionForm {...{ handlePlaceAdd }} />,
 			grid: Object.keys(directionInformation).length > 0 && (
-				<DirectionGrid />
+				<DirectionGrid
+					{...{
+						directionInformation,
+						setDirectionInformation,
+						savedPlacesMap,
+					}}
+					mode="edit"
+				/>
 			),
 			context: context.direction,
 		},

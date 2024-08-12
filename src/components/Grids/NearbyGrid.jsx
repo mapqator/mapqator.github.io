@@ -2,9 +2,14 @@ import React, { useContext } from "react";
 import NearbyCard from "@/components/Cards/NearbyCard";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { Grid } from "@mui/material";
+import { AppContext } from "@/contexts/AppContext";
 
-export default function NearbyGrid() {
-	const { nearbyPlacesMap } = useContext(GlobalContext);
+export default function NearbyGrid({
+	mode,
+	nearbyPlacesMap,
+	setNearbyPlacesMap,
+	savedPlacesMap,
+}) {
 	return (
 		<Grid container spacing={2} sx={{ mt: 0, mb: 2 }}>
 			{Object.keys(nearbyPlacesMap).map((place_id, i) =>
@@ -16,6 +21,10 @@ export default function NearbyGrid() {
 								index,
 								entry,
 								i,
+								savedPlacesMap,
+								nearbyPlacesMap,
+								setNearbyPlacesMap,
+								mode,
 							}}
 						/>
 					</Grid>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
 	IconButton,
 	CardContent,
@@ -24,13 +24,17 @@ import {
 } from "@/services/utils";
 import RouteSummary from "../Box/RouteSummary";
 
-function DistanceCardDetails({ from_id, to_id }) {
-	const { distanceMatrix, setDistanceMatrix } = useContext(GlobalContext);
+function DistanceCardDetails({
+	from_id,
+	to_id,
+	distanceMatrix,
+	setDistanceMatrix,
+	mode,
+}) {
 	const handleDelete = (mode) => {
 		const newDistanceMatrix = {
 			...distanceMatrix,
 		};
-
 		delete newDistanceMatrix[from_id][to_id][mode];
 		if (Object.keys(newDistanceMatrix[from_id][to_id]).length === 0)
 			delete newDistanceMatrix[from_id][to_id];
@@ -40,49 +44,59 @@ function DistanceCardDetails({ from_id, to_id }) {
 	};
 	return (
 		<List dense>
-			{Object.keys(distanceMatrix[from_id][to_id]).map((mode, index) => (
-				<React.Fragment key={index}>
-					<ListItem
-						secondaryAction={
-							<IconButton
-								edge="end"
-								onClick={() => handleDelete(mode)}
-								size="small"
-							>
-								<Delete color="error" />
-							</IconButton>
-						}
-					>
-						<ListItemIcon>
-							{convertTravelModeToIcon(mode)}
-						</ListItemIcon>
-						<ListItemText
-							primary={convertTravelModeToLabel(mode)}
-							secondary={
-								distanceMatrix[from_id][to_id][mode].duration +
-								" | " +
-								distanceMatrix[from_id][to_id][mode].distance
+			{Object.keys(distanceMatrix[from_id][to_id]).map(
+				(travelMode, index) => (
+					<React.Fragment key={index}>
+						<ListItem
+							secondaryAction={
+								mode === "edit" && (
+									<IconButton
+										edge="end"
+										onClick={() => handleDelete(travelMode)}
+										size="small"
+									>
+										<Delete color="error" />
+									</IconButton>
+								)
 							}
-							primaryTypographyProps={{
-								noWrap: true,
-							}}
-							secondaryTypographyProps={{
-								noWrap: true,
-							}}
-						/>
-					</ListItem>
-					{index <
-						Object.keys(distanceMatrix[from_id][to_id]).length -
-							1 && <Divider component="li" />}
-				</React.Fragment>
-			))}
+						>
+							<ListItemIcon>
+								{convertTravelModeToIcon(travelMode)}
+							</ListItemIcon>
+							<ListItemText
+								primary={convertTravelModeToLabel(travelMode)}
+								secondary={
+									distanceMatrix[from_id][to_id][travelMode]
+										.duration +
+									" | " +
+									distanceMatrix[from_id][to_id][travelMode]
+										.distance
+								}
+								primaryTypographyProps={{
+									noWrap: true,
+								}}
+								secondaryTypographyProps={{
+									noWrap: true,
+								}}
+							/>
+						</ListItem>
+						{index <
+							Object.keys(distanceMatrix[from_id][to_id]).length -
+								1 && <Divider component="li" />}
+					</React.Fragment>
+				)
+			)}
 		</List>
 	);
 }
 
-function DistanceCardSummary({ from_id, to_id, expanded }) {
-	const { distanceMatrix } = useContext(GlobalContext);
-	const { savedPlacesMap } = useContext(AppContext);
+function DistanceCardSummary({
+	from_id,
+	to_id,
+	expanded,
+	distanceMatrix,
+	savedPlacesMap,
+}) {
 	return (
 		<>
 			<Box
@@ -90,7 +104,7 @@ function DistanceCardSummary({ from_id, to_id, expanded }) {
 				justifyContent="space-between"
 				alignItems="center"
 			>
-				<RouteSummary {...{ from_id, to_id }} />
+				<RouteSummary {...{ from_id, to_id, savedPlacesMap }} />
 				<Box>
 					<IconButton
 						size="small"
@@ -125,19 +139,47 @@ function DistanceCardSummary({ from_id, to_id, expanded }) {
 	);
 }
 
-export default function DistanceCard({ from_id, to_id, index }) {
-	const [expanded, setExpanded] = useState(index === 0);
+export default function DistanceCard({
+	from_id,
+	to_id,
+	index,
+	mode,
+	distanceMatrix,
+	setDistanceMatrix,
+	savedPlacesMap,
+}) {
+	const [expanded, setExpanded] = useState(false);
+
+	useEffect(() => {
+		setExpanded(index === 0);
+	}, [index]);
 	return (
-		<Card variant="outlined">
+		<Card variant="outlined" className="h-full">
 			<CardContent
 				onClick={() => setExpanded(!expanded)}
 				className="cursor-pointer"
 			>
-				<DistanceCardSummary {...{ from_id, to_id, expanded }} />
+				<DistanceCardSummary
+					{...{
+						from_id,
+						to_id,
+						expanded,
+						distanceMatrix,
+						savedPlacesMap,
+					}}
+				/>
 			</CardContent>
 			<Collapse in={expanded} timeout="auto" unmountOnExit>
 				<Divider />
-				<DistanceCardDetails {...{ from_id, to_id }} />
+				<DistanceCardDetails
+					{...{
+						from_id,
+						to_id,
+						distanceMatrix,
+						setDistanceMatrix,
+						mode,
+					}}
+				/>
 			</Collapse>
 		</Card>
 	);

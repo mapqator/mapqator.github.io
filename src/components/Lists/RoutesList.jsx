@@ -16,8 +16,12 @@ import {
 } from "@mui/icons-material";
 import { AppContext } from "@/contexts/AppContext";
 
-export default function RoutesList({ routes, showSteps, waypoints }) {
-	const { savedPlacesMap } = useContext(AppContext);
+export default function RoutesList({
+	routes,
+	showSteps,
+	waypoints,
+	savedPlacesMap,
+}) {
 	return (
 		<List dense>
 			{routes.map((route, index) => (

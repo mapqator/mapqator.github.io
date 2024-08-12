@@ -2,9 +2,14 @@ import React, { useContext } from "react";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import DistanceCard from "@/components/Cards/DistanceCard";
 import { Grid } from "@mui/material";
+import { AppContext } from "@/contexts/AppContext";
 
-export default function DistanceGrid() {
-	const { distanceMatrix } = useContext(GlobalContext);
+export default function DistanceGrid({
+	distanceMatrix,
+	setDistanceMatrix,
+	savedPlacesMap,
+	mode,
+}) {
 	return (
 		<Grid container spacing={2} sx={{ mt: 0, mb: 2 }}>
 			{Object.keys(distanceMatrix).map((from_id, i) =>
@@ -16,7 +21,17 @@ export default function DistanceGrid() {
 						md={6}
 						key={from_id + "-" + to_id}
 					>
-						<DistanceCard {...{ from_id, to_id }} index={i + j} />
+						<DistanceCard
+							{...{
+								from_id,
+								to_id,
+								distanceMatrix,
+								setDistanceMatrix,
+								savedPlacesMap,
+								mode,
+							}}
+							index={i + j}
+						/>
 					</Grid>
 				))
 			)}

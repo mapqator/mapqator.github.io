@@ -34,6 +34,7 @@ import categories from "@/database/categories.json";
 import { convertFromSnake } from "@/services/utils";
 import { AppContext } from "@/contexts/AppContext";
 import ContextGeneratorService from "@/services/contextGeneratorService";
+import ContextVisualize from "../Viewer/ContextVisualize";
 
 export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 	const [flag, setFlag] = useState(false);
@@ -211,6 +212,23 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 							</Paper>
 						</Box>
 					)}
+					<Box sx={{ mb: 2 }}>
+						<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
+							<ContextVisualize
+								savedPlacesMap={entry.context_json.saved_places}
+								selectedPlacesMap={entry.context_json.places}
+								nearbyPlacesMap={
+									entry.context_json.nearby_places
+								}
+								distanceMatrix={
+									entry.context_json.distance_matrix
+								}
+								directionInformation={
+									entry.context_json.directions
+								}
+							/>
+						</Paper>
+					</Box>
 
 					<div className="flex flex-col gap-4">
 						{entry.questions.map((question, i) => (

@@ -9,8 +9,8 @@ export default function RouteSummary({
 	to_id,
 	intermediates,
 	optimized,
+	savedPlacesMap,
 }) {
-	const { savedPlacesMap } = useContext(AppContext);
 	return (
 		<Box className="flex flex-row w-full gap-8 justify-center">
 			<Box className="flex flex-col">

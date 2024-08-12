@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
 	IconButton,
 	Typography,
@@ -23,24 +23,38 @@ const priceMap = {
 	PRICE_LEVEL_VERY_EXPENSIVE: "Very Expensive",
 };
 
-function NearbyCardDetails({ index, place_id, entry }) {
-	const { nearbyPlacesMap, setNearbyPlacesMap } = useContext(GlobalContext);
+function NearbyCardDetails({
+	index,
+	place_id,
+	entry,
+	nearbyPlacesMap,
+	setNearbyPlacesMap,
+	mode,
+}) {
 	const handleTogglePlace = (e, poi_index) => {
 		const newNearbyPlacesMap = { ...nearbyPlacesMap };
 		newNearbyPlacesMap[place_id][index].places[poi_index].selected =
 			e.target.checked;
 		setNearbyPlacesMap(newNearbyPlacesMap);
 	};
-
 	return (
-		<PoiList places={entry.places} handleTogglePlace={handleTogglePlace} />
+		<PoiList
+			places={entry.places}
+			handleTogglePlace={handleTogglePlace}
+			mode={mode}
+		/>
 	);
 }
-function NearbyCardSummary({ index, place_id, entry, expanded }) {
-	const { selectedPlacesMap, nearbyPlacesMap, setNearbyPlacesMap } =
-		useContext(GlobalContext);
-	const { savedPlacesMap } = useContext(AppContext);
-
+function NearbyCardSummary({
+	index,
+	place_id,
+	entry,
+	expanded,
+	mode,
+	nearbyPlacesMap,
+	setNearbyPlacesMap,
+	savedPlacesMap,
+}) {
 	const handleDelete = () => {
 		const newNearbyPlacesMap = { ...nearbyPlacesMap };
 		newNearbyPlacesMap[place_id].splice(index, 1);
@@ -48,7 +62,6 @@ function NearbyCardSummary({ index, place_id, entry, expanded }) {
 			delete newNearbyPlacesMap[place_id];
 		setNearbyPlacesMap(newNearbyPlacesMap);
 	};
-
 	return (
 		<>
 			<Box
@@ -60,11 +73,13 @@ function NearbyCardSummary({ index, place_id, entry, expanded }) {
 				<Typography variant="h6" component="div">
 					{savedPlacesMap[place_id].displayName.text}
 				</Typography>
-				<Box className="flex flex-col items-end justify-start">
-					<IconButton onClick={handleDelete} size="small">
-						<Delete color="error" />
-					</IconButton>
-				</Box>
+				{mode === "edit" && (
+					<Box className="flex flex-col items-end justify-start">
+						<IconButton onClick={handleDelete} size="small">
+							<Delete color="error" />
+						</IconButton>
+					</Box>
+				)}
 			</Box>
 			<Box display="flex" justifyContent="space-between">
 				<Box
@@ -132,8 +147,20 @@ function NearbyCardSummary({ index, place_id, entry, expanded }) {
 		</>
 	);
 }
-export default function NearbyCard({ index, place_id, entry, i }) {
-	const [expanded, setExpanded] = useState(i === 0);
+export default function NearbyCard({
+	index,
+	place_id,
+	entry,
+	i,
+	mode,
+	nearbyPlacesMap,
+	setNearbyPlacesMap,
+	savedPlacesMap,
+}) {
+	const [expanded, setExpanded] = useState(false);
+	// useEffect(() => {
+	// 	setExpanded(i === 0);
+	// }, [i]);
 
 	return (
 		<Card variant="outlined">
@@ -141,11 +168,31 @@ export default function NearbyCard({ index, place_id, entry, i }) {
 				onClick={() => setExpanded(!expanded)}
 				className="cursor-pointer"
 			>
-				<NearbyCardSummary {...{ index, place_id, entry, expanded }} />
+				<NearbyCardSummary
+					{...{
+						index,
+						place_id,
+						entry,
+						expanded,
+						savedPlacesMap,
+						nearbyPlacesMap,
+						setNearbyPlacesMap,
+						mode,
+					}}
+				/>
 			</CardContent>
 			<Collapse in={expanded} timeout="auto" unmountOnExit>
 				<Divider />
-				<NearbyCardDetails {...{ index, place_id, entry }} />
+				<NearbyCardDetails
+					{...{
+						index,
+						place_id,
+						entry,
+						nearbyPlacesMap,
+						setNearbyPlacesMap,
+						mode,
+					}}
+				/>
 			</Collapse>
 		</Card>
 	);
