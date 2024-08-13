@@ -41,10 +41,14 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 	const [flag, setFlag] = useState(false);
 	const { setQueries } = useContext(AppContext);
 	const { isAuthenticated } = useAuth();
-	const [expanded, setExpanded] = useState(index === 0);
+	const [expanded, setExpanded] = useState(false);
 	const [context, setContext] = useState();
 	const [contextExpanded, setContextExpanded] = useState(false);
 	// const [category, setCategory] = useState(entry.classification);
+
+	// useEffect(() => {
+	// 	setExpanded(index === 0);
+	// }, [index]);
 
 	const handleDelete = async () => {
 		if (isAuthenticated) {
@@ -216,7 +220,12 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 					)}
 					<Box sx={{ mb: 2 }}>
 						<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
-							<div className="flex justify-center flex-row items-center">
+							<div
+								className="flex justify-center flex-row items-center cursor-pointer"
+								onClick={() =>
+									setContextExpanded((prev) => !prev)
+								}
+							>
 								<h1 className="font-bold p-2">
 									{contextExpanded
 										? "Hide Context"
@@ -224,9 +233,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 								</h1>
 								<IconButton
 									// sx={{ height: "2rem", width: "2rem" }}
-									onClick={() =>
-										setContextExpanded((prev) => !prev)
-									}
+
 									sx={{
 										transform: contextExpanded
 											? "rotate(180deg)"
