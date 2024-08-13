@@ -10,6 +10,7 @@ import {
 	Button,
 	IconButton,
 	Card,
+	Divider,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -42,6 +43,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 	const { isAuthenticated } = useAuth();
 	const [expanded, setExpanded] = useState(index === 0);
 	const [context, setContext] = useState();
+	const [contextExpanded, setContextExpanded] = useState(false);
 	// const [category, setCategory] = useState(entry.classification);
 
 	const handleDelete = async () => {
@@ -214,19 +216,54 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 					)}
 					<Box sx={{ mb: 2 }}>
 						<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
-							<ContextVisualize
-								savedPlacesMap={entry.context_json.saved_places}
-								selectedPlacesMap={entry.context_json.places}
-								nearbyPlacesMap={
-									entry.context_json.nearby_places
-								}
-								distanceMatrix={
-									entry.context_json.distance_matrix
-								}
-								directionInformation={
-									entry.context_json.directions
-								}
-							/>
+							<div className="flex justify-center flex-row items-center">
+								<h1 className="font-bold p-2">
+									{contextExpanded
+										? "Hide Context"
+										: "Visualize Context"}
+								</h1>
+								<IconButton
+									// sx={{ height: "2rem", width: "2rem" }}
+									onClick={() =>
+										setContextExpanded((prev) => !prev)
+									}
+									sx={{
+										transform: contextExpanded
+											? "rotate(180deg)"
+											: "rotate(0deg)",
+										transition: "0.3s",
+									}}
+								>
+									<ExpandMoreIcon />
+								</IconButton>
+							</div>
+
+							{contextExpanded && (
+								<>
+									<Divider
+										sx={{
+											mt: 2,
+										}}
+									/>
+									<ContextVisualize
+										savedPlacesMap={
+											entry.context_json.saved_places
+										}
+										selectedPlacesMap={
+											entry.context_json.places
+										}
+										nearbyPlacesMap={
+											entry.context_json.nearby_places
+										}
+										distanceMatrix={
+											entry.context_json.distance_matrix
+										}
+										directionInformation={
+											entry.context_json.directions
+										}
+									/>
+								</>
+							)}
 						</Paper>
 					</Box>
 
