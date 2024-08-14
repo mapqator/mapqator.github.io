@@ -72,6 +72,23 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 	if (attributes.includes("reservable")) {
 		text += place.reservable ? "- Reservable.\n" : "- Not Reservable.\n";
 	}
+
+	if (attributes.includes("servesBreakfast")) {
+		text += place.servesBreakfast
+			? "- Serves Breakfast.\n"
+			: "- Does Not Serve Breakfast.\n";
+	}
+	if (attributes.includes("servesLunch")) {
+		text += place.servesLunch
+			? "- Serves Lunch.\n"
+			: "- Does Not Serve Lunch.\n";
+	}
+
+	if (attributes.includes("servesDinner")) {
+		text += place.servesDinner
+			? "- Serves Dinner.\n"
+			: "- Does Not Serve Dinner.\n";
+	}
 	if (attributes.includes("accessibilityOptions")) {
 		text += place.accessibilityOptions.wheelchairAccessibleEntrance
 			? "- Wheelchair Accessible Entrance.\n"
