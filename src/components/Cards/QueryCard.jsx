@@ -27,7 +27,13 @@ import OptionsPreview from "../Lists/OptionsPreview";
 import { getUserName } from "@/api/base";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import queryApi from "@/api/queryApi";
-import { Delete, Save, GetApp, Rule } from "@mui/icons-material";
+import {
+	Delete,
+	Save,
+	GetApp,
+	Rule,
+	AssignmentTurnedIn,
+} from "@mui/icons-material";
 import { useAuth } from "@/contexts/AuthContext";
 import { showError, showSuccess } from "@/contexts/ToastProvider";
 import { FormControl, Select, MenuItem, InputLabel } from "@mui/material";
@@ -36,7 +42,7 @@ import { convertFromSnake } from "@/services/utils";
 import { AppContext } from "@/contexts/AppContext";
 import ContextGeneratorService from "@/services/contextGeneratorService";
 import ContextVisualize from "../Viewer/ContextVisualize";
-
+import Pluralize from "pluralize";
 export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 	const [flag, setFlag] = useState(false);
 	const { setQueries } = useContext(AppContext);
@@ -309,8 +315,8 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 			)}
 			{(entry.username === getUserName() ||
 				getUserName() === "admin") && (
-				<div className="w-full flex flex-row justify-end gap-2 p-2">
-					{getUserName() === "admin" && (
+				<div className="w-full flex flex-row justify-between gap-2 p-2 items-center">
+					{getUserName() === "admin" ? (
 						<div className="flex flex-row gap-2 mr-auto">
 							{/* <FormControl
 										variant="outlined"
@@ -372,67 +378,87 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 								Save
 							</Button>
 						</div>
+					) : (
+						<Chip
+							icon={<AssignmentTurnedIn />}
+							label={Pluralize(
+								"Question",
+								entry.questions.length ?? 0,
+								true
+							)}
+							// size="small"
+							color="primary"
+							variant="outlined"
+						/>
 					)}
 
-					{mode === "explore" ? (
-						<>
-							<QueryEditButton {...{ onEdit }} query={entry} />
-						</>
-					) : (
-						<>
-							{/* <Button
+					<div className="flex gap-2">
+						{mode === "explore" ? (
+							<>
+								<QueryEditButton
+									{...{ onEdit }}
+									query={entry}
+								/>
+							</>
+						) : (
+							<>
+								{/* <Button
 								color="primary"
 								startIcon={<GetApp />}
 								onClick={handleDownloadQuery}
 							>
 								Download Query
 							</Button> */}
-							<Button
-								color="primary"
-								startIcon={<Rule />}
-								onClick={async () => {
-									const res =
-										await queryApi.submitForEvaluation(
-											entry.id,
-											context
-										);
-									if (res.success) {
-										showSuccess(
-											"Query submitted for evaluation"
-										);
-										console.log(res.data[0]);
-										// Update the query with the evaluation
-										setQueries((prev) =>
-											prev.map((q) =>
-												q.id === entry.id
-													? {
-															...entry,
-															evaluation:
-																res.data[0],
-													  }
-													: q
-											)
-										);
-									} else {
-										showError(
-											"Can't submit query for evaluation"
-										);
-									}
-								}}
-							>
-								Evaluate
-							</Button>
-							<Button
-								// variant="contained"
-								color="error"
-								startIcon={<Delete />}
-								onClick={() => handleDelete()}
-							>
-								Delete
-							</Button>
-							<QueryEditButton {...{ onEdit }} query={entry} />
-						</>
-					)}
+								<Button
+									color="primary"
+									startIcon={<Rule />}
+									onClick={async () => {
+										const res =
+											await queryApi.submitForEvaluation(
+												entry.id,
+												context
+											);
+										if (res.success) {
+											showSuccess(
+												"Query submitted for evaluation"
+											);
+											console.log(res.data[0]);
+											// Update the query with the evaluation
+											setQueries((prev) =>
+												prev.map((q) =>
+													q.id === entry.id
+														? {
+																...entry,
+																evaluation:
+																	res.data[0],
+														  }
+														: q
+												)
+											);
+										} else {
+											showError(
+												"Can't submit query for evaluation"
+											);
+										}
+									}}
+								>
+									Evaluate
+								</Button>
+								<Button
+									// variant="contained"
+									color="error"
+									startIcon={<Delete />}
+									onClick={() => handleDelete()}
+								>
+									Delete
+								</Button>
+								<QueryEditButton
+									{...{ onEdit }}
+									query={entry}
+								/>
+							</>
+						)}
+					</div>
 				</div>
 			)}
 		</Card>
