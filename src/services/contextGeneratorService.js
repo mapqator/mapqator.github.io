@@ -25,6 +25,11 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 				: ""
 		}.\n`;
 	}
+
+	if (attributes.includes("internationalPhoneNumber")) {
+		text += `- Phone Number: ${place.internationalPhoneNumber}.\n`;
+	}
+
 	if (attributes.includes("regularOpeningHours")) {
 		text += `- Opening hours: ${place.regularOpeningHours.weekdayDescriptions.join(
 			", "
