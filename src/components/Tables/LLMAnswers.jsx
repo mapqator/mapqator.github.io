@@ -28,9 +28,10 @@ const extractSubstringInParentheses = (s) => {
 export default function LLMAnswers({ entry, index }) {
 	console.log(entry.evaluation);
 	const results =
-		entry.evaluation?.length > 0 &&
+		entry.evaluation?.length &&
 		entry.evaluation.map((e) => {
 			const responses = e.responses;
+			if (responses.length < index + 1) return null;
 			const response = responses[index];
 			const option = parseInt(extract(response));
 			const model = e.model;
@@ -99,38 +100,44 @@ export default function LLMAnswers({ entry, index }) {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{results.map((llmAnswer, index) => (
-									<TableRow key={index}>
-										<TableCell>{llmAnswer.model}</TableCell>
-										<TableCell
-											align="center"
-											sx={{
-												fontSize: "0.65rem",
-											}}
-										>
-											{llmAnswer.explanation}
-										</TableCell>
-										<TableCell align="center">
-											Option {llmAnswer.option}
-										</TableCell>
+								{results?.map(
+									(llmAnswer, index) =>
+										llmAnswer && (
+											<TableRow key={index}>
+												<TableCell>
+													{llmAnswer.model}
+												</TableCell>
+												<TableCell
+													align="center"
+													sx={{
+														fontSize: "0.65rem",
+													}}
+												>
+													{llmAnswer.explanation}
+												</TableCell>
+												<TableCell align="center">
+													Option {llmAnswer.option}
+												</TableCell>
 
-										<TableCell align="center">
-											{llmAnswer.verdict === "right" ? (
-												<Chip
-													label="Correct"
-													color="success"
-													size="small"
-												/>
-											) : (
-												<Chip
-													label="Incorrect"
-													color="error"
-													size="small"
-												/>
-											)}
-										</TableCell>
-									</TableRow>
-								))}
+												<TableCell align="center">
+													{llmAnswer.verdict ===
+													"right" ? (
+														<Chip
+															label="Correct"
+															color="success"
+															size="small"
+														/>
+													) : (
+														<Chip
+															label="Incorrect"
+															color="error"
+															size="small"
+														/>
+													)}
+												</TableCell>
+											</TableRow>
+										)
+								)}
 							</TableBody>
 						</Table>
 					</TableContainer>
