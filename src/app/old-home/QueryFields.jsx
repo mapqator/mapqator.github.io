@@ -568,19 +568,13 @@ export default function QueryFields({
 							}}
 							input={<OutlinedInput label={"Category"} />}
 						>
-							{[
-								"nearby_poi",
-								"planning",
-								"time_calculation",
-								"routing",
-								"location_finding",
-								"opinion",
-								"navigation",
-							].map((value, index) => (
-								<MenuItem key={index} value={value}>
-									{value}
-								</MenuItem>
-							))}
+							{["poi", "nearby", "routing", "trip"].map(
+								(value, index) => (
+									<MenuItem key={index} value={value}>
+										{value}
+									</MenuItem>
+								)
+							)}
 						</Select>
 					</FormControl>
 				</div>
