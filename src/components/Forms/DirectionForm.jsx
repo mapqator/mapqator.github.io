@@ -6,6 +6,7 @@ import {
 	Chip,
 	FormControl,
 	Grid,
+	IconButton,
 	InputLabel,
 	ListItemText,
 	MenuItem,
@@ -22,6 +23,8 @@ import { showError } from "@/contexts/ToastProvider";
 import DepartureTimeField from "../InputFields/DepartureTimeField";
 import dayjs from "dayjs";
 import { AppContext } from "@/contexts/AppContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
 
 const avoidMap = {
 	avoidTolls: "Tolls",
@@ -177,7 +180,25 @@ export default function DirectionForm({
 						handlePlaceAdd={handlePlaceAdd}
 					/>
 				</Grid>
-
+				<Grid item xs={12} className="flex justify-center">
+					<IconButton
+						onClick={() => {
+							setNewDirection((prev) => ({
+								...prev,
+								origin: newDirection.destination,
+								destination: newDirection.origin,
+							}));
+						}}
+					>
+						<FontAwesomeIcon
+							icon={faRightLeft}
+							style={{
+								transform: "rotate(90deg)",
+								color: "#000",
+							}}
+						/>
+					</IconButton>
+				</Grid>
 				<Grid item xs={12}>
 					<PlaceSelectionField
 						label="Destination"
