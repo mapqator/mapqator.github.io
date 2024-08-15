@@ -208,8 +208,11 @@ const ContextGeneratorService = {
 							savedPlacesMap[near_place.place_id]?.displayName
 								.text || near_place.name
 						}</b> (${
-							near_place.formatted_address ||
-							savedPlacesMap[near_place.place_id]?.vicinity
+							"Rating: " +
+							near_place.rating +
+							(near_place.priceLevel
+								? " | " + near_place.priceLevel
+								: "")
 						})\n`;
 						counter++;
 					}

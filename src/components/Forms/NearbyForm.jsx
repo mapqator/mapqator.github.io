@@ -220,7 +220,7 @@ export default function NearbyForm({ handlePlaceAdd }) {
 				)}
 			</Grid>
 
-			{newNearbyPlaces.locationBias &&
+			{/* {newNearbyPlaces.locationBias &&
 				((newNearbyPlaces.searchBy === "type" &&
 					newNearbyPlaces.type) ||
 					(newNearbyPlaces.searchBy === "keyword" &&
@@ -246,7 +246,7 @@ export default function NearbyForm({ handlePlaceAdd }) {
 							}`}
 						></iframe>
 					</Grid>
-				)}
+				)} */}
 
 			<Grid item xs={12}>
 				<TextField
