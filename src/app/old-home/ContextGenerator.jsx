@@ -504,7 +504,7 @@ export default function ContextGenerator({
 					setSelectedPlacesMap,
 				}}
 			/>
-
+			{/* 
 			<POI
 				{...{
 					savedPlacesMap,
@@ -514,7 +514,7 @@ export default function ContextGenerator({
 					setPoisMap,
 					setSelectedPlacesMap,
 				}}
-			/>
+			/> */}
 
 			{/* <CurrentInformation
 				{...{

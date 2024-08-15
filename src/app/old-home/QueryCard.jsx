@@ -26,7 +26,8 @@ import QueryFields from "./QueryFields";
 import dayjs from "dayjs";
 import { Clear, Save } from "@mui/icons-material";
 import mapApi from "@/api/mapApi";
-
+import categories from "@/database/categories";
+import { showSuccess } from "./home";
 export default function QueryCard({
 	initQuery,
 	index,
@@ -148,30 +149,19 @@ export default function QueryCard({
 								Category
 							</InputLabel>
 							<Select
-								multiple
+								// multiple
 								id="outlined-adornment"
 								className="outlined-input"
-								value={query.classification
-									.split(",")
-									.filter(Boolean)}
+								value={query.classification}
 								onChange={(e) => {
 									setQuery((prev) => ({
 										...prev,
-										classification:
-											e.target.value.join(","),
+										classification: e.target.value,
 									}));
 								}}
 								input={<OutlinedInput label={"Category"} />}
 							>
-								{[
-									"nearby_poi",
-									"planning",
-									"time_calculation",
-									"routing",
-									"location_finding",
-									"opinion",
-									"navigation",
-								].map((value, index) => (
+								{categories.map((value, index) => (
 									<MenuItem key={index} value={value}>
 										{value}
 									</MenuItem>
@@ -182,7 +172,14 @@ export default function QueryCard({
 							variant="contained"
 							color="primary"
 							onClick={async () => {
-								await handleEdit(query, index);
+								// await handleEdit(query, index);
+								const res = await queryApi.updateCategory(
+									query.id,
+									query.classification
+								);
+								if (res.success) {
+									showSuccess("Category Updated", res);
+								}
 							}}
 							startIcon={<Save />}
 						>
