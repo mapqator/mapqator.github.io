@@ -45,7 +45,7 @@ function NearbyCardDetails({
 	};
 	const [travelMode, setTravelMode] = useState("WALK");
 	const [loading, setLoading] = useState(false);
-
+	const { setNewDistance, setActiveStep } = useContext(GlobalContext);
 	const handleDistanceAdd = async () => {
 		setLoading(true);
 		const origins = [place_id];
@@ -110,6 +110,7 @@ function NearbyCardDetails({
 				places={entry.places}
 				handleTogglePlace={handleTogglePlace}
 				mode={mode}
+				locationBias={place_id}
 			/>
 			{mode === "edit" && (
 				<div className="flex flex-col gap-4 p-4">
@@ -118,14 +119,23 @@ function NearbyCardDetails({
 						{savedPlacesMap[place_id].displayName.text} to nearby{" "}
 						{Pluralize(entry.type)}
 					</Typography>
-					<TravelSelectionField
+					{/* <TravelSelectionField
 						mode={travelMode}
 						setMode={(value) => setTravelMode(value)}
-					/>
+					/> */}
 					<LoadingButton
 						variant="contained"
 						fullWidth
-						onClick={handleDistanceAdd}
+						onClick={() => {
+							setNewDistance({
+								origins: [place_id],
+								destinations: entry.places
+									.filter((place) => place.selected)
+									.map((place) => place.place_id),
+								travelMode: "WALK",
+							});
+							setActiveStep(4);
+						}}
 						startIcon={<Add />}
 						loading={loading}
 						loadingPosition="start"
@@ -253,9 +263,9 @@ export default function NearbyCard({
 	setDistanceMatrix,
 }) {
 	const [expanded, setExpanded] = useState(false);
-	// useEffect(() => {
-	// 	setExpanded(i === 0);
-	// }, [i]);
+	useEffect(() => {
+		setExpanded(i === 0);
+	}, [i]);
 
 	return (
 		<Card variant="outlined">

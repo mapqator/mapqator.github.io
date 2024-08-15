@@ -18,6 +18,7 @@ import PlaceIcon from "@mui/icons-material/Place";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import ContextPreview from "@/components/Cards/ContextPreview";
 import {
+	AddLocationAlt,
 	Clear,
 	Flag,
 	KeyboardArrowRight,
@@ -217,9 +218,16 @@ export default function ContextStepper({
 		directionInformation,
 		setDirectionInformation,
 		context,
+		newDistance,
+		setNewDistance,
+		newNearbyPlaces,
+		setNewNearbyPlaces,
+		newDirection,
+		setNewDirection,
 	} = useContext(GlobalContext);
 
 	const { savedPlacesMap } = useContext(AppContext);
+
 	const handleNext = () => {
 		if (activeStep === steps.length - 1) onFinish();
 		else setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -273,7 +281,7 @@ export default function ContextStepper({
 		{
 			label: "Add Information of Places",
 			description: `Add full details of a place.`,
-			icon: <Place />,
+			icon: <AddLocationAlt />,
 			additional: "Places you have added to the context.",
 			form: <PlacesForm {...{ handlePlaceAdd }} />,
 			grid: Object.keys(selectedPlacesMap).length > 0 && (
@@ -298,7 +306,11 @@ export default function ContextStepper({
 			additional:
 				"List of places whose nearby pois are added to the context",
 			icon: <SiGooglenearby />,
-			form: <NearbyForm {...{ handlePlaceAdd }} />,
+			form: (
+				<NearbyForm
+					{...{ handlePlaceAdd, newNearbyPlaces, setNewNearbyPlaces }}
+				/>
+			),
 			grid: Object.keys(nearbyPlacesMap).length > 0 && (
 				<NearbyGrid
 					{...{
@@ -313,23 +325,18 @@ export default function ContextStepper({
 			),
 			context: context.nearby,
 		},
-		// {
-		// 	label: "Explore POIs inside Places",
-		// 	description: `Explore various Points of Interest (POIs) within a larger area. Select a region like a city or neighborhood, then choose a type (e.g., restaurants, museums, parks) to see POIs within that area.`,
-		// 	additional:
-		// 		"List of areas whose internals pois are added to the context",
-		// 	icon: <ExploreIcon />,
-		// 	form: <AreaForm {...{ handlePlaceAdd }} />,
-		// 	grid: Object.keys(poisMap).length > 0 && <AreaGrid />,
-		// 	context: context.area,
-		// },
+
 		{
 			label: "Get Distance Matrix",
 			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Choose origins, destinations and travel mode to find distance and durations.`,
 			additional:
 				"List of origin - destination pairs whose fastest route is added to the context",
 			icon: <MapIcon />,
-			form: <DistanceForm {...{ handlePlaceAdd }} />,
+			form: (
+				<DistanceForm
+					{...{ handlePlaceAdd, newDistance, setNewDistance }}
+				/>
+			),
 			grid: Object.keys(distanceMatrix).length > 0 && (
 				<DistanceGrid
 					{...{
@@ -348,7 +355,11 @@ export default function ContextStepper({
 			additional:
 				"List of origin - destination pairs whose alternative routes are added to the context",
 			icon: <DirectionsIcon />,
-			form: <DirectionForm {...{ handlePlaceAdd }} />,
+			form: (
+				<DirectionForm
+					{...{ handlePlaceAdd, newDirection, setNewDirection }}
+				/>
+			),
 			grid: Object.keys(directionInformation).length > 0 && (
 				<DirectionGrid
 					{...{
@@ -361,7 +372,32 @@ export default function ContextStepper({
 			),
 			context: context.direction,
 		},
-
+		{
+			label: "Preview Full Context",
+			description: `Review the information gathered and then you can proceed to create a question based on the context you have generated.`,
+			icon: <RemoveRedEye />,
+			component: (
+				<>
+					<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
+						<ContextPreview
+							context={ContextGeneratorService.convertContextToText(
+								context
+							)}
+						/>
+					</Paper>
+				</>
+			),
+		},
+		// {
+		// 	label: "Explore POIs inside Places",
+		// 	description: `Explore various Points of Interest (POIs) within a larger area. Select a region like a city or neighborhood, then choose a type (e.g., restaurants, museums, parks) to see POIs within that area.`,
+		// 	additional:
+		// 		"List of areas whose internals pois are added to the context",
+		// 	icon: <ExploreIcon />,
+		// 	form: <AreaForm {...{ handlePlaceAdd }} />,
+		// 	grid: Object.keys(poisMap).length > 0 && <AreaGrid />,
+		// 	context: context.area,
+		// },
 		// {
 		// 	label: "Set Query Parameters",
 		// 	description: `Set the time, day, and location that should be used as a basis for answering questions. This will help provide more accurate and context-specific responses.`,
@@ -379,22 +415,6 @@ export default function ContextStepper({
 		// 	),
 		// 	context: context.params,
 		// },
-		{
-			label: "Preview Full Context",
-			description: `Review the information gathered and then you can proceed to create a question based on the context you have generated.`,
-			icon: <RemoveRedEye />,
-			component: (
-				<>
-					<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
-						<ContextPreview
-							context={ContextGeneratorService.convertContextToText(
-								context
-							)}
-						/>
-					</Paper>
-				</>
-			),
-		},
 	];
 	return (
 		<>

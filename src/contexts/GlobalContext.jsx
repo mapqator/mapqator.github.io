@@ -192,7 +192,7 @@ export default function GlobalContextProvider({ children }) {
 		direction: [],
 		params: [],
 	});
-
+	const [activeStep, setActiveStep] = useState(0);
 	const [llmResults, setLlmResults] = useState({});
 	const [contextStatus, setContextStatus] = useState("empty");
 	const [queryStatus, setQueryStatus] = useState("empty");
@@ -212,6 +212,42 @@ export default function GlobalContextProvider({ children }) {
 	const [currentInformation, setCurrentInformation] = useState(
 		initCurrentInformation
 	);
+
+	const [newDistance, setNewDistance] = useState({
+		origins: [],
+		destinations: [],
+		travelMode: "WALK",
+	});
+	const [newNearbyPlaces, setNewNearbyPlaces] = useState({
+		locationBias: "",
+		searchBy: "type",
+		type: "",
+		keyword: "",
+		rankPreference: "RELEVANCE",
+		minRating: 0, // Values are rounded up to the nearest 0.5.
+		priceLevels: [],
+	});
+	const [newDirection, setNewDirection] = useState({
+		origin: "",
+		destination: "",
+		intermediates: [],
+		travelMode: "WALK",
+		departureTime: {
+			type: "now",
+			date: dayjs(),
+			time: dayjs(),
+			departureTimestamp: new Date(),
+		},
+		optimizeWaypointOrder: false,
+		transitPreferences: {
+			allowedTravelModes: [],
+		},
+		routeModifiers: {
+			avoidTolls: false,
+			avoidHighways: false,
+			avoidFerries: false,
+		},
+	});
 
 	// const initQuery = {
 	// 	question: "Time to go from Louvre to Eiffel Tower by car?",
@@ -339,6 +375,14 @@ export default function GlobalContextProvider({ children }) {
 				setEvaluationStatus,
 				llmResults,
 				setLlmResults,
+				activeStep,
+				setActiveStep,
+				newDistance,
+				setNewDistance,
+				newNearbyPlaces,
+				setNewNearbyPlaces,
+				newDirection,
+				setNewDirection,
 			}}
 		>
 			{children}

@@ -48,7 +48,11 @@ const priceMap = {
 	PRICE_LEVEL_VERY_EXPENSIVE: "Very Expensive",
 };
 
-export default function NearbyForm({ handlePlaceAdd }) {
+export default function NearbyForm({
+	handlePlaceAdd,
+	newNearbyPlaces,
+	setNewNearbyPlaces,
+}) {
 	const { selectedPlacesMap, nearbyPlacesMap, setNearbyPlacesMap } =
 		useContext(GlobalContext);
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
@@ -61,7 +65,10 @@ export default function NearbyForm({ handlePlaceAdd }) {
 		minRating: 0, // Values are rounded up to the nearest 0.5.
 		priceLevels: [],
 	};
-	const [newNearbyPlaces, setNewNearbyPlaces] = useState(initialData);
+
+	// useEffect(() => {
+	// 	setNewNearbyPlaces(initialData);
+	// }, []);
 
 	const handleSave = async (place) => {
 		let details = savedPlacesMap[place.id];
@@ -157,74 +164,75 @@ export default function NearbyForm({ handlePlaceAdd }) {
 	};
 
 	return (
-		<Grid container spacing={2}>
-			<Grid item xs={12}>
-				<PlaceSelectionField
-					label="Location"
-					value={newNearbyPlaces.locationBias}
-					onChange={(e) =>
-						setNewNearbyPlaces((prev) => ({
-							...prev,
-							locationBias: e.target.value,
-						}))
-					}
-					handlePlaceAdd={handlePlaceAdd}
-				/>
-			</Grid>
-
-			<Grid item xs={12}>
-				<RadioGroup
-					row
-					value={newNearbyPlaces.searchBy}
-					onChange={(e) =>
-						setNewNearbyPlaces((prev) => ({
-							...prev,
-							searchBy: e.target.value,
-						}))
-					}
-				>
-					<FormControlLabel
-						value="type"
-						control={<Radio />}
-						label="Search by type"
-					/>
-					<FormControlLabel
-						value="keyword"
-						control={<Radio />}
-						label="Search by keyword"
-					/>
-				</RadioGroup>
-			</Grid>
-
-			<Grid item xs={12}>
-				{newNearbyPlaces.searchBy === "type" ? (
-					<TypeSelectionField
-						type={newNearbyPlaces.type}
-						setType={(newValue) => {
-							console.log("New Value: ", newValue);
-							setNewNearbyPlaces((prev) => ({
-								...prev,
-								type: newValue,
-							}));
-						}}
-					/>
-				) : (
-					<TextField
-						fullWidth
-						size="small"
-						label="Keyword"
-						value={newNearbyPlaces.keyword}
+		newNearbyPlaces && (
+			<Grid container spacing={2}>
+				<Grid item xs={12}>
+					<PlaceSelectionField
+						label="Location"
+						value={newNearbyPlaces.locationBias}
 						onChange={(e) =>
 							setNewNearbyPlaces((prev) => ({
 								...prev,
-								keyword: e.target.value,
+								locationBias: e.target.value,
 							}))
 						}
+						handlePlaceAdd={handlePlaceAdd}
 					/>
-				)}
-			</Grid>
+				</Grid>
 
-			{/* {newNearbyPlaces.locationBias &&
+				<Grid item xs={12}>
+					<RadioGroup
+						row
+						value={newNearbyPlaces.searchBy}
+						onChange={(e) =>
+							setNewNearbyPlaces((prev) => ({
+								...prev,
+								searchBy: e.target.value,
+							}))
+						}
+					>
+						<FormControlLabel
+							value="type"
+							control={<Radio />}
+							label="Search by type"
+						/>
+						<FormControlLabel
+							value="keyword"
+							control={<Radio />}
+							label="Search by keyword"
+						/>
+					</RadioGroup>
+				</Grid>
+
+				<Grid item xs={12}>
+					{newNearbyPlaces.searchBy === "type" ? (
+						<TypeSelectionField
+							type={newNearbyPlaces.type}
+							setType={(newValue) => {
+								console.log("New Value: ", newValue);
+								setNewNearbyPlaces((prev) => ({
+									...prev,
+									type: newValue,
+								}));
+							}}
+						/>
+					) : (
+						<TextField
+							fullWidth
+							size="small"
+							label="Keyword"
+							value={newNearbyPlaces.keyword}
+							onChange={(e) =>
+								setNewNearbyPlaces((prev) => ({
+									...prev,
+									keyword: e.target.value,
+								}))
+							}
+						/>
+					)}
+				</Grid>
+
+				{/* {newNearbyPlaces.locationBias &&
 				((newNearbyPlaces.searchBy === "type" &&
 					newNearbyPlaces.type) ||
 					(newNearbyPlaces.searchBy === "keyword" &&
@@ -252,87 +260,87 @@ export default function NearbyForm({ handlePlaceAdd }) {
 					</Grid>
 				)} */}
 
-			<Grid item xs={12}>
-				<TextField
-					type="number"
-					value={newNearbyPlaces.minRating}
-					label="Min Rating"
-					onChange={(e) =>
-						setNewNearbyPlaces((prev) => ({
-							...prev,
-							minRating: e.target.value,
-						}))
-					}
-					inputProps={{ step: 0.5, min: 0, max: 5 }}
-					size="small"
-					fullWidth
-				/>
-			</Grid>
-			<Grid item xs={12}>
-				<FormControl fullWidth size="small">
-					<InputLabel>Price</InputLabel>
-					<Select
-						// input={<OutlinedInput label="Tag" />}
-						value={newNearbyPlaces.priceLevels}
+				<Grid item xs={12}>
+					<TextField
+						type="number"
+						value={newNearbyPlaces.minRating}
+						label="Min Rating"
 						onChange={(e) =>
 							setNewNearbyPlaces((prev) => ({
 								...prev,
-								priceLevels: e.target.value,
+								minRating: e.target.value,
 							}))
 						}
-						label={"Price"}
-						multiple
-						renderValue={(selected) => {
-							if (selected.length === 0) {
-								return <em>Any</em>; // Custom label for empty array
+						inputProps={{ step: 0.5, min: 0, max: 5 }}
+						size="small"
+						fullWidth
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<FormControl fullWidth size="small">
+						<InputLabel>Price</InputLabel>
+						<Select
+							// input={<OutlinedInput label="Tag" />}
+							value={newNearbyPlaces.priceLevels}
+							onChange={(e) =>
+								setNewNearbyPlaces((prev) => ({
+									...prev,
+									priceLevels: e.target.value,
+								}))
 							}
-							return selected
-								.map((value) => priceMap[value] || value)
-								.join(", ");
-						}}
+							label={"Price"}
+							multiple
+							renderValue={(selected) => {
+								if (selected.length === 0) {
+									return <em>Any</em>; // Custom label for empty array
+								}
+								return selected
+									.map((value) => priceMap[value] || value)
+									.join(", ");
+							}}
+						>
+							{Object.keys(priceMap).map((key) => (
+								<MenuItem key={key} value={key}>
+									<Checkbox
+										checked={
+											newNearbyPlaces.priceLevels.indexOf(
+												key
+											) > -1
+										}
+									/>
+									<ListItemText primary={priceMap[key]} />
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+					<Typography variant="caption">
+						The default is to select all price levels.
+					</Typography>
+				</Grid>
+				<Grid item xs={12}>
+					<RadioGroup
+						row
+						value={newNearbyPlaces.rankPreference}
+						onChange={(e) =>
+							setNewNearbyPlaces((prev) => ({
+								...prev,
+								rankPreference: e.target.value,
+							}))
+						}
 					>
-						{Object.keys(priceMap).map((key) => (
-							<MenuItem key={key} value={key}>
-								<Checkbox
-									checked={
-										newNearbyPlaces.priceLevels.indexOf(
-											key
-										) > -1
-									}
-								/>
-								<ListItemText primary={priceMap[key]} />
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-				<Typography variant="caption">
-					The default is to select all price levels.
-				</Typography>
-			</Grid>
-			<Grid item xs={12}>
-				<RadioGroup
-					row
-					value={newNearbyPlaces.rankPreference}
-					onChange={(e) =>
-						setNewNearbyPlaces((prev) => ({
-							...prev,
-							rankPreference: e.target.value,
-						}))
-					}
-				>
-					<FormControlLabel
-						value="RELEVANCE"
-						control={<Radio />}
-						label="Rank by Relevance"
-					/>
-					<FormControlLabel
-						value="DISTANCE"
-						control={<Radio />}
-						label="Rank by Distance"
-					/>
-				</RadioGroup>
-			</Grid>
-			{/* {newNearbyPlaces.rankPreference === "prominence" && (
+						<FormControlLabel
+							value="RELEVANCE"
+							control={<Radio />}
+							label="Rank by Relevance"
+						/>
+						<FormControlLabel
+							value="DISTANCE"
+							control={<Radio />}
+							label="Rank by Distance"
+						/>
+					</RadioGroup>
+				</Grid>
+				{/* {newNearbyPlaces.rankPreference === "prominence" && (
 				<Grid item xs={12}>
 					<TextField
 						fullWidth
@@ -349,21 +357,23 @@ export default function NearbyForm({ handlePlaceAdd }) {
 					/>
 				</Grid>
 			)} */}
-			<Grid item xs={12}>
-				<LoadingButton
-					variant="contained"
-					fullWidth
-					onClick={searchNearbyPlaces}
-					startIcon={<Add />}
-					loading={loading}
-					loadingPosition="start"
-				>
-					Add Nearby POIs
-				</LoadingButton>
-				<h6 className="px-2  text-sm text-center">
-					Note: Added pois may differ from what is shown in the map.
-				</h6>
+				<Grid item xs={12}>
+					<LoadingButton
+						variant="contained"
+						fullWidth
+						onClick={searchNearbyPlaces}
+						startIcon={<Add />}
+						loading={loading}
+						loadingPosition="start"
+					>
+						Add Nearby POIs
+					</LoadingButton>
+					<h6 className="px-2  text-sm text-center">
+						Note: Added pois may differ from what is shown in the
+						map.
+					</h6>
+				</Grid>
 			</Grid>
-		</Grid>
+		)
 	);
 }

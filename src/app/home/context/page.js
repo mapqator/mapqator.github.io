@@ -11,7 +11,6 @@ import dayjs from "dayjs";
 import KeyStoreButton from "@/components/Buttons/KeyStoreButton";
 import { useRouter } from "next/navigation";
 export default function ContextGenerator() {
-	const [activeStep, setActiveStep] = useState(0);
 	const {
 		selectedPlacesMap,
 		setSelectedPlacesMap,
@@ -28,6 +27,8 @@ export default function ContextGenerator() {
 		setCurrentInformation,
 		setContextStatus,
 		queryStatus,
+		activeStep,
+		setActiveStep,
 	} = useContext(GlobalContext);
 
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
