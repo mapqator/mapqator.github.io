@@ -70,7 +70,7 @@ export default function DatasetCreator({
 
 	useEffect(() => {
 		if (process.env.NODE_ENV === "production") {
-			fetchQueries();
+			// fetchQueries();
 		}
 	}, []);
 

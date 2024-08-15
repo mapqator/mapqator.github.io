@@ -56,7 +56,7 @@ export const AutocompleteSearchBox = ({
 
 	useEffect(() => {
 		if (process.env.NODE_ENV === "production") {
-			fetchPlaces();
+			// fetchPlaces();
 		}
 	}, []);
 

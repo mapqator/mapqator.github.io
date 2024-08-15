@@ -1,6 +1,8 @@
-import ApexCharts from "react-apexcharts";
+"use client";
 import { Divider } from "@mui/material";
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 export default function PieChart({ queries }) {
 	const [chart, setChart] = useState(undefined);
