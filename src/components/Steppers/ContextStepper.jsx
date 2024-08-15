@@ -23,6 +23,7 @@ import {
 	KeyboardArrowRight,
 	KeyboardDoubleArrowRight,
 	NextPlanTwoTone,
+	Place,
 	RemoveRedEye,
 	Save,
 	Send,
@@ -48,7 +49,7 @@ import { showError } from "@/contexts/ToastProvider";
 import { AppContext } from "@/contexts/AppContext";
 import SavedPlacesGrid from "../Grids/SavedPlacesGrid";
 import PlacesForm from "../Forms/PlacesForm";
-
+import { SiGooglenearby } from "react-icons/si";
 function ContextStep({
 	step,
 	index,
@@ -243,7 +244,6 @@ export default function ContextStepper({
 
     		1. Add Places: Start by searching for and adding key locations to your context.
 			2. Explore Nearby Places: Discover nearby places and points of interest around your selected locations.
-			3. Discover Area POIs: Find points of interest within a larger area, like a city or neighborhood.
 			3. Get Directions & Distances: Find routes between places and calculate distances.
 			4. Generate Context: Review and finalize your place-related information.
 
@@ -273,7 +273,7 @@ export default function ContextStepper({
 		{
 			label: "Add Information of Places",
 			description: `Add full details of a place.`,
-			icon: <SearchIcon />,
+			icon: <Place />,
 			additional: "Places you have added to the context.",
 			form: <PlacesForm {...{ handlePlaceAdd }} />,
 			grid: Object.keys(selectedPlacesMap).length > 0 && (
@@ -297,7 +297,7 @@ export default function ContextStepper({
 			You can choose a type from the given list or a custom type. It is recommended to choose from the given list for better result.`,
 			additional:
 				"List of places whose nearby pois are added to the context",
-			icon: <PlaceIcon />,
+			icon: <SiGooglenearby />,
 			form: <NearbyForm {...{ handlePlaceAdd }} />,
 			grid: Object.keys(nearbyPlacesMap).length > 0 && (
 				<NearbyGrid

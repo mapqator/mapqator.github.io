@@ -19,7 +19,7 @@ export default function PoiList({ places, handleTogglePlace, mode }) {
 				<React.Fragment key={index}>
 					<ListItem>
 						<Box className="flex gap-1 justify-between w-full items-center">
-							{mode === "edit" && (
+							{/* {mode === "edit" && (
 								<Checkbox
 									edge="start"
 									checked={place.selected}
@@ -27,7 +27,7 @@ export default function PoiList({ places, handleTogglePlace, mode }) {
 										handleTogglePlace(e, index)
 									}
 								/>
-							)}
+							)} */}
 							<ListItemText
 								primary={place.name}
 								secondary={`${place.rating}* (${

@@ -16,7 +16,7 @@ export default function SavedPlacesGrid({
 			{Object.keys(savedPlacesMap)
 				.reverse()
 				.map((placeId, index) => (
-					<Grid item xs={12} key={placeId}>
+					<Grid item xs={12} sm={6} key={placeId}>
 						<SavedPlaceCard
 							{...{
 								placeId,

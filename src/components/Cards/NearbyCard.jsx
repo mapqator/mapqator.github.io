@@ -35,6 +35,7 @@ function NearbyCardDetails({
 	distanceMatrix,
 	setDistanceMatrix,
 	mode,
+	savedPlacesMap,
 }) {
 	const handleTogglePlace = (e, poi_index) => {
 		const newNearbyPlacesMap = { ...nearbyPlacesMap };
@@ -112,6 +113,11 @@ function NearbyCardDetails({
 			/>
 			{mode === "edit" && (
 				<div className="flex flex-col gap-4 p-4">
+					<Typography variant="body2">
+						Add travel time from{" "}
+						{savedPlacesMap[place_id].displayName.text} to nearby{" "}
+						{Pluralize(entry.type)}
+					</Typography>
 					<TravelSelectionField
 						mode={travelMode}
 						setMode={(value) => setTravelMode(value)}
@@ -124,7 +130,7 @@ function NearbyCardDetails({
 						loading={loading}
 						loadingPosition="start"
 					>
-						Add Distance and Duration
+						Add Travel Time
 					</LoadingButton>
 				</div>
 			)}
@@ -282,6 +288,7 @@ export default function NearbyCard({
 						mode,
 						distanceMatrix,
 						setDistanceMatrix,
+						savedPlacesMap,
 					}}
 				/>
 			</Collapse>

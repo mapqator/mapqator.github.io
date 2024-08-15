@@ -64,9 +64,8 @@ export default function NearbyForm({ handlePlaceAdd }) {
 	const [newNearbyPlaces, setNewNearbyPlaces] = useState(initialData);
 
 	const handleSave = async (place) => {
-		let details = savedPlacesMap[place_id];
+		let details = savedPlacesMap[place.id];
 		if (details === undefined) {
-			const res = await mapApi.getDetailsNew(place_id);
 			setSavedPlacesMap((prev) => ({
 				...prev,
 				[place.id]: place,
