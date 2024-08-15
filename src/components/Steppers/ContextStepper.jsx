@@ -256,7 +256,7 @@ export default function ContextStepper({
 			form: <AutocompleteSearchBox />,
 			grid: Object.keys(selectedPlacesMap).length > 0 && (
 				<>
-					{/* <MapComponent /> */}
+					<MapComponent />
 					<PlacesGrid
 						{...{
 							selectedPlacesMap,
@@ -277,7 +277,7 @@ export default function ContextStepper({
 			additional:
 				"List of places whose nearby pois are added to the context",
 			icon: <PlaceIcon />,
-
+			form: <NearbyForm {...{ handlePlaceAdd }} />,
 			grid: Object.keys(nearbyPlacesMap).length > 0 && (
 				<NearbyGrid
 					{...{
