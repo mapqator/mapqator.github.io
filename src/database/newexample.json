@@ -1551,20 +1551,7 @@
 			]
 		}
 	},
-	"places": {
-		"ChIJD3uTd9hx5kcR1IQvGfr8dbk": {
-			"selectedAttributes": [],
-			"attributes": []
-		},
-		"ChIJLU7jZClu5kcR4PcOOO6p3I0": {
-			"selectedAttributes": [],
-			"attributes": []
-		},
-		"ChIJATr1n-Fx5kcRjQb6q6cdQDY": {
-			"selectedAttributes": [],
-			"attributes": []
-		}
-	},
+	"places": {},
 	"distance_matrix": {},
 	"nearby_places": {},
 	"directions": []

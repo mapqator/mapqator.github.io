@@ -37,7 +37,6 @@ export default function DistanceForm({ handlePlaceAdd }) {
 			const origins = newDistance.origins;
 			const destinations = newDistance.destinations;
 			const elements = response.data;
-
 			const newDistanceMatrix = { ...distanceMatrix };
 			// distanceMatrix[origin][destination][travelMode] = { duration, distance }
 			for (const route of elements) {

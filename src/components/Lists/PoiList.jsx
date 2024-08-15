@@ -40,11 +40,11 @@ export default function PoiList({ places, handleTogglePlace, mode }) {
 								primaryTypographyProps={{ noWrap: true }}
 								secondaryTypographyProps={{ noWrap: true }}
 							/>
-							{mode === "edit" && (
+							{/* {mode === "edit" && (
 								<Box className="ml-auto">
 									<PlaceAddButton place_id={place.place_id} />
 								</Box>
-							)}
+							)} */}
 						</Box>
 					</ListItem>
 					{index < places.length - 1 && <Divider component="li" />}

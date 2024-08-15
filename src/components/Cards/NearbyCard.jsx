@@ -9,12 +9,15 @@ import {
 	Chip,
 	Divider,
 } from "@mui/material";
-import { Delete, ExpandMore } from "@mui/icons-material";
+import { Add, Delete, ExpandMore } from "@mui/icons-material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { AppContext } from "@/contexts/AppContext";
 import PoiList from "@/components/Lists/PoiList";
 import Pluralize from "pluralize";
 import { convertFromSnake } from "@/services/utils";
+import TravelSelectionField from "../InputFields/TravelSelectionField.";
+import { LoadingButton } from "@mui/lab";
+import mapApi from "@/api/mapApi";
 
 const priceMap = {
 	PRICE_LEVEL_INEXPENSIVE: "Inexpensive",
@@ -29,6 +32,8 @@ function NearbyCardDetails({
 	entry,
 	nearbyPlacesMap,
 	setNearbyPlacesMap,
+	distanceMatrix,
+	setDistanceMatrix,
 	mode,
 }) {
 	const handleTogglePlace = (e, poi_index) => {
@@ -37,12 +42,93 @@ function NearbyCardDetails({
 			e.target.checked;
 		setNearbyPlacesMap(newNearbyPlacesMap);
 	};
+	const [travelMode, setTravelMode] = useState("WALK");
+	const [loading, setLoading] = useState(false);
+
+	const handleDistanceAdd = async () => {
+		setLoading(true);
+		const origins = [place_id];
+		const destinations = entry.places
+			.filter((place) => place.selected)
+			.map((place) => place.place_id);
+		const response = await mapApi.getDistanceNew({
+			origins,
+			destinations,
+			travelMode,
+		});
+		if (response.success) {
+			const elements = response.data;
+			const newDistanceMatrix = { ...distanceMatrix };
+			for (const route of elements) {
+				const {
+					originIndex,
+					destinationIndex,
+					condition,
+					localizedValues,
+				} = route;
+
+				if (
+					origins[originIndex] === destinations[destinationIndex] ||
+					condition === "ROUTE_NOT_FOUND"
+				) {
+					continue;
+				}
+				const distance = localizedValues.distance.text;
+				const duration = localizedValues.staticDuration.text;
+				const o = origins[originIndex];
+				const d = destinations[destinationIndex];
+				if (newDistanceMatrix[o])
+					newDistanceMatrix[o][d] = {
+						...newDistanceMatrix[o][d],
+						[travelMode]: {
+							duration,
+							distance,
+						},
+					};
+				else {
+					newDistanceMatrix[o] = {
+						[d]: {
+							[travelMode]: {
+								duration,
+								distance,
+							},
+						},
+					};
+				}
+			}
+			setDistanceMatrix(newDistanceMatrix);
+		} else {
+			showError("Couldn't find the distance between the places");
+		}
+		setLoading(false);
+	};
+
 	return (
-		<PoiList
-			places={entry.places}
-			handleTogglePlace={handleTogglePlace}
-			mode={mode}
-		/>
+		<>
+			<PoiList
+				places={entry.places}
+				handleTogglePlace={handleTogglePlace}
+				mode={mode}
+			/>
+			{mode === "edit" && (
+				<div className="flex flex-col gap-4 p-4">
+					<TravelSelectionField
+						mode={travelMode}
+						setMode={(value) => setTravelMode(value)}
+					/>
+					<LoadingButton
+						variant="contained"
+						fullWidth
+						onClick={handleDistanceAdd}
+						startIcon={<Add />}
+						loading={loading}
+						loadingPosition="start"
+					>
+						Add Distance and Duration
+					</LoadingButton>
+				</div>
+			)}
+		</>
 	);
 }
 function NearbyCardSummary({
@@ -53,6 +139,7 @@ function NearbyCardSummary({
 	mode,
 	nearbyPlacesMap,
 	setNearbyPlacesMap,
+
 	savedPlacesMap,
 }) {
 	const handleDelete = () => {
@@ -156,6 +243,8 @@ export default function NearbyCard({
 	nearbyPlacesMap,
 	setNearbyPlacesMap,
 	savedPlacesMap,
+	distanceMatrix,
+	setDistanceMatrix,
 }) {
 	const [expanded, setExpanded] = useState(false);
 	// useEffect(() => {
@@ -191,6 +280,8 @@ export default function NearbyCard({
 						nearbyPlacesMap,
 						setNearbyPlacesMap,
 						mode,
+						distanceMatrix,
+						setDistanceMatrix,
 					}}
 				/>
 			</Collapse>

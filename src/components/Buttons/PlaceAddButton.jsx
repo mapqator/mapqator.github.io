@@ -32,7 +32,7 @@ export default function PlaceAddButton({ place_id }) {
 				return;
 			}
 		}
-		handleAdd(details);
+		// handleAdd(details);
 		setLoading(false);
 	};
 
@@ -58,7 +58,7 @@ export default function PlaceAddButton({ place_id }) {
 		<LoadingButton
 			startIcon={<Add />}
 			onClick={() => handleAddSave(place_id)}
-			disabled={selectedPlacesMap[place_id]}
+			disabled={savedPlacesMap[place_id]}
 			loading={loading}
 		>
 			Add

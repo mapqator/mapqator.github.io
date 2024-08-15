@@ -46,6 +46,8 @@ import { LoadingButton } from "@mui/lab";
 import { setLoading } from "@/app/old-home/page";
 import { showError } from "@/contexts/ToastProvider";
 import { AppContext } from "@/contexts/AppContext";
+import SavedPlacesGrid from "../Grids/SavedPlacesGrid";
+import PlacesForm from "../Forms/PlacesForm";
 
 function ContextStep({
 	step,
@@ -249,14 +251,33 @@ export default function ContextStepper({
 			icon: <Flag />,
 		},
 		{
-			label: "Add Information of Places",
+			label: "Search for Places",
 			description: `Start by searching for a location. Type in a place name or address in the search bar below.`,
 			icon: <SearchIcon />,
-			additional: "Places you have added to the context.",
+			additional: "Places you have saved.",
 			form: <AutocompleteSearchBox />,
+			grid: Object.keys(savedPlacesMap).length > 0 && (
+				<>
+					{/* <MapComponent /> */}
+					<SavedPlacesGrid
+						{...{
+							selectedPlacesMap,
+							setSelectedPlacesMap,
+							savedPlacesMap,
+						}}
+						mode="edit"
+					/>
+				</>
+			),
+		},
+		{
+			label: "Add Information of Places",
+			description: `Add full details of a place.`,
+			icon: <SearchIcon />,
+			additional: "Places you have added to the context.",
+			form: <PlacesForm {...{ handlePlaceAdd }} />,
 			grid: Object.keys(selectedPlacesMap).length > 0 && (
 				<>
-					<MapComponent />
 					<PlacesGrid
 						{...{
 							selectedPlacesMap,
@@ -284,6 +305,8 @@ export default function ContextStepper({
 						nearbyPlacesMap,
 						setNearbyPlacesMap,
 						savedPlacesMap,
+						distanceMatrix,
+						setDistanceMatrix,
 					}}
 					mode="edit"
 				/>

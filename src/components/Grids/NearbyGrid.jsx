@@ -9,6 +9,8 @@ export default function NearbyGrid({
 	nearbyPlacesMap,
 	setNearbyPlacesMap,
 	savedPlacesMap,
+	distanceMatrix,
+	setDistanceMatrix,
 }) {
 	return (
 		<Grid container spacing={2} sx={{ mt: 0, mb: 2 }}>
@@ -24,6 +26,8 @@ export default function NearbyGrid({
 								savedPlacesMap,
 								nearbyPlacesMap,
 								setNearbyPlacesMap,
+								distanceMatrix,
+								setDistanceMatrix,
 								mode,
 							}}
 						/>

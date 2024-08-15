@@ -4,7 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { AppContext } from "@/contexts/AppContext";
 
-export default function PlaceDeleteButton({ placeId }) {
+export default function PlaceDeleteButton({ placeId, isSelected }) {
 	const {
 		// Getters
 		selectedPlacesMap,
@@ -63,7 +63,7 @@ export default function PlaceDeleteButton({ placeId }) {
 		const newSelectedPlacesMap = { ...selectedPlacesMap };
 		delete newSelectedPlacesMap[place_id];
 		setSelectedPlacesMap(newSelectedPlacesMap);
-		deletePlaceFromSaved(place_id);
+		// deletePlaceFromSaved(place_id);
 	};
 	return (
 		<IconButton onClick={() => deletePlace(placeId)}>

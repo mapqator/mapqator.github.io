@@ -24,8 +24,8 @@ export default function OptionsPreview({ answer }) {
 			<Grid container spacing={2} className="mt-2">
 				{answer.options.map((option, index) => (
 					<Grid item xs={12} sm={6} key={index}>
-						<Card variant="outlined" className="bg-white">
-							<CardContent>
+						<Card variant="outlined" className="bg-white h-full">
+							<CardContent className="h-full">
 								<Typography variant="body2">
 									Option {index + 1}: {option}
 									{index === answer.correct && (

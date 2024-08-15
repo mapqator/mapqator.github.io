@@ -51,7 +51,7 @@ const priceMap = {
 export default function NearbyForm({ handlePlaceAdd }) {
 	const { selectedPlacesMap, nearbyPlacesMap, setNearbyPlacesMap } =
 		useContext(GlobalContext);
-	const { savedPlacesMap } = useContext(AppContext);
+	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 	const initialData = {
 		locationBias: "",
 		searchBy: "type",
@@ -63,9 +63,16 @@ export default function NearbyForm({ handlePlaceAdd }) {
 	};
 	const [newNearbyPlaces, setNewNearbyPlaces] = useState(initialData);
 
-	// useEffect(() => {
-	// 	setNewNearbyPlaces(initialData);
-	// }, [selectedPlacesMap]);
+	const handleSave = async (place) => {
+		let details = savedPlacesMap[place_id];
+		if (details === undefined) {
+			const res = await mapApi.getDetailsNew(place_id);
+			setSavedPlacesMap((prev) => ({
+				...prev,
+				[place.id]: place,
+			}));
+		}
+	};
 
 	const [loading, setLoading] = useState(false);
 	const searchNearbyPlaces = async () => {
@@ -134,18 +141,16 @@ export default function NearbyForm({ handlePlaceAdd }) {
 			});
 
 			setNearbyPlacesMap(newNearbyPlacesMap);
-			console.log("Update Nearby Places: ", {
-				...newNearbyPlaces,
-				type: "",
-				keyword: "",
-			});
 			setNewNearbyPlaces((prev) => ({
 				...prev,
 				type: "",
 				keyword: "",
 			}));
-
 			setLoading(false);
+
+			places.forEach((place) => {
+				handleSave(place);
+			});
 		} else {
 			showError("Couldn't find nearby places.");
 		}

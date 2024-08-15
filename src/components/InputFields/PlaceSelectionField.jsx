@@ -49,7 +49,7 @@ export default function PlaceSelectionField({
 							: undefined
 					}
 				>
-					{Object.keys(selectedPlacesMap).map((place_id) => (
+					{Object.keys(savedPlacesMap).map((place_id) => (
 						<MenuItem key={place_id} value={place_id}>
 							{savedPlacesMap[place_id].displayName.text}
 						</MenuItem>
