@@ -425,7 +425,7 @@ export default function QueryCard({
 												}
 											);
 											console.log(res);
-											if (res.success)
+											if (res.success) {
 												setQuery((prev) => ({
 													...prev,
 													human: {
@@ -435,6 +435,10 @@ export default function QueryCard({
 																.username,
 													},
 												}));
+												showSuccess(
+													"Annotation saved successfully"
+												);
+											}
 										}}
 										startIcon={<Save />}
 									>
