@@ -74,7 +74,7 @@ export default function ContextGenerator({
 				Object.keys(distanceMatrix[from_id][to_id]).forEach((mode) => {
 					if (mode.toLowerCase() === "transit") {
 						newContext.push(
-							`Distance from ${
+							`Travel Time from ${
 								// selectedPlacesMap[from_id].alias ||
 								savedPlacesMap[from_id].name
 							} to ${
@@ -88,7 +88,7 @@ export default function ContextGenerator({
 						);
 					} else if (mode.toLowerCase() === "driving") {
 						newContext.push(
-							`Distance from ${
+							`Travel Time from ${
 								// selectedPlacesMap[from_id].alias ||
 								savedPlacesMap[from_id].name
 							} to ${
@@ -102,7 +102,7 @@ export default function ContextGenerator({
 						);
 					} else if (mode.toLowerCase() === "bicycling") {
 						newContext.push(
-							`Distance from ${
+							`Travel Time from ${
 								// selectedPlacesMap[from_id].alias ||
 								savedPlacesMap[from_id].name
 							} to ${
@@ -116,7 +116,7 @@ export default function ContextGenerator({
 						);
 					} else if (mode.toLowerCase() === "walking") {
 						newContext.push(
-							`Distance from ${
+							`Travel Time from ${
 								// selectedPlacesMap[from_id].alias ||
 								savedPlacesMap[from_id].name
 							} to ${
