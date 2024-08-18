@@ -436,7 +436,8 @@ export default function QueryCard({
 													},
 												}));
 												showSuccess(
-													"Annotation saved successfully"
+													"Annotation saved successfully",
+													res
 												);
 											}
 										}}
