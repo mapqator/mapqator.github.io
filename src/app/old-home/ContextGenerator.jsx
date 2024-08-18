@@ -109,9 +109,9 @@ export default function ContextGenerator({
 								// selectedPlacesMap[to_id].alias ||
 								savedPlacesMap[to_id].name
 							} by cycle is ${
-								distanceMatrix[from_id][to_id][mode].distance
-							} (${
 								distanceMatrix[from_id][to_id][mode].duration
+							} (${
+								distanceMatrix[from_id][to_id][mode].distance
 							}).`
 						);
 					} else if (mode.toLowerCase() === "walking") {
@@ -123,9 +123,9 @@ export default function ContextGenerator({
 								// selectedPlacesMap[to_id].alias ||
 								savedPlacesMap[to_id].name
 							} on foot is ${
-								distanceMatrix[from_id][to_id][mode].distance
-							} (${
 								distanceMatrix[from_id][to_id][mode].duration
+							} (${
+								distanceMatrix[from_id][to_id][mode].distance
 							}).`
 						);
 					}
