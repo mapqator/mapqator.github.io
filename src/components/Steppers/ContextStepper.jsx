@@ -266,7 +266,7 @@ export default function ContextStepper({
 			form: <AutocompleteSearchBox />,
 			grid: Object.keys(savedPlacesMap).length > 0 && (
 				<>
-					{/* <MapComponent /> */}
+					<MapComponent />
 					<SavedPlacesGrid
 						{...{
 							selectedPlacesMap,

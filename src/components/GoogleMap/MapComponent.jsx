@@ -18,7 +18,7 @@ export default function MapComponent() {
 
 	useEffect(() => {
 		const list = [];
-		Object.keys(selectedPlacesMap).map((place_id) => {
+		Object.keys(savedPlacesMap).map((place_id) => {
 			const place = savedPlacesMap[place_id];
 			const lat = place.location.latitude;
 			const lng = place.location.longitude;
@@ -26,7 +26,7 @@ export default function MapComponent() {
 		});
 		console.log(list);
 		setLocations(list);
-	}, [selectedPlacesMap]);
+	}, [savedPlacesMap]);
 
 	const mapStyles = {
 		height: "400px",
