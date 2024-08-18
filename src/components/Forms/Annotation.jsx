@@ -19,6 +19,7 @@ import { getUserName } from "@/api/base";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { showError } from "@/contexts/ToastProvider";
 import { useAuth } from "@/contexts/AuthContext";
+import { showSuccess } from "@/app/old-home/home";
 
 export default function Annotation({ query }) {
 	const { isAuthenticated } = useAuth();
@@ -130,6 +131,9 @@ export default function Annotation({ query }) {
 													  }
 													: q
 											)
+										);
+										showSuccess(
+											"Annotation saved successfully"
 										);
 									} else {
 										showError("Can't save annotation");
