@@ -46,63 +46,63 @@ function NearbyCardDetails({
 	const [travelMode, setTravelMode] = useState("WALK");
 	const [loading, setLoading] = useState(false);
 	const { setNewDistance, setActiveStep } = useContext(GlobalContext);
-	const handleDistanceAdd = async () => {
-		setLoading(true);
-		const origins = [place_id];
-		const destinations = entry.places
-			.filter((place) => place.selected)
-			.map((place) => place.place_id);
-		const response = await mapApi.getDistanceNew({
-			origins,
-			destinations,
-			travelMode,
-		});
-		if (response.success) {
-			const elements = response.data;
-			const newDistanceMatrix = { ...distanceMatrix };
-			for (const route of elements) {
-				const {
-					originIndex,
-					destinationIndex,
-					condition,
-					localizedValues,
-				} = route;
+	// const handleDistanceAdd = async () => {
+	// 	setLoading(true);
+	// 	const origins = [place_id];
+	// 	const destinations = entry.places
+	// 		.filter((place) => place.selected)
+	// 		.map((place) => place.place_id);
+	// 	const response = await mapApi.getDistanceNew({
+	// 		origins,
+	// 		destinations,
+	// 		travelMode,
+	// 	});
+	// 	if (response.success) {
+	// 		const elements = response.data;
+	// 		const newDistanceMatrix = { ...distanceMatrix };
+	// 		for (const route of elements) {
+	// 			const {
+	// 				originIndex,
+	// 				destinationIndex,
+	// 				condition,
+	// 				localizedValues,
+	// 			} = route;
 
-				if (
-					origins[originIndex] === destinations[destinationIndex] ||
-					condition === "ROUTE_NOT_FOUND"
-				) {
-					continue;
-				}
-				const distance = localizedValues.distance.text;
-				const duration = localizedValues.staticDuration.text;
-				const o = origins[originIndex];
-				const d = destinations[destinationIndex];
-				if (newDistanceMatrix[o])
-					newDistanceMatrix[o][d] = {
-						...newDistanceMatrix[o][d],
-						[travelMode]: {
-							duration,
-							distance,
-						},
-					};
-				else {
-					newDistanceMatrix[o] = {
-						[d]: {
-							[travelMode]: {
-								duration,
-								distance,
-							},
-						},
-					};
-				}
-			}
-			setDistanceMatrix(newDistanceMatrix);
-		} else {
-			showError("Couldn't find the distance between the places");
-		}
-		setLoading(false);
-	};
+	// 			if (
+	// 				origins[originIndex] === destinations[destinationIndex] ||
+	// 				condition === "ROUTE_NOT_FOUND"
+	// 			) {
+	// 				continue;
+	// 			}
+	// 			const distance = localizedValues.distance.text;
+	// 			const duration = localizedValues.staticDuration.text;
+	// 			const o = origins[originIndex];
+	// 			const d = destinations[destinationIndex];
+	// 			if (newDistanceMatrix[o])
+	// 				newDistanceMatrix[o][d] = {
+	// 					...newDistanceMatrix[o][d],
+	// 					[travelMode]: {
+	// 						duration,
+	// 						distance,
+	// 					},
+	// 				};
+	// 			else {
+	// 				newDistanceMatrix[o] = {
+	// 					[d]: {
+	// 						[travelMode]: {
+	// 							duration,
+	// 							distance,
+	// 						},
+	// 					},
+	// 				};
+	// 			}
+	// 		}
+	// 		setDistanceMatrix(newDistanceMatrix);
+	// 	} else {
+	// 		showError("Couldn't find the distance between the places");
+	// 	}
+	// 	setLoading(false);
+	// };
 
 	return (
 		<>
@@ -130,7 +130,7 @@ function NearbyCardDetails({
 							setNewDistance({
 								origins: [place_id],
 								destinations: entry.places
-									.filter((place) => place.selected)
+									// .filter((place) => place.selected)
 									.map((place) => place.place_id),
 								travelMode: "WALK",
 							});
@@ -197,10 +197,7 @@ function NearbyCardSummary({
 							label={Pluralize(
 								convertFromSnake(entry.type),
 								nearbyPlacesMap[place_id]
-									? nearbyPlacesMap[place_id][
-											index
-									  ].places.filter((place) => place.selected)
-											.length
+									? nearbyPlacesMap[place_id][index].length
 									: 0,
 								true
 							)}

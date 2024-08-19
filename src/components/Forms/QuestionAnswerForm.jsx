@@ -52,8 +52,8 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 				distance_matrix: distanceMatrix,
 				places: selectedPlacesMap,
 				nearby_places: nearbyPlacesMap,
-				current_information: currentInformation,
-				pois: poisMap,
+				// current_information: currentInformation,
+				// pois: poisMap,
 				directions: directionInformation,
 			},
 		};

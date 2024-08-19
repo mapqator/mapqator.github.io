@@ -75,7 +75,8 @@ export default function QueryCard({
 		);
 		console.log(query.human);
 		if (invalid) {
-			setFlag(true);
+			if (query.context !== "") setFlag(true);
+			else setFlag(false);
 		} else {
 			setFlag(query.human.answer === 0);
 		}

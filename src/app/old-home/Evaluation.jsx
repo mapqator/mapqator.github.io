@@ -44,7 +44,7 @@ export default function Evaluation({ queries }) {
 								: 1,
 						};
 					}
-					console.log(query.id, tmp[e.model], e.model);
+					// console.log(query.id, tmp[e.model], e.model);
 					tmp[e.model].accuracy =
 						(tmp[e.model].correct * 100.0) / valid_questions;
 				});

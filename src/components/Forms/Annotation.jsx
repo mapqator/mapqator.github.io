@@ -115,6 +115,9 @@ export default function Annotation({ query }) {
 									);
 									console.log(res);
 									if (res.success) {
+										showSuccess(
+											"Annotation saved successfully"
+										);
 										setQueries((prev) =>
 											prev.map((q) =>
 												q.id === query.id
@@ -131,9 +134,6 @@ export default function Annotation({ query }) {
 													  }
 													: q
 											)
-										);
-										showSuccess(
-											"Annotation saved successfully"
 										);
 									} else {
 										showError("Can't save annotation");

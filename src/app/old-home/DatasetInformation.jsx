@@ -25,7 +25,8 @@ export default function DatasetInformation({ queries }) {
 						e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
 						e.verdict === "invalid"
 				);
-				if (!invalid) valid_questions++;
+				// if (!invalid) valid_questions++;
+				valid_questions++;
 			}
 		});
 		tmp["total_questions"] = total_questions;

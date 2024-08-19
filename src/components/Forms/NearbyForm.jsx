@@ -124,7 +124,7 @@ export default function NearbyForm({
 				PRICE_LEVEL_UNSPECIFIED: "Unspecified",
 			};
 			const placesWithSelection = places.map((place) => ({
-				selected: true,
+				// selected: true,
 				place_id: place.id,
 				name: place.displayName.text,
 				formatted_address: place.shortFormattedAddress,

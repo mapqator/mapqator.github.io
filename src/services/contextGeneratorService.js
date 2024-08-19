@@ -31,9 +31,7 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 	}
 
 	if (attributes.includes("regularOpeningHours")) {
-		text += `- Opening hours: ${place.regularOpeningHours.weekdayDescriptions.join(
-			", "
-		)}.\n`;
+		text += `- Opening hours: ${place.regularOpeningHours.join(", ")}.\n`;
 	}
 	if (attributes.includes("rating")) {
 		text += `- Rating: ${place.rating}. ${
