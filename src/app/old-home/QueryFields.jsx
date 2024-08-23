@@ -554,16 +554,14 @@ export default function QueryFields({
 							Category
 						</InputLabel>
 						<Select
-							multiple
+							// multiple
 							id="outlined-adornment"
 							className="outlined-input"
-							value={query.classification
-								.split(",")
-								.filter(Boolean)}
+							value={query.classification}
 							onChange={(e) => {
 								setQuery((prev) => ({
 									...prev,
-									classification: e.target.value.join(","),
+									classification: e.target.value,
 								}));
 							}}
 							input={<OutlinedInput label={"Category"} />}
@@ -610,7 +608,11 @@ export default function QueryFields({
 							}
 
 							onSave(query);
-							setQuery(init);
+							setQuery({
+								...init,
+								context: query.context,
+								context_json: query.context_json,
+							});
 						}}
 						startIcon={<Save />}
 						variant="contained"

@@ -72,7 +72,7 @@ export default function PlacesForm({ handlePlaceAdd }) {
 					startIcon={<Add />}
 					loading={loading}
 					loadingPosition="start"
-					disabled={!placeId || savedPlacesMap[placeId]}
+					disabled={!placeId || selectedPlacesMap[placeId]}
 				>
 					Add Place
 				</LoadingButton>

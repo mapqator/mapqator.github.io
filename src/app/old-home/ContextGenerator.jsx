@@ -251,34 +251,34 @@ export default function ContextGenerator({
 			});
 		});
 
-		Object.keys(poisMap).forEach((place_id, index) => {
-			poisMap[place_id].forEach((poi) => {
-				newContext.push(
-					`Places in ${
-						// selectedPlacesMap[place_id].alias ||
-						savedPlacesMap[place_id].name
-					} of type \"${poi.type}\" are:`
-				);
-				let counter = 1;
-				poi.places.forEach((place) => {
-					if (place.selected) {
-						newContext.push(
-							`${counter}. <b>${
-								// selectedPlacesMap[place.place_id]?.alias ||
-								savedPlacesMap[place.place_id]?.name ||
-								place.name
-							}</b> (${
-								place.formatted_address ||
-								savedPlacesMap[place.place_id]?.vicinity
-							})`
-						);
-						counter++;
-					}
-				});
+		// Object.keys(poisMap).forEach((place_id, index) => {
+		// 	poisMap[place_id].forEach((poi) => {
+		// 		newContext.push(
+		// 			`Places in ${
+		// 				// selectedPlacesMap[place_id].alias ||
+		// 				savedPlacesMap[place_id].name
+		// 			} of type \"${poi.type}\" are:`
+		// 		);
+		// 		let counter = 1;
+		// 		poi.places.forEach((place) => {
+		// 			if (place.selected) {
+		// 				newContext.push(
+		// 					`${counter}. <b>${
+		// 						// selectedPlacesMap[place.place_id]?.alias ||
+		// 						savedPlacesMap[place.place_id]?.name ||
+		// 						place.name
+		// 					}</b> (${
+		// 						place.formatted_address ||
+		// 						savedPlacesMap[place.place_id]?.vicinity
+		// 					})`
+		// 				);
+		// 				counter++;
+		// 			}
+		// 		});
 
-				newContext.push("");
-			});
-		});
+		// 		newContext.push("");
+		// 	});
+		// });
 
 		// if (currentInformation.time && currentInformation.day !== "") {
 		// 	newContext.push(
@@ -413,6 +413,23 @@ export default function ContextGenerator({
 			text += place.reservable
 				? "- Reservable.\n"
 				: "- Not Reservable.\n";
+		}
+
+		if (attributes.includes("serves_breakfast")) {
+			text += place.serves_breakfast
+				? "- Serves Breakfast.\n"
+				: "- Does Not Serve Breakfast.\n";
+		}
+		if (attributes.includes("serves_lunch")) {
+			text += place.serves_lunch
+				? "- Serves Lunch.\n"
+				: "- Does Not Serve Lunch.\n";
+		}
+
+		if (attributes.includes("serves_dinner")) {
+			text += place.serves_dinner
+				? "- Serves Dinner.\n"
+				: "- Does Not Serve Dinner.\n";
 		}
 
 		if (attributes.includes("wheelchair_accessible_entrance")) {

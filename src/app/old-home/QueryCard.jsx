@@ -125,15 +125,18 @@ export default function QueryCard({
 				</div>
 			</div>
 			{mode === "edit" ? (
-				<QueryFields
-					{...{ contextJSON, context }}
-					onSave={async (new_query) => {
-						handleEdit(new_query, index);
-						setMode("view");
-						// window.location.reload();
-					}}
-					initialQuery={query}
-				/>
+				<>
+					<QueryFields
+						{...{ contextJSON, context }}
+						onSave={async (new_query) => {
+							handleEdit(new_query, index);
+							setMode("view");
+							// window.location.reload();
+						}}
+						initialQuery={query}
+					/>
+					<Button onClick={() => setMode("view")}>Cancel</Button>
+				</>
 			) : expanded ? (
 				<div className="p-2 flex flex-col gap-2">
 					{/* <div className="flex flex-row gap-2">
@@ -266,10 +269,10 @@ export default function QueryCard({
 											className="flex flex-row gap-2 items-center"
 										>
 											<Radio
-												checked={
-													query.answer.correct ===
-													index
-												}
+												// checked={
+												// 	query.answer.correct ===
+												// 	index
+												// }
 												value={index}
 												name="radio-buttons"
 												disabled={true}
@@ -299,6 +302,9 @@ export default function QueryCard({
 										<h1 className="text-lg w-1/2">
 											{e.model}
 										</h1>
+										<h1 className="text-lg w-1/2 ">
+											{e.answer}
+										</h1>
 										{e.verdict == "invalid" ? (
 											<h1 className="text-lg w-1/2 ">
 												{"Can't answer"}
@@ -306,7 +312,12 @@ export default function QueryCard({
 													? "(" + e.answer + ")"
 													: ""}
 											</h1>
-										) : e.verdict == "right" ? (
+										) : (
+											<h1 className="text-lg w-1/2 font-semibold">
+												Option {e.answer}
+											</h1>
+										)}
+										{/* e.verdict == "right" ? (
 											<h1 className="text-lg w-1/2  text-green-500 font-semibold">
 												Correct
 											</h1>
@@ -314,7 +325,7 @@ export default function QueryCard({
 											<h1 className="text-lg w-1/2  text-red-500 font-semibold">
 												Wrong {"(" + e.answer + ")"}
 											</h1>
-										)}
+										) */}
 									</div>
 								))}
 							</div>
