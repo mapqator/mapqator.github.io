@@ -10,6 +10,7 @@ export default function DatasetInformation({ queries }) {
 		let total_questions = 0;
 		let questions_with_context = 0;
 		let questions_with_answer = 0;
+		let ok = 0;
 
 		queries.forEach((query) => {
 			total_questions++;
@@ -25,7 +26,7 @@ export default function DatasetInformation({ queries }) {
 						e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
 						e.verdict === "invalid"
 				);
-				// if (!invalid) valid_questions++;
+				if (!invalid) ok++;
 				valid_questions++;
 			}
 		});
@@ -33,6 +34,7 @@ export default function DatasetInformation({ queries }) {
 		tmp["questions_with_context"] = questions_with_context;
 		tmp["questions_with_answer"] = questions_with_answer;
 		tmp["valid_questions"] = valid_questions;
+		tmp["ok"] = ok;
 		setState(tmp);
 	}, [queries]);
 	return (
@@ -42,32 +44,36 @@ export default function DatasetInformation({ queries }) {
 			</div>
 			<div className="w-full p-2">
 				<div className="flex flex-row gap-2 font-bold">
-					<h1 className="text-lg w-[25%] text-center">
+					<h1 className="text-lg w-[33%] text-center">
 						Total Questions
 					</h1>
-					<h1 className="text-lg w-[25%] text-center">No Context</h1>
+					{/* <h1 className="text-lg w-[25%] text-center">No Context</h1>
 					<h1 className="text-lg w-[25%] text-center">
 						No Ground Truth
-					</h1>
-					<h1 className="text-lg w-[25%] text-center">
+					</h1> */}
+					<h1 className="text-lg w-[33%] text-center">
 						Valid Questions
 					</h1>
+					<h1 className="text-lg w-[33%] text-center ">OK</h1>
 				</div>
 				<hr className="bg-black border-black" />
 				<div className="flex flex-row gap-1 w-full">
-					<h1 className="text-lg w-[25%] text-center">
+					<h1 className="text-lg w-[33%] text-center">
 						{state?.total_questions}
 					</h1>
-					<h1 className="text-lg w-[25%] text-center">
+					{/* <h1 className="text-lg w-[25%] text-center">
 						{(state?.total_questions ?? 0) -
 							(state?.questions_with_context ?? 0)}
 					</h1>
 					<h1 className="text-lg w-[25%] text-center">
 						{(state?.total_questions ?? 0) -
 							(state?.questions_with_answer ?? 0)}
-					</h1>
-					<h1 className="text-lg w-[25%] text-center text-green-500 font-semibold">
+					</h1> */}
+					<h1 className="text-lg w-[33%] text-center font-semibold">
 						{state?.valid_questions}
+					</h1>
+					<h1 className="text-lg w-[33%] text-center text-green-500 font-semibold">
+						{state?.ok}
 					</h1>
 				</div>
 			</div>
