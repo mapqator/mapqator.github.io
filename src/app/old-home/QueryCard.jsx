@@ -269,10 +269,10 @@ export default function QueryCard({
 											className="flex flex-row gap-2 items-center"
 										>
 											<Radio
-												// checked={
-												// 	query.answer.correct ===
-												// 	index
-												// }
+												checked={
+													query.answer.correct ===
+													index
+												}
 												value={index}
 												name="radio-buttons"
 												disabled={true}
@@ -312,12 +312,7 @@ export default function QueryCard({
 													? "(" + e.answer + ")"
 													: ""}
 											</h1>
-										) : (
-											<h1 className="text-lg w-1/2 font-semibold">
-												Option {e.answer}
-											</h1>
-										)}
-										{/* e.verdict == "right" ? (
+										) : e.verdict == "right" ? (
 											<h1 className="text-lg w-1/2  text-green-500 font-semibold">
 												Correct
 											</h1>
@@ -325,7 +320,7 @@ export default function QueryCard({
 											<h1 className="text-lg w-1/2  text-red-500 font-semibold">
 												Wrong {"(" + e.answer + ")"}
 											</h1>
-										) */}
+										)}
 									</div>
 								))}
 							</div>
