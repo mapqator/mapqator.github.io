@@ -68,13 +68,10 @@ export default function QueryCard({
 	}, [initQuery]);
 
 	useEffect(() => {
-		const invalid = query.evaluation?.find(
-			(e) =>
-				e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
-				e.verdict === "invalid"
-		);
-		console.log(query.human);
-		if (invalid) {
+		const invalidCount =
+			query.evaluation?.filter((e) => e.verdict === "invalid").length ||
+			0;
+		if (invalidCount > 1) {
 			if (query.context !== "") setFlag(true);
 			else setFlag(false);
 		} else {

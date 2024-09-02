@@ -21,12 +21,10 @@ export default function DatasetInformation({ queries }) {
 				questions_with_answer++;
 			}
 			if (query.context !== "" && query.answer.correct !== -1) {
-				const invalid = query.evaluation?.find(
-					(e) =>
-						e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
-						e.verdict === "invalid"
-				);
-				if (!invalid) ok++;
+				const invalidCount =
+					query.evaluation?.filter((e) => e.verdict === "invalid")
+						.length || 0;
+				if (invalidCount > 1) ok++;
 				valid_questions++;
 			}
 		});
