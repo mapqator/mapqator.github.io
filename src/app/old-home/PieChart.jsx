@@ -14,7 +14,7 @@ export default function PieChart({ queries }) {
 	});
 	useEffect(() => {
 		queries.forEach((query) => {
-			data[query.classification] += 1;
+			if (query.context !== "") data[query.classification] += 1;
 		});
 		setChart({
 			series: [data.poi, data.nearby, data.routing, data.trip],
