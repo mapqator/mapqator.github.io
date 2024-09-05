@@ -299,7 +299,7 @@ export default function QueryCard({
 										<h1 className="text-lg w-1/2">
 											{e.model}
 										</h1>
-										<h1 className="text-lg w-1/2 ">
+										<h1 className="text-sm w-1/2 ">
 											{e.answer}
 										</h1>
 										{e.verdict == "invalid" ? (
