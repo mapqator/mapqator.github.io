@@ -1,6 +1,5 @@
 import { Divider } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import Chart from "react-apexcharts";
 import dynamic from "next/dynamic";
 const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
