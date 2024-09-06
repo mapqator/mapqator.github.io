@@ -353,6 +353,10 @@ export default function ContextGenerator({
 					: ""
 			}.\n`;
 		}
+		if (attributes.includes("phone_number")) {
+			text += `- Phone Number: ${place.phone_number}.\n`;
+		}
+
 		if (attributes.includes("opening_hours")) {
 			text += `- Open: ${place.opening_hours.weekday_text.join(", ")}.\n`;
 		}
