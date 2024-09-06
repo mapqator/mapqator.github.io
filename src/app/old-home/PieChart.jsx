@@ -6,13 +6,14 @@ const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 export default function PieChart({ queries }) {
 	const [chart, setChart] = useState(undefined);
-	const [data, setData] = useState({
-		poi: 0,
-		nearby: 0,
-		routing: 0,
-		trip: 0,
-	});
+
 	useEffect(() => {
+		const data = {
+			poi: 0,
+			nearby: 0,
+			routing: 0,
+			trip: 0,
+		};
 		queries.forEach((query) => {
 			if (query.context !== "") data[query.classification] += 1;
 		});

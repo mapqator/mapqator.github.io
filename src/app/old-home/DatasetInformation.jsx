@@ -24,6 +24,9 @@ export default function DatasetInformation({ queries }) {
 				const invalidCount =
 					query.evaluation?.filter((e) => e.verdict === "invalid")
 						.length || 0;
+				const rightCount =
+					query.evaluation?.filter((e) => e.verdict === "right")
+						.length || 0;
 				if (invalidCount < 1) ok++;
 				valid_questions++;
 			}

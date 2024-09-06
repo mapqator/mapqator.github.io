@@ -71,6 +71,9 @@ export default function QueryCard({
 		const invalidCount =
 			query.evaluation?.filter((e) => e.verdict === "invalid").length ||
 			0;
+		const rightCount =
+			query.evaluation?.filter((e) => e.verdict === "right").length || 0;
+
 		if (invalidCount > 0) {
 			if (query.context !== "") setFlag(true);
 			else setFlag(false);

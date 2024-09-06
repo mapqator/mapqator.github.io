@@ -15,6 +15,15 @@ import DirectionInformation from "./DirectionInformation";
 import HybridSearch from "./HybridSearch";
 import { LoadingButton } from "@mui/lab";
 import { Start } from "@mui/icons-material";
+import Pluralize from "pluralize";
+
+function convertFromSnake(text) {
+	return text
+		.replace(/_/g, " ") // Replace underscores with spaces
+		.split(" ") // Split the string into an array of words
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize the first letter of each word
+		.join(" ");
+}
 
 export default function ContextGenerator({
 	setContextJSON,
@@ -217,13 +226,11 @@ export default function ContextGenerator({
 		Object.keys(nearbyPlacesMap).forEach((place_id, index) => {
 			nearbyPlacesMap[place_id].forEach((e) => {
 				newContext.push(
-					`Nearby places of ${
+					`Nearby ${Pluralize(
+						convertFromSnake(e.type === "any" ? e.keyword : e.type)
+					)} of ${
 						// selectedPlacesMap[place_id].alias ||
 						savedPlacesMap[place_id].name
-					} ${e.type === "any" ? "" : 'of type "' + e.type + '"'} ${
-						e.keyword !== ""
-							? 'with keyword "' + e.keyword + '"'
-							: ""
 					} are (${
 						e.hasRadius
 							? "in " + e.radius + " m radius"
