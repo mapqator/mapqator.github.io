@@ -436,6 +436,12 @@ export default function ContextGenerator({
 				: "- Does Not Serve Dinner.\n";
 		}
 
+		if (attributes.includes("takeout")) {
+			text += place.takeout
+				? "- Takeout Available.\n"
+				: "- Takeout Not Available.\n";
+		}
+
 		if (attributes.includes("wheelchair_accessible_entrance")) {
 			text += place.wheelchair_accessible_entrance
 				? "- Wheelchair Accessible Entrance.\n"
