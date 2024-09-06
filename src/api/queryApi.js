@@ -50,6 +50,9 @@ class QueryApi extends Api {
 			context,
 		});
 	};
+	getModels = async () => {
+		return await this.get("/queries/models");
+	};
 }
 
 const queryApi = new QueryApi();
