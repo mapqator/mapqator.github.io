@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import queryApi from "@/api/queryApi";
 const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const ColumnChart = ({ queries }) => {
+const AccuracyChart = ({ queries }) => {
 	const [chart, setChart] = useState({
 		series: [],
 		options: {},
@@ -29,66 +29,37 @@ const ColumnChart = ({ queries }) => {
 
 		console.log(data);
 
-		let valid_questions = {
-			poi: 0,
-			nearby: 0,
-			routing: 0,
-			trip: 0,
-		};
+		let valid_questions = 0;
 		queries.forEach((query) => {
 			if (query.context !== "" && query.answer.correct !== -1) {
-				valid_questions[query.classification]++;
+				valid_questions++;
 				query.evaluation?.forEach((e) => {
 					if (!data[e.model]) {
-						data[e.model] = {
-							poi: 0,
-							nearby: 0,
-							routing: 0,
-							trip: 0,
-						};
+						data[e.model] = 0;
 					}
 					if (e.verdict === "right") {
-						if (!data[e.model][query.classification]) {
-							data[e.model][query.classification] = 0;
-						}
-						data[e.model][query.classification] += 1;
+						data[e.model]++;
 					}
 				});
 			}
 		});
 
+		console.log(data);
 		setChart({
-			series: Object.keys(data).map((key) => {
-				return {
-					name: key,
-					data: [
-						parseFloat(
-							(
-								(data[key].poi * 100) /
-								valid_questions.poi
-							).toFixed(2)
-						),
-						parseFloat(
-							(
-								(data[key].nearby * 100) /
-								valid_questions.nearby
-							).toFixed(2)
-						),
-						parseFloat(
-							(
-								(data[key].routing * 100) /
-								valid_questions.routing
-							).toFixed(2)
-						),
-						parseFloat(
-							(
-								(data[key].trip * 100) /
-								valid_questions.trip
-							).toFixed(2)
-						),
-					],
-				};
-			}),
+			series: [
+				{
+					data: models
+						.filter((model) => model.id > 0)
+						.map((model) => {
+							return parseFloat(
+								(
+									(data[model.name] / valid_questions) *
+									100
+								).toFixed(2)
+							);
+						}),
+				},
+			],
 			options: {
 				chart: {
 					height: "100%",
@@ -113,7 +84,9 @@ const ColumnChart = ({ queries }) => {
 						horizontal: false,
 					},
 				},
-				labels: ["poi", "nearby", "routing", "trip"],
+				labels: models
+					.filter((model) => model.id > 0)
+					.map((model) => model.name),
 				dataLabels: {
 					enabled: false,
 				},
@@ -134,7 +107,7 @@ const ColumnChart = ({ queries }) => {
 	return (
 		<div className="bu-card-primary rounded-lg shadow-md relative w-full">
 			<h2 className="bu-text-primary py-2 px-5 font-semibold">
-				Categorical Accuracy
+				Overall Accuracy
 			</h2>
 			<Divider />
 			<div className="h-full p-3">
@@ -160,4 +133,4 @@ const ColumnChart = ({ queries }) => {
 	);
 };
 
-export default ColumnChart;
+export default AccuracyChart;
