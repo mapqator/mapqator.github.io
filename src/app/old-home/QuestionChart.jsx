@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import queryApi from "@/api/queryApi";
 const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const ColumnChart = ({ queries }) => {
+const QuestionChart = ({ queries }) => {
 	const [chart, setChart] = useState({
 		series: [],
 		options: {},
@@ -25,70 +25,26 @@ const ColumnChart = ({ queries }) => {
 		if (queries.length === 0) return;
 
 		console.log("Models:", models);
-		const data = {};
-
-		console.log(data);
-
-		let valid_questions = {
-			poi: 0,
-			nearby: 0,
-			routing: 0,
-			trip: 0,
-		};
+		const data = new Array(models.length).fill(0);
 		queries.forEach((query) => {
+			let correct = 0;
 			if (query.context !== "" && query.answer.correct !== -1) {
-				valid_questions[query.classification]++;
 				query.evaluation?.forEach((e) => {
-					if (!data[e.model]) {
-						data[e.model] = {
-							poi: 0,
-							nearby: 0,
-							routing: 0,
-							trip: 0,
-						};
-					}
 					if (e.verdict === "right") {
-						if (!data[e.model][query.classification]) {
-							data[e.model][query.classification] = 0;
-						}
-						data[e.model][query.classification] += 1;
+						correct++;
 					}
 				});
 			}
+			data[correct]++;
 		});
 
+		console.log(data);
 		setChart({
-			series: Object.keys(data).map((key) => {
-				return {
-					name: key,
-					data: [
-						parseFloat(
-							(
-								(data[key].poi * 100) /
-								valid_questions.poi
-							).toFixed(2)
-						),
-						parseFloat(
-							(
-								(data[key].nearby * 100) /
-								valid_questions.nearby
-							).toFixed(2)
-						),
-						parseFloat(
-							(
-								(data[key].routing * 100) /
-								valid_questions.routing
-							).toFixed(2)
-						),
-						parseFloat(
-							(
-								(data[key].trip * 100) /
-								valid_questions.trip
-							).toFixed(2)
-						),
-					],
-				};
-			}),
+			series: [
+				{
+					data: data,
+				},
+			],
 			options: {
 				chart: {
 					height: "100%",
@@ -113,16 +69,9 @@ const ColumnChart = ({ queries }) => {
 						horizontal: false,
 					},
 				},
-				labels: ["poi", "nearby", "routing", "trip"],
+				labels: Array.from({ length: models.length }, (_, i) => i),
 				dataLabels: {
 					enabled: false,
-				},
-				yaxis: {
-					labels: {
-						formatter: function (value) {
-							return value.toFixed(2) + "%";
-						},
-					},
 				},
 			},
 		});
@@ -131,7 +80,7 @@ const ColumnChart = ({ queries }) => {
 	return (
 		<div className="bu-card-primary rounded-lg shadow-md relative w-full">
 			<h2 className="bu-text-primary py-2 px-5 font-semibold">
-				Categorical Accuracy
+				Question Accuracy
 			</h2>
 			<Divider />
 			<div className="h-full p-3">
@@ -157,4 +106,4 @@ const ColumnChart = ({ queries }) => {
 	);
 };
 
-export default ColumnChart;
+export default QuestionChart;

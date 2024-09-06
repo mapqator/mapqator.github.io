@@ -31,6 +31,7 @@ import PieChart from "./PieChart";
 import BarChart from "./BarChart";
 import ColumnChart from "./ColumnChart";
 import AccuracyChart from "./AccuracyChart";
+import QuestionChart from "./QuestionChart";
 const itemsPerPage = 5;
 
 export default function DatasetCreator({
@@ -157,6 +158,7 @@ export default function DatasetCreator({
 					<PieChart {...{ queries }} />
 					<BarChart {...{ queries }} />
 					<ColumnChart {...{ queries }} />
+					<QuestionChart {...{ queries }} />
 					<AccuracyChart {...{ queries }} />
 					<Evaluation {...{ queries }} />
 					<div className="flex flex-col gap-2 mt-1 w-full">

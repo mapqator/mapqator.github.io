@@ -92,9 +92,6 @@ const AccuracyChart = ({ queries }) => {
 				},
 				yaxis: {
 					labels: {
-						style: {
-							fontSize: "15px", // Increase font size for x-axis labels
-						},
 						formatter: function (value) {
 							return value.toFixed(2) + "%";
 						},
