@@ -32,6 +32,7 @@ import BarChart from "./BarChart";
 import ColumnChart from "./ColumnChart";
 import AccuracyChart from "./AccuracyChart";
 import QuestionChart from "./QuestionChart";
+import GroundTruthDistribution from "./GroundTruthDistribution";
 const itemsPerPage = 5;
 
 export default function DatasetCreator({
@@ -160,6 +161,7 @@ export default function DatasetCreator({
 					<ColumnChart {...{ queries }} />
 					<QuestionChart {...{ queries }} />
 					<AccuracyChart {...{ queries }} />
+					<GroundTruthDistribution {...{ queries }} />
 					<Evaluation {...{ queries }} />
 					<div className="flex flex-col gap-2 mt-1 w-full">
 						<div className="flex justify-center bottom-0 left-0 right-0 pt-4">
