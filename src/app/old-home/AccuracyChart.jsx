@@ -44,20 +44,33 @@ const AccuracyChart = ({ queries }) => {
 			}
 		});
 
-		console.log(data);
+		const sorted_data = Object.keys(data)
+			.map((key) => {
+				return {
+					model: key,
+					value: data[key],
+				};
+			})
+			.sort((a, b) => b.value - a.value);
+
 		setChart({
 			series: [
 				{
-					data: models
-						.filter((model) => model.id > 0)
-						.map((model) => {
-							return parseFloat(
-								(
-									(data[model.name] / valid_questions) *
-									100
-								).toFixed(2)
-							);
-						}),
+					// data: models
+					// 	.filter((model) => model.id > 0)
+					// 	.map((model) => {
+					// 		return parseFloat(
+					// 			(
+					// 				(data[model.name] / valid_questions) *
+					// 				100
+					// 			).toFixed(2)
+					// 		);
+					// 	}),
+					data: sorted_data.map((e) => {
+						return parseFloat(
+							((e.value / valid_questions) * 100).toFixed(2)
+						);
+					}),
 				},
 			],
 			options: {
@@ -84,9 +97,7 @@ const AccuracyChart = ({ queries }) => {
 						horizontal: false,
 					},
 				},
-				labels: models
-					.filter((model) => model.id > 0)
-					.map((model) => model.name),
+				labels: sorted_data.map((e) => e.model),
 				dataLabels: {
 					enabled: false,
 				},

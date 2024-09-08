@@ -33,6 +33,7 @@ import ColumnChart from "./ColumnChart";
 import AccuracyChart from "./AccuracyChart";
 import QuestionChart from "./QuestionChart";
 import GroundTruthDistribution from "./GroundTruthDistribution";
+import AverageContext from "./AverageContext";
 const itemsPerPage = 5;
 
 export default function DatasetCreator({
@@ -159,6 +160,7 @@ export default function DatasetCreator({
 					<PieChart {...{ queries }} />
 					<BarChart {...{ queries }} />
 					<ColumnChart {...{ queries }} />
+					<AverageContext {...{ queries }} />
 					<QuestionChart {...{ queries }} />
 					<AccuracyChart {...{ queries }} />
 					<GroundTruthDistribution {...{ queries }} />
