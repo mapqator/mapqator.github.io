@@ -34,6 +34,7 @@ import AccuracyChart from "./AccuracyChart";
 import QuestionChart from "./QuestionChart";
 import GroundTruthDistribution from "./GroundTruthDistribution";
 import AverageContext from "./AverageContext";
+import AverageQuestion from "./AverageQuestion";
 const itemsPerPage = 5;
 
 export default function DatasetCreator({
@@ -161,9 +162,10 @@ export default function DatasetCreator({
 					<BarChart {...{ queries }} />
 					<ColumnChart {...{ queries }} />
 					<AverageContext {...{ queries }} />
+					<AverageQuestion {...{ queries }} />
+					<GroundTruthDistribution {...{ queries }} />
 					<QuestionChart {...{ queries }} />
 					<AccuracyChart {...{ queries }} />
-					<GroundTruthDistribution {...{ queries }} />
 					<Evaluation {...{ queries }} />
 					<div className="flex flex-col gap-2 mt-1 w-full">
 						<div className="flex justify-center bottom-0 left-0 right-0 pt-4">
