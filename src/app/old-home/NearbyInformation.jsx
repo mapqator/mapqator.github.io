@@ -241,6 +241,10 @@ export function NearbyInfo({
 					place_id: place.place_id,
 					name: place.name,
 					formatted_address: place.vicinity,
+					rating: place.rating,
+					opening_hours: place.opening_hours,
+					user_ratings_total: place.user_ratings_total,
+					price_level: place.price_level,
 				}));
 
 				if (!placeTypes.includes(newNearbyPlaces.type)) {

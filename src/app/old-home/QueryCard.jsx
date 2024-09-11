@@ -50,6 +50,7 @@ export default function QueryCard({
 	const [flag, setFlag] = useState(false);
 	const [query, setQuery] = useState(initQuery);
 	const [contextExpanded, setContextExpanded] = useState(false);
+	const [difficulty, setDifficulty] = useState("Medium");
 	const handleSave = async (place_id) => {
 		const res = await mapApi.getDetails(place_id);
 		if (res.success) {
@@ -63,8 +64,26 @@ export default function QueryCard({
 			return;
 		}
 	};
+
+	const calculateDifficulty = () => {
+		const invalidCount =
+			query.evaluation?.filter((e) => e.verdict === "invalid").length ||
+			0;
+		const rightCount =
+			query.evaluation?.filter((e) => e.verdict === "right").length || 0;
+
+		if (rightCount < 5) {
+			return "Hard";
+		} else if (rightCount > 10) {
+			return "Easy";
+		} else {
+			return "Medium";
+		}
+	};
+
 	useEffect(() => {
 		setQuery(initQuery);
+		setDifficulty(calculateDifficulty());
 	}, [initQuery]);
 
 	useEffect(() => {
@@ -95,6 +114,17 @@ export default function QueryCard({
 					</h1>
 					<div className="text-xl font-bold text-white px-1 lowercase border-2 rounded-md">
 						{query.classification}
+					</div>
+					<div
+						className={`text-xl font-bold px-1 lowercase border-2 rounded-md ${
+							difficulty === "Hard"
+								? "bg-red-500 border-red-700"
+								: difficulty === "Medium"
+								? "bg-orange-500 border-orange-700"
+								: "bg-green-500 border-green-700"
+						}`}
+					>
+						{difficulty}
 					</div>
 				</div>
 

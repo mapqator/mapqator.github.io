@@ -245,11 +245,38 @@ export default function ContextGenerator({
 								// selectedPlacesMap[near_place.place_id]?.alias ||
 								savedPlacesMap[near_place.place_id]?.name ||
 								near_place.name
-							}</b> (${
-								near_place.formatted_address ||
-								savedPlacesMap[near_place.place_id]?.vicinity
-							})`
+							}</b>`
 						);
+						newContext.push(
+							`   - Address: ${near_place.formatted_address}.`
+						);
+
+						if (near_place.rating)
+							newContext.push(
+								`   - Rating: ${near_place.rating}. (${near_place.user_ratings_total} ratings).\n`
+							);
+
+						const priceMap = [
+							"Free",
+							"Inexpensive",
+							"Moderate",
+							"Expensive",
+							"Very Expensive",
+						];
+						if (near_place.price_level)
+							newContext.push(
+								`   - Price Level: ${
+									priceMap[near_place.price_level]
+								}.`
+							);
+
+						if (near_place.opening_hours?.weekday_text)
+							newContext.push(
+								`   - Open: ${near_place.opening_hours.weekday_text.join(
+									", "
+								)}.`
+							);
+
 						counter++;
 					}
 				});
