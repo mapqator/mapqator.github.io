@@ -582,14 +582,14 @@ export default function QueryCard({
 						>
 							Edit
 						</Button>
-						{/* <Button
+						<Button
 							variant="contained"
 							color="error"
 							startIcon={<FontAwesomeIcon icon={faTrash} />}
 							onClick={() => handleDelete(index)}
 						>
 							Delete
-						</Button> */}
+						</Button>
 					</div>
 				</div>
 			) : (
