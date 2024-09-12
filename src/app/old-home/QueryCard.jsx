@@ -93,12 +93,17 @@ export default function QueryCard({
 		const rightCount =
 			query.evaluation?.filter((e) => e.verdict === "right").length || 0;
 
-		if (invalidCount > 0) {
-			if (query.context !== "") setFlag(true);
-			else setFlag(false);
-		} else {
-			setFlag(query.human.answer === 0);
-		}
+		const flag =
+			query.evaluation?.filter(
+				(e) => e.verdict === "wrong" && e.model_id === 9
+			).length || 0;
+		// if (invalidCount > 0) {
+		// 	if (query.context !== "") setFlag(true);
+		// 	else setFlag(false);
+		// } else {
+		// 	setFlag(query.human.answer === 0);
+		// }
+		setFlag(flag > 0);
 	}, [query]);
 	return (
 		<div
