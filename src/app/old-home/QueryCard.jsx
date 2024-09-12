@@ -103,7 +103,7 @@ export default function QueryCard({
 		// } else {
 		// 	setFlag(query.human.answer === 0);
 		// }
-		setFlag(flag > 0);
+		setFlag(rightCount === 16);
 	}, [query]);
 	return (
 		<div
