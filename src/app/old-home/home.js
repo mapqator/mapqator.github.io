@@ -88,6 +88,7 @@ export default function Home() {
 						contextJSON={contextJSON}
 						context={context}
 						{...{
+							savedPlacesMap,
 							setSavedPlacesMap,
 							setSelectedPlacesMap,
 							setDistanceMatrix,

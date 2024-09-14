@@ -41,6 +41,7 @@ export default function DatasetCreator({
 	contextJSON,
 	setContextJSON,
 	context,
+	savedPlacesMap,
 	setContext,
 	setSavedPlacesMap,
 	setSelectedPlacesMap,
@@ -98,7 +99,10 @@ export default function DatasetCreator({
 	};
 
 	const handleSave = async (query) => {
-		const res = await queryApi.createQuery(query);
+		const res = await queryApi.createQuery({
+			...query,
+			place_details: savedPlacesMap,
+		});
 		if (res.success) {
 			// update the queries
 			const newQueries = [...queries];
@@ -114,10 +118,10 @@ export default function DatasetCreator({
 	const handleEdit = async (query, index) => {
 		// console.log("Editing query: ", query, queries[index]);
 		// return;
-		const res = await queryApi.updateQuery(
-			filteredQueries[index].id,
-			query
-		);
+		const res = await queryApi.updateQuery(filteredQueries[index].id, {
+			...query,
+			place_details: savedPlacesMap,
+		});
 		if (res.success) {
 			// update the queries
 			console.log("New Query: ", res.data[0]);
