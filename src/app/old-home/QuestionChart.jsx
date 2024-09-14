@@ -30,7 +30,11 @@ const QuestionChart = ({ queries }) => {
 			let correct = 0;
 			if (query.context !== "" && query.answer.correct !== -1) {
 				query.evaluation?.forEach((e) => {
-					if (e.verdict === "right" && e.type === 0) {
+					if (
+						(e.verdict === "right" ||
+							e.option === query.answer.correct + 1) &&
+						e.type === 0
+					) {
 						correct++;
 					}
 				});

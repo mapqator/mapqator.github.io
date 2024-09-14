@@ -22,8 +22,11 @@ export default function DatasetInformation({ queries }) {
 			}
 			if (query.context !== "" && query.answer.correct !== -1) {
 				const invalidCount =
-					query.evaluation?.filter((e) => e.verdict === "invalid")
-						.length || 0;
+					query.evaluation?.filter(
+						(e) =>
+							e.verdict == "invalid" &&
+							(e.option === null || e.option === 0)
+					).length || 0;
 				const rightCount =
 					query.evaluation?.filter((e) => e.verdict === "right")
 						.length || 0;

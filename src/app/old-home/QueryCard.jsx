@@ -340,16 +340,15 @@ export default function QueryCard({
 										<h1 className="text-sm w-1/2 ">
 											{e.answer}
 										</h1>
-										{e.verdict == "invalid" ? (
-											<h1 className="text-lg w-1/2 ">
-												{"Can't answer"}
-												{e.answer !== ""
-													? "(" + e.answer + ")"
-													: ""}
-											</h1>
-										) : e.verdict == "right" ? (
+										{e.verdict === "right" ||
+										e.option ===
+											query.answer.correct + 1 ? (
 											<h1 className="text-lg w-1/2  text-green-500 font-semibold">
 												Correct
+											</h1>
+										) : e.verdict == "invalid" ? (
+											<h1 className="text-lg w-1/2 ">
+												{"Can't answer"}
 											</h1>
 										) : (
 											<h1 className="text-lg w-1/2  text-red-500 font-semibold">

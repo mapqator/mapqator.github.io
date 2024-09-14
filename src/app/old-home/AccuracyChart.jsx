@@ -37,7 +37,11 @@ const AccuracyChart = ({ queries, type }) => {
 					if (!data[e.model]) {
 						data[e.model] = 0;
 					}
-					if (e.verdict === "right" && e.type === type) {
+					if (
+						(e.verdict === "right" ||
+							e.option === query.answer.correct + 1) &&
+						e.type === type
+					) {
 						data[e.model]++;
 					}
 				});

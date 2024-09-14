@@ -22,7 +22,10 @@ export default function Evaluation({ queries, type }) {
 						};
 					}
 					if (e.type === type) {
-						if (e.verdict === "right") {
+						if (
+							e.verdict === "right" ||
+							e.option === query.answer.correct + 1
+						) {
 							tmp[e.model] = {
 								...tmp[e.model],
 								correct: tmp[e.model]?.correct
