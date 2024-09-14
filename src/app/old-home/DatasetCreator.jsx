@@ -183,6 +183,7 @@ export default function DatasetCreator({
 					<Evaluation {...{ queries }} type={0} />
 					<Evaluation {...{ queries }} type={1} />
 					<Evaluation {...{ queries }} type={2} />
+					<Evaluation {...{ queries }} type={3} />
 					<div className="flex flex-col gap-2 mt-1 w-full">
 						<div className="flex justify-center bottom-0 left-0 right-0 pt-4">
 							<Pagination
