@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-export default function Evaluation({ queries }) {
+export default function Evaluation({ queries, type }) {
 	const [result, setResult] = useState({});
 
 	useEffect(() => {
@@ -21,32 +21,34 @@ export default function Evaluation({ queries }) {
 							wrong: 0,
 						};
 					}
-					if (e.verdict === "right") {
-						tmp[e.model] = {
-							...tmp[e.model],
-							correct: tmp[e.model]?.correct
-								? tmp[e.model].correct + 1
-								: 1,
-						};
-					} else if (e.verdict == "invalid") {
-						console.log("Invalid question");
-						tmp[e.model] = {
-							...tmp[e.model],
-							invalid: tmp[e.model]?.invalid
-								? tmp[e.model].invalid + 1
-								: 1,
-						};
-					} else {
-						tmp[e.model] = {
-							...tmp[e.model],
-							wrong: tmp[e.model]?.wrong
-								? tmp[e.model].wrong + 1
-								: 1,
-						};
+					if (e.type === type) {
+						if (e.verdict === "right") {
+							tmp[e.model] = {
+								...tmp[e.model],
+								correct: tmp[e.model]?.correct
+									? tmp[e.model].correct + 1
+									: 1,
+							};
+						} else if (e.verdict == "invalid") {
+							console.log("Invalid question");
+							tmp[e.model] = {
+								...tmp[e.model],
+								invalid: tmp[e.model]?.invalid
+									? tmp[e.model].invalid + 1
+									: 1,
+							};
+						} else {
+							tmp[e.model] = {
+								...tmp[e.model],
+								wrong: tmp[e.model]?.wrong
+									? tmp[e.model].wrong + 1
+									: 1,
+							};
+						}
+						tmp[e.model].accuracy =
+							(tmp[e.model].correct * 100.0) / valid_questions;
 					}
 					// console.log(query.id, tmp[e.model], e.model);
-					tmp[e.model].accuracy =
-						(tmp[e.model].correct * 100.0) / valid_questions;
 				});
 			}
 		});

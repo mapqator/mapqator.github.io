@@ -168,7 +168,8 @@ export default function DatasetCreator({
 					<QuestionChart {...{ queries }} />
 					<AccuracyChart {...{ queries }} type={0} />
 					<AccuracyChart {...{ queries }} type={1} />
-					<Evaluation {...{ queries }} />
+					<Evaluation {...{ queries }} type={0} />
+					<Evaluation {...{ queries }} type={1} />
 					<div className="flex flex-col gap-2 mt-1 w-full">
 						<div className="flex justify-center bottom-0 left-0 right-0 pt-4">
 							<Pagination
