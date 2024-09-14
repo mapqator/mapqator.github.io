@@ -612,6 +612,7 @@ export default function QueryFields({
 								...init,
 								context: query.context,
 								context_json: query.context_json,
+								context_gpt: query.context_gpt,
 							});
 						}}
 						startIcon={<Save />}

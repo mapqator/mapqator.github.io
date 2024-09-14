@@ -47,7 +47,7 @@ const ColumnChart = ({ queries }) => {
 							trip: 0,
 						};
 					}
-					if (e.verdict === "right") {
+					if (e.verdict === "right" && e.type === 0) {
 						if (!data[e.model][query.classification]) {
 							data[e.model][query.classification] = 0;
 						}
