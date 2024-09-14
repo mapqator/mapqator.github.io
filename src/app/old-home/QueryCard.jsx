@@ -528,6 +528,7 @@ export default function QueryCard({
 							color="primary"
 							startIcon={<FontAwesomeIcon icon={faPen} />}
 							onClick={async () => {
+								setSavedPlacesMap({});
 								for (let place_id in query.context_json
 									.places) {
 									await handleSave(place_id);
