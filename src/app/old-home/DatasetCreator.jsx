@@ -160,12 +160,14 @@ export default function DatasetCreator({
 					<DatasetInformation {...{ queries }} />
 					<PieChart {...{ queries }} />
 					<BarChart {...{ queries }} />
-					<ColumnChart {...{ queries }} />
+					<ColumnChart {...{ queries }} type={0} />
+					<ColumnChart {...{ queries }} type={1} />
 					<AverageContext {...{ queries }} />
 					<AverageQuestion {...{ queries }} />
 					<GroundTruthDistribution {...{ queries }} />
 					<QuestionChart {...{ queries }} />
-					<AccuracyChart {...{ queries }} />
+					<AccuracyChart {...{ queries }} type={0} />
+					<AccuracyChart {...{ queries }} type={1} />
 					<Evaluation {...{ queries }} />
 					<div className="flex flex-col gap-2 mt-1 w-full">
 						<div className="flex justify-center bottom-0 left-0 right-0 pt-4">

@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import queryApi from "@/api/queryApi";
 const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const AccuracyChart = ({ queries }) => {
+const AccuracyChart = ({ queries, type }) => {
 	const [chart, setChart] = useState({
 		series: [],
 		options: {},
@@ -37,7 +37,7 @@ const AccuracyChart = ({ queries }) => {
 					if (!data[e.model]) {
 						data[e.model] = 0;
 					}
-					if (e.verdict === "right") {
+					if (e.verdict === "right" && e.type === type) {
 						data[e.model]++;
 					}
 				});

@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import queryApi from "@/api/queryApi";
 const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const ColumnChart = ({ queries }) => {
+const ColumnChart = ({ queries, type }) => {
 	const [chart, setChart] = useState({
 		series: [],
 		options: {},
@@ -47,7 +47,7 @@ const ColumnChart = ({ queries }) => {
 							trip: 0,
 						};
 					}
-					if (e.verdict === "right" && e.type === 0) {
+					if (e.verdict === "right" && e.type === type) {
 						if (!data[e.model][query.classification]) {
 							data[e.model][query.classification] = 0;
 						}
@@ -62,30 +62,38 @@ const ColumnChart = ({ queries }) => {
 				return {
 					name: key,
 					data: [
-						parseFloat(
-							(
-								(data[key].poi * 100) /
-								valid_questions.poi
-							).toFixed(2)
-						),
-						parseFloat(
-							(
-								(data[key].nearby * 100) /
-								valid_questions.nearby
-							).toFixed(2)
-						),
-						parseFloat(
-							(
-								(data[key].routing * 100) /
-								valid_questions.routing
-							).toFixed(2)
-						),
-						parseFloat(
-							(
-								(data[key].trip * 100) /
-								valid_questions.trip
-							).toFixed(2)
-						),
+						valid_questions.poi > 0
+							? parseFloat(
+									(
+										(data[key]?.poi * 100) /
+										valid_questions.poi
+									).toFixed(2)
+							  )
+							: 0,
+						valid_questions.nearby > 0
+							? parseFloat(
+									(
+										(data[key]?.nearby * 100) /
+										valid_questions.nearby
+									).toFixed(2)
+							  )
+							: 0,
+						valid_questions.routing > 0
+							? parseFloat(
+									(
+										(data[key]?.routing * 100) /
+										valid_questions.routing
+									).toFixed(2)
+							  )
+							: 0,
+						valid_questions.trip > 0
+							? parseFloat(
+									(
+										(data[key]?.trip * 100) /
+										valid_questions.trip
+									).toFixed(2)
+							  )
+							: 0,
 					],
 				};
 			}),
