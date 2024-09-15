@@ -171,6 +171,12 @@ export const AutocompleteSearchBox = ({
 	};
 
 	useEffect(() => {
+		if (Object.keys(savedPlacesMap).length === 0) {
+			setFilteredPlaces([]);
+		}
+	}, [savedPlacesMap]);
+
+	useEffect(() => {
 		if (search) {
 			debouncedSearch(search);
 			// setFilteredPlaces(
@@ -336,13 +342,13 @@ export const AutocompleteSearchBox = ({
 												{
 													savedPlacesMap[
 														place.place_id
-													].name
+													]?.name
 												}{" "}
 												-{" "}
 												{
 													savedPlacesMap[
 														place.place_id
-													].formatted_address
+													]?.formatted_address
 												}
 											</button>
 										</li>

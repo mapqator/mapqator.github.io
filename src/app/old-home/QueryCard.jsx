@@ -55,6 +55,7 @@ export default function QueryCard({
 		const res = await mapApi.getDetails(place_id);
 		if (res.success) {
 			const details = res.data.result;
+			console.log("Saving: ", details.name);
 			setSavedPlacesMap((prev) => ({
 				...prev,
 				[place_id]: details,
@@ -70,7 +71,12 @@ export default function QueryCard({
 			query.evaluation?.filter((e) => e.verdict === "invalid").length ||
 			0;
 		const rightCount =
-			query.evaluation?.filter((e) => e.verdict === "right").length || 0;
+			query.evaluation?.filter(
+				(e) =>
+					e.type === 0 &&
+					(e.verdict === "right" ||
+						e.option === query.answer.correct + 1)
+			).length || 0;
 
 		if (rightCount < 5) {
 			return "Hard";
@@ -528,7 +534,21 @@ export default function QueryCard({
 							color="primary"
 							startIcon={<FontAwesomeIcon icon={faPen} />}
 							onClick={async () => {
+								setPoisMap({});
+								setDistanceMatrix({});
+								setNearbyPlacesMap({});
+								setContext([]);
+								setContextJSON({});
+								setCurrentInformation({
+									time: null,
+									day: "",
+									location: "",
+								});
+								setDirectionInformation({});
+								setSelectedPlacesMap({});
 								setSavedPlacesMap({});
+
+								console.log("Saved Places Reset");
 								for (let place_id in query.context_json
 									.places) {
 									await handleSave(place_id);
