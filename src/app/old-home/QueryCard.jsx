@@ -94,8 +94,9 @@ export default function QueryCard({
 
 	useEffect(() => {
 		const invalidCount =
-			query.evaluation?.filter((e) => e.verdict === "invalid").length ||
-			0;
+			query.evaluation?.filter(
+				(e) => e.verdict === "invalid" && !e.option
+			).length || 0;
 		const rightCount =
 			query.evaluation?.filter((e) => e.verdict === "right").length || 0;
 
@@ -103,13 +104,13 @@ export default function QueryCard({
 			query.evaluation?.filter(
 				(e) => e.verdict === "wrong" && e.model_id === 9
 			).length || 0;
-		// if (invalidCount > 0) {
-		// 	if (query.context !== "") setFlag(true);
-		// 	else setFlag(false);
-		// } else {
-		// 	setFlag(query.human.answer === 0);
-		// }
-		setFlag(!flag && rightCount >= 15);
+		if (invalidCount > 0) {
+			if (query.context !== "") setFlag(true);
+			else setFlag(false);
+		} else {
+			setFlag(query.human.answer === 0);
+		}
+		// setFlag(!flag && rightCount >= 15);
 	}, [query]);
 	return (
 		<div
