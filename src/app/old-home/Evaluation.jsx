@@ -32,19 +32,19 @@ export default function Evaluation({ queries, type }) {
 									? tmp[e.model].correct + 1
 									: 1,
 							};
-						} else if (e.verdict == "invalid") {
+						} else if (e.verdict == "wrong") {
+							tmp[e.model] = {
+								...tmp[e.model],
+								wrong: tmp[e.model]?.wrong
+									? tmp[e.model].wrong + 1
+									: 1,
+							};
+						} else {
 							console.log("Invalid question");
 							tmp[e.model] = {
 								...tmp[e.model],
 								invalid: tmp[e.model]?.invalid
 									? tmp[e.model].invalid + 1
-									: 1,
-							};
-						} else {
-							tmp[e.model] = {
-								...tmp[e.model],
-								wrong: tmp[e.model]?.wrong
-									? tmp[e.model].wrong + 1
 									: 1,
 							};
 						}
