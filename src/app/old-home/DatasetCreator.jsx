@@ -168,12 +168,25 @@ export default function DatasetCreator({
 			{/*<h1 className="text-2xl w-full">Previous Queries</h1>*/}
 			{fetched ? (
 				<>
+					<div className="p-5">
+						<LoadingButton
+							onClick={fetchQueries}
+							loading={loading}
+							variant="contained"
+							color="primary"
+							endIcon={<Refresh />}
+							loadingPosition="end"
+						>
+							Load Dataset
+						</LoadingButton>
+					</div>
 					<DatasetInformation {...{ queries }} />
 					<PieChart {...{ queries }} />
 					<BarChart {...{ queries }} />
 					<ColumnChart {...{ queries }} type={0} />
 					{/* <ColumnChart {...{ queries }} type={1} />
 					<ColumnChart {...{ queries }} type={2} /> */}
+					<ColumnChart {...{ queries }} type={4} />
 					<AverageContext {...{ queries }} />
 					<ContextDistribution {...{ queries }} />
 					<AverageQuestion {...{ queries }} />
