@@ -1,10 +1,9 @@
 import { Divider } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import queryApi from "@/api/queryApi";
 const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const AverageContext = ({ queries }) => {
+const ContextDistribution = ({ queries }) => {
 	const [chart, setChart] = useState({
 		series: [],
 		options: {},
@@ -13,78 +12,70 @@ const AverageContext = ({ queries }) => {
 	useEffect(() => {
 		if (queries.length === 0) return;
 
-		const data = {
-			poi: 0,
-			nearby: 0,
-			routing: 0,
-			trip: 0,
-		};
+		const contextLengths = [];
 
-		let valid_questions = {
-			poi: 0,
-			nearby: 0,
-			routing: 0,
-			trip: 0,
-		};
-		let max = 0;
 		queries.forEach((query) => {
 			if (query.context !== "" && query.answer.correct !== -1) {
-				valid_questions[query.classification]++;
-				data[query.classification] += query.context.length;
-				if (query.context.length > max)
-					console.log("Max:", query.id, query.context.length);
-				max = Math.max(max, query.context.length);
+				contextLengths.push(query.context.length);
 			}
 		});
 
-		console.log("Average Context Length: ", data);
-		console.log("Maximum Context Length: ", max);
+		// Sort the context lengths to create bins for a histogram
+		contextLengths.sort((a, b) => a - b);
 
+		// Create bins (ranges) for the context lengths
+		const binSize = 500; // Adjust bin size as needed
+		const maxContextLength = Math.max(...contextLengths);
+		const numberOfBins = Math.ceil(maxContextLength / binSize);
+
+		const distribution = new Array(numberOfBins).fill(0);
+		contextLengths.forEach((length) => {
+			const binIndex = Math.floor(length / binSize);
+			distribution[binIndex]++;
+		});
+
+		// Prepare chart data
 		setChart({
 			series: [
 				{
-					data: [
-						data["poi"] / valid_questions["poi"],
-						data["nearby"] / valid_questions["nearby"],
-						data["routing"] / valid_questions["routing"],
-						data["trip"] / valid_questions["trip"],
-					],
+					data: distribution,
 				},
 			],
 			options: {
 				chart: {
 					height: "100%",
-					// stacked: true,
 					type: "bar",
-				},
-				states: {
-					active: {
-						filter: {
-							type: "none", // none, lighten, darken
-						},
-					},
-					hover: {
-						filter: {
-							type: "lighten",
-							value: 0.0001,
-						},
-					},
 				},
 				plotOptions: {
 					bar: {
 						horizontal: false,
 					},
 				},
-				labels: ["poi", "nearby", "routing", "trip"],
-				dataLabels: {
-					enabled: false,
+				labels: Array.from(
+					{ length: numberOfBins },
+					(_, i) => `${i * binSize}-${(i + 1) * binSize}`
+				),
+				xaxis: {
+					title: {
+						text: "Context Length Ranges",
+					},
+					categories: Array.from(
+						{ length: numberOfBins },
+						(_, i) => `${i * binSize}-${(i + 1) * binSize}`
+					),
 				},
 				yaxis: {
+					title: {
+						text: "Number of Queries",
+					},
 					labels: {
 						formatter: function (value) {
-							return value.toFixed(2);
+							return value.toFixed(0);
 						},
 					},
+				},
+				dataLabels: {
+					enabled: false,
 				},
 			},
 		});
@@ -93,7 +84,7 @@ const AverageContext = ({ queries }) => {
 	return (
 		<div className="bu-card-primary rounded-lg shadow-md relative w-full">
 			<h2 className="bu-text-primary py-2 px-5 font-semibold">
-				Average Context Length
+				Context Length Distribution
 			</h2>
 			<Divider />
 			<div className="h-full p-3">
@@ -119,4 +110,4 @@ const AverageContext = ({ queries }) => {
 	);
 };
 
-export default AverageContext;
+export default ContextDistribution;

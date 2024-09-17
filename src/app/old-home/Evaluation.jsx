@@ -1,10 +1,20 @@
 "use client";
 
+import { all } from "axios";
 import { useEffect, useState } from "react";
 
 export default function Evaluation({ queries, type }) {
 	const [result, setResult] = useState({});
-
+	const [metrics, setMetrics] = useState({
+		0: {
+			variant: "",
+			all: "",
+			poi: "",
+			nearby: "",
+			routing: "",
+			trip: "",
+		},
+	});
 	useEffect(() => {
 		const tmp = {};
 		let valid_questions = 0;
@@ -56,7 +66,84 @@ export default function Evaluation({ queries, type }) {
 			}
 		});
 		setResult(tmp);
+
 		console.log(result);
+	}, [queries]);
+
+	useEffect(() => {
+		let valid_questions = {
+			all: 0,
+			poi: 0,
+			nearby: 0,
+			routing: 0,
+			trip: 0,
+		};
+		const tmp = {};
+		queries.forEach((query) => {
+			if (query.context !== "" && query.answer.correct !== -1) {
+				valid_questions[query.classification]++;
+				valid_questions["all"]++;
+
+				query.evaluation?.forEach((e) => {
+					if (!tmp[e.model_id]) {
+						tmp[e.model_id] = {
+							variant: e.variant,
+							all: 0,
+							poi: 0,
+							nearby: 0,
+							routing: 0,
+							trip: 0,
+						};
+					}
+					if (e.type === type) {
+						if (
+							e.verdict === "right" ||
+							e.option === query.answer.correct + 1
+						) {
+							tmp[e.model_id] = {
+								...tmp[e.model_id],
+								all: tmp[e.model_id].all + 1,
+								[query.classification]:
+									tmp[e.model_id][query.classification] + 1,
+							};
+						}
+					}
+				});
+			}
+		});
+		setMetrics(tmp);
+		console.log("Metrics:", tmp);
+		console.log(`
+			\\begin{tabular}{|l|c|c|c|c|c|c|}
+			\hline
+			\\textbf{Model} & \\textbf{Correct} & \\textbf{All} & \\textbf{Poi} & \\textbf{Nearby} & \\textbf{Routing} & \\textbf{Trip} \\\\
+			\hline
+		`);
+		let result = "";
+
+		Object.keys(tmp).forEach((key) => {
+			result += `${tmp[key].variant} & ${tmp[key].all} & ${(
+				(tmp[key].all * 100) /
+				valid_questions.all
+			).toFixed(2)} & ${(
+				(tmp[key].poi * 100) /
+				valid_questions.poi
+			).toFixed(2)} & ${(
+				(tmp[key].nearby * 100) /
+				valid_questions.nearby
+			).toFixed(2)} & ${(
+				(tmp[key].routing * 100) /
+				valid_questions.routing
+			).toFixed(2)} & ${(
+				(tmp[key].trip * 100) /
+				valid_questions.trip
+			).toFixed(2)} \\\\
+`;
+		});
+		console.log(result);
+
+		console.log(`\\hline
+			\\end{tabular}`);
 	}, [queries]);
 
 	return (
