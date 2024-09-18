@@ -199,6 +199,7 @@ export default function DatasetCreator({
 					<AccuracyChart {...{ queries }} type={4} />
 					<AccuracyChart {...{ queries }} type={5} />
 					<Evaluation {...{ queries }} type={0} />
+					<Evaluation {...{ queries }} type={5} />
 					{/* <Evaluation {...{ queries }} type={1} />
 					<Evaluation {...{ queries }} type={2} />
 					<Evaluation {...{ queries }} type={3} /> */}
