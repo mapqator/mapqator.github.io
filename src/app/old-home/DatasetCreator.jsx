@@ -187,6 +187,7 @@ export default function DatasetCreator({
 					{/* <ColumnChart {...{ queries }} type={1} />
 					<ColumnChart {...{ queries }} type={2} /> */}
 					<ColumnChart {...{ queries }} type={4} />
+					<ColumnChart {...{ queries }} type={5} />
 					<AverageContext {...{ queries }} />
 					<ContextDistribution {...{ queries }} />
 					<AverageQuestion {...{ queries }} />
@@ -196,6 +197,7 @@ export default function DatasetCreator({
 					<AccuracyChart {...{ queries }} type={1} />
 					<AccuracyChart {...{ queries }} type={2} />
 					<AccuracyChart {...{ queries }} type={4} />
+					<AccuracyChart {...{ queries }} type={5} />
 					<Evaluation {...{ queries }} type={0} />
 					{/* <Evaluation {...{ queries }} type={1} />
 					<Evaluation {...{ queries }} type={2} />
