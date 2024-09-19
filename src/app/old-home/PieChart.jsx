@@ -52,7 +52,7 @@ export default function PieChart({ queries }) {
 					style: {
 						// colors: ["#222222", "#222222"], // Add this line. This will make the labels dark black.
 						offset: -50, // Adjust this value as needed
-						fontSize: "20px",
+						fontSize: "16px",
 						shadow: false,
 					},
 				},
