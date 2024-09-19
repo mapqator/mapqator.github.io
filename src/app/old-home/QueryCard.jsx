@@ -98,19 +98,20 @@ export default function QueryCard({
 				(e) => e.verdict === "invalid" && !e.option
 			).length || 0;
 		const rightCount =
-			query.evaluation?.filter((e) => e.verdict === "right").length || 0;
-
+			query.evaluation?.filter(
+				(e) => e.verdict === "right" && e.type == 0
+			).length || 0;
 		const flag =
 			query.evaluation?.filter(
 				(e) => e.verdict === "wrong" && e.model_id === 9
 			).length || 0;
-		if (invalidCount > 0) {
-			if (query.context !== "") setFlag(true);
-			else setFlag(false);
-		} else {
-			setFlag(query.human.answer === 0);
-		}
-		// setFlag(!flag && rightCount >= 15);
+		// if (invalidCount > 0) {
+		// 	if (query.context !== "") setFlag(true);
+		// 	else setFlag(false);
+		// } else {
+		// 	setFlag(query.human.answer === 0);
+		// }
+		setFlag(rightCount >= 16);
 	}, [query]);
 	return (
 		<div
