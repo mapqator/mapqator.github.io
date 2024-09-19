@@ -34,15 +34,16 @@ const AccuracyChart = ({ queries, type }) => {
 			if (query.context !== "" && query.answer.correct !== -1) {
 				valid_questions++;
 				query.evaluation?.forEach((e) => {
-					if (!data[e.model]) {
-						data[e.model] = 0;
-					}
-					if (
-						(e.verdict === "right" ||
-							e.option === query.answer.correct + 1) &&
-						e.type === type
-					) {
-						data[e.model]++;
+					if (e.type === type) {
+						if (!data[e.model]) {
+							data[e.model] = 0;
+						}
+						if (
+							e.verdict === "right" ||
+							e.option === query.answer.correct + 1
+						) {
+							data[e.model]++;
+						}
 					}
 				});
 			}
