@@ -53,7 +53,7 @@ const ContextDistribution = ({ queries }) => {
 				},
 				labels: Array.from(
 					{ length: numberOfBins },
-					(_, i) => `${i * binSize}-${(i + 1) * binSize}`
+					(_, i) => `${i * binSize}`
 				),
 				xaxis: {
 					title: {
@@ -61,7 +61,7 @@ const ContextDistribution = ({ queries }) => {
 					},
 					categories: Array.from(
 						{ length: numberOfBins },
-						(_, i) => `${i * binSize}-${(i + 1) * binSize}`
+						(_, i) => `${i * binSize}`
 					),
 				},
 				yaxis: {

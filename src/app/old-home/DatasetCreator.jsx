@@ -36,6 +36,7 @@ import GroundTruthDistribution from "./GroundTruthDistribution";
 import AverageContext from "./AverageContext";
 import AverageQuestion from "./AverageQuestion";
 import ContextDistribution from "./ContextDistribution";
+import QuestionDistribution from "./QuestionDistribution";
 const itemsPerPage = 5;
 
 export default function DatasetCreator({
@@ -191,6 +192,7 @@ export default function DatasetCreator({
 					<ColumnChart {...{ queries }} type={6} />
 					<AverageContext {...{ queries }} />
 					<ContextDistribution {...{ queries }} />
+					<QuestionDistribution {...{ queries }} />
 					<AverageQuestion {...{ queries }} />
 					<GroundTruthDistribution {...{ queries }} />
 					<QuestionChart {...{ queries }} />
