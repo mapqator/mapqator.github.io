@@ -190,6 +190,7 @@ export default function DatasetCreator({
 					<ColumnChart {...{ queries }} type={4} />
 					<ColumnChart {...{ queries }} type={5} />
 					<ColumnChart {...{ queries }} type={6} />
+					<ColumnChart {...{ queries }} type={7} />
 					<AverageContext {...{ queries }} />
 					<ContextDistribution {...{ queries }} />
 					<QuestionDistribution {...{ queries }} />

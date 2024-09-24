@@ -16,8 +16,8 @@ const TokenDistribution = ({ queries }) => {
 
 		queries.forEach((query) => {
 			if (query.context !== "" && query.answer.correct !== -1) {
-				// Assuming tokens are split by spaces; adjust as necessary
-				const tokens = query.context.split(/[\s\n]+/);
+				// Split by spaces and newlines to count tokens
+				const tokens = query.question.split(/[\s\n]+/);
 				tokenCounts.push(tokens.length);
 			}
 		});
@@ -26,7 +26,7 @@ const TokenDistribution = ({ queries }) => {
 		tokenCounts.sort((a, b) => a - b);
 
 		// Create bins (ranges) for the token counts
-		const binSize = 100; // Adjust bin size as needed
+		const binSize = 10; // Adjust bin size as needed
 		const maxTokenCount = Math.max(...tokenCounts);
 		const numberOfBins = Math.ceil(maxTokenCount / binSize);
 
@@ -39,7 +39,7 @@ const TokenDistribution = ({ queries }) => {
 			distribution[binIndex]++;
 		});
 
-		console.log("Context Distribution: ", distribution);
+		console.log("Question Distribution: ", distribution);
 
 		// Prepare chart data
 		setChart({
@@ -91,7 +91,7 @@ const TokenDistribution = ({ queries }) => {
 	return (
 		<div className="bu-card-primary rounded-lg shadow-md relative w-full">
 			<h2 className="bu-text-primary py-2 px-5 font-semibold">
-				Context Token Count Distribution
+				Token Count Distribution
 			</h2>
 			<Divider />
 			<div className="h-full p-3">

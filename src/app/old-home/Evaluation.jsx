@@ -79,10 +79,23 @@ export default function Evaluation({ queries, type }) {
 			trip: 0,
 		};
 		const tmp = {};
+		let annotation = {
+			right: 0,
+			wrong: 0,
+			invalid: 0,
+		};
 		queries.forEach((query) => {
 			if (query.context !== "" && query.answer.correct !== -1) {
 				valid_questions[query.classification]++;
 				valid_questions["all"]++;
+
+				if (query.human.answer === query.answer.correct + 1) {
+					annotation["right"]++;
+				} else if (!query.human.answer) {
+					annotation["invalid"]++;
+				} else {
+					annotation["wrong"]++;
+				}
 
 				query.evaluation?.forEach((e) => {
 					if (!tmp[e.model_id]) {
@@ -144,6 +157,8 @@ export default function Evaluation({ queries, type }) {
 
 		console.log(`\\hline
 			\\end{tabular}`);
+
+		console.log("Human: ", annotation);
 	}, [queries]);
 
 	return (
