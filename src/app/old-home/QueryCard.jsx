@@ -312,7 +312,7 @@ export default function QueryCard({
 											key={index}
 											className="flex flex-row gap-2 items-center"
 										>
-											<Radio
+											{/* <Radio
 												checked={
 													query.answer.correct ===
 													index
@@ -320,7 +320,7 @@ export default function QueryCard({
 												value={index}
 												name="radio-buttons"
 												disabled={true}
-											/>
+											/> */}
 											<h1 className="text-lg">
 												{option}
 											</h1>
