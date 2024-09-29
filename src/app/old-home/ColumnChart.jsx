@@ -34,9 +34,18 @@ const ColumnChart = ({ queries, type }) => {
 			nearby: 0,
 			routing: 0,
 			trip: 0,
+			unanswerable: 0,
 		};
 		queries.forEach((query) => {
-			if (query.context !== "" && query.answer.correct !== -1) {
+			if (query.context !== "") {
+				if (!query.classification) {
+					query.classification = "unanswerable";
+				} else {
+					query.classification = query.classification.replace(
+						/^spatial_/,
+						""
+					);
+				}
 				valid_questions[query.classification]++;
 				query.evaluation?.forEach((e) => {
 					if (!data[e.model]) {
@@ -45,10 +54,11 @@ const ColumnChart = ({ queries, type }) => {
 							nearby: 0,
 							routing: 0,
 							trip: 0,
+							unanswerable: 0,
 						};
 					}
 					if (
-						(e.verdict === "right" ||
+						((e.option === null && e.verdict === "right") ||
 							e.option === query.answer.correct + 1) &&
 						e.type === type
 					) {
@@ -98,6 +108,14 @@ const ColumnChart = ({ queries, type }) => {
 									).toFixed(2)
 							  )
 							: 0,
+						valid_questions.unanswerable > 0
+							? parseFloat(
+									(
+										(data[key]?.unanswerable * 100) /
+										valid_questions.unanswerable
+									).toFixed(2)
+							  )
+							: 0,
 					],
 				};
 			}),
@@ -125,7 +143,7 @@ const ColumnChart = ({ queries, type }) => {
 						horizontal: false,
 					},
 				},
-				labels: ["poi", "nearby", "routing", "trip"],
+				labels: ["poi", "nearby", "routing", "trip", "unanswerable"],
 				dataLabels: {
 					enabled: false,
 				},

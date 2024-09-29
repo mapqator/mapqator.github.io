@@ -13,14 +13,30 @@ const TokenDistribution = ({ queries }) => {
 		if (queries.length === 0) return;
 
 		const tokenCounts = [];
-
+		const uniqueContexts = new Set(); // To store unique contexts
+		let max = 0;
+		let total = 0;
 		queries.forEach((query) => {
-			if (query.context !== "" && query.answer.correct !== -1) {
+			if (query.context !== "") {
 				// Assuming tokens are split by spaces; adjust as necessary
 				const tokens = query.context.split(/[\s\n]+/);
 				tokenCounts.push(tokens.length);
+				uniqueContexts.add(query.context); // Add context to the set of unique contexts
+				if (tokens.length > max) {
+					max = Math.max(max, tokens.length);
+					console.log(
+						"Max Context ID:",
+						query.id,
+						"Tokens:",
+						tokens.length
+					);
+				}
+				total += tokens.length;
 			}
 		});
+		console.log("Max Context:", max);
+		console.log("Total Context Tokens:", total);
+		console.log("Unique Contexts Count:", uniqueContexts.size); // Log the count of unique contexts
 
 		// Sort the token counts to create bins for a histogram
 		tokenCounts.sort((a, b) => a - b);

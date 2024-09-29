@@ -18,7 +18,7 @@ const GroundTruthDistribution = ({ queries }) => {
 		console.log(data);
 		let valid_questions = 0;
 		queries.forEach((query) => {
-			if (query.context !== "" && query.answer.correct !== -1) {
+			if (query.context !== "") {
 				data[query.answer.correct]++;
 			}
 		});
@@ -28,7 +28,7 @@ const GroundTruthDistribution = ({ queries }) => {
 				{
 					data: data,
 				},
-			],	
+			],
 			options: {
 				chart: {
 					height: "100%",

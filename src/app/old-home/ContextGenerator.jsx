@@ -203,18 +203,18 @@ export default function ContextGenerator({
 						directionInformation[from_id][to_id][
 							mode
 						].routes.forEach((route, index) => {
-							newContext.push(
-								`${index + 1}. Via ${route.label} | ${
-									route.duration
-								} | ${route.distance}`
-							);
+							newContext.push(`${index + 1}. Via ${route.label}`);
 
 							if (
 								directionInformation[from_id][to_id][mode]
 									.showSteps
 							) {
 								route.steps.forEach((step, index) => {
-									newContext.push(` - ${step}`);
+									if (step.html_instructions)
+										newContext.push(
+											` - (${step.duration} | ${step.distance}) ${step.html_instructions} `
+										);
+									else newContext.push(` - ${step}`);
 								});
 							}
 						});
@@ -239,13 +239,21 @@ export default function ContextGenerator({
 				);
 				let counter = 1;
 				e.places.forEach((near_place) => {
+					const lat =
+						typeof near_place.geometry.location.lat === "function"
+							? near_place.geometry.location.lat()
+							: near_place.geometry.location.lat;
+					const lng =
+						typeof near_place.geometry.location.lng === "function"
+							? near_place.geometry.location.lng()
+							: near_place.geometry.location.lng;
 					if (near_place.selected) {
 						newContext.push(
 							`${counter}. <b>${
 								// selectedPlacesMap[near_place.place_id]?.alias ||
 								savedPlacesMap[near_place.place_id]?.name ||
 								near_place.name
-							}</b>`
+							}</b>` + `(${lat.toFixed(4)}, ${lng.toFixed(4)})`
 						);
 						newContext.push(
 							`   - Address: ${near_place.formatted_address}.`
@@ -383,7 +391,7 @@ export default function ContextGenerator({
 					: ""
 			}${
 				attributes.includes("geometry")
-					? "(" + lat + ", " + lng + ")"
+					? `(${lat.toFixed(4)}, ${lng.toFixed(4)})`
 					: ""
 			}.\n`;
 		}
@@ -502,6 +510,7 @@ export default function ContextGenerator({
 						});
 						setDirectionInformation({});
 						setSelectedPlacesMap({});
+						setSavedPlacesMap({});
 					}}
 				>
 					<FontAwesomeIcon icon={faRefresh} color="black" />

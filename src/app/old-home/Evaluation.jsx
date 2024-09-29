@@ -19,7 +19,7 @@ export default function Evaluation({ queries, type }) {
 		const tmp = {};
 		let valid_questions = 0;
 		queries.forEach((query) => {
-			if (query.context !== "" && query.answer.correct !== -1) {
+			if (query.context !== "") {
 				valid_questions++;
 
 				query.evaluation?.forEach((e) => {
@@ -33,7 +33,7 @@ export default function Evaluation({ queries, type }) {
 					}
 					if (e.type === type) {
 						if (
-							e.verdict === "right" ||
+							(e.option === null && e.verdict === "right") ||
 							e.option === query.answer.correct + 1
 						) {
 							tmp[e.model] = {
@@ -77,6 +77,7 @@ export default function Evaluation({ queries, type }) {
 			nearby: 0,
 			routing: 0,
 			trip: 0,
+			unanswerable: 0,
 		};
 		const tmp = {};
 		let annotation = {
@@ -85,16 +86,22 @@ export default function Evaluation({ queries, type }) {
 			invalid: 0,
 		};
 		queries.forEach((query) => {
-			if (query.context !== "" && query.answer.correct !== -1) {
+			if (query.context !== "") {
+				if (!query.classification) {
+					query.classification = "unanswerable";
+				}
+
 				valid_questions[query.classification]++;
 				valid_questions["all"]++;
 
-				if (query.human.answer === query.answer.correct + 1) {
-					annotation["right"]++;
-				} else if (!query.human.answer) {
-					annotation["invalid"]++;
-				} else {
-					annotation["wrong"]++;
+				if (query.human.username === "almash") {
+					if (query.human.answer === query.answer.correct + 1) {
+						annotation["right"]++;
+					} else if (!query.human.answer) {
+						annotation["invalid"]++;
+					} else {
+						annotation["wrong"]++;
+					}
 				}
 
 				query.evaluation?.forEach((e) => {
@@ -110,7 +117,7 @@ export default function Evaluation({ queries, type }) {
 					}
 					if (e.type === type) {
 						if (
-							e.verdict === "right" ||
+							(e.option === null && e.verdict === "right") ||
 							e.option === query.answer.correct + 1
 						) {
 							tmp[e.model_id] = {
@@ -150,6 +157,9 @@ export default function Evaluation({ queries, type }) {
 			).toFixed(2)} & ${(
 				(tmp[key].trip * 100) /
 				valid_questions.trip
+			).toFixed(2)} & ${(
+				(tmp[key].unanswerable * 100) /
+				valid_questions.unanswerable
 			).toFixed(2)} \\\\
 `;
 		});

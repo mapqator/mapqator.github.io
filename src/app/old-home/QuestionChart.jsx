@@ -28,10 +28,10 @@ const QuestionChart = ({ queries }) => {
 		const data = new Array(models.length).fill(0);
 		queries.forEach((query) => {
 			let correct = 0;
-			if (query.context !== "" && query.answer.correct !== -1) {
+			if (query.context !== "") {
 				query.evaluation?.forEach((e) => {
 					if (
-						(e.verdict === "right" ||
+						((e.option === null && e.verdict === "right") ||
 							e.option === query.answer.correct + 1) &&
 						e.type === 0
 					) {

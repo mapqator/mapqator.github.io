@@ -17,6 +17,7 @@ import {
 	Select,
 	MenuItem,
 	Card,
+	Typography,
 } from "@mui/material";
 import QueryCard from "./QueryCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -391,6 +392,49 @@ export default function QueryFields({
 						</Button> */}
 						</div>
 						<div className="flex flex-col gap-2">
+							<div className="flex flex-row justify-start items-center gap-2">
+								<Radio
+									checked={query.answer.correct === -1}
+									onChange={() =>
+										setQuery((prev) => ({
+											...prev,
+											answer: {
+												...prev.answer,
+												correct: -1,
+											},
+										}))
+									}
+									value={0}
+									name="radio-buttons"
+									inputProps={{
+										"aria-label": `Option 0`,
+									}}
+									// disabled={option === ""}
+								/>
+								{/* <TextField
+									multiline
+									value={option}
+									size={"small"}
+									fullWidth
+									label={`Option ${index + 1}`}
+									onChange={(e) => {
+										setQuery((prev) => {
+											const options = [
+												...prev.answer.options,
+											];
+											options[index] = e.target.value;
+											return {
+												...prev,
+												answer: {
+													...prev.answer,
+													options,
+												},
+											};
+										});
+									}}
+								></TextField> */}
+								<Typography>Unanswerable</Typography>
+							</div>
 							{query.answer.options.map((option, index) => (
 								<div
 									key={index}
@@ -566,13 +610,19 @@ export default function QueryFields({
 							}}
 							input={<OutlinedInput label={"Category"} />}
 						>
-							{["poi", "nearby", "routing", "trip"].map(
-								(value, index) => (
-									<MenuItem key={index} value={value}>
-										{value}
-									</MenuItem>
-								)
-							)}
+							{[
+								"poi",
+								"nearby",
+								"routing",
+								"trip",
+								"spatial_poi",
+								"spatial_nearby",
+								"spatial_routing",
+							].map((value, index) => (
+								<MenuItem key={index} value={value}>
+									{value}
+								</MenuItem>
+							))}
 						</Select>
 					</FormControl>
 				</div>

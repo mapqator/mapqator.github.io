@@ -14,13 +14,19 @@ const TokenDistribution = ({ queries }) => {
 
 		const tokenCounts = [];
 
+		let max = 0;
+		let total = 0;
 		queries.forEach((query) => {
-			if (query.context !== "" && query.answer.correct !== -1) {
+			if (query.context !== "") {
 				// Split by spaces and newlines to count tokens
 				const tokens = query.question.split(/[\s\n]+/);
 				tokenCounts.push(tokens.length);
+				if (tokens.length > max) max = Math.max(max, tokens.length);
+				total += tokens.length;
 			}
 		});
+		console.log("Max Question:", max);
+		console.log("Total Question Tokens:", total);
 
 		// Sort the token counts to create bins for a histogram
 		tokenCounts.sort((a, b) => a - b);

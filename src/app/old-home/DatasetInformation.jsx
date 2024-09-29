@@ -20,7 +20,7 @@ export default function DatasetInformation({ queries }) {
 			if (query.answer.correct !== -1) {
 				questions_with_answer++;
 			}
-			if (query.context !== "" && query.answer.correct !== -1) {
+			if (query.context !== "") {
 				const invalidCount =
 					query.evaluation?.filter(
 						(e) =>

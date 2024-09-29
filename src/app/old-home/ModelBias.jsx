@@ -4,53 +4,59 @@ import dynamic from "next/dynamic";
 import queryApi from "@/api/queryApi";
 const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const AverageContext = ({ queries }) => {
+const ModelBias = ({ queries, type }) => {
 	const [chart, setChart] = useState({
 		series: [],
 		options: {},
 	});
+	const [models, setModels] = useState([]);
+
+	const fetchModels = async () => {
+		const res = await queryApi.getModels();
+		if (res.success) {
+			setModels(res.data);
+		}
+	};
+	useEffect(() => {
+		fetchModels();
+	}, []);
 
 	useEffect(() => {
 		if (queries.length === 0) return;
-
-		const data = {
-			poi: 0,
-			nearby: 0,
-			routing: 0,
-			trip: 0,
-		};
-
-		let valid_questions = {
-			poi: 0,
-			nearby: 0,
-			routing: 0,
-			trip: 0,
-		};
-		let max = 0;
+		const data = {};
+		const total = new Array(4).fill(0);
 		queries.forEach((query) => {
 			if (query.context !== "") {
-				valid_questions[query.classification]++;
-				data[query.classification] += query.context.length;
-				if (query.context.length > max)
-					console.log("Max:", query.id, query.context.length);
-				max = Math.max(max, query.context.length);
+				total[query.answer.correct]++;
+				query.evaluation?.forEach((e) => {
+					if (!data[e.model]) {
+						data[e.model] = new Array(4).fill(0);
+					}
+					if (
+						((e.option === null && e.verdict === "right") ||
+							e.option === query.answer.correct + 1) &&
+						e.type === type
+					) {
+						// data[e.model][query.answer.correct] += 1;
+					} else if (e.option > 0 && e.type === type) {
+						// console.log("e.model: ", e.model);
+						data[e.model][e.option - 1] += 1;
+					}
+				});
 			}
 		});
 
-		console.log("Average Context Length: ", data);
-		console.log("Maximum Context Length: ", max);
+		console.log("Biasness: ", data);
 
 		setChart({
-			series: [
-				{
-					data: [
-						data["poi"] / valid_questions["poi"],
-						data["nearby"] / valid_questions["nearby"],
-						data["routing"] / valid_questions["routing"],
-						data["trip"] / valid_questions["trip"],
-					],
-				},
-			],
+			series: Object.keys(data).map((key) => {
+				return {
+					name: key,
+					data: Array.from({ length: 4 }, (_, i) =>
+						parseFloat(data[key][i])
+					),
+				};
+			}),
 			options: {
 				chart: {
 					height: "100%",
@@ -75,25 +81,25 @@ const AverageContext = ({ queries }) => {
 						horizontal: false,
 					},
 				},
-				labels: ["poi", "nearby", "routing", "trip"],
+				labels: ["1", "2", "3", "4"],
 				dataLabels: {
 					enabled: false,
 				},
 				yaxis: {
 					labels: {
 						formatter: function (value) {
-							return value.toFixed(2);
+							return value.toFixed(2) + "%";
 						},
 					},
 				},
 			},
 		});
-	}, [queries]);
+	}, [queries, models]);
 
 	return (
 		<div className="bu-card-primary rounded-lg shadow-md relative w-full">
 			<h2 className="bu-text-primary py-2 px-5 font-semibold">
-				Average Context Length
+				Model Biasness
 			</h2>
 			<Divider />
 			<div className="h-full p-3">
@@ -119,4 +125,4 @@ const AverageContext = ({ queries }) => {
 	);
 };
 
-export default AverageContext;
+export default ModelBias;

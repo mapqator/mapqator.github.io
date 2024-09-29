@@ -37,6 +37,7 @@ import AverageContext from "./AverageContext";
 import AverageQuestion from "./AverageQuestion";
 import ContextDistribution from "./ContextDistribution";
 import QuestionDistribution from "./QuestionDistribution";
+import ModelBias from "./ModelBias";
 const itemsPerPage = 5;
 
 export default function DatasetCreator({
@@ -187,10 +188,11 @@ export default function DatasetCreator({
 					<ColumnChart {...{ queries }} type={0} />
 					{/* <ColumnChart {...{ queries }} type={1} />
 					<ColumnChart {...{ queries }} type={2} /> */}
-					<ColumnChart {...{ queries }} type={4} />
+					{/* <ColumnChart {...{ queries }} type={4} /> */}
 					<ColumnChart {...{ queries }} type={5} />
 					<ColumnChart {...{ queries }} type={6} />
 					<ColumnChart {...{ queries }} type={7} />
+					<ColumnChart {...{ queries }} type={8} />
 					<AverageContext {...{ queries }} />
 					<ContextDistribution {...{ queries }} />
 					<QuestionDistribution {...{ queries }} />
@@ -203,8 +205,10 @@ export default function DatasetCreator({
 					<AccuracyChart {...{ queries }} type={4} /> */}
 					<AccuracyChart {...{ queries }} type={5} />
 					<AccuracyChart {...{ queries }} type={6} />
+					<AccuracyChart {...{ queries }} type={8} />
 					<Evaluation {...{ queries }} type={0} />
 					<Evaluation {...{ queries }} type={5} />
+					<ModelBias {...{ queries }} type={6} />
 					{/* <Evaluation {...{ queries }} type={1} />
 					<Evaluation {...{ queries }} type={2} />
 					<Evaluation {...{ queries }} type={3} /> */}

@@ -240,6 +240,7 @@ export function NearbyInfo({
 					selected: true,
 					place_id: place.place_id,
 					name: place.name,
+					geometry: place.geometry,
 					formatted_address: place.vicinity,
 					rating: place.rating,
 					opening_hours: place.opening_hours,
@@ -301,7 +302,7 @@ export function NearbyInfo({
 									key={index2}
 									{...{
 										index2,
-										selectedPlacesMap,
+									selectedPlacesMap,
 										savedPlacesMap,
 										setSavedPlacesMap,
 										nearbyPlacesMap,

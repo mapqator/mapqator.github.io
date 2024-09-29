@@ -521,7 +521,7 @@ const ContextGeneratorService = {
 		});
 		return newContext;
 	},
-	convertContextToText: (context) => {
+convertContextToText: (context) => {
 		let text = "";
 		text += context.places !== "" ? context.places : "";
 		text +=

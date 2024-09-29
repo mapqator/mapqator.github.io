@@ -179,7 +179,11 @@ export function GetDirections({
 			routes.forEach((route) => {
 				const steps = [];
 				route.legs[0].steps.forEach((step) => {
-					steps.push(step.html_instructions);
+					steps.push({
+						distance: step.distance.text,
+						duration: step.duration.text,
+						html_instructions: step.html_instructions,
+					});
 				});
 				all_routes.push({
 					label: route.summary,

@@ -27,7 +27,7 @@ const AverageQuestion = ({ queries }) => {
 			trip: 0,
 		};
 		queries.forEach((query) => {
-			if (query.context !== "" && query.answer.correct !== -1) {
+			if (query.context !== "") {
 				valid_questions[query.classification]++;
 				data[query.classification] += query.question.length;
 			}

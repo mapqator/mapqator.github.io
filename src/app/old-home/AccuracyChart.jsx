@@ -31,7 +31,7 @@ const AccuracyChart = ({ queries, type }) => {
 
 		let valid_questions = 0;
 		queries.forEach((query) => {
-			if (query.context !== "" && query.answer.correct !== -1) {
+			if (query.context !== "") {
 				valid_questions++;
 				query.evaluation?.forEach((e) => {
 					if (e.type === type) {
@@ -39,7 +39,7 @@ const AccuracyChart = ({ queries, type }) => {
 							data[e.model] = 0;
 						}
 						if (
-							e.verdict === "right" ||
+							(e.option === null && e.verdict === "right") ||
 							e.option === query.answer.correct + 1
 						) {
 							data[e.model]++;
