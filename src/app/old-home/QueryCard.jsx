@@ -126,9 +126,9 @@ export default function QueryCard({
 						{" "}
 						# {query.id}
 					</h1>
-					<div className="text-xl font-bold text-white px-1 lowercase border-2 rounded-md">
+					{/* <div className="text-xl font-bold text-white px-1 lowercase border-2 rounded-md">
 						{query.classification}
-					</div>
+					</div> */}
 					<div
 						className={`text-xl font-bold px-1 lowercase border-2 rounded-md ${
 							difficulty === "Hard"
