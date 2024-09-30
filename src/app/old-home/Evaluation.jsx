@@ -113,6 +113,7 @@ export default function Evaluation({ queries, type }) {
 							nearby: 0,
 							routing: 0,
 							trip: 0,
+							unanswerable: 0,
 						};
 					}
 					if (e.type === type) {
@@ -136,29 +137,27 @@ export default function Evaluation({ queries, type }) {
 		console.log(`
 			\\begin{tabular}{|l|c|c|c|c|c|c|}
 			\hline
-			\\textbf{Model} & \\textbf{Correct} & \\textbf{All} & \\textbf{Poi} & \\textbf{Nearby} & \\textbf{Routing} & \\textbf{Trip} \\\\
+			\\textbf{Model} & \\textbf{Correct} & \\textbf{Overall} & \\textbf{Place Info} & \\textbf{Nearby} & \\textbf{Routing} & \\textbf{Trip} \\\\
 			\hline
 		`);
 		let result = "";
 
-		Object.keys(tmp).forEach((key) => {
-			result += `${tmp[key].variant} & ${tmp[key].all} & ${(
-				(tmp[key].all * 100) /
+		const tmpArray = Object.entries(tmp);
+		tmpArray.sort((a, b) => b[1].all - a[1].all);
+
+		console.log("Total unanswerable: ", valid_questions.unanswerable);
+		tmpArray.forEach(([key, value]) => {
+			result += `${value.variant} & ${(
+				(value.all * 100) /
 				valid_questions.all
-			).toFixed(2)} & ${(
-				(tmp[key].poi * 100) /
-				valid_questions.poi
-			).toFixed(2)} & ${(
-				(tmp[key].nearby * 100) /
-				valid_questions.nearby
-			).toFixed(2)} & ${(
-				(tmp[key].routing * 100) /
-				valid_questions.routing
-			).toFixed(2)} & ${(
-				(tmp[key].trip * 100) /
-				valid_questions.trip
-			).toFixed(2)} & ${(
-				(tmp[key].unanswerable * 100) /
+			).toFixed(2)} & ${((value.poi * 100) / valid_questions.poi).toFixed(
+				2
+			)} & ${((value.nearby * 100) / valid_questions.nearby).toFixed(
+				2
+			)} & ${((value.routing * 100) / valid_questions.routing).toFixed(
+				2
+			)} & ${((value.trip * 100) / valid_questions.trip).toFixed(2)} & ${(
+				(value.unanswerable * 100) /
 				valid_questions.unanswerable
 			).toFixed(2)} \\\\
 `;
@@ -169,6 +168,86 @@ export default function Evaluation({ queries, type }) {
 			\\end{tabular}`);
 
 		console.log("Human: ", annotation);
+
+		// Generate LaTeX tikzpicture code
+		let tikzResult = `
+\\begin{figure}[ht]
+    \\centering
+    \\begin{tikzpicture}
+\\begin{axis}[
+    ybar=1,
+    symbolic x coords={Place Info, Nearby, Routing, Trip, Unanswerable},
+    xtick=data,
+    ylabel=Accuracy (\\%),
+    ymin=0, ymax=100,
+    enlarge x limits=0.15,
+    width=1\\textwidth,
+    height=0.25\\textheight,
+    bar width=4pt,
+    legend style={at={(0.5,-0.2)}, anchor=north,legend columns=4, draw=none,column sep=1ex},
+    clip=false,
+    grid=major,
+    minor grid style={},
+    ylabel style={yshift=-10pt},
+    axis lines*=left,
+    legend cell align={left}
+    ]
+`;
+
+		// Add data for each model
+		tmpArray.forEach(([key, value]) => {
+			tikzResult += `\\addplot[fill=${getColor(
+				key
+			)}, line width=0pt] coordinates {(Place Info,${(
+				(value.poi * 100) /
+				valid_questions.poi
+			).toFixed(2)}) (Nearby,${(
+				(value.nearby * 100) /
+				valid_questions.nearby
+			).toFixed(2)}) (Routing,${(
+				(value.routing * 100) /
+				valid_questions.routing
+			).toFixed(2)}) (Trip,${(
+				(value.trip * 100) /
+				valid_questions.trip
+			).toFixed(2)}) (Unanswerable,${(
+				(value.unanswerable * 100) /
+				valid_questions.unanswerable
+			).toFixed(2)})}; % ${value.variant}\n`;
+		});
+
+		// Add legend
+		tikzResult += `\\legend{${tmpArray
+			.map(([key, value]) => value.variant)
+			.join(",")}}\n`;
+
+		tikzResult += `
+\\end{axis}
+    \\end{tikzpicture}
+\\end{figure}
+`;
+
+		console.log(tikzResult);
+
+		// Function to get color based on key (you can customize this)
+		function getColor(key) {
+			const colors = [
+				"pink!50",
+				"magenta!50",
+				"purple!50",
+				"lime!50",
+				"cyan!50",
+				"teal!50",
+				"brown!50",
+				"blue!50",
+				"violet!50",
+				"orange!50",
+				"red!50",
+				"gray!50",
+				"yellow!50",
+			];
+			return colors[key % colors.length];
+		}
 	}, [queries]);
 
 	return (
