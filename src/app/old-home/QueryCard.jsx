@@ -332,7 +332,7 @@ export default function QueryCard({
 						<h1 className="text-lg">{query.answer.correct}</h1>
 					)}
 
-					{query.evaluation?.length > 0 && (
+					{/* {query.evaluation?.length > 0 && (
 						<div>
 							<h1 className="text-lg font-bold underline">
 								Evaluation
@@ -368,7 +368,7 @@ export default function QueryCard({
 								))}
 							</div>
 						</div>
-					)}
+					)} */}
 					<div className="flex flex-col gap-2 p-2 border-2 border-black rounded-md">
 						<div className="flex flex-row justify-between">
 							<h1 className="text-lg font-bold underline">
