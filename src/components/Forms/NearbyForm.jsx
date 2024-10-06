@@ -368,10 +368,10 @@ export default function NearbyForm({
 					>
 						Add Nearby POIs
 					</LoadingButton>
-					<h6 className="px-2  text-sm text-center">
+					{/* <h6 className="px-2  text-sm text-center">
 						Note: Added pois may differ from what is shown in the
 						map.
-					</h6>
+					</h6> */}
 				</Grid>
 			</Grid>
 		)

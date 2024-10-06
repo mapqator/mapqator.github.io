@@ -228,6 +228,7 @@ export default function ContextStepper({
 	} = useContext(GlobalContext);
 
 	const { savedPlacesMap } = useContext(AppContext);
+	const [locations, setLocations] = useState([]);
 
 	const handleNext = () => {
 		if (activeStep === steps.length - 1) onFinish();
@@ -246,6 +247,19 @@ export default function ContextStepper({
 	const handlePlaceAdd = () => {
 		setActiveStep(1);
 	};
+
+	useEffect(() => {
+		const list = [];
+		Object.keys(savedPlacesMap).map((place_id) => {
+			const place = savedPlacesMap[place_id];
+			const lat = place.location.latitude;
+			const lng = place.location.longitude;
+			list.push({ lat, lng });
+		});
+		console.log(list);
+		setLocations(list);
+	}, [savedPlacesMap]);
+
 	const steps = [
 		{
 			label: "Guidelines",
@@ -267,7 +281,7 @@ export default function ContextStepper({
 			form: <AutocompleteSearchBox />,
 			grid: Object.keys(savedPlacesMap).length > 0 && (
 				<>
-					<MapComponent />
+					<MapComponent locations={locations} />
 					<SavedPlacesGrid
 						{...{
 							selectedPlacesMap,

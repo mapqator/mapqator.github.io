@@ -18,6 +18,7 @@ import { convertFromSnake } from "@/services/utils";
 import TravelSelectionField from "../InputFields/TravelSelectionField.";
 import { LoadingButton } from "@mui/lab";
 import mapApi from "@/api/mapApi";
+import MapComponent from "../GoogleMap/MapComponent";
 
 const priceMap = {
 	PRICE_LEVEL_INEXPENSIVE: "Inexpensive",
@@ -155,7 +156,6 @@ function NearbyCardSummary({
 	mode,
 	nearbyPlacesMap,
 	setNearbyPlacesMap,
-
 	savedPlacesMap,
 }) {
 	const handleDelete = () => {
@@ -165,6 +165,7 @@ function NearbyCardSummary({
 			delete newNearbyPlacesMap[place_id];
 		setNearbyPlacesMap(newNearbyPlacesMap);
 	};
+	console.log("Nearby:", nearbyPlacesMap[place_id][index]);
 	return (
 		<>
 			<Box
@@ -197,7 +198,8 @@ function NearbyCardSummary({
 							label={Pluralize(
 								convertFromSnake(entry.type),
 								nearbyPlacesMap[place_id]
-									? nearbyPlacesMap[place_id][index].length
+									? nearbyPlacesMap[place_id][index].places
+											.length
 									: 0,
 								true
 							)}
@@ -260,9 +262,22 @@ export default function NearbyCard({
 	setDistanceMatrix,
 }) {
 	const [expanded, setExpanded] = useState(false);
+	const [locations, setLocations] = useState([]);
 	useEffect(() => {
 		setExpanded(i === 0);
 	}, [i]);
+
+	useEffect(() => {
+		const list = [];
+		entry.places.map((np) => {
+			const place = savedPlacesMap[np.place_id];
+			const lat = place.location.latitude;
+			const lng = place.location.longitude;
+			list.push({ lat, lng });
+		});
+		console.log(list);
+		setLocations(list);
+	}, [entry.places]);
 
 	return (
 		<Card variant="outlined">
@@ -285,6 +300,7 @@ export default function NearbyCard({
 			</CardContent>
 			<Collapse in={expanded} timeout="auto" unmountOnExit>
 				<Divider />
+				<MapComponent locations={locations} />
 				<NearbyCardDetails
 					{...{
 						index,

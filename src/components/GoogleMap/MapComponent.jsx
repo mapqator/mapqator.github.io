@@ -5,10 +5,10 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useContext, useEffect, useState } from "react";
 
-export default function MapComponent() {
+export default function MapComponent({ locations }) {
 	const { selectedPlacesMap } = useContext(GlobalContext);
 	const { savedPlacesMap } = useContext(AppContext);
-	const [locations, setLocations] = useState([]);
+	// const [locations, setLocations] = useState([]);
 	const [googleMapsApiKey, setGoogleMapsApiKey] = useState(undefined);
 	const { isAuthenticated } = useAuth();
 	useEffect(() => {
@@ -16,17 +16,17 @@ export default function MapComponent() {
 		setGoogleMapsApiKey(key);
 	}, [isAuthenticated]);
 
-	useEffect(() => {
-		const list = [];
-		Object.keys(savedPlacesMap).map((place_id) => {
-			const place = savedPlacesMap[place_id];
-			const lat = place.location.latitude;
-			const lng = place.location.longitude;
-			list.push({ lat, lng });
-		});
-		console.log(list);
-		setLocations(list);
-	}, [savedPlacesMap]);
+	// useEffect(() => {
+	// 	const list = [];
+	// 	Object.keys(savedPlacesMap).map((place_id) => {
+	// 		const place = savedPlacesMap[place_id];
+	// 		const lat = place.location.latitude;
+	// 		const lng = place.location.longitude;
+	// 		list.push({ lat, lng });
+	// 	});
+	// 	console.log(list);
+	// 	setLocations(list);
+	// }, [savedPlacesMap]);
 
 	const mapStyles = {
 		height: "400px",

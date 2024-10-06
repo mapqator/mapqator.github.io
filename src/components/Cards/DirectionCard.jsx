@@ -20,6 +20,7 @@ import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { Delete, ExpandMore } from "@mui/icons-material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { AppContext } from "@/contexts/AppContext";
+import Pluralize from "pluralize";
 import {
 	convertTravelModeToIcon,
 	convertTravelModeToLabel,
@@ -78,11 +79,13 @@ function DirectionCardDetails({ from_id, to_id }) {
 								<div className="w-1/2">
 									<ListItemText
 										primary={convertTravelModeToLabel(mode)}
-										secondary={
+										secondary={Pluralize(
+											"route",
 											directionInformation[from_id][
 												to_id
-											][mode].routes.length + " routes"
-										}
+											][mode].routes.length,
+											true
+										)}
 										primaryTypographyProps={{
 											noWrap: true,
 										}}

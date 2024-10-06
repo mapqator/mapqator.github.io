@@ -90,7 +90,8 @@ function PlaceCardDetails({
 							<Chip
 								key={value}
 								label={convertFromSnake(value)}
-								size="small"
+								// size="small"
+								sx={{ fontSize: "0.6rem", height: "1rem" }} // Adjust the font size as needed
 							/>
 						))}
 					</Box>

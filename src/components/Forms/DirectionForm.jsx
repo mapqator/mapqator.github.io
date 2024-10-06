@@ -355,23 +355,22 @@ export default function DirectionForm({
 					/>
 				</Grid>
 			)} */}
-
-				{/* {newDirection.from && newDirection.to && (
-				<Grid item xs={12}>
-					<iframe
-						width="100%"
-						height="450"
-						// style="border:0"
-						style={{
-							border: 0,
-						}}
-						loading="lazy"
-						allowfullscreen
-						referrerPolicy="no-referrer-when-downgrade"
-						src={`https://www.google.com/maps/embed/v1/directions?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&origin=place_id:${newDirection.from}&destination=place_id:${newDirection.to}&mode=${newDirection.travelMode}`}
-					/>
-				</Grid>
-			)} */}
+				{/* <Grid item xs={12}>
+						<iframe
+							width="100%"
+							height="450"
+							// style="border:0"
+							style={{
+								border: 0,
+							}}
+							loading="lazy"
+							allowfullscreen
+							referrerPolicy="no-referrer-when-downgrade"
+							src={
+								"https://www.google.com/maps/embed/v1/directions?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&path=g|~oCcftfPoBHIAQAsBCcA@WB?h@AXiCBCy@M}COgEKcJM_JCWf@I`Ba@pA_@dCq@|Ac@\\MtBo@v@Uf@Od@Md@MvFaBf@OfBi@lBm@lBi@bA[|@Wd@MtEqAt@ABGDGBCLED?RDp@SdBi@pBi@hCm@l@OtHoBPEf@MvBc@hBa@pB_@nCq@xAYNCPCf@Iz@K~@IbAKTGRAHARCz@C`@ApEF\\@`@@xAB`@B^@dALP@fANfC\\H@r@Fr@F|AH~ABjBBbC?`CG|BSLCZINOPCPFHH@DBVIRl@`@d@TRLvA]xBKvCQdD?fCAhABtB@xFAa@zDSdAe@nBADYnBKl@rARD?JBKCE?sASJm@XoB@Ed@oBXgBRqBFg@yF@uBAiACgC@mD?oCPs@FeABwA\\SMe@Um@a@OHM?GAOICGiHToFCcAAs@CyCSIAUCeCUgAKSGcACq@AK?qACaACkBK}CE{@B_@FUBm@HK@YBw@JG@eAH[DgARqHnB}@T}@N_Cf@OBmEdAwIrB}A^cA`@k@P@PADEHGHQFSCCCKKo@@m@L_B^sA\\]J_@P}Af@a@JqErAsA`@m@Ne@NcEjAk@Na@Jg@NqA^cBf@MDQHQHODQFkAZa@D]Fc@Le@P[Ja@JL`BFjBLhDF`D@n@FrC\\|IVCf@AnCBP@~@Ax@E"
+							}
+						/>
+					</Grid> */}
 
 				{["DRIVE", "TWO_WHEELER"].includes(newDirection.travelMode) && (
 					<Grid item xs={12}>
