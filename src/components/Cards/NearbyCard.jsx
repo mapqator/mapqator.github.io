@@ -241,7 +241,7 @@ export default function NearbyCard({
 	useEffect(() => {
 		const list = [];
 		entry.places.map((np) => {
-			const place = savedPlacesMap[np.place_id];
+			const place = savedPlacesMap[np.id];
 			if (!place) return;
 			const lat = place.location.latitude;
 			const lng = place.location.longitude;

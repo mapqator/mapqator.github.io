@@ -24,6 +24,7 @@ import { AppContext } from "@/contexts/AppContext";
 import { convertFromSnake } from "@/services/utils";
 import PlaceDeleteButton from "../Buttons/PlaceDeleteButton";
 import { template } from "@/database/templates";
+import textualFields from "@/database/textualFields";
 function PlaceCardSummary({
 	placeId,
 	expanded,
@@ -76,41 +77,7 @@ function PlaceCardDetails({
 			},
 		}));
 	};
-	return (
-		<FormControl fullWidth sx={{ mt: 2, mb: 1 }}>
-			<InputLabel>Attributes</InputLabel>
-			<Select
-				multiple
-				value={selectedPlacesMap[placeId].selectedAttributes}
-				onChange={(e) => handleAttributeChange(placeId, e.target.value)}
-				renderValue={(selected) => (
-					<Box
-						sx={{
-							display: "flex",
-							flexWrap: "wrap",
-							gap: 0.5,
-						}}
-					>
-						{selected.map((value) => (
-							<Chip
-								key={value}
-								label={convertFromSnake(value)}
-								// size="small"
-								sx={{ fontSize: "0.6rem", height: "1rem" }} // Adjust the font size as needed
-							/>
-						))}
-					</Box>
-				)}
-				input={<OutlinedInput label="Attributes" />}
-			>
-				{selectedPlacesMap[placeId].attributes.map((attribute) => (
-					<MenuItem key={attribute} value={attribute}>
-						{convertFromSnake(attribute)}
-					</MenuItem>
-				))}
-			</Select>
-		</FormControl>
-	);
+	return <FormControl fullWidth sx={{ mt: 2, mb: 1 }}></FormControl>;
 }
 export default function PlaceCard({
 	placeId,
@@ -160,33 +127,31 @@ export default function PlaceCard({
 									</Typography>
 								</Box>
 								<Box className="h-[350px] overflow-auto">
-									{selectedPlacesMap[placeId].attributes.map(
-										(attribute, index) => (
-											<Box key={attribute}>
-												{index > 0 && <Divider />}
+									{textualFields.map((attribute, index) => (
+										<Box key={attribute}>
+											{index > 0 && <Divider />}
 
-												<Typography
-													variant="body2"
-													className="p-2"
-													// color="textSecondary"
-												>
-													<span className="font-bold underline">
-														{convertFromSnake(
-															attribute
-														)}
-														:
-													</span>{" "}
-													{template[attribute]
-														? template[attribute](
-																savedPlacesMap[
-																	placeId
-																][attribute]
-														  )
-														: "N/A"}
-												</Typography>
-											</Box>
-										)
-									)}
+											<Typography
+												variant="body2"
+												className="p-2"
+												// color="textSecondary"
+											>
+												<span className="font-bold underline">
+													{convertFromSnake(
+														attribute
+													)}
+													:
+												</span>{" "}
+												{template[attribute]
+													? template[attribute](
+															savedPlacesMap[
+																placeId
+															][attribute]
+													  )
+													: "N/A"}
+											</Typography>
+										</Box>
+									))}
 								</Box>
 							</Paper>
 						</Grid>

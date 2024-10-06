@@ -36,24 +36,6 @@ export default function PlaceAddButton({ place_id }) {
 		setLoading(false);
 	};
 
-	const handleAdd = (details) => {
-		const place_id = details["id"];
-		if (place_id === "" || selectedPlacesMap[place_id]) return;
-		setSelectedPlacesMap((prev) => ({
-			...prev,
-			[place_id]: {
-				selectedAttributes: Object.keys(details).filter(
-					(key) =>
-						details[key] !== null && textualFields.includes(key)
-				),
-				attributes: Object.keys(details).filter(
-					(key) =>
-						details[key] !== null && textualFields.includes(key)
-				),
-			},
-		}));
-	};
-
 	return (
 		<LoadingButton
 			startIcon={<Add />}

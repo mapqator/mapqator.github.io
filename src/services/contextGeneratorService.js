@@ -1,5 +1,7 @@
 import Pluralize from "pluralize";
 import { convertFromSnake } from "./utils";
+import textualFields from "@/database/textualFields.json";
+import { template } from "@/database/templates.js";
 const priceMap = {
 	PRICE_LEVEL_INEXPENSIVE: "Inexpensive",
 	PRICE_LEVEL_MODERATE: "Moderate",
@@ -11,7 +13,7 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 	let place = savedPlacesMap[place_id];
 	if (!place) return "";
 
-	let attributes = selectedPlacesMap[place_id].selectedAttributes;
+	let attributes = textualFields;
 	let text = "";
 
 	if (attributes.includes("formatted_address")) {
@@ -57,7 +59,7 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 			"Expensive",
 			"Very Expensive",
 		];
-		text += `- ${place.priceLevel}.\n`;
+		text += `- ${template["priceLevel"](place.priceLevel)}.\n`;
 	}
 	if (attributes.includes("delivery")) {
 		text += place.delivery
@@ -206,13 +208,14 @@ const ContextGeneratorService = {
 					if (near_place.selected) {
 						newContext += `${counter}. <b>${
 							savedPlacesMap[near_place.place_id]?.displayName
-								.text || near_place.name
+								.text || near_place.displayName?.text
 						}</b> (${
 							"Rating: " +
 							near_place.rating +
 							(near_place.priceLevel
-								? " | " + near_place.priceLevel
-								: "")
+								? " | " +
+								  template["priceLevel"](near_place.priceLevel)
+								: "")	
 						})\n`;
 						counter++;
 					}

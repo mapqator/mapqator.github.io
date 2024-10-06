@@ -15,6 +15,7 @@ import PlaceAddButton from "../Buttons/PlaceAddButton";
 import { Directions } from "@mui/icons-material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import dayjs from "dayjs";
+import { template } from "@/database/templates";
 
 export default function PoiList({
 	places,
@@ -23,6 +24,7 @@ export default function PoiList({
 	locationBias,
 }) {
 	const { setNewDirection, setActiveStep } = useContext(GlobalContext);
+	console.log("Places:", places);
 	return (
 		<List dense>
 			{places.map((place, index) => (
@@ -39,12 +41,20 @@ export default function PoiList({
 								/>
 							)} */}
 							<ListItemText
-								primary={place.name}
-								secondary={`${place.rating}* (${
-									place.userRatingCount
-								}) ${
+								primary={place.displayName?.text}
+								secondary={`${
+									place.rating
+										? place.rating +
+										  "*" +
+										  " (" +
+										  place.userRatingCount +
+										  ")"
+										: ""
+								} ${
 									place.priceLevel
-										? `| ${place.priceLevel}`
+										? `| ${template["priceLevel"](
+												place.priceLevel
+										  )}`
 										: ""
 								}`}
 								primaryTypographyProps={{ noWrap: true }}

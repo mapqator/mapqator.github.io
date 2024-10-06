@@ -94,10 +94,10 @@ function NearbyCard({
 					{e.hasRadius ? e.radius + " m" : "Distance"}
 				</h1>
 				{/* <h1
-														className={`text-center w-[14%]`}
-													>
-														{e.places.length}
-													</h1> */}
+						className={`text-center w-[14%]`}
+					>
+						{e.places.length}
+					</h1> */}
 				<IconButton
 					sx={{
 						height: "3rem",
@@ -302,7 +302,7 @@ export function NearbyInfo({
 									key={index2}
 									{...{
 										index2,
-									selectedPlacesMap,
+										selectedPlacesMap,
 										savedPlacesMap,
 										setSavedPlacesMap,
 										nearbyPlacesMap,

@@ -55,20 +55,7 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 		if (place_id === "" || selectedPlacesMap[place_id]) return;
 		setSelectedPlacesMap((prev) => ({
 			...prev,
-			// [place_id]: {
-			// 	selectedAttributes: Object.keys(details).filter(
-			// 		(key) =>
-			// 			details[key] !== null && textualFields.includes(key)
-			// 	),
-			// 	attributes: Object.keys(details).filter(
-			// 		(key) =>
-			// 			details[key] !== null && textualFields.includes(key)
-			// 	),
-			// },
-			[place_id]: {
-				selectedAttributes: textualFields,
-				attributes: textualFields,
-			},
+			[place_id]: true,
 		}));
 	};
 
