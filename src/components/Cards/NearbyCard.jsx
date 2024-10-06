@@ -9,6 +9,7 @@ import {
 	Chip,
 	Divider,
 	Grid,
+	Paper,
 } from "@mui/material";
 import { Add, Delete, ExpandMore } from "@mui/icons-material";
 import { GlobalContext } from "@/contexts/GlobalContext";
@@ -270,33 +271,55 @@ export default function NearbyCard({
 				/>
 			</CardContent>
 			<Collapse in={expanded} timeout="auto" unmountOnExit>
-				<Divider />
-				<Grid container>
+				{/* <Divider /> */}
+				<Grid container spacing={2} className="px-4 mb-4">
 					<Grid item xs={12} md={6}>
-						<NearbyCardDetails
-							{...{
-								index,
-								place_id,
-								entry,
-								nearbyPlacesMap,
-								setNearbyPlacesMap,
-								mode,
-								distanceMatrix,
-								setDistanceMatrix,
-								savedPlacesMap,
-							}}
-						/>
+						<Paper elevation={2}>
+							<Box>
+								<Typography
+									variant="h6"
+									className="font-bold bg-zinc-200 p-2 text-center border-b-2 border-black"
+								>
+									Nearby {Pluralize(entry.type)}
+								</Typography>
+							</Box>
+							<Box className="h-[320px] overflow-auto">
+								<NearbyCardDetails
+									{...{
+										index,
+										place_id,
+										entry,
+										nearbyPlacesMap,
+										setNearbyPlacesMap,
+										mode,
+										distanceMatrix,
+										setDistanceMatrix,
+										savedPlacesMap,
+									}}
+								/>
+							</Box>
+						</Paper>
 					</Grid>
 					<Grid item xs={12} md={6}>
-						<MapComponent
-							locations={locations}
-							height={"312px"}
-							zoom={14}
-						/>
+						<Paper elevation={2}>
+							<Box>
+								<Typography
+									variant="h6"
+									className="font-bold bg-zinc-200 p-2 text-center border-b-2 border-black"
+								>
+									Map View
+								</Typography>
+							</Box>
+							<MapComponent
+								locations={locations}
+								height={"320px"}
+								zoom={14}
+							/>
+						</Paper>
 					</Grid>
 				</Grid>
 				{mode === "edit" && (
-					<div className="flex flex-col gap-4 p-4 items-center	">
+					<div className="flex flex-col gap-4 p-4 items-center">
 						<Typography variant="body2">
 							Add travel time from{" "}
 							{savedPlacesMap[place_id].displayName?.text} to

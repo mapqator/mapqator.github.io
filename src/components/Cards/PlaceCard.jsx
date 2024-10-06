@@ -159,7 +159,7 @@ export default function PlaceCard({
 										Detailed Information
 									</Typography>
 								</Box>
-								<Box className="h-[350px] overflow-auto bg-zinc-100">
+								<Box className="h-[350px] overflow-auto">
 									{selectedPlacesMap[placeId].attributes.map(
 										(attribute, index) => (
 											<Box key={attribute}>

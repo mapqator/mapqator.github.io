@@ -13,7 +13,11 @@ export default function RouteSummary({
 }) {
 	return (
 		<Box className="flex flex-row w-full gap-8 justify-center">
-			<Box className="flex flex-col">
+			<Box
+				className={`flex flex-col items-center ${
+					optimized ? "w-1/2" : "w-full"
+				}`}
+			>
 				<h6 className="text-base md:text-xl text-center md:font-semibold">
 					{savedPlacesMap[from_id].displayName?.text}
 				</h6>
@@ -34,7 +38,7 @@ export default function RouteSummary({
 
 			{optimized && (
 				<Box
-					className="flex flex-col"
+					className="flex flex-col w-1/2 items-center"
 					sx={{
 						color: "primary.main",
 					}}

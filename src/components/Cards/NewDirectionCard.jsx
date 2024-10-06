@@ -20,6 +20,7 @@ import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { Delete, ExpandMore } from "@mui/icons-material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { AppContext } from "@/contexts/AppContext";
+import Pluralize from "pluralize";
 import {
 	convertTravelModeToIcon,
 	convertTravelModeToLabel,
@@ -152,44 +153,70 @@ function DirectionCardSummary({
 					</IconButton>
 				</Box>
 			</Box>
-			<Box
-				display="flex"
-				flexDirection={"row"}
-				justifyContent={"start"}
-				alignItems={"center"}
-				gap={1}
-				mt={1}
-			>
-				{convertTravelModeToIcon(direction.travelMode)}
-				<Chip
-					label={direction.routes.length + " routes"}
-					color="primary"
-					size="small"
-				/>
-				{["DRIVE", "TWO_WHEELER"].includes(direction.travelMode) &&
-					Object.entries(direction.routeModifiers).map(
-						([key, value]) =>
-							value && (
+			<div className="flex flex-row justify-between w-full items-center mt-1">
+				<Box
+					display="flex"
+					flexDirection={"row"}
+					justifyContent={"start"}
+					alignItems={"center"}
+					gap={1}
+					// mt={1}
+				>
+					{convertTravelModeToIcon(direction.travelMode)}
+					{direction.intermediates.length === 0 ? (
+						<Chip
+							label={Pluralize(
+								"route",
+								direction.routes.length,
+								true
+							)}
+							color="primary"
+							size="small"
+						/>
+					) : (
+						<Chip
+							label={Pluralize(
+								"waypoint",
+								direction.intermediates.length,
+								true
+							)}
+							color="primary"
+							size="small"
+						/>
+					)}
+
+					{["DRIVE", "TWO_WHEELER"].includes(direction.travelMode) &&
+						Object.entries(direction.routeModifiers).map(
+							([key, value]) =>
+								value && (
+									<Chip
+										key={key}
+										label={"Avoid " + avoidMap[key]}
+										color="success"
+										size="small"
+									/>
+								)
+						)}
+					{["TRANSIT"].includes(direction.travelMode) &&
+						direction.transitPreferences.allowedTravelModes.map(
+							(mode) => (
 								<Chip
-									key={key}
-									label={"Avoid " + avoidMap[key]}
+									key={mode}
+									label={"Use " + transitModeMap[mode]}
 									color="success"
 									size="small"
 								/>
 							)
-					)}
-				{["TRANSIT"].includes(direction.travelMode) &&
-					direction.transitPreferences.allowedTravelModes.map(
-						(mode) => (
-							<Chip
-								key={mode}
-								label={"Use " + transitModeMap[mode]}
-								color="success"
-								size="small"
-							/>
-						)
-					)}
-			</Box>
+						)}
+				</Box>
+				{direction.optimizeWaypointOrder && (
+					<Box className="w-[46%] flex justify-center mr-[34px]">
+						<Typography className="text-center border-t-2 border-zinc-500 w-2/3">
+							Optimized route
+						</Typography>
+					</Box>
+				)}
+			</div>
 		</>
 	);
 }
