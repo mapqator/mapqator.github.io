@@ -31,11 +31,11 @@ const TokenDistribution = ({ queries }) => {
 						tokens.length
 					);
 				}
-				total += tokens.length;
+				total += query.answer.options.length;
 			}
 		});
 		console.log("Max Context:", max);
-		console.log("Total Context Tokens:", total);
+		console.log("Total Options Tokens:", total);
 		console.log("Unique Contexts Count:", uniqueContexts.size); // Log the count of unique contexts
 
 		// Sort the token counts to create bins for a histogram
