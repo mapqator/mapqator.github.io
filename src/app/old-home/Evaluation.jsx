@@ -147,16 +147,21 @@ export default function Evaluation({ queries, type }) {
 
 		console.log("Total unanswerable: ", valid_questions.unanswerable);
 		tmpArray.forEach(([key, value]) => {
-			result += `${value.variant} & ${(
-				(value.all * 100) /
-				valid_questions.all
-			).toFixed(2)} & ${((value.poi * 100) / valid_questions.poi).toFixed(
-				2
-			)} & ${((value.nearby * 100) / valid_questions.nearby).toFixed(
-				2
-			)} & ${((value.routing * 100) / valid_questions.routing).toFixed(
-				2
-			)} & ${((value.trip * 100) / valid_questions.trip).toFixed(2)} & ${(
+			result += `${value.variant} &
+			${value.all} 
+			& ${((value.all * 100) / valid_questions.all).toFixed(2)} & ${(
+				(value.poi * 100) /
+				valid_questions.poi
+			).toFixed(2)} & ${(
+				(value.nearby * 100) /
+				valid_questions.nearby
+			).toFixed(2)} & ${(
+				(value.routing * 100) /
+				valid_questions.routing
+			).toFixed(2)} & ${(
+				(value.trip * 100) /
+				valid_questions.trip
+			).toFixed(2)} & ${(
 				(value.unanswerable * 100) /
 				valid_questions.unanswerable
 			).toFixed(2)} \\\\

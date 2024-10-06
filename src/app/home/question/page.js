@@ -21,6 +21,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { AppContext } from "@/contexts/AppContext";
 import { useRouter } from "next/navigation";
 import QuestionAnswerForm from "@/components/Forms/QuestionAnswerForm";
+import { Assessment } from "@mui/icons-material";
 
 export default function QuestionCreationPage() {
 	const {
@@ -59,11 +60,13 @@ export default function QuestionCreationPage() {
 	};
 
 	const handleReset = () => {
-		setQuery((prev) => ({
-			...initQuery,
-			context: prev.context,
-			context_json: prev.context_json,
-		}));
+		setQuery({
+			questions: [initQuery],
+			// context: prev.context,
+			// context_json: prev.context_json,
+		});
+		setQueryStatus("empty");
+		router.push("/home");
 	};
 
 	const handleSubmit = async (event) => {
@@ -241,6 +244,35 @@ export default function QuestionCreationPage() {
 					</div>
 				</>
 			)} */}
+				{queryStatus === "saved" && (
+					<Box
+						// mt={3}
+						// p={2}
+						// bgcolor="background.paper"
+						borderRadius={1}
+						className="mt-4 p-4 bg-blue-50 rounded-lg w-full"
+					>
+						<Typography variant="h6" gutterBottom>
+							Would you like to evaluate this query with LLMs?
+						</Typography>
+						<Box display="flex" className="gap-2" mt={1}>
+							<Button
+								onClick={onFinish}
+								variant="contained"
+								color="primary"
+								startIcon={<Assessment />}
+							>
+								Evaluate
+							</Button>
+							<Button
+								onClick={() => handleReset()}
+								variant="outlined"
+							>
+								No, thanks
+							</Button>
+						</Box>
+					</Box>
+				)}
 			</Box>
 		</Container>
 	);

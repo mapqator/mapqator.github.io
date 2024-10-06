@@ -1,17 +1,21 @@
 // components/SaveQuery.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Typography, Box, Snackbar, TextField } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const SaveQuery = ({ prevName, onSave, onDiscard }) => {
+const SaveQuery = ({ query, onSave, onDiscard }) => {
 	const [showSnackbar, setShowSnackbar] = useState(false);
-	const [queryName, setQueryName] = useState(prevName || "");
+	const [queryName, setQueryName] = useState(query?.name || "");
 	const handleSave = (e) => {
 		e.preventDefault();
 		onSave(queryName);
 		// setShowSnackbar(true);
 	};
+
+	useEffect(() => {
+		setQueryName(query?.name || "");
+	}, [query]);
 
 	return (
 		<form
@@ -19,7 +23,7 @@ const SaveQuery = ({ prevName, onSave, onDiscard }) => {
 			onSubmit={handleSave}
 		>
 			<Typography variant="h6" gutterBottom>
-				Save this to dataset?
+				{query?.id === undefined ? "Save" : "Update"} this to dataset?
 			</Typography>
 			<TextField
 				required
@@ -37,12 +41,15 @@ const SaveQuery = ({ prevName, onSave, onDiscard }) => {
 					color="primary"
 					startIcon={<SaveIcon />}
 				>
-					Save
+					Save {query?.id === undefined ? "" : "#" + query?.id}
 				</Button>
 				<Button
 					variant="outlined"
 					color="error"
-					onClick={onDiscard}
+					onClick={() => {
+						setQueryName("");
+						onDiscard();
+					}}
 					startIcon={<DeleteIcon />}
 				>
 					Discard

@@ -224,6 +224,7 @@ export default function ContextStepper({
 		setNewNearbyPlaces,
 		newDirection,
 		setNewDirection,
+		query,
 	} = useContext(GlobalContext);
 
 	const { savedPlacesMap } = useContext(AppContext);
@@ -476,7 +477,7 @@ export default function ContextStepper({
 					sx={{ mt: 1, mr: 1 }}
 					endIcon={<Send />}
 				>
-					Submit
+					Submit {query.id === undefined ? "" : "#" + query.id}
 				</Button>
 				<Button
 					onClick={handleReset}

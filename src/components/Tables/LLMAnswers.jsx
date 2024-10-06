@@ -33,11 +33,13 @@ export default function LLMAnswers({ entry, index }) {
 			const responses = e.responses;
 			if (responses.length < index + 1) return null;
 			const response = responses[index];
-			const option = parseInt(extract(response));
+			// const option = parseInt(extract(response));
+			const option = response.option;
 			const model = e.model;
-			const answer = entry.questions[index].answer.correct + 1;
-			const verdict = option === answer ? "right" : "wrong";
-			const explanation = response;
+			// const answer = entry.questions[index].answer.correct + 1;
+			// const verdict = option === answer ? "right" : "wrong";
+			const verdict = response.verdict;
+			const explanation = response.explanation;
 			return {
 				model,
 				option,
@@ -77,7 +79,7 @@ export default function LLMAnswers({ entry, index }) {
 											fontWeight: "bold",
 										}}
 									>
-										Response
+										Explanation
 									</TableCell>
 									<TableCell
 										align="center"
@@ -86,7 +88,7 @@ export default function LLMAnswers({ entry, index }) {
 											fontWeight: "bold",
 										}}
 									>
-										Answer
+										Choice
 									</TableCell>
 									<TableCell
 										align="center"
@@ -109,9 +111,11 @@ export default function LLMAnswers({ entry, index }) {
 												</TableCell>
 												<TableCell
 													align="center"
-													sx={{
-														fontSize: "0.65rem",
-													}}
+													sx={
+														{
+															// fontSize: "0.65rem",
+														}
+													}
 												>
 													{llmAnswer.explanation}
 												</TableCell>

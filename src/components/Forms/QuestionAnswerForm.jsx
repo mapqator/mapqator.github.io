@@ -36,6 +36,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 		directionInformation,
 		distanceMatrix,
 		currentInformation,
+		setQueryStatus,
 	} = useContext(GlobalContext);
 	const router = useRouter();
 	const { queries, setQueries, savedPlacesMap } = useContext(AppContext);
@@ -67,8 +68,12 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 				const newQueries = [...queries];
 				newQueries.unshift(res.data[0]);
 				setQueries(newQueries);
-				handleDiscard();
-				router.push("/home/my-dataset");
+				setQuery((prev) => ({
+					...prev,
+					id: res.data[0].id,
+				}));
+				// handleDiscard();
+				// router.push("/home/my-dataset");
 			} else {
 				showError("Can't save this query");
 				// window.scrollTo(0, 0);
@@ -81,13 +86,16 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 				);
 				// update the queries
 				showSuccess("Query edited successfully");
-				handleDiscard();
-				router.push("/home/my-dataset");
+				// handleDiscard();
+				// router.push("/home/my-dataset");
 			} else {
 				showError("Can't update this query");
 				// window.scrollTo(0, 0);
 			}
 		}
+		// handleSubmit();
+		setQueryStatus("saved");
+		window.scrollTo(0, document.body.scrollHeight);
 	};
 
 	const handleLogin = () => {
@@ -179,7 +187,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 
 			{isAuthenticated ? (
 				<SaveQuery
-					prevName={query.name}
+					query={query}
 					onSave={handleSave}
 					onDiscard={handleDiscard}
 				/>

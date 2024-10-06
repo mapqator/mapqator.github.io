@@ -38,6 +38,7 @@ import AverageQuestion from "./AverageQuestion";
 import ContextDistribution from "./ContextDistribution";
 import QuestionDistribution from "./QuestionDistribution";
 import ModelBias from "./ModelBias";
+import AccuracyVsContext from "./accuracy_vs_context";
 const itemsPerPage = 5;
 
 export default function DatasetCreator({
@@ -183,6 +184,7 @@ export default function DatasetCreator({
 						</LoadingButton>
 					</div>
 					<DatasetInformation {...{ queries }} />
+					{/* <AccuracyVsContext {...{ queries }} /> */}
 					<PieChart {...{ queries }} />
 					<BarChart {...{ queries }} />
 					<ColumnChart {...{ queries }} type={0} />
