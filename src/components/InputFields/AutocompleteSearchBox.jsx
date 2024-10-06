@@ -26,7 +26,7 @@ function SearchPlaceCard({ place, index, length }) {
 		<React.Fragment key={index}>
 			<Box className="flex gap-1 justify-between w-full items-center px-2">
 				<ListItemText
-					primary={place.displayName.text}
+					primary={place.displayName?.text}
 					secondary={place.shortFormattedAddress}
 				/>
 				<Box className="ml-auto">
@@ -221,7 +221,7 @@ export default function AutocompleteSearchBox() {
 						<ul className="h-60 overflow-y-auto">
 							{results.map((place, index) => (
 								<SearchPlaceCard
-									place={place}
+									placeCon={place}
 									index={index}
 									length={results.length}
 									key={index}

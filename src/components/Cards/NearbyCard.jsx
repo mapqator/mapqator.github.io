@@ -8,6 +8,7 @@ import {
 	Collapse,
 	Chip,
 	Divider,
+	Grid,
 } from "@mui/material";
 import { Add, Delete, ExpandMore } from "@mui/icons-material";
 import { GlobalContext } from "@/contexts/GlobalContext";
@@ -45,8 +46,7 @@ function NearbyCardDetails({
 		setNearbyPlacesMap(newNearbyPlacesMap);
 	};
 	const [travelMode, setTravelMode] = useState("WALK");
-	const [loading, setLoading] = useState(false);
-	const { setNewDistance, setActiveStep } = useContext(GlobalContext);
+
 	// const handleDistanceAdd = async () => {
 	// 	setLoading(true);
 	// 	const origins = [place_id];
@@ -113,38 +113,6 @@ function NearbyCardDetails({
 				mode={mode}
 				locationBias={place_id}
 			/>
-			{mode === "edit" && (
-				<div className="flex flex-col gap-4 p-4">
-					<Typography variant="body2">
-						Add travel time from{" "}
-						{savedPlacesMap[place_id].displayName.text} to nearby{" "}
-						{Pluralize(entry.type)}
-					</Typography>
-					{/* <TravelSelectionField
-						mode={travelMode}
-						setMode={(value) => setTravelMode(value)}
-					/> */}
-					<LoadingButton
-						variant="contained"
-						fullWidth
-						onClick={() => {
-							setNewDistance({
-								origins: [place_id],
-								destinations: entry.places
-									// .filter((place) => place.selected)
-									.map((place) => place.place_id),
-								travelMode: "WALK",
-							});
-							setActiveStep(4);
-						}}
-						startIcon={<Add />}
-						loading={loading}
-						loadingPosition="start"
-					>
-						Add Travel Time
-					</LoadingButton>
-				</div>
-			)}
 		</>
 	);
 }
@@ -175,7 +143,7 @@ function NearbyCardSummary({
 				className="gap-1"
 			>
 				<Typography variant="h6" component="div">
-					{savedPlacesMap[place_id].displayName.text}
+					{savedPlacesMap[place_id].displayName?.text}
 				</Typography>
 				{mode === "edit" && (
 					<Box className="flex flex-col items-end justify-start">
@@ -263,6 +231,8 @@ export default function NearbyCard({
 }) {
 	const [expanded, setExpanded] = useState(false);
 	const [locations, setLocations] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const { setNewDistance, setActiveStep } = useContext(GlobalContext);
 	useEffect(() => {
 		setExpanded(i === 0);
 	}, [i]);
@@ -301,20 +271,57 @@ export default function NearbyCard({
 			</CardContent>
 			<Collapse in={expanded} timeout="auto" unmountOnExit>
 				<Divider />
-				<MapComponent locations={locations} />
-				<NearbyCardDetails
-					{...{
-						index,
-						place_id,
-						entry,
-						nearbyPlacesMap,
-						setNearbyPlacesMap,
-						mode,
-						distanceMatrix,
-						setDistanceMatrix,
-						savedPlacesMap,
-					}}
-				/>
+				<Grid container>
+					<Grid item xs={12} md={6}>
+						<NearbyCardDetails
+							{...{
+								index,
+								place_id,
+								entry,
+								nearbyPlacesMap,
+								setNearbyPlacesMap,
+								mode,
+								distanceMatrix,
+								setDistanceMatrix,
+								savedPlacesMap,
+							}}
+						/>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<MapComponent
+							locations={locations}
+							height={"312px"}
+							zoom={14}
+						/>
+					</Grid>
+				</Grid>
+				{mode === "edit" && (
+					<div className="flex flex-col gap-4 p-4 items-center	">
+						<Typography variant="body2">
+							Add travel time from{" "}
+							{savedPlacesMap[place_id].displayName?.text} to
+							nearby {Pluralize(entry.type)}
+						</Typography>
+						<LoadingButton
+							variant="contained"
+							onClick={() => {
+								setNewDistance({
+									origins: [place_id],
+									destinations: entry.places
+										// .filter((place) => place.selected)
+										.map((place) => place.place_id),
+									travelMode: "WALK",
+								});
+								setActiveStep(4);
+							}}
+							startIcon={<Add />}
+							loading={loading}
+							loadingPosition="start"
+						>
+							Add Travel Time
+						</LoadingButton>
+					</div>
+				)}
 			</Collapse>
 		</Card>
 	);

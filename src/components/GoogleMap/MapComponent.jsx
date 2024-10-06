@@ -5,7 +5,7 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useContext, useEffect, useState } from "react";
 
-export default function MapComponent({ locations }) {
+export default function MapComponent({ locations, height, zoom }) {
 	const { selectedPlacesMap } = useContext(GlobalContext);
 	const { savedPlacesMap } = useContext(AppContext);
 	// const [locations, setLocations] = useState([]);
@@ -29,7 +29,7 @@ export default function MapComponent({ locations }) {
 	// }, [savedPlacesMap]);
 
 	const mapStyles = {
-		height: "400px",
+		height: height || "400px",
 		width: "100%",
 	};
 
@@ -37,7 +37,7 @@ export default function MapComponent({ locations }) {
 		locations.length > 0 && (
 			<GoogleMap
 				mapContainerStyle={mapStyles}
-				zoom={12}
+				zoom={zoom || 12}
 				center={locations[locations.length - 1]}
 			>
 				{locations.map((location, index) => (

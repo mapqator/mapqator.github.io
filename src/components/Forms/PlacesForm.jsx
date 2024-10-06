@@ -40,14 +40,8 @@ export default function PlacesForm({ handlePlaceAdd }) {
 		setSelectedPlacesMap((prev) => ({
 			...prev,
 			[place_id]: {
-				selectedAttributes: Object.keys(details).filter(
-					(key) =>
-						details[key] !== null && textualFields.includes(key)
-				),
-				attributes: Object.keys(details).filter(
-					(key) =>
-						details[key] !== null && textualFields.includes(key)
-				),
+				selectedAttributes: textualFields,
+				attributes: textualFields,
 			},
 		}));
 	};

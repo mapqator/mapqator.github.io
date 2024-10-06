@@ -135,7 +135,7 @@ function ContextStep({
 									<Divider />
 								</>
 						  )}
-					{step.context !== undefined && (
+					{/* {step.context !== undefined && (
 						<div className="flex flex-col gap-2">
 							<Typography
 								sx={{
@@ -153,7 +153,7 @@ function ContextStep({
 								<ContextPreview context={step.context} />
 							</Paper>
 						</div>
-					)}
+					)} */}
 
 					<Box sx={{ my: 1 }}>
 						<div>
@@ -252,6 +252,7 @@ export default function ContextStepper({
 		const list = [];
 		Object.keys(savedPlacesMap).map((place_id) => {
 			const place = savedPlacesMap[place_id];
+			if (!place.location) return;
 			const lat = place.location.latitude;
 			const lng = place.location.longitude;
 			list.push({ lat, lng });

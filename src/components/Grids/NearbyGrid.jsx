@@ -16,7 +16,7 @@ export default function NearbyGrid({
 		<Grid container spacing={2} sx={{ mt: 0, mb: 2 }}>
 			{Object.keys(nearbyPlacesMap).map((place_id, i) =>
 				nearbyPlacesMap[place_id].map((entry, index) => (
-					<Grid item xs={12} sm={6} md={6} key={index}>
+					<Grid item xs={12} key={index}>
 						<NearbyCard
 							{...{
 								place_id,

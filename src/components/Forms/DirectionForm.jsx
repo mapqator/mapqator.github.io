@@ -285,7 +285,7 @@ export default function DirectionForm({
 														label={
 															savedPlacesMap[
 																value
-															].displayName.text
+															].displayName?.text
 														}
 														size="small"
 													/>
@@ -302,7 +302,7 @@ export default function DirectionForm({
 											>
 												{
 													savedPlacesMap[place_id]
-														.displayName.text
+														.displayName?.text
 												}
 											</MenuItem>
 										)

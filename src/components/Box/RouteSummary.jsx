@@ -15,20 +15,20 @@ export default function RouteSummary({
 		<Box className="flex flex-row w-full gap-8 justify-center">
 			<Box className="flex flex-col">
 				<h6 className="text-base md:text-xl text-center md:font-semibold">
-					{savedPlacesMap[from_id].displayName.text}
+					{savedPlacesMap[from_id].displayName?.text}
 				</h6>
 				<FontAwesomeIcon icon={faArrowDown} />
 				{intermediates?.length > 0 &&
 					intermediates.map((intermediate, index) => (
 						<>
 							<h6 className="text-base md:text-xl text-center md:font-semibold">
-								{savedPlacesMap[intermediate].displayName.text}
+								{savedPlacesMap[intermediate].displayName?.text}
 							</h6>
 							<FontAwesomeIcon icon={faArrowDown} />
 						</>
 					))}
 				<h6 className="text-base md:text-xl text-center md:font-semibold">
-					{savedPlacesMap[to_id].displayName.text}
+					{savedPlacesMap[to_id].displayName?.text}
 				</h6>
 			</Box>
 
@@ -40,7 +40,7 @@ export default function RouteSummary({
 					}}
 				>
 					<h6 className="text-base md:text-xl text-center md:font-semibold">
-						{savedPlacesMap[from_id].displayName.text}
+						{savedPlacesMap[from_id].displayName?.text}
 					</h6>
 					<FontAwesomeIcon icon={faArrowDown} />
 					{optimized?.length > 0 &&
@@ -56,7 +56,7 @@ export default function RouteSummary({
 							</>
 						))}
 					<h6 className="text-base md:text-xl text-center md:font-semibold">
-						{savedPlacesMap[to_id].displayName.text}
+						{savedPlacesMap[to_id].displayName?.text}
 					</h6>
 				</Box>
 			)}

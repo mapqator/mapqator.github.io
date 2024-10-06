@@ -31,7 +31,9 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 	}
 
 	if (attributes.includes("regularOpeningHours")) {
-		text += `- Opening hours: ${place.regularOpeningHours.join(", ")}.\n`;
+		text += `- Opening hours: ${place.regularOpeningHours?.weekdayDescriptions?.join(
+			", "
+		)}.\n`;
 	}
 	if (attributes.includes("rating")) {
 		text += `- Rating: ${place.rating}. ${
@@ -93,7 +95,7 @@ const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
 			: "- Does Not Serve Dinner.\n";
 	}
 	if (attributes.includes("accessibilityOptions")) {
-		text += place.accessibilityOptions.wheelchairAccessibleEntrance
+		text += place.accessibilityOptions?.wheelchairAccessibleEntrance
 			? "- Wheelchair Accessible Entrance.\n"
 			: "- Not Wheelchair Accessible Entrance.\n";
 	}
@@ -124,7 +126,7 @@ const ContextGeneratorService = {
 					newContext += "\n";
 				}
 				newContext +=
-					`Information of <b>${savedPlacesMap[place_id]?.displayName.text}</b>:\n` +
+					`Information of <b>${savedPlacesMap[place_id]?.displayName?.text}</b>:\n` +
 					text;
 			}
 		}
@@ -185,7 +187,7 @@ const ContextGeneratorService = {
 					convertFromSnake(e.type)
 				)} of ${
 					// selectedPlacesMap[place_id].alias ||
-					savedPlacesMap[place_id]?.displayName.text
+					savedPlacesMap[place_id]?.displayName?.text
 				}${
 					e.minRating > 0
 						? " with a minimum rating of " + e.minRating
@@ -228,10 +230,10 @@ const ContextGeneratorService = {
 				}
 				newContext += `Travel time from <b>${
 					// selectedPlacesMap[from_id].alias ||
-					savedPlacesMap[from_id]?.displayName.text
+					savedPlacesMap[from_id]?.displayName?.text
 				}</b> to <b>${
 					// selectedPlacesMap[to_id].alias ||
-					savedPlacesMap[to_id]?.displayName.text
+					savedPlacesMap[to_id]?.displayName?.text
 				}</b> is:\n`;
 				Object.keys(distanceMatrix[from_id][to_id]).forEach((mode) => {
 					newContext += `- ${
@@ -260,12 +262,12 @@ const ContextGeneratorService = {
 			if (direction.intermediates.length > 0) {
 				if (direction.optimizeWaypointOrder) {
 					newContext += `If we want to start our journey from <b>${
-						savedPlacesMap[direction.origin]?.displayName.text
+						savedPlacesMap[direction.origin]?.displayName?.text
 					}</b>, then visit ${direction.intermediates.map(
 						(intermediate) =>
-							`<b>${savedPlacesMap[intermediate]?.displayName.text}</b>,`
+							`<b>${savedPlacesMap[intermediate]?.displayName?.text}</b>,`
 					)} and end our journey at <b>${
-						savedPlacesMap[direction.destination]?.displayName.text
+						savedPlacesMap[direction.destination]?.displayName?.text
 					}</b>, the optimized order of visit by ${
 						direction.travelMode.toLowerCase() === "transit"
 							? "public transport"
@@ -285,9 +287,9 @@ const ContextGeneratorService = {
 								direction.routes[0]
 									.optimizedIntermediateWaypointIndex[0]
 							]
-						]?.displayName.text
+						]?.displayName?.text
 					}</b> from <b>${
-						savedPlacesMap[direction.origin]?.displayName.text
+						savedPlacesMap[direction.origin]?.displayName?.text
 					}</b> which takes ${
 						direction.routes[0].legs[0].localizedValues
 							.staticDuration.text +
@@ -304,7 +306,7 @@ const ContextGeneratorService = {
 									direction.routes[0]
 										.optimizedIntermediateWaypointIndex[i]
 								]
-							]?.displayName.text
+							]?.displayName?.text
 						}</b> from <b>${
 							savedPlacesMap[
 								direction.intermediates[
@@ -313,7 +315,7 @@ const ContextGeneratorService = {
 										i - 1
 									]
 								]
-							]?.displayName.text
+							]?.displayName?.text
 						}</b> which takes ${
 							direction.routes[0].legs[i].localizedValues
 								.staticDuration.text +
@@ -325,7 +327,7 @@ const ContextGeneratorService = {
 					}
 
 					newContext += `Finally go to <b>${
-						savedPlacesMap[direction.destination]?.displayName.text
+						savedPlacesMap[direction.destination]?.displayName?.text
 					}</b> from <b>${
 						savedPlacesMap[
 							direction.intermediates[
@@ -334,7 +336,7 @@ const ContextGeneratorService = {
 									direction.intermediates.length - 1
 								]
 							]
-						]?.displayName.text
+						]?.displayName?.text
 					}</b> which takes ${
 						direction.routes[0].legs[
 							direction.routes[0].legs.length - 1
@@ -356,14 +358,14 @@ const ContextGeneratorService = {
 					}.\n`;
 				} else {
 					newContext += `If we start our journey from <b>${
-						savedPlacesMap[direction.origin]?.displayName.text
+						savedPlacesMap[direction.origin]?.displayName?.text
 					}</b>, then visit ${direction.intermediates
 						.map(
 							(intermediate) =>
-								`<b>${savedPlacesMap[intermediate]?.displayName.text}</b>`
+								`<b>${savedPlacesMap[intermediate]?.displayName?.text}</b>`
 						)
 						.join(", ")}, and finally end our journey at <b>${
-						savedPlacesMap[direction.destination]?.displayName.text
+						savedPlacesMap[direction.destination]?.displayName?.text
 					}</b>, the ${
 						direction.travelMode.toLowerCase() === "transit"
 							? "transit"
@@ -386,7 +388,7 @@ const ContextGeneratorService = {
 						savedPlacesMap[direction.intermediates[0]]?.displayName
 							.text
 					}</b> from <b>${
-						savedPlacesMap[direction.origin]?.displayName.text
+						savedPlacesMap[direction.origin]?.displayName?.text
 					}</b>, which takes ${
 						direction.routes[0].legs[0].localizedValues
 							.staticDuration.text +
@@ -399,10 +401,10 @@ const ContextGeneratorService = {
 					for (let i = 1; i < direction.intermediates.length; i++) {
 						newContext += `Then, go to <b>${
 							savedPlacesMap[direction.intermediates[i]]
-								?.displayName.text
+								?.displayName?.text
 						}</b> from <b>${
 							savedPlacesMap[direction.intermediates[i - 1]]
-								?.displayName.text
+								?.displayName?.text
 						}</b>, which takes ${
 							direction.routes[0].legs[i].localizedValues
 								.staticDuration.text +
@@ -414,13 +416,13 @@ const ContextGeneratorService = {
 					}
 
 					newContext += `Finally, go to <b>${
-						savedPlacesMap[direction.destination]?.displayName.text
+						savedPlacesMap[direction.destination]?.displayName?.text
 					}</b> from <b>${
 						savedPlacesMap[
 							direction.intermediates[
 								direction.intermediates.length - 1
 							]
-						]?.displayName.text
+						]?.displayName?.text
 					}</b>, which takes ${
 						direction.routes[0].legs[
 							direction.routes[0].legs.length - 1
@@ -445,9 +447,9 @@ const ContextGeneratorService = {
 				newContext += `There are ${
 					direction.routes.length
 				} routes from <b>${
-					savedPlacesMap[direction.origin]?.displayName.text
+					savedPlacesMap[direction.origin]?.displayName?.text
 				}</b> to <b>${
-					savedPlacesMap[direction.destination]?.displayName.text
+					savedPlacesMap[direction.destination]?.displayName?.text
 				}</b> by ${
 					direction.travelMode.toLowerCase() === "transit"
 						? "public transport"
@@ -521,7 +523,7 @@ const ContextGeneratorService = {
 		});
 		return newContext;
 	},
-convertContextToText: (context) => {
+	convertContextToText: (context) => {
 		let text = "";
 		text += context.places !== "" ? context.places : "";
 		text +=

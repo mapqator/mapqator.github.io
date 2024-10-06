@@ -103,7 +103,7 @@ export const AutocompleteSearchBox = ({
 				const addressIncludesQuery = [];
 
 				Object.values(savedPlacesMap).forEach((place) => {
-					const lowerCaseName = place.name.toLowerCase();
+					const lowerCaseName = place.name?.toLowerCase();
 					const lowerCaseAddress =
 						place.formatted_address.toLowerCase();
 					const lowerCaseQuery = query.toLowerCase();
@@ -130,7 +130,7 @@ export const AutocompleteSearchBox = ({
 			// setFilteredPlaces(
 			// 	Object.values(savedPlacesMap).filter(
 			// 		(place) =>
-			// 			place.name.toLowerCase().startsWith(query.toLowerCase())
+			// 			place.name?.toLowerCase().startsWith(query.toLowerCase())
 			// 		// ||
 			// 		// place.formatted_address
 			// 		// 	.toLowerCase()
@@ -182,7 +182,7 @@ export const AutocompleteSearchBox = ({
 			// setFilteredPlaces(
 			// 	Object.values(savedPlacesMap).filter(
 			// 		(place) =>
-			// 			place.name.toLowerCase().includes(search.toLowerCase())
+			// 			place.name?.toLowerCase().includes(search.toLowerCase())
 			// 		// ||
 			// 		// place.formatted_address
 			// 		// 	.toLowerCase()

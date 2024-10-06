@@ -55,15 +55,19 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 		if (place_id === "" || selectedPlacesMap[place_id]) return;
 		setSelectedPlacesMap((prev) => ({
 			...prev,
+			// [place_id]: {
+			// 	selectedAttributes: Object.keys(details).filter(
+			// 		(key) =>
+			// 			details[key] !== null && textualFields.includes(key)
+			// 	),
+			// 	attributes: Object.keys(details).filter(
+			// 		(key) =>
+			// 			details[key] !== null && textualFields.includes(key)
+			// 	),
+			// },
 			[place_id]: {
-				selectedAttributes: Object.keys(details).filter(
-					(key) =>
-						details[key] !== null && textualFields.includes(key)
-				),
-				attributes: Object.keys(details).filter(
-					(key) =>
-						details[key] !== null && textualFields.includes(key)
-				),
+				selectedAttributes: textualFields,
+				attributes: textualFields,
 			},
 		}));
 	};
@@ -73,7 +77,7 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 			<CardContent className="flex flex-col justify-between h-full gap-4">
 				<div className="flex flex-col">
 					<Typography variant="h6" component="div">
-						{savedPlacesMap[placeId].displayName.text}
+						{savedPlacesMap[placeId].displayName?.text}
 					</Typography>
 					<Typography color="textSecondary">
 						{savedPlacesMap[placeId].shortFormattedAddress}

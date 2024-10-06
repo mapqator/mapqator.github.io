@@ -95,7 +95,7 @@ export default function PoiList({
 							)}
 						</Box>
 					</ListItem>
-					{index < places.length - 1 && <Divider component="li" />}
+					<Divider component="li" />
 				</React.Fragment>
 			))}
 		</List>

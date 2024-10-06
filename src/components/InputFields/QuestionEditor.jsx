@@ -31,7 +31,7 @@ export default function QuestionEditor({ index }) {
 
 	useEffect(() => {
 		const names = Object.values(savedPlacesMap).map(
-			(place) => place.displayName.text
+			(place) => place.displayName?.text
 		);
 		setNames(names);
 	}, [savedPlacesMap]);
@@ -144,7 +144,7 @@ export default function QuestionEditor({ index }) {
 	};
 
 	const filteredNames = names?.filter((name) =>
-		name.toLowerCase().includes(mentionSearch.toLowerCase())
+		name?.toLowerCase().includes(mentionSearch.toLowerCase())
 	);
 
 	// useEffect(() => {

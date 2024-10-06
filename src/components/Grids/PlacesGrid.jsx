@@ -15,7 +15,7 @@ export default function PlacesGrid({
 			{Object.keys(selectedPlacesMap)
 				.reverse()
 				.map((placeId, index) => (
-					<Grid item xs={12} sm={6} md={6} key={placeId}>
+					<Grid item xs={12} sm={12} md={12} key={placeId}>
 						<PlaceCard
 							{...{
 								placeId,

@@ -126,7 +126,7 @@ export default function NearbyForm({
 			const placesWithSelection = places.map((place) => ({
 				// selected: true,
 				place_id: place.id,
-				name: place.displayName.text,
+				name: place.displayName?.text,
 				formatted_address: place.shortFormattedAddress,
 				rating: place.rating,
 				priceLevel: place.priceLevel
@@ -254,7 +254,7 @@ export default function NearbyForm({
 									: newNearbyPlaces.keyword
 							}s near ${
 								savedPlacesMap[newNearbyPlaces.locationBias]
-									.displayName.text
+									.displayName?.text
 							}`}
 						></iframe>
 					</Grid>

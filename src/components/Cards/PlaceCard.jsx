@@ -12,13 +12,18 @@ import {
 	Box,
 	Select,
 	MenuItem,
+	Checkbox,
+	FormControlLabel,
+	Divider,
+	Paper,
+	Grid,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { AppContext } from "@/contexts/AppContext";
 import { convertFromSnake } from "@/services/utils";
 import PlaceDeleteButton from "../Buttons/PlaceDeleteButton";
-
+import { template } from "@/database/templates";
 function PlaceCardSummary({
 	placeId,
 	expanded,
@@ -27,23 +32,23 @@ function PlaceCardSummary({
 }) {
 	return (
 		<>
-			<Typography variant="h6" component="div" noWrap>
-				{savedPlacesMap[placeId].displayName.text}
-			</Typography>
-			<Typography color="textSecondary" gutterBottom noWrap>
-				{savedPlacesMap[placeId].shortFormattedAddress}
-			</Typography>
 			<Box
 				sx={{
 					display: "flex",
-					alignItems: "center",
+					// alignItems: "center",
 					mt: 1,
 				}}
+				className="justify-between items-start"
 			>
-				<Typography variant="body2" sx={{ flexGrow: 1 }}>
-					Selected Attributes:{" "}
-					{selectedPlacesMap[placeId].selectedAttributes.length}
-				</Typography>
+				<div className="flex flex-col">
+					<Typography variant="h6" component="div" noWrap>
+						{savedPlacesMap[placeId].displayName?.text}
+					</Typography>
+					<Typography color="textSecondary" gutterBottom noWrap>
+						{savedPlacesMap[placeId].shortFormattedAddress}
+					</Typography>
+				</div>
+
 				<IconButton
 					sx={{
 						transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
@@ -142,8 +147,51 @@ export default function PlaceCard({
 					/>
 				</Box>
 
-				<Collapse in={expanded} timeout="auto" unmountOnExit>
-					{mode === "edit" && (
+				<Collapse in={expanded} timeout="auto">
+					<Grid container spacing={2}>
+						<Grid item xs={12} md={6}>
+							<Paper elevation={2}>
+								<Box>
+									<Typography
+										variant="h6"
+										className="font-bold bg-zinc-200 p-2 text-center border-b-2 border-black"
+									>
+										Detailed Information
+									</Typography>
+								</Box>
+								<Box className="h-[350px] overflow-auto bg-zinc-100">
+									{selectedPlacesMap[placeId].attributes.map(
+										(attribute, index) => (
+											<Box key={attribute}>
+												{index > 0 && <Divider />}
+
+												<Typography
+													variant="body2"
+													className="p-2"
+													// color="textSecondary"
+												>
+													<span className="font-bold underline">
+														{convertFromSnake(
+															attribute
+														)}
+														:
+													</span>{" "}
+													{template[attribute]
+														? template[attribute](
+																savedPlacesMap[
+																	placeId
+																][attribute]
+														  )
+														: "N/A"}
+												</Typography>
+											</Box>
+										)
+									)}
+								</Box>
+							</Paper>
+						</Grid>
+
+						{/* {mode === "edit" && (
 						<PlaceCardDetails
 							{...{
 								placeId,
@@ -152,28 +200,41 @@ export default function PlaceCard({
 								mode,
 							}}
 						/>
-					)}
-
-					<iframe
-						width="100%"
-						// height="350"
-						// style="border:0"
-						style={{
-							border: 0,
-							aspectRatio: "1 / 1",
-						}}
-						loading="lazy"
-						// allowfullscreen
-						referrerPolicy="no-referrer-when-downgrade"
-						src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=place_id:${placeId}`}
-					></iframe>
+					)} */}
+						<Grid item xs={12} md={6}>
+							<Paper elevation={2}>
+								<Box>
+									<Typography
+										variant="h6"
+										className="font-bold bg-zinc-200 p-2 text-center border-b-2 border-black"
+									>
+										Map View
+									</Typography>
+								</Box>
+								<iframe
+									width="100%"
+									// className="aspect-square"
+									height="350"
+									// style="border:0"
+									style={{
+										border: 0,
+										aspectRatio: "1 / 1",
+									}}
+									loading="lazy"
+									// allowfullscreen
+									referrerPolicy="no-referrer-when-downgrade"
+									src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=place_id:${placeId}`}
+								></iframe>
+							</Paper>
+						</Grid>
+					</Grid>
 				</Collapse>
 
 				{mode === "edit" && (
 					<Box
 						sx={{
 							display: "flex",
-							justifyContent: "flex-start",
+							justifyContent: "flex-end",
 							mt: "auto",
 						}}
 					>

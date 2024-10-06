@@ -39,7 +39,7 @@ export default function PlaceSelectionField({
 												key={value}
 												label={
 													savedPlacesMap[value]
-														.displayName.text
+														.displayName?.text
 												}
 												size="small"
 											/>
@@ -51,7 +51,7 @@ export default function PlaceSelectionField({
 				>
 					{Object.keys(savedPlacesMap).map((place_id) => (
 						<MenuItem key={place_id} value={place_id}>
-							{savedPlacesMap[place_id].displayName.text}
+							{savedPlacesMap[place_id].displayName?.text}
 						</MenuItem>
 					))}
 				</Select>

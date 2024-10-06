@@ -23,9 +23,10 @@ export default function QueryEditButton({ onEdit, query }) {
 
 	const handleSave = async (place_id) => {
 		if (savedPlacesMap[place_id]) return;
-		const res = await mapApi.getDetails(place_id);
+		const res = await mapApi.getDetailsNew(place_id);
 		if (res.success) {
-			const details = res.data.result;
+			const details = res.data;
+			console.log("saving place_id", place_id, details);
 			setSavedPlacesMap((prev) => ({
 				...prev,
 				[place_id]: details,
@@ -41,6 +42,7 @@ export default function QueryEditButton({ onEdit, query }) {
 			setSavedPlacesMap(query.context_json.saved_places);
 		} else {
 			for (let place_id in query.context_json.places) {
+				console.log("saving place_id", place_id);
 				await handleSave(place_id);
 			}
 		}
