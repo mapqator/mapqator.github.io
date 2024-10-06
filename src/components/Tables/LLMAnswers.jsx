@@ -31,7 +31,7 @@ export default function LLMAnswers({ entry, index }) {
 		entry.evaluation?.length &&
 		entry.evaluation.map((e) => {
 			const responses = e.responses;
-			if (responses?.length < index + 1) return null;
+			if (!responses && responses.length < index + 1) return null;
 			const response = responses[index];
 			// const option = parseInt(extract(response));
 			const option = response.option;

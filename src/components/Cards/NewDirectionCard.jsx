@@ -33,6 +33,7 @@ function DirectionCardDetails({
 	directionInformation,
 	setDirectionInformation,
 	savedPlacesMap,
+	mode,
 }) {
 	return (
 		<Paper
@@ -56,6 +57,7 @@ function DirectionCardDetails({
 					}}
 					checked={direction.showSteps}
 					size="small"
+					disabled={mode !== "edit"}
 				/>
 			</Box>
 			<RoutesList

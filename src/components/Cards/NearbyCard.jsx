@@ -271,6 +271,7 @@ export default function NearbyCard({
 		const list = [];
 		entry.places.map((np) => {
 			const place = savedPlacesMap[np.place_id];
+			if (!place) return;
 			const lat = place.location.latitude;
 			const lng = place.location.longitude;
 			list.push({ lat, lng });
