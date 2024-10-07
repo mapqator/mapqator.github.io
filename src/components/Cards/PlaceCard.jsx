@@ -87,7 +87,7 @@ export default function PlaceCard({
 	savedPlacesMap,
 	mode,
 }) {
-	const [expanded, setExpanded] = useState(false);
+	const [expanded, setExpanded] = useState(index === 0);
 	// useEffect(() => {
 	// 	setExpanded(index === 0);
 	// }, [index]);

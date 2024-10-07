@@ -165,7 +165,7 @@ function ContextStep({
 							>
 								{index === 0 ? "Start" : "Continue"}
 							</Button>
-							{index > 0 ? (
+							{/* {index > 0 ? (
 								<Button
 									onClick={handleBack}
 									sx={{ mt: 1, mr: 1 }}
@@ -184,15 +184,15 @@ function ContextStep({
 								>
 									Start with Example
 								</LoadingButton>
-							)}
-							{/* {index > 0 && (
+							)} */}
+							{index > 0 && (
 								<Button
 									onClick={handleBack}
 									sx={{ mt: 1, mr: 1 }}
 								>
 									Back
 								</Button>
-							)} */}
+							)}
 						</div>
 					</Box>
 				</div>
@@ -267,9 +267,9 @@ export default function ContextStepper({
 			description: `Welcome to the Context Generator! This tool helps you create rich, place-related contexts using Google Maps APIs. Here's how it works:
 
     		1. Add Places: Start by searching for and adding key locations to your context.
-			2. Explore Nearby Places: Discover nearby places and points of interest around your selected locations.
-			3. Get Directions & Distances: Find routes between places and calculate distances.
-			4. Generate Context: Review and finalize your place-related information.
+			2. Add Place Details: Add detailed information about a place.
+			3. Explore Nearby Places: Discover nearby places and points of interest around your selected locations.
+			4. Get Directions: Find routes between places or multi-stop routes.
 
 			Let's begin!`,
 			icon: <Flag />,
@@ -387,22 +387,22 @@ export default function ContextStepper({
 			),
 			context: context.direction,
 		},
-		{
-			label: "Preview Full Context",
-			description: `Review the information gathered and then you can proceed to create a question based on the context you have generated.`,
-			icon: <RemoveRedEye />,
-			component: (
-				<>
-					<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
-						<ContextPreview
-							context={ContextGeneratorService.convertContextToText(
-								context
-							)}
-						/>
-					</Paper>
-				</>
-			),
-		},
+		// {
+		// 	label: "Preview Full Context",
+		// 	description: `Review the information gathered and then you can proceed to create a question based on the context you have generated.`,
+		// 	icon: <RemoveRedEye />,
+		// 	component: (
+		// 		<>
+		// 			<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
+		// 				<ContextPreview
+		// 					context={ContextGeneratorService.convertContextToText(
+		// 						context
+		// 					)}
+		// 				/>
+		// 			</Paper>
+		// 		</>
+		// 	),
+		// },
 		// {
 		// 	label: "Explore POIs inside Places",
 		// 	description: `Explore various Points of Interest (POIs) within a larger area. Select a region like a city or neighborhood, then choose a type (e.g., restaurants, museums, parks) to see POIs within that area.`,

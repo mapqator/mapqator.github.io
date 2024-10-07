@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
 	Box,
 	Typography,
@@ -7,6 +7,7 @@ import {
 	Paper,
 	Divider,
 	Container,
+	IconButton,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { GlobalContext } from "@/contexts/GlobalContext";
@@ -21,7 +22,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { AppContext } from "@/contexts/AppContext";
 import { useRouter } from "next/navigation";
 import QuestionAnswerForm from "@/components/Forms/QuestionAnswerForm";
-import { Assessment } from "@mui/icons-material";
+import { Assessment, ExpandMore } from "@mui/icons-material";
+import ContextVisualize from "@/components/Viewer/ContextVisualize";
 
 export default function QuestionCreationPage() {
 	const {
@@ -69,6 +71,7 @@ export default function QuestionCreationPage() {
 		router.push("/home");
 	};
 
+	const [contextExpanded, setContextExpanded] = useState(false);
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		setQueryStatus("saved");
@@ -182,39 +185,61 @@ export default function QuestionCreationPage() {
 					</Box>
 					<Divider sx={{ my: 2 }} />
 					<Box>
-						<CollapsedContext
+						{/* <CollapsedContext
 							context={ContextGeneratorService.convertContextToText(
 								context
 							)}
-						/>
-						{/* <React.Fragment>
-						<p
-							className="w-full text-left"
-							dangerouslySetInnerHTML={{
-								__html: expanded
-									? text
-									: text.substring(0, 200) + " ...",
-							}}
-							style={{
-								whiteSpace: "pre-line",
-							}}
-						/>
-					</React.Fragment>
-					{text === "" && (
-						<p className="text-center my-auto text-lg md:text-xl text-zinc-400">
-							No context provided.
-						</p>
-					)}
-					{text.length > 200 && (
-						<Button
-							onClick={() => setExpanded((prev) => !prev)}
-							sx={{ mt: 1, textTransform: "none" }}
-						>
-							{expanded ? "Show Less" : "Read More"}
-						</Button>
-					)} */}
+						/> */}
+
+						<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
+							<div
+								className="flex justify-center flex-row items-center cursor-pointer"
+								onClick={() =>
+									setContextExpanded((prev) => !prev)
+								}
+							>
+								<h1 className="font-bold p-2">
+									{contextExpanded
+										? "Hide Context"
+										: "Visualize Context"}
+								</h1>
+								<IconButton
+									// sx={{ height: "2rem", width: "2rem" }}
+
+									sx={{
+										transform: contextExpanded
+											? "rotate(180deg)"
+											: "rotate(0deg)",
+										transition: "0.3s",
+									}}
+								>
+									<ExpandMore />
+								</IconButton>
+							</div>
+
+							{contextExpanded && (
+								<>
+									<Divider
+										sx={{
+											mt: 2,
+										}}
+									/>
+									<ContextVisualize
+										savedPlacesMap={savedPlacesMap}
+										selectedPlacesMap={selectedPlacesMap}
+										nearbyPlacesMap={nearbyPlacesMap}
+										distanceMatrix={distanceMatrix}
+										directionInformation={
+											directionInformation
+										}
+									/>
+								</>
+							)}
+						</Paper>
 					</Box>
 				</Paper>
+				{/* <ContextVisualize context={context} /> */}
+				<Box sx={{ mb: 2 }}></Box>
 
 				{/* <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
 				<Typography variant="h6">AI Generated Questions</Typography>
