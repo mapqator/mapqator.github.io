@@ -3,6 +3,7 @@ import {
 	Button,
 	Card,
 	CardContent,
+	Divider,
 	IconButton,
 	Typography,
 } from "@mui/material";
@@ -61,8 +62,8 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 
 	return (
 		<Card variant="outlined" className="h-full">
-			<CardContent className="flex flex-col justify-between h-full gap-4">
-				<div className="flex flex-col">
+			<CardContent className="flex flex-col justify-between h-full gap-2">
+				<div className="flex flex-col mb-2">
 					<Typography variant="h6" component="div">
 						{savedPlacesMap[placeId].displayName?.text}
 					</Typography>
@@ -174,7 +175,10 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 						<Typography variant="body2">Nearby</Typography>
 					</Box>
 				</div>
-				{/* <PlaceDeleteButton placeId={placeId} /> */}
+				<Divider />
+				<Box className="ml-auto">
+					<PlaceDeleteButton placeId={placeId} />
+				</Box>
 			</CardContent>
 		</Card>
 	);

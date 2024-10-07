@@ -203,7 +203,10 @@ export default function PlaceCard({
 							mt: "auto",
 						}}
 					>
-						<PlaceDeleteButton placeId={placeId} />
+						<PlaceDeleteButton
+							placeId={placeId}
+							isSelected={true}
+						/>
 					</Box>
 				)}
 			</CardContent>

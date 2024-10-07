@@ -63,7 +63,7 @@ export default function PlaceDeleteButton({ placeId, isSelected }) {
 		const newSelectedPlacesMap = { ...selectedPlacesMap };
 		delete newSelectedPlacesMap[place_id];
 		setSelectedPlacesMap(newSelectedPlacesMap);
-		// deletePlaceFromSaved(place_id);
+		if (!isSelected) deletePlaceFromSaved(place_id);
 	};
 	return (
 		<IconButton onClick={() => deletePlace(placeId)}>
