@@ -166,7 +166,6 @@ export default function GlobalContextProvider({ children }) {
 			},
 		},
 	};
-
 	const exampleCurrentInformation = {
 		time: dayjs("2024-07-22T21:00:00.000Z"),
 		day: "Monday",
@@ -178,6 +177,7 @@ export default function GlobalContextProvider({ children }) {
 	const initPoisMap = {};
 	const initDistanceMatrix = {};
 	const initDirectionInformation = [];
+	const initRoutePlacesMap = [];
 	const initCurrentInformation = {
 		time: null,
 		day: "",
@@ -204,6 +204,7 @@ export default function GlobalContextProvider({ children }) {
 		initSelectedPlacesMap
 	);
 	const [nearbyPlacesMap, setNearbyPlacesMap] = useState(initNearbyPlacesMap);
+	const [routePlacesMap, setRoutePlacesMap] = useState(initRoutePlacesMap);
 	const [poisMap, setPoisMap] = useState(initPoisMap);
 	const [distanceMatrix, setDistanceMatrix] = useState(initDistanceMatrix);
 	const [directionInformation, setDirectionInformation] = useState(
@@ -226,7 +227,20 @@ export default function GlobalContextProvider({ children }) {
 		rankPreference: "RELEVANCE",
 		minRating: 0, // Values are rounded up to the nearest 0.5.
 		priceLevels: [],
+		maxResultCount: 5, // 1 to 20
 	});
+
+	const [newRoutePlaces, setNewRoutePlaces] = useState({
+		encodedPolyline: "",
+		searchBy: "type",
+		type: "",
+		keyword: "",
+		rankPreference: "RELEVANCE",
+		minRating: 0, // Values are rounded up to the nearest 0.5.
+		priceLevels: [],
+		maxResultCount: 5,
+	});
+
 	const [newDirection, setNewDirection] = useState({
 		origin: "",
 		destination: "",
@@ -247,6 +261,7 @@ export default function GlobalContextProvider({ children }) {
 			avoidHighways: false,
 			avoidFerries: false,
 		},
+		computeAlternativeRoutes: true,
 	});
 
 	// const initQuery = {
@@ -285,10 +300,10 @@ export default function GlobalContextProvider({ children }) {
 				nearbyPlacesMap,
 				savedPlacesMap
 			),
-			area: ContextGeneratorService.getAreaContext(
-				poisMap,
-				savedPlacesMap
-			),
+			// area: ContextGeneratorService.getAreaContext(
+			// 	poisMap,
+			// 	savedPlacesMap
+			// ),
 			// distance: ContextGeneratorService.getDistanceContext(
 			// 	distanceMatrix,
 			// 	savedPlacesMap
@@ -297,10 +312,10 @@ export default function GlobalContextProvider({ children }) {
 				directionInformation,
 				savedPlacesMap
 			),
-			params: ContextGeneratorService.getParamsContext(
-				currentInformation,
-				savedPlacesMap
-			),
+			// params: ContextGeneratorService.getParamsContext(
+			// 	currentInformation,
+			// 	savedPlacesMap
+			// ),
 		});
 	}, [
 		savedPlacesMap,
@@ -365,6 +380,7 @@ export default function GlobalContextProvider({ children }) {
 				initDistanceMatrix,
 				initDirectionInformation,
 				initCurrentInformation,
+				initRoutePlacesMap,
 				contextStatus,
 				setContextStatus,
 				queryStatus,
@@ -383,6 +399,10 @@ export default function GlobalContextProvider({ children }) {
 				setNewNearbyPlaces,
 				newDirection,
 				setNewDirection,
+				routePlacesMap,
+				setRoutePlacesMap,
+				newRoutePlaces,
+				setNewRoutePlaces,
 			}}
 		>
 			{children}

@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import {
 	Box,
+	Button,
 	Divider,
 	Grid,
 	List,
@@ -16,18 +17,29 @@ import {
 	ArrowRightAlt,
 	DoubleArrow,
 	KeyboardDoubleArrowRight,
+	Search,
 } from "@mui/icons-material";
 import { AppContext } from "@/contexts/AppContext";
 import DirectionComponent from "../GoogleMap/DirectionComponent";
 
-function SingleRoute({ route, index }) {
+function SingleRoute({ route, index, length }) {
+	const {
+		selectedPlacesMap,
+		setSelectedPlacesMap,
+		activeStep,
+		setActiveStep,
+		setNewNearbyPlaces,
+		setNewRoutePlaces,
+	} = useContext(GlobalContext);
+
 	return (
 		<>
+			{index !== 0 && <Divider />}
 			<Box className="p-4">
 				<div className="flex flex-row justify-between w-full">
 					<h1 className="w-[60%] text-wrap text-lg font-semibold">
 						{"Via " + route.description}{" "}
-						{index === 0 && "(Recommended)"}
+						{index === 0 && length > 1 && "(Recommended)"}
 					</h1>
 					<div className="flex flex-col w-[40%] text-right">
 						<h1 className="font-semibold">
@@ -104,6 +116,21 @@ function SingleRoute({ route, index }) {
 					</Paper>
 				</Grid>
 			</Grid>
+			<Box className="flex flex-row justify-center pb-4">
+				<Button
+					startIcon={<Search />}
+					variant="contained"
+					onClick={() => {
+						setNewRoutePlaces((prev) => ({
+							...prev,
+							encodedPolyline: route.polyline.encodedPolyline,
+						}));
+						setActiveStep(5);
+					}}
+				>
+					Search Along Route
+				</Button>
+			</Box>
 		</>
 	);
 }
@@ -230,7 +257,11 @@ export default function RoutesList({
 			{routes.map((route, index) => (
 				<React.Fragment key={index}>
 					{route.legs.length === 1 ? (
-						<SingleRoute route={route} index={index} />
+						<SingleRoute
+							route={route}
+							index={index}
+							length={routes.length}
+						/>
 					) : (
 						<MultiLeg
 							route={route}

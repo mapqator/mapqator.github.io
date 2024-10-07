@@ -81,27 +81,10 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 						<Button
 							variant="outlined"
 							onClick={() => {
-								setNewDirection({
-									origin: "",
+								setNewDirection((prev) => ({
+									...prev,
 									destination: placeId,
-									intermediates: [],
-									travelMode: "WALK",
-									departureTime: {
-										type: "now",
-										date: dayjs(),
-										time: dayjs(),
-										departureTimestamp: new Date(),
-									},
-									optimizeWaypointOrder: false,
-									transitPreferences: {
-										allowedTravelModes: [],
-									},
-									routeModifiers: {
-										avoidTolls: false,
-										avoidHighways: false,
-										avoidFerries: false,
-									},
-								});
+								}));
 								setActiveStep(4);
 							}}
 							sx={{
@@ -159,6 +142,7 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 									rankPreference: "RELEVANCE",
 									minRating: 0, // Values are rounded up to the nearest 0.5.
 									priceLevels: [],
+									maxResultCount: 5, // 1 to 20
 								});
 								setActiveStep(3);
 							}}
@@ -175,10 +159,10 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 						<Typography variant="body2">Nearby</Typography>
 					</Box>
 				</div>
-				<Divider />
+				{/* <Divider />
 				<Box className="ml-auto">
 					<PlaceDeleteButton placeId={placeId} />
-				</Box>
+				</Box> */}
 			</CardContent>
 		</Card>
 	);

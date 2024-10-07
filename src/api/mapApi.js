@@ -24,6 +24,9 @@ class MapApi extends Api {
 				params.location
 		);
 	};
+	searchAlongRoute = async (params) => {
+		return await this.post("/map/search/along-route", params);
+	};
 	getNearbyNew = async (params) => {
 		return await this.post("/map/nearby/new", params);
 	};

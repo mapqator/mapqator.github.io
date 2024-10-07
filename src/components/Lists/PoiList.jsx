@@ -19,7 +19,7 @@ import { template } from "@/database/templates";
 
 export default function PoiList({
 	places,
-	handleTogglePlace,
+	// handleTogglePlace,
 	mode,
 	locationBias,
 }) {
@@ -65,32 +65,16 @@ export default function PoiList({
 									<PlaceAddButton place_id={place.place_id} />
 								</Box>
 							)} */}
-							{mode === "edit" && (
+							{mode === "edit" && locationBias && (
 								<Button
 									variant="outlined"
 									onClick={() => {
-										setNewDirection({
+										setNewDirection((prev) => ({
+											...prev,
 											origin: locationBias,
-											destination: place.place_id,
-											intermediates: [],
-											travelMode: "WALK",
-											departureTime: {
-												type: "now",
-												date: dayjs(),
-												time: dayjs(),
-												departureTimestamp: new Date(),
-											},
-											optimizeWaypointOrder: false,
-											transitPreferences: {
-												allowedTravelModes: [],
-											},
-											routeModifiers: {
-												avoidTolls: false,
-												avoidHighways: false,
-												avoidFerries: false,
-											},
-										});
-										setActiveStep(5);
+											destination: place.id,
+										}));
+										setActiveStep(4);
 									}}
 									sx={{
 										borderRadius: "50%",

@@ -26,9 +26,11 @@ import {
 	NextPlanTwoTone,
 	Place,
 	RemoveRedEye,
+	Route,
 	Save,
 	Send,
 	Settings,
+	ShareLocation,
 } from "@mui/icons-material";
 import ExploreIcon from "@mui/icons-material/Explore";
 import ContextGeneratorService from "@/services/contextGeneratorService";
@@ -51,6 +53,8 @@ import { AppContext } from "@/contexts/AppContext";
 import SavedPlacesGrid from "../Grids/SavedPlacesGrid";
 import PlacesForm from "../Forms/PlacesForm";
 import { SiGooglenearby } from "react-icons/si";
+import RouteSearchGrid from "../Grids/RouteSearchGrid";
+import RouteSearchForm from "../Forms/RouteSearchForm";
 function ContextStep({
 	step,
 	index,
@@ -112,7 +116,7 @@ function ContextStep({
 								<>
 									<Divider />
 									<Box>
-										<Box className="mx-auto w-full md:w-[30rem] p-5">
+										<Box className="mx-auto w-full p-5">
 											{step.form}
 										</Box>
 										{step.grid && (
@@ -225,6 +229,11 @@ export default function ContextStepper({
 		newDirection,
 		setNewDirection,
 		query,
+
+		routePlacesMap,
+		setRoutePlacesMap,
+		newRoutePlaces,
+		setNewRoutePlaces,
 	} = useContext(GlobalContext);
 
 	const { savedPlacesMap } = useContext(AppContext);
@@ -321,7 +330,8 @@ export default function ContextStepper({
 			You can choose a type from the given list or a custom type. It is recommended to choose from the given list for better result.`,
 			additional:
 				"List of places whose nearby pois are added to the context",
-			icon: <SiGooglenearby />,
+			// icon: <SiGooglenearby />,
+			icon: <ShareLocation />,
 			form: (
 				<NearbyForm
 					{...{ handlePlaceAdd, newNearbyPlaces, setNewNearbyPlaces }}
@@ -386,6 +396,30 @@ export default function ContextStepper({
 				/>
 			),
 			context: context.direction,
+		},
+		{
+			label: "Search Along Route",
+			description: `Utilize the Places API to find places along a route. Choose a route to find places along the route.`,
+			additional:
+				"List of origin - destination pairs whose alternative routes are added to the context",
+			icon: <Route />,
+			form: (
+				<RouteSearchForm
+					{...{ handlePlaceAdd, newRoutePlaces, setNewRoutePlaces }}
+				/>
+			),
+			grid: Object.keys(routePlacesMap).length > 0 && (
+				<RouteSearchGrid
+					{...{
+						routePlacesMap,
+						setRoutePlacesMap,
+						directionInformation,
+						savedPlacesMap,
+					}}
+					mode="edit"
+				/>
+			),
+			// context: context.direction,
 		},
 		// {
 		// 	label: "Preview Full Context",
