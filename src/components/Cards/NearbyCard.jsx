@@ -21,6 +21,7 @@ import TravelSelectionField from "../InputFields/TravelSelectionField.";
 import { LoadingButton } from "@mui/lab";
 import mapApi from "@/api/mapApi";
 import MapComponent from "../GoogleMap/MapComponent";
+import NearbyComponent from "../GoogleMap/NearbyComponent";
 
 const priceMap = {
 	PRICE_LEVEL_INEXPENSIVE: "Inexpensive",
@@ -280,7 +281,8 @@ export default function NearbyCard({
 									variant="h6"
 									className="font-bold bg-zinc-200 p-2 text-center border-b-2 border-black"
 								>
-									Nearby {Pluralize(entry.type)}
+									Nearby{" "}
+									{Pluralize(convertFromSnake(entry.type))}
 								</Typography>
 							</Box>
 							<Box className="h-[320px] overflow-auto">
@@ -310,10 +312,11 @@ export default function NearbyCard({
 									Map View
 								</Typography>
 							</Box>
-							<MapComponent
-								locations={locations}
+							<NearbyComponent
 								height={"320px"}
 								zoom={14}
+								places={entry.places}
+								locationBias={savedPlacesMap[place_id]}
 							/>
 						</Paper>
 					</Grid>

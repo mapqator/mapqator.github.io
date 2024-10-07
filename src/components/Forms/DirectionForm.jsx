@@ -109,6 +109,7 @@ export default function DirectionForm({
 					legs: route.legs,
 					optimizedIntermediateWaypointIndex:
 						route.optimizedIntermediateWaypointIndex,
+					polyline: route.polyline,
 				});
 			});
 
@@ -229,6 +230,22 @@ export default function DirectionForm({
 						}
 					/>
 				</Grid>
+
+				<Box className="w-full p-3 pb-0 flex flex-row justify-start items-center gap-2">
+					<Switch
+						onChange={() => {
+							setNewDirection((prev) => ({
+								...prev,
+								computeAlternativeRoutes:
+									!prev.computeAlternativeRoutes,
+							}));
+						}}
+						checked={newDirection.computeAlternativeRoutes}
+						size="small"
+						disabled={newDirection.intermediates.length > 0}
+					/>
+					<h6 className="text-base">Compute alternative routes</h6>
+				</Box>
 
 				{newDirection.travelMode !== "TRANSIT" && (
 					<>
