@@ -215,7 +215,7 @@ const ContextGeneratorService = {
 							(near_place.priceLevel
 								? " | " +
 								  template["priceLevel"](near_place.priceLevel)
-								: "")	
+								: "")
 						})\n`;
 						counter++;
 					}
@@ -352,11 +352,12 @@ const ContextGeneratorService = {
 					}.\n`;
 
 					newContext += `The entire route is Via ${
-						direction.routes[0].label
+						direction.routes[0].description
 					} and total time taken is ${
-						direction.routes[0].duration +
+						direction.routes[0].localizedValues.staticDuration
+							.text +
 						" (" +
-						direction.routes[0].distance +
+						direction.routes[0].localizedValues.distance.text +
 						")"
 					}.\n`;
 				} else {
@@ -438,11 +439,12 @@ const ContextGeneratorService = {
 					}.\n`;
 
 					newContext += `The entire route follows ${
-						direction.routes[0].label
+						direction.routes[0].description
 					}, with a total time of ${
-						direction.routes[0].duration +
+						direction.routes[0].localizedValues.staticDuration
+							.text +
 						" (" +
-						direction.routes[0].distance +
+						direction.routes[0].localizedValues.distance.text +
 						")"
 					}.\n`;
 				}
@@ -466,9 +468,9 @@ const ContextGeneratorService = {
 				}. They are:\n`;
 
 				direction.routes.forEach((route, index) => {
-					newContext += `${index + 1}. Via ${route.label} | ${
-						route.duration
-					} (${route.distance})\n`;
+					newContext += `${index + 1}. Via ${route.description} | ${
+						route.localizedValues.staticDuration.text
+					} (${route.localizedValues.distance.text})\n`;
 					if (direction.showSteps) {
 						route.legs.forEach((leg) =>
 							leg.steps.map((step) => {
@@ -507,9 +509,9 @@ const ContextGeneratorService = {
 						directionInformation[from_id][to_id][
 							mode
 						].routes.forEach((route, index) => {
-							newContext += `${index + 1}. Via ${route.label} | ${
-								route.duration
-							} | ${route.distance}\n`;
+							newContext += `${index + 1}. Via ${
+								route.description
+							} | ${route.duration} | ${route.distance}\n`;
 
 							if (
 								directionInformation[from_id][to_id][mode]

@@ -112,7 +112,7 @@ function DirectionCardDetails({ from_id, to_id }) {
 						<Collapse
 							in={expandedRoute[mode]}
 							timeout="auto"
-							unmountOnExit
+							// unmountOnExit
 						>
 							{/* <Divider /> */}
 							<Paper
@@ -229,7 +229,7 @@ export default function DirectionCard({ from_id, to_id, index }) {
 			>
 				<DirectionCardSummary {...{ from_id, to_id, expanded }} />
 			</CardContent>
-			<Collapse in={expanded} timeout="auto" unmountOnExit>
+			<Collapse in={expanded} timeout="auto">
 				<Divider />
 				<DirectionCardDetails {...{ from_id, to_id }} />
 			</Collapse>

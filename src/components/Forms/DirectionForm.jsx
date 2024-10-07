@@ -25,6 +25,7 @@ import dayjs from "dayjs";
 import { AppContext } from "@/contexts/AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
+import DirectionComponent from "../GoogleMap/DirectionComponent";
 
 const avoidMap = {
 	avoidTolls: "Tolls",
@@ -83,6 +84,7 @@ export default function DirectionForm({
 			const routes = response.data.routes;
 			const newDirectionInfo = [...directionInformation];
 			const all_routes = [];
+			console.log("Routes: ", routes);
 			routes.forEach((route) => {
 				// const legs = [];
 				// route.legs.forEach((leg) => {
@@ -100,14 +102,17 @@ export default function DirectionForm({
 				// });
 				// console.log("Legs: ", legs);
 				all_routes.push({
-					label: route.description,
-					duration: route.localizedValues.staticDuration.text,
-					distance: route.localizedValues.distance.text,
+					description: route.description,
+					localizedValues: route.localizedValues,
+					// duration: route.localizedValues.staticDuration.text,
+					// distance: route.localizedValues.distance.text,
 					legs: route.legs,
 					optimizedIntermediateWaypointIndex:
 						route.optimizedIntermediateWaypointIndex,
 				});
 			});
+
+			console.log("All Routes: ", all_routes);
 			const o = newDirection.origin;
 			const d = newDirection.destination;
 
@@ -136,7 +141,7 @@ export default function DirectionForm({
 						: false,
 				},
 				routes: all_routes,
-				showSteps: false,
+				showSteps: true,
 			});
 
 			// if (newDirectionInfo[o])

@@ -1,9 +1,12 @@
 import React, { useContext, useState } from "react";
 import {
+	Box,
 	Divider,
+	Grid,
 	List,
 	ListItem,
 	ListItemText,
+	Paper,
 	Typography,
 } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
@@ -15,7 +18,206 @@ import {
 	KeyboardDoubleArrowRight,
 } from "@mui/icons-material";
 import { AppContext } from "@/contexts/AppContext";
+import DirectionComponent from "../GoogleMap/DirectionComponent";
 
+function SingleRoute({ route }) {
+	return (
+		<>
+			<Box className="p-4">
+				<div className="flex flex-row justify-between w-full">
+					<h1 className="w-[60%] text-wrap text-lg font-semibold">
+						{"Via " + route.description}
+					</h1>
+					<div className="flex flex-col w-[40%] text-right">
+						<h1 className="font-semibold">
+							{route.localizedValues.staticDuration.text +
+								" (" +
+								route.localizedValues.distance.text +
+								")"}
+						</h1>
+					</div>
+				</div>
+			</Box>
+			<Grid container spacing={2} className="px-4 mb-4">
+				<Grid item xs={12} md={6}>
+					<Paper elevation={2}>
+						<Typography
+							variant="h6"
+							className="font-bold bg-zinc-200 p-2 text-center border-b-2 border-black"
+						>
+							Navigation Instructions
+						</Typography>
+						<Box className="h-[350px] overflow-auto">
+							{route.legs.map((leg, i) => (
+								<>
+									{leg.steps.map(
+										(step, j) =>
+											step.navigationInstruction && (
+												<>
+													{j > 0 && <Divider />}
+													<p
+														key={i + j}
+														// className="text-sm"
+														dangerouslySetInnerHTML={{
+															__html: step
+																.navigationInstruction
+																.instructions,
+														}}
+														className="p-2"
+													/>
+													<h1 className="text-sm text-right px-2 py-1 text-zinc-500">
+														{
+															step.localizedValues
+																.staticDuration
+																.text
+														}{" "}
+														(
+														{
+															step.localizedValues
+																.distance.text
+														}
+														)
+													</h1>
+												</>
+											)
+									)}
+								</>
+							))}
+						</Box>
+					</Paper>
+				</Grid>
+				<Grid item xs={12} md={6}>
+					<Paper elevation={2}>
+						<Box>
+							<Typography
+								variant="h6"
+								className="font-bold bg-zinc-200 p-2 text-center border-b-2 border-black"
+							>
+								Map View
+							</Typography>
+						</Box>
+						<DirectionComponent
+							polyline={route.legs[0].polyline.encodedPolyline}
+							height={"350px"}
+						/>
+					</Paper>
+				</Grid>
+			</Grid>
+		</>
+	);
+}
+
+function MultiLeg({ route, savedPlacesMap, waypoints }) {
+	return (
+		<>
+			<Box className="p-4">
+				<div className="flex flex-row justify-between w-full">
+					<h1 className="w-[60%] text-wrap text-lg font-semibold">
+						{"Via " + route.description}
+					</h1>
+					<div className="flex flex-col w-[40%] text-right">
+						<h1 className="font-semibold">
+							{route.localizedValues.staticDuration.text +
+								" (" +
+								route.localizedValues.distance.text +
+								")"}
+						</h1>
+					</div>
+				</div>
+			</Box>
+			{route.legs.map((leg, i) => (
+				<>
+					<Paper elevation={2} className="mx-4 mb-4">
+						<div
+							className="flex flex-row justify-between items-center bg-zinc-200 px-4 py-2"
+							key={i}
+						>
+							<Typography className="pt-1 text-black">
+								{savedPlacesMap[waypoints[i]].displayName.text}
+								<ArrowRightAlt />
+								{
+									savedPlacesMap[waypoints[i + 1]].displayName
+										.text
+								}
+							</Typography>
+							<Typography
+								variant="body2"
+								className="w-[10rem] text-right"
+							>
+								{leg.localizedValues.staticDuration.text +
+									" (" +
+									leg.localizedValues.distance.text +
+									")"}
+							</Typography>
+						</div>
+					</Paper>
+
+					<Grid container spacing={2} className="px-4 mb-4">
+						<Grid item xs={12} md={6}>
+							<Paper elevation={2}>
+								<Typography
+									variant="h6"
+									className="font-bold bg-zinc-200 p-2 text-center border-b-2 border-black"
+								>
+									Navigation Instructions
+								</Typography>
+								<Box className="h-[350px] overflow-auto">
+									{leg.steps.map(
+										(step, j) =>
+											step.navigationInstruction && (
+												<>
+													{j > 0 && <Divider />}
+													<p
+														key={i + j}
+														// className="text-sm"
+														dangerouslySetInnerHTML={{
+															__html: step
+																.navigationInstruction
+																.instructions,
+														}}
+														className="p-2"
+													/>
+													<h1 className="text-sm text-right px-2 py-1 text-zinc-500">
+														{
+															step.localizedValues
+																.staticDuration
+																.text
+														}{" "}
+														(
+														{
+															step.localizedValues
+																.distance.text
+														}
+														)
+													</h1>
+												</>
+											)
+									)}
+								</Box>
+							</Paper>
+						</Grid>
+						<Grid item xs={12} md={6}>
+							<Paper elevation={2}>
+								<Box>
+									<Typography
+										variant="h6"
+										className="font-bold bg-zinc-200 p-2 text-center border-b-2 border-black"
+									>
+										Map View
+									</Typography>
+								</Box>
+								<DirectionComponent
+									polyline={leg.polyline.encodedPolyline}
+									height={"350px"}
+								/>
+							</Paper>
+						</Grid>
+					</Grid>
+				</>
+			))}
+		</>
+	);
+}
 export default function RoutesList({
 	routes,
 	showSteps,
@@ -26,20 +228,31 @@ export default function RoutesList({
 		<List dense>
 			{routes.map((route, index) => (
 				<React.Fragment key={index}>
-					<Divider />
-					<ListItem>
+					{route.legs.length === 1 ? (
+						<SingleRoute route={route} />
+					) : (
+						<MultiLeg
+							route={route}
+							savedPlacesMap={savedPlacesMap}
+							waypoints={waypoints}
+						/>
+					)}
+					{/* <Divider /> */}
+					{/* <ListItem>
 						<div className="flex flex-col gap-2 w-full">
 							<ListItemText
 								primary={
 									<div className="flex flex-row justify-between w-full">
 										<h1 className="w-[60%] text-wrap text-lg font-semibold">
-											{"Via " + route.label}
+											{"Via " + route.description}
 										</h1>
 										<div className="flex flex-col w-[40%] text-right">
 											<h1 className="font-semibold">
-												{route.duration +
+												{route.localizedValues
+													.staticDuration.text +
 													" (" +
-													route.distance +
+													route.localizedValues
+														.distance.text +
 													")"}
 											</h1>
 										</div>
@@ -111,7 +324,7 @@ export default function RoutesList({
 								}}
 							/>
 						</div>
-					</ListItem>
+					</ListItem> */}
 				</React.Fragment>
 			))}
 		</List>

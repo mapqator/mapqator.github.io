@@ -101,7 +101,7 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 										avoidFerries: false,
 									},
 								});
-								setActiveStep(5);
+								setActiveStep(4);
 							}}
 							sx={{
 								borderRadius: "50%",

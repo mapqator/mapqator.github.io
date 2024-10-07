@@ -341,30 +341,29 @@ export default function ContextStepper({
 			),
 			context: context.nearby,
 		},
-
-		{
-			label: "Get Distance Matrix",
-			description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Choose origins, destinations and travel mode to find distance and durations.`,
-			additional:
-				"List of origin - destination pairs whose fastest route is added to the context",
-			icon: <MapIcon />,
-			form: (
-				<DistanceForm
-					{...{ handlePlaceAdd, newDistance, setNewDistance }}
-				/>
-			),
-			grid: Object.keys(distanceMatrix).length > 0 && (
-				<DistanceGrid
-					{...{
-						distanceMatrix,
-						setDistanceMatrix,
-						savedPlacesMap,
-					}}
-					mode="edit"
-				/>
-			),
-			context: context.distance,
-		},
+		// {
+		// 	label: "Get Distance Matrix",
+		// 	description: `Use the Distance Matrix API to get travel distances and times between multiple locations. Choose origins, destinations and travel mode to find distance and durations.`,
+		// 	additional:
+		// 		"List of origin - destination pairs whose fastest route is added to the context",
+		// 	icon: <MapIcon />,
+		// 	form: (
+		// 		<DistanceForm
+		// 			{...{ handlePlaceAdd, newDistance, setNewDistance }}
+		// 		/>
+		// 	),
+		// 	grid: Object.keys(distanceMatrix).length > 0 && (
+		// 		<DistanceGrid
+		// 			{...{
+		// 				distanceMatrix,
+		// 				setDistanceMatrix,
+		// 				savedPlacesMap,
+		// 			}}
+		// 			mode="edit"
+		// 		/>
+		// 	),
+		// 	context: context.distance,
+		// },
 		{
 			label: "Get Alternative Routes",
 			description: `Utilize the Directions API to find routes between two points. Choose origin, destination and travel mode to find possible routes between them.`,

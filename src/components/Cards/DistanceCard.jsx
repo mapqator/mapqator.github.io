@@ -169,7 +169,7 @@ export default function DistanceCard({
 					}}
 				/>
 			</CardContent>
-			<Collapse in={expanded} timeout="auto" unmountOnExit>
+			<Collapse in={expanded} timeout="auto">
 				<Divider />
 				<DistanceCardDetails
 					{...{

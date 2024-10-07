@@ -45,7 +45,7 @@ function DirectionCardDetails({
 				// mt: 0,
 			}}
 		>
-			<Box className="w-full p-3 pb-0 flex flex-row justify-end items-center">
+			{/* <Box className="w-full p-3 pb-0 flex flex-row justify-end items-center">
 				<h6 className="text-xs text-zinc-500">Show Steps</h6>
 				<Switch
 					onChange={() => {
@@ -60,7 +60,7 @@ function DirectionCardDetails({
 					size="small"
 					disabled={mode !== "edit"}
 				/>
-			</Box>
+			</Box> */}
 			<RoutesList
 				waypoints={[
 					direction.origin,
@@ -247,7 +247,7 @@ export default function DirectionCard({
 					}}
 				/>
 			</CardContent>
-			<Collapse in={expanded} timeout="auto" unmountOnExit>
+			<Collapse in={expanded} timeout="auto">
 				<Divider />
 				<DirectionCardDetails
 					{...{

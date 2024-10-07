@@ -270,7 +270,7 @@ export default function NearbyCard({
 					}}
 				/>
 			</CardContent>
-			<Collapse in={expanded} timeout="auto" unmountOnExit>
+			<Collapse in={expanded} timeout="auto">
 				{/* <Divider /> */}
 				<Grid container spacing={2} className="px-4 mb-4">
 					<Grid item xs={12} md={6}>
@@ -318,7 +318,7 @@ export default function NearbyCard({
 						</Paper>
 					</Grid>
 				</Grid>
-				{mode === "edit" && (
+				{/* {mode === "edit" && (
 					<div className="flex flex-col gap-4 p-4 items-center">
 						<Typography variant="body2">
 							Add travel time from{" "}
@@ -344,7 +344,7 @@ export default function NearbyCard({
 							Add Travel Time
 						</LoadingButton>
 					</div>
-				)}
+				)} */}
 			</Collapse>
 		</Card>
 	);
