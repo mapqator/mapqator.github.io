@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import _ from "lodash";
 
-import { Clear, Search } from "@mui/icons-material";
+import { Add, Clear, Search } from "@mui/icons-material";
 import Fuse from "fuse.js";
 import { useCallback } from "react";
 import { CircularProgress, InputAdornment } from "@mui/material";
@@ -19,9 +19,12 @@ import debounce from "lodash/debounce";
 import { AppContext } from "@/contexts/AppContext";
 import PlaceAddButton from "../Buttons/PlaceAddButton";
 import { useAuth } from "@/contexts/AuthContext";
+import { LoadingButton } from "@mui/lab";
 
 function SearchPlaceCard({ place, index, length }) {
 	// Issue: Name overlaps with Add button
+	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
+	const [loading, setLoading] = useState(false);
 	return (
 		<React.Fragment key={index}>
 			<Box className="flex gap-1 justify-between w-full items-center px-2">
@@ -30,7 +33,22 @@ function SearchPlaceCard({ place, index, length }) {
 					secondary={place.shortFormattedAddress}
 				/>
 				<Box className="ml-auto">
-					<PlaceAddButton place_id={place.id} />
+					{/* <PlaceAddButton place_id={place.id} /> */}
+					<LoadingButton
+						startIcon={<Add />}
+						onClick={() => {
+							setLoading(true);
+							setSavedPlacesMap((prev) => ({
+								...prev,
+								[place.id]: place,
+							}));
+							setLoading(false);
+						}}
+						disabled={savedPlacesMap[place.id]}
+						loading={loading}
+					>
+						Add
+					</LoadingButton>
 				</Box>
 			</Box>
 			<Divider component="li" />

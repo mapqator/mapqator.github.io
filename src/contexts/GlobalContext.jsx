@@ -289,10 +289,10 @@ export default function GlobalContextProvider({ children }) {
 				poisMap,
 				savedPlacesMap
 			),
-			distance: ContextGeneratorService.getDistanceContext(
-				distanceMatrix,
-				savedPlacesMap
-			),
+			// distance: ContextGeneratorService.getDistanceContext(
+			// 	distanceMatrix,
+			// 	savedPlacesMap
+			// ),
 			direction: ContextGeneratorService.getDirectionContext(
 				directionInformation,
 				savedPlacesMap

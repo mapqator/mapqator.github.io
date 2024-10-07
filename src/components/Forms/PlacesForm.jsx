@@ -21,7 +21,7 @@ export default function PlacesForm({ handlePlaceAdd }) {
 		const res = await mapApi.getDetailsNew(place_id);
 		if (res.success) {
 			details = res.data;
-			setSavedPlacesMap((prev) => ({
+			setSelectedPlacesMap((prev) => ({
 				...prev,
 				[place_id]: details,
 			}));
@@ -30,7 +30,7 @@ export default function PlacesForm({ handlePlaceAdd }) {
 			setLoading(false);
 			return;
 		}
-		handleAdd(details);
+		// handleAdd(details);
 		setLoading(false);
 	};
 
@@ -39,10 +39,7 @@ export default function PlacesForm({ handlePlaceAdd }) {
 		if (place_id === "" || selectedPlacesMap[place_id]) return;
 		setSelectedPlacesMap((prev) => ({
 			...prev,
-			[place_id]: {
-				selectedAttributes: textualFields,
-				attributes: textualFields,
-			},
+			[place_id]: true,
 		}));
 	};
 

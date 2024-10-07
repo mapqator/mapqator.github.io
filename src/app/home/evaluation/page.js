@@ -192,12 +192,12 @@ export default function LiveEvaluation() {
 			...query,
 			context: ContextGeneratorService.convertContextToText(context),
 			context_json: {
-				saved_places: savedPlacesMap,
-				distance_matrix: distanceMatrix,
-				places: selectedPlacesMap,
+				places: savedPlacesMap,
+				// distance_matrix: distanceMatrix,
+				place_details: selectedPlacesMap,
 				nearby_places: nearbyPlacesMap,
-				current_information: currentInformation,
-				pois: poisMap,
+				// current_information: currentInformation,
+				// pois: poisMap,
 				directions: directionInformation,
 			},
 			evaluation: Object.entries(llmResults).map(([llm, result]) => ({

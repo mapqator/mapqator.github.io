@@ -38,18 +38,18 @@ export default function QueryEditButton({ onEdit, query }) {
 	};
 
 	const handleEdit = async () => {
-		if (query.context_json.saved_places) {
-			setSavedPlacesMap(query.context_json.saved_places);
-		} else {
-			for (let place_id in query.context_json.places) {
-				console.log("saving place_id", place_id);
-				await handleSave(place_id);
-			}
-		}
-		setSelectedPlacesMap(query.context_json.places ?? {});
+		// if (query.context_json.places) {
+		setSavedPlacesMap(query.context_json.places);
+		// } else {
+		// 	for (let place_id in query.context_json.place_details) {
+		// 		console.log("saving place_id", place_id);
+		// 		await handleSave(place_id);
+		// 	}
+		// }
+		setSelectedPlacesMap(query.context_json.place_details ?? {});
 		setDistanceMatrix(query.context_json.distance_matrix ?? {});
 		setDirectionInformation(query.context_json.directions ?? []);
-		setNearbyPlacesMap(query.context_json.nearby_places ?? {});
+		setNearbyPlacesMap(query.context_json.nearby_places ?? {});	
 		setCurrentInformation(
 			query.context_json.current_information
 				? {
@@ -80,10 +80,10 @@ export default function QueryEditButton({ onEdit, query }) {
 				query.context_json.pois ?? {},
 				savedPlacesMap
 			),
-			distance: ContextGeneratorService.getDistanceContext(
-				query.context_json.distance_matrix ?? {},
-				savedPlacesMap
-			),
+			// distance: ContextGeneratorService.getDistanceContext(
+			// 	query.context_json.distance_matrix ?? {},
+			// 	savedPlacesMap
+			// ),
 			direction: ContextGeneratorService.getDirectionContext(
 				query.context_json.directions ?? {},
 				savedPlacesMap

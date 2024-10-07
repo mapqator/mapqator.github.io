@@ -49,9 +49,9 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 			name: queryName,
 			context: ContextGeneratorService.convertContextToText(context),
 			context_json: {
-				saved_places: savedPlacesMap,
-				distance_matrix: distanceMatrix,
-				places: selectedPlacesMap,
+				places: savedPlacesMap,
+				// distance_matrix: distanceMatrix,
+				place_details: selectedPlacesMap,
 				nearby_places: nearbyPlacesMap,
 				// current_information: currentInformation,
 				// pois: poisMap,

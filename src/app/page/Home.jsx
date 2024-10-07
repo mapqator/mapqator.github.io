@@ -56,22 +56,22 @@ export default function Home() {
 				nearbyPlacesMap,
 				savedPlacesMap
 			),
-			area: ContextGeneratorService.getAreaContext(
-				poisMap,
-				savedPlacesMap
-			),
-			distance: ContextGeneratorService.getDistanceContext(
-				distanceMatrix,
-				savedPlacesMap
-			),
+			// area: ContextGeneratorService.getAreaContext(
+			// 	poisMap,
+			// 	savedPlacesMap
+			// ),
+			// distance: ContextGeneratorService.getDistanceContext(
+			// 	distanceMatrix,
+			// 	savedPlacesMap
+			// ),
 			direction: ContextGeneratorService.getDirectionContext(
 				directionInformation,
 				savedPlacesMap
 			),
-			params: ContextGeneratorService.getParamsContext(
-				currentInformation,
-				savedPlacesMap
-			),
+			// params: ContextGeneratorService.getParamsContext(
+			// 	currentInformation,
+			// 	savedPlacesMap
+			// ),
 		});
 	}, [
 		savedPlacesMap,
@@ -82,8 +82,6 @@ export default function Home() {
 		directionInformation,
 		currentInformation,
 	]);
-
-	
 
 	useEffect(() => {
 		const page = window.location.hash.substring(1);

@@ -119,34 +119,34 @@ export default function ContextGenerator() {
 				example.nearby_places ?? {},
 				savedPlacesMap
 			),
-			area: ContextGeneratorService.getAreaContext(
-				example.pois ?? {},
-				savedPlacesMap
-			),
-			distance: ContextGeneratorService.getDistanceContext(
-				example.distance_matrix ?? {},
-				savedPlacesMap
-			),
+			// area: ContextGeneratorService.getAreaContext(
+			// 	example.pois ?? {},
+			// 	savedPlacesMap
+			// ),
+			// distance: ContextGeneratorService.getDistanceContext(
+			// 	example.distance_matrix ?? {},
+			// 	savedPlacesMap
+			// ),
 			direction: ContextGeneratorService.getDirectionContext(
 				example.directions ?? {},
 				savedPlacesMap
 			),
-			params: ContextGeneratorService.getParamsContext(
-				example.current_information
-					? {
-							time: example.current_information.time
-								? dayjs(example.current_information.time)
-								: null,
-							day: example.current_information.day,
-							location: example.current_information.location,
-					  }
-					: {
-							time: null,
-							day: "",
-							location: "",
-					  },
-				savedPlacesMap
-			),
+			// params: ContextGeneratorService.getParamsContext(
+			// 	example.current_information
+			// 		? {
+			// 				time: example.current_information.time
+			// 					? dayjs(example.current_information.time)
+			// 					: null,
+			// 				day: example.current_information.day,
+			// 				location: example.current_information.location,
+			// 		  }
+			// 		: {
+			// 				time: null,
+			// 				day: "",
+			// 				location: "",
+			// 		  },
+			// 	savedPlacesMap
+			// ),
 		});
 	};
 

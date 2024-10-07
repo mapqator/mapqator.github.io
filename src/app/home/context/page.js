@@ -103,8 +103,8 @@ export default function ContextGenerator() {
 		// for (let place_id in example.places) {
 		// 	await handleSave(place_id);
 		// }
-		setSavedPlacesMap(example.saved_places ?? {});
-		setSelectedPlacesMap(example.places ?? {});
+		setSavedPlacesMap(example.places ?? {});
+		setSelectedPlacesMap(example.place_details ?? {});
 		setDistanceMatrix(example.distance_matrix ?? {});
 		setDirectionInformation(example.directions ?? {});
 		setNearbyPlacesMap(example.nearby_places ?? {});

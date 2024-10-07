@@ -20,13 +20,14 @@ import {
 import { AppContext } from "@/contexts/AppContext";
 import DirectionComponent from "../GoogleMap/DirectionComponent";
 
-function SingleRoute({ route }) {
+function SingleRoute({ route, index }) {
 	return (
 		<>
 			<Box className="p-4">
 				<div className="flex flex-row justify-between w-full">
 					<h1 className="w-[60%] text-wrap text-lg font-semibold">
-						{"Via " + route.description}
+						{"Via " + route.description}{" "}
+						{index === 0 && "(Recommended)"}
 					</h1>
 					<div className="flex flex-col w-[40%] text-right">
 						<h1 className="font-semibold">
@@ -229,7 +230,7 @@ export default function RoutesList({
 			{routes.map((route, index) => (
 				<React.Fragment key={index}>
 					{route.legs.length === 1 ? (
-						<SingleRoute route={route} />
+						<SingleRoute route={route} index={index} />
 					) : (
 						<MultiLeg
 							route={route}

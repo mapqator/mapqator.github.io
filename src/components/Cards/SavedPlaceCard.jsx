@@ -36,7 +36,7 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 		const res = await mapApi.getDetailsNew(place_id);
 		if (res.success) {
 			details = res.data;
-			setSavedPlacesMap((prev) => ({
+			setSelectedPlacesMap((prev) => ({
 				...prev,
 				[place_id]: details,
 			}));
@@ -45,7 +45,7 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 			setLoading(false);
 			return;
 		}
-		handleAdd(details);
+		// handleAdd(details);
 		setActiveStep(2);
 		setAddingPlace(false);
 	};

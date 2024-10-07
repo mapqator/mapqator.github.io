@@ -102,20 +102,20 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 	useEffect(() => {
 		const raw = {
 			places: ContextGeneratorService.getPlacesContext(
-				entry.context_json.places,
-				entry.context_json.saved_places
+				entry.context_json.place_details,
+				entry.context_json.places
 			),
 			nearby: ContextGeneratorService.getNearbyContext(
 				entry.context_json.nearby_places,
-				entry.context_json.saved_places
+				entry.context_json.places
 			),
-			distance: ContextGeneratorService.getDistanceContext(
-				entry.context_json.distance_matrix,
-				entry.context_json.saved_places
-			),
+			// distance: ContextGeneratorService.getDistanceContext(
+			// 	entry.context_json.distance_matrix,
+			// 	entry.context_json.places
+			// ),
 			direction: ContextGeneratorService.getDirectionContext(
 				entry.context_json.directions,
-				entry.context_json.saved_places
+				entry.context_json.places
 			),
 		};
 		setContext(ContextGeneratorService.convertContextToText(raw));
@@ -260,10 +260,10 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 									/>
 									<ContextVisualize
 										savedPlacesMap={
-											entry.context_json.saved_places
+											entry.context_json.places
 										}
 										selectedPlacesMap={
-											entry.context_json.places
+											entry.context_json.place_details
 										}
 										nearbyPlacesMap={
 											entry.context_json.nearby_places

@@ -144,7 +144,7 @@ export default function PlaceCard({
 												</span>{" "}
 												{template[attribute]
 													? template[attribute](
-															savedPlacesMap[
+															selectedPlacesMap[
 																placeId
 															][attribute]
 													  )
