@@ -32,7 +32,7 @@ const priceMap = {
 
 function NearbyCardDetails({
 	index,
-	place_id,
+
 	entry,
 	nearbyPlacesMap,
 	setNearbyPlacesMap,
@@ -41,14 +41,6 @@ function NearbyCardDetails({
 	mode,
 	savedPlacesMap,
 }) {
-	const handleTogglePlace = (e, poi_index) => {
-		const newNearbyPlacesMap = { ...nearbyPlacesMap };
-		newNearbyPlacesMap[place_id][index].places[poi_index].selected =
-			e.target.checked;
-		setNearbyPlacesMap(newNearbyPlacesMap);
-	};
-	const [travelMode, setTravelMode] = useState("WALK");
-
 	// const handleDistanceAdd = async () => {
 	// 	setLoading(true);
 	// 	const origins = [place_id];
@@ -111,16 +103,15 @@ function NearbyCardDetails({
 		<>
 			<PoiList
 				places={entry.places}
-				handleTogglePlace={handleTogglePlace}
+				// handleTogglePlace={handleTogglePlace}
 				mode={mode}
-				locationBias={place_id}
+				locationBias={entry.locationBias}
 			/>
 		</>
 	);
 }
 function NearbyCardSummary({
 	index,
-	place_id,
 	entry,
 	expanded,
 	mode,
@@ -129,13 +120,11 @@ function NearbyCardSummary({
 	savedPlacesMap,
 }) {
 	const handleDelete = () => {
-		const newNearbyPlacesMap = { ...nearbyPlacesMap };
-		newNearbyPlacesMap[place_id].splice(index, 1);
-		if (newNearbyPlacesMap[place_id].length === 0)
-			delete newNearbyPlacesMap[place_id];
+		const newNearbyPlacesMap = [...nearbyPlacesMap];
+		newNearbyPlacesMap.splice(index, 1);
 		setNearbyPlacesMap(newNearbyPlacesMap);
 	};
-	console.log("Nearby:", nearbyPlacesMap[place_id][index]);
+
 	return (
 		<>
 			<Box
@@ -145,7 +134,7 @@ function NearbyCardSummary({
 				className="gap-1"
 			>
 				<Typography variant="h6" component="div">
-					{savedPlacesMap[place_id].displayName?.text}
+					{savedPlacesMap[entry.locationBias].displayName?.text}
 				</Typography>
 				{mode === "edit" && (
 					<Box className="flex flex-col items-end justify-start">
@@ -167,10 +156,7 @@ function NearbyCardSummary({
 						<Chip
 							label={Pluralize(
 								convertFromSnake(entry.type),
-								nearbyPlacesMap[place_id]
-									? nearbyPlacesMap[place_id][index].places
-											.length
-									: 0,
+								nearbyPlacesMap[index].places.length,
 								true
 							)}
 							color="primary"
@@ -221,9 +207,7 @@ function NearbyCardSummary({
 }
 export default function NearbyCard({
 	index,
-	place_id,
 	entry,
-	i,
 	mode,
 	nearbyPlacesMap,
 	setNearbyPlacesMap,
@@ -236,8 +220,8 @@ export default function NearbyCard({
 	const [loading, setLoading] = useState(false);
 	const { setNewDistance, setActiveStep } = useContext(GlobalContext);
 	useEffect(() => {
-		setExpanded(i === 0);
-	}, [i]);
+		setExpanded(index === 0);
+	}, [index]);
 
 	useEffect(() => {
 		const list = [];
@@ -261,7 +245,6 @@ export default function NearbyCard({
 				<NearbyCardSummary
 					{...{
 						index,
-						place_id,
 						entry,
 						expanded,
 						savedPlacesMap,
@@ -289,7 +272,6 @@ export default function NearbyCard({
 								<NearbyCardDetails
 									{...{
 										index,
-										place_id,
 										entry,
 										nearbyPlacesMap,
 										setNearbyPlacesMap,
@@ -316,7 +298,9 @@ export default function NearbyCard({
 								height={"320px"}
 								zoom={14}
 								places={entry.places}
-								locationBias={savedPlacesMap[place_id]}
+								locationBias={
+									savedPlacesMap[entry.locationBias]
+								}
 							/>
 						</Paper>
 					</Grid>

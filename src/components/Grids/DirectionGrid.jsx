@@ -11,12 +11,12 @@ export default function DirectionGrid({
 }) {
 	return (
 		<Grid container spacing={2} sx={{ mt: 0, mb: 2 }}>
-			{directionInformation.map((direction, i) => (
-				<Grid item xs={12} sm={12} md={12} key={i}>
+			{directionInformation.map((direction, index) => (
+				<Grid item xs={12} sm={12} md={12} key={index}>
 					<DirectionCard
-						direction={direction}
-						index={i}
 						{...{
+							direction,
+							index,
 							directionInformation,
 							setDirectionInformation,
 							savedPlacesMap,

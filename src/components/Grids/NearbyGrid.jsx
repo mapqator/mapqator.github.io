@@ -14,26 +14,22 @@ export default function NearbyGrid({
 }) {
 	return (
 		<Grid container spacing={2} sx={{ mt: 0, mb: 2 }}>
-			{Object.keys(nearbyPlacesMap).map((place_id, i) =>
-				nearbyPlacesMap[place_id].map((entry, index) => (
-					<Grid item xs={12} key={index}>
-						<NearbyCard
-							{...{
-								place_id,
-								index,
-								entry,
-								i,
-								savedPlacesMap,
-								nearbyPlacesMap,
-								setNearbyPlacesMap,
-								distanceMatrix,
-								setDistanceMatrix,
-								mode,
-							}}
-						/>
-					</Grid>
-				))
-			)}
+			{nearbyPlacesMap.map((entry, index) => (
+				<Grid item xs={12} sm={12} md={12} key={index}>
+					<NearbyCard
+						{...{
+							index,
+							entry,
+							savedPlacesMap,
+							nearbyPlacesMap,
+							setNearbyPlacesMap,
+							distanceMatrix,
+							setDistanceMatrix,
+							mode,
+						}}
+					/>
+				</Grid>
+			))}
 		</Grid>
 	);
 }

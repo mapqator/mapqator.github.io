@@ -173,11 +173,12 @@ export default function GlobalContextProvider({ children }) {
 	};
 
 	const initSelectedPlacesMap = {};
-	const initNearbyPlacesMap = {};
+
 	const initPoisMap = {};
 	const initDistanceMatrix = {};
 	const initDirectionInformation = [];
 	const initRoutePlacesMap = [];
+	const initNearbyPlacesMap = [];
 	const initCurrentInformation = {
 		time: null,
 		day: "",

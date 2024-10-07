@@ -38,9 +38,9 @@ export default function PlaceDeleteButton({ placeId, isSelected }) {
 	};
 
 	const deletePlaceFromNearbyPlaces = (place_id) => {
-		const newNearbyPlacesMap = { ...nearbyPlacesMap };
-		delete newNearbyPlacesMap[place_id];
-		setNearbyPlacesMap(newNearbyPlacesMap);
+		setNearbyPlacesMap((prev) =>
+			prev.filter((entry) => entry.locationBias !== place_id)
+		);
 	};
 
 	const deletePlaceFromPois = (place_id) => {

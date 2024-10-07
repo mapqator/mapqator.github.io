@@ -180,46 +180,39 @@ const ContextGeneratorService = {
 	},
 	getNearbyContext: (nearbyPlacesMap, savedPlacesMap) => {
 		let newContext = "";
-		Object.keys(nearbyPlacesMap).forEach((place_id, index) => {
-			nearbyPlacesMap[place_id].forEach((e) => {
-				if (newContext.length > 0) {
-					newContext += "\n";
+		nearbyPlacesMap.forEach((e, index) => {
+			if (newContext.length > 0) {
+				newContext += "\n";
+			}
+			newContext += `Nearby ${Pluralize(convertFromSnake(e.type))} of ${
+				// selectedPlacesMap[place_id].alias ||
+				savedPlacesMap[e.locationBias]?.displayName?.text
+			}${
+				e.minRating > 0
+					? " with a minimum rating of " + e.minRating
+					: ""
+			}${
+				e.priceLevels.length > 0
+					? (e.minRating > 0 ? " and " : " ") +
+					  "price levels of " +
+					  e.priceLevels.map((p) => priceMap[p]).join(" or ")
+					: ""
+			} are:${e.rankBy === "DISTANCE" ? " (Rank by Distance)" : ""}\n`;
+			let counter = 1;
+			e.places.forEach((near_place) => {
+				if (near_place.selected) {
+					newContext += `${counter}. <b>${
+						near_place.displayName?.text
+					}</b> (${
+						"Rating: " +
+						near_place.rating +
+						(near_place.priceLevel
+							? " | " +
+							  template["priceLevel"](near_place.priceLevel)
+							: "")
+					})\n`;
+					counter++;
 				}
-				newContext += `Nearby ${Pluralize(
-					convertFromSnake(e.type)
-				)} of ${
-					// selectedPlacesMap[place_id].alias ||
-					savedPlacesMap[place_id]?.displayName?.text
-				}${
-					e.minRating > 0
-						? " with a minimum rating of " + e.minRating
-						: ""
-				}${
-					e.priceLevels.length > 0
-						? (e.minRating > 0 ? " and " : " ") +
-						  "price levels of " +
-						  e.priceLevels.map((p) => priceMap[p]).join(" or ")
-						: ""
-				} are:${
-					e.rankBy === "DISTANCE" ? " (Rank by Distance)" : ""
-				}\n`;
-				let counter = 1;
-				e.places.forEach((near_place) => {
-					if (near_place.selected) {
-						newContext += `${counter}. <b>${
-							savedPlacesMap[near_place.place_id]?.displayName
-								.text || near_place.displayName?.text
-						}</b> (${
-							"Rating: " +
-							near_place.rating +
-							(near_place.priceLevel
-								? " | " +
-								  template["priceLevel"](near_place.priceLevel)
-								: "")
-						})\n`;
-						counter++;
-					}
-				});
 			});
 		});
 		return newContext;

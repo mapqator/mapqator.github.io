@@ -79,9 +79,6 @@ export default function NearbyForm({
 		if (newNearbyPlaces.locationBias === "" || newNearbyPlaces.type === "")
 			return;
 		setLoading(true);
-		const location = savedPlacesMap[newNearbyPlaces.locationBias].location;
-		const lat = location.latitude;
-		const lng = location.longitude;
 
 		if (!placeTypes.includes(newNearbyPlaces.type)) {
 			newNearbyPlaces.keyword = newNearbyPlaces.type;
@@ -90,30 +87,13 @@ export default function NearbyForm({
 			newNearbyPlaces.keyword = "";
 		}
 
-		const response = await mapApi.getNearbyNew({
-			lat,
-			lng,
-			locationBias: newNearbyPlaces.locationBias,
-			searchBy: newNearbyPlaces.searchBy,
-			type: newNearbyPlaces.type,
-			keyword: newNearbyPlaces.keyword,
-			rankPreference: newNearbyPlaces.rankPreference,
-			minRating: newNearbyPlaces.minRating,
-			priceLevels: newNearbyPlaces.priceLevels,
-			maxResultCount: newNearbyPlaces.maxResultCount,
-		});
+		if (list.length > 0) {
+			const places = list;
 
-		if (response.success) {
-			const places = response.data.places;
-			console.log("Nearby Places: ", response.data);
-			const newNearbyPlacesMap = { ...nearbyPlacesMap };
-			if (
-				newNearbyPlacesMap[newNearbyPlaces.locationBias] === undefined
-			) {
-				newNearbyPlacesMap[newNearbyPlaces.locationBias] = [];
-			}
+			const newNearbyPlacesMap = [...nearbyPlacesMap];
 
-			newNearbyPlacesMap[newNearbyPlaces.locationBias].push({
+			newNearbyPlacesMap.push({
+				locationBias: newNearbyPlaces.locationBias,
 				type:
 					newNearbyPlaces.searchBy === "type"
 						? newNearbyPlaces.type
