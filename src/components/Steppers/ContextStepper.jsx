@@ -304,7 +304,7 @@ export default function ContextStepper({
 			),
 		},
 		{
-			label: "Add Information of Places",
+			label: "Add details of Places",
 			description: `Add full details of a place.`,
 			icon: <AddLocationAlt />,
 			additional: "Places you have added to the context.",
@@ -324,7 +324,7 @@ export default function ContextStepper({
 			context: context.places,
 		},
 		{
-			label: "Search for Nearby places or Explore the area",
+			label: "Search for Nearby places",
 			description: `Use the Nearby Search Tool to discover points of interest around your selected location. You just need to select a location and the type of poi you are looking for. 
 			Additionally you can specify the order in which results are listed. Possible values are Prominence and Distance. When prominence is specified, the radius parameter is required. 
 			You can choose a type from the given list or a custom type. It is recommended to choose from the given list for better result.`,
@@ -375,7 +375,7 @@ export default function ContextStepper({
 		// 	context: context.distance,
 		// },
 		{
-			label: "Get Alternative Routes",
+			label: "Compute Routes",
 			description: `Utilize the Directions API to find routes between two points. Choose origin, destination and travel mode to find possible routes between them.`,
 			additional:
 				"List of origin - destination pairs whose alternative routes are added to the context",
