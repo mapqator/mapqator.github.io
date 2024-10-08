@@ -11,7 +11,7 @@ import textualFields from "@/database/textualFields.json";
 export default function PlacesForm({ handlePlaceAdd }) {
 	const [placeId, setPlaceId] = useState();
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
-	const { selectedPlacesMap, setSelectedPlacesMap } =
+	const { selectedPlacesMap, setSelectedPlacesMap, setApiCallLogs } =
 		useContext(GlobalContext);
 	const [loading, setLoading] = useState(false);
 
@@ -20,11 +20,12 @@ export default function PlacesForm({ handlePlaceAdd }) {
 		let details = savedPlacesMap[place_id];
 		const res = await mapApi.getDetailsNew(place_id);
 		if (res.success) {
-			details = res.data;
+			details = res.data.result;
 			setSelectedPlacesMap((prev) => ({
 				...prev,
-				[place_id]: details,
+				[place_id]: { ...details, uuid: res.data.uuid },
 			}));
+			setApiCallLogs((prev) => [...prev, ...res.data.apiCallLogs]);
 		} else {
 			showError(res.error);
 			setLoading(false);

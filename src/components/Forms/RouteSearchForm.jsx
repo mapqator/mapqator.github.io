@@ -63,11 +63,17 @@ export default function RouteSearchForm({
 	newRoutePlaces,
 	setNewRoutePlaces,
 }) {
-	const { selectedPlacesMap, routePlacesMap, setRoutePlacesMap } =
-		useContext(GlobalContext);
+	const {
+		selectedPlacesMap,
+		routePlacesMap,
+		setRoutePlacesMap,
+		setApiCallLogs,
+	} = useContext(GlobalContext);
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 	const [routes, setRoutes] = useState([]);
 	const [places, setPlaces] = useState([]);
+	const [apiCalls, setApiCalls] = useState([]);
+	const [uuid, setUuid] = useState("");
 
 	const handleSave = async (place) => {
 		let details = savedPlacesMap[place.id];
@@ -106,9 +112,11 @@ export default function RouteSearchForm({
 				origin: newRoutePlaces.origin,
 				destination: newRoutePlaces.destination,
 				travelMode: newRoutePlaces.travelMode,
+				uuid,
 			});
 
 			setRoutePlacesMap(newRoutePlacesMap);
+			setApiCallLogs((prev) => [...prev, ...apiCalls]);
 			setNewRoutePlaces((prev) => ({
 				...prev,
 				type: "",
@@ -134,13 +142,17 @@ export default function RouteSearchForm({
 		if (data.type === "") {
 			const response = await mapApi.getDirectionsNew(data);
 			if (response.success) {
-				setRoutes(response.data.routes);
+				setRoutes(response.data.result.routes);
+				setApiCalls(response.data.apiCallLogs);
+				setUuid(response.data.uuid);
 			}
 		} else {
 			const response = await mapApi.searchAlongRoute(data);
 			if (response.success) {
 				setRoutes(response.data.route_response.routes);
 				setPlaces(response.data.nearby_response.places);
+				setApiCalls(response.data.apiCallLogs);
+				setUuid(response.data.uuid);
 			}
 		}
 		setLoading(false);

@@ -17,6 +17,7 @@ export default function QueryEditButton({ onEdit, query }) {
 		setContext,
 		setQuery,
 		setPoisMap,
+		setApiCallLogs,
 	} = useContext(GlobalContext);
 
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
@@ -49,7 +50,8 @@ export default function QueryEditButton({ onEdit, query }) {
 		setSelectedPlacesMap(query.context_json.place_details ?? {});
 		setDistanceMatrix(query.context_json.distance_matrix ?? {});
 		setDirectionInformation(query.context_json.directions ?? []);
-		setNearbyPlacesMap(query.context_json.nearby_places ?? {});	
+		setNearbyPlacesMap(query.context_json.nearby_places ?? {});
+		setApiCallLogs(query.api_call_logs ?? []);
 		setCurrentInformation(
 			query.context_json.current_information
 				? {

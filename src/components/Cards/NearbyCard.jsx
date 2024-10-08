@@ -120,8 +120,13 @@ function NearbyCardSummary({
 	setNearbyPlacesMap,
 	savedPlacesMap,
 }) {
+	const { setApiCallLogs } = useContext(GlobalContext);
 	const handleDelete = () => {
 		const newNearbyPlacesMap = [...nearbyPlacesMap];
+
+		const uuid = newNearbyPlacesMap[index].uuid;
+		setApiCallLogs((prev) => prev.filter((log) => log.uuid !== uuid));
+
 		newNearbyPlacesMap.splice(index, 1);
 		setNearbyPlacesMap(newNearbyPlacesMap);
 	};

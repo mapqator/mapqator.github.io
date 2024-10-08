@@ -301,6 +301,7 @@ export default function GlobalContextProvider({ children }) {
 
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 
+	const [apiCallLogs, setApiCallLogs] = useState([]);
 	useEffect(() => {
 		setContext({
 			places: ContextGeneratorService.getPlacesContext(
@@ -362,6 +363,8 @@ export default function GlobalContextProvider({ children }) {
 	return (
 		<GlobalContext.Provider
 			value={{
+				apiCallLogs,
+				setApiCallLogs,
 				context,
 				setContext,
 				distanceMatrix,

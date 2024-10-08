@@ -61,7 +61,11 @@ export default function NearbyForm({
 		useContext(GlobalContext);
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 	const [list, setList] = useState([]);
+	const [apiCalls, setApiCalls] = useState([]);
 	const [routingSummaries, setRoutingSummaries] = useState([]);
+	const [uuid, setUuid] = useState("");
+
+	const { apiCallLogs, setApiCallLogs } = useContext(GlobalContext);
 
 	const handleSave = async (place) => {
 		let details = savedPlacesMap[place.id];
@@ -104,9 +108,11 @@ export default function NearbyForm({
 				rankBy: newNearbyPlaces.rankPreference,
 				places: places,
 				routingSummaries: routingSummaries,
+				uuid,
 			});
 
 			setNearbyPlacesMap(newNearbyPlacesMap);
+			setApiCallLogs((prev) => [...prev, ...apiCalls]);
 			setNewNearbyPlaces((prev) => ({
 				...prev,
 				type: "",
@@ -151,9 +157,11 @@ export default function NearbyForm({
 		});
 
 		if (response.success) {
-			const places = response.data.places;
+			const places = response.data.result.places;
 			setList(places);
-			setRoutingSummaries(response.data.routingSummaries);
+			setApiCalls(response.data.apiCallLogs);
+			setUuid(response.data.uuid);
+			setRoutingSummaries(response.data.result.routingSummaries);
 		} else {
 			showError("Couldn't find nearby places.");
 		}

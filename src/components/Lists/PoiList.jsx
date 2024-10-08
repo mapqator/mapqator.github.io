@@ -58,12 +58,16 @@ export default function PoiList({
 												place.priceLevel
 										  )}`
 										: ""
-								} |🚶🏾‍➡️${
-									routingSummaries[index].legs[0].duration
-								} (${
-									routingSummaries[index].legs[0]
-										.distanceMeters
-								}m)`}
+								} ${
+									routingSummaries &&
+									"|🚶🏾‍➡️" +
+										routingSummaries[index].legs[0]
+											.duration +
+										" (" +
+										routingSummaries[index].legs[0]
+											.distanceMeters +
+										"m)"
+								}`}
 								primaryTypographyProps={{ noWrap: true }}
 								secondaryTypographyProps={{ noWrap: true }}
 							/>

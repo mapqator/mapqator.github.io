@@ -20,6 +20,7 @@ export default function PlaceDeleteButton({ placeId, isSelected }) {
 		setNearbyPlacesMap,
 		setSelectedPlacesMap,
 		setPoisMap,
+		setApiCallLogs,
 	} = useContext(GlobalContext);
 
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
@@ -53,6 +54,9 @@ export default function PlaceDeleteButton({ placeId, isSelected }) {
 
 	const deletePlaceFromSaved = (place_id) => {
 		const tmp = { ...savedPlacesMap };
+		// First delete from apiCallLogs with same uuid
+		const uuid = tmp[place_id].uuid;
+		setApiCallLogs((prev) => prev.filter((log) => log.uuid !== uuid));
 		delete tmp[place_id];
 		setSavedPlacesMap(tmp);
 	};

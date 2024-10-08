@@ -103,6 +103,7 @@ function DirectionCardSummary({
 	savedPlacesMap,
 	mode,
 }) {
+	const { setApiCallLogs } = useContext(GlobalContext);
 	return (
 		<>
 			<Box
@@ -132,6 +133,10 @@ function DirectionCardSummary({
 								const newDirectionMatrix = [
 									...directionInformation,
 								];
+								const uuid = newDirectionMatrix[index].uuid;
+								setApiCallLogs((prev) =>
+									prev.filter((log) => log.uuid !== uuid)
+								);
 								newDirectionMatrix.splice(index, 1);
 								setDirectionInformation(newDirectionMatrix);
 							}}

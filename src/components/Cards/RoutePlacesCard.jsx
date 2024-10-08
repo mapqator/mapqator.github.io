@@ -70,21 +70,57 @@ function RoutePlacesSummary({
 	// console.log("Nearby:", routePlacesMap[place_id][index]);
 	return (
 		<>
-			<Box className={`flex flex-col items-center w-full`}>
-				<h6 className="text-base md:text-xl text-center md:font-semibold">
-					{
-						savedPlacesMap[routePlacesMap[index].origin].displayName
-							?.text
-					}
-				</h6>
-				<FontAwesomeIcon icon={faArrowDown} />
-				<h6 className="text-base md:text-xl text-center md:font-semibold">
-					{
-						savedPlacesMap[routePlacesMap[index].destination]
-							.displayName?.text
-					}
-				</h6>
+			<Box
+				display="flex"
+				justifyContent="space-between"
+				alignItems="center"
+			>
+				<Box className={`flex flex-col items-center w-full`}>
+					<h6 className="text-base md:text-xl text-center md:font-semibold">
+						{
+							savedPlacesMap[routePlacesMap[index].origin]
+								.displayName?.text
+						}
+					</h6>
+					<FontAwesomeIcon icon={faArrowDown} />
+					<h6 className="text-base md:text-xl text-center md:font-semibold">
+						{
+							savedPlacesMap[routePlacesMap[index].destination]
+								.displayName?.text
+						}
+					</h6>
+				</Box>
+				<Box className="flex flex-col justify-between h-full">
+					{mode === "edit" && (
+						<IconButton
+							onClick={() => {
+								const newRoutePlacesMap = [...routePlacesMap];
+								const uuid = newRoutePlacesMap[index].uuid;
+								setApiCallLogs((prev) =>
+									prev.filter((log) => log.uuid !== uuid)
+								);
+								newRoutePlacesMap.splice(index, 1);
+								setRoutePlacesMap(newRoutePlacesMap);
+							}}
+							size="small"
+						>
+							<Delete color="error" />
+						</IconButton>
+					)}
+					<IconButton
+						size="small"
+						sx={{
+							transform: expanded
+								? "rotate(180deg)"
+								: "rotate(0deg)",
+							transition: "0.3s",
+						}}
+					>
+						<ExpandMore />
+					</IconButton>
+				</Box>
 			</Box>
+
 			<Box display="flex" justifyContent="space-between">
 				<Box
 					display="flex"
@@ -133,7 +169,8 @@ function RoutePlacesSummary({
 						)}
 					</div>
 				</Box>
-				<IconButton
+
+				{/* <IconButton
 					size="small"
 					sx={{
 						transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
@@ -141,7 +178,7 @@ function RoutePlacesSummary({
 					}}
 				>
 					<ExpandMore />
-				</IconButton>
+				</IconButton> */}
 			</Box>
 		</>
 	);

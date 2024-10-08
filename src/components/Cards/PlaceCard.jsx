@@ -89,6 +89,7 @@ export default function PlaceCard({
 	mode,
 }) {
 	const [expanded, setExpanded] = useState(index === 0);
+	const { setApiCallLogs } = useContext(GlobalContext);
 	// useEffect(() => {
 	// 	setExpanded(index === 0);
 	// }, [index]);
@@ -212,6 +213,13 @@ export default function PlaceCard({
 							onClick={() => {
 								setSelectedPlacesMap((prev) => {
 									const newMap = { ...prev };
+
+									// First delete from apiCallLogs with same uuid
+									const uuid = newMap[placeId].uuid;
+									setApiCallLogs((prev) =>
+										prev.filter((log) => log.uuid !== uuid)
+									);
+
 									delete newMap[placeId];
 									return newMap;
 								});

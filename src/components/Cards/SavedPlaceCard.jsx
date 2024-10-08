@@ -28,6 +28,7 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 		setActiveStep,
 		setNewNearbyPlaces,
 		setNewDirection,
+		setApiCallLogs,
 	} = useContext(GlobalContext);
 
 	const [addingPlace, setAddingPlace] = useState(false);
@@ -36,11 +37,12 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 		let details = savedPlacesMap[place_id];
 		const res = await mapApi.getDetailsNew(place_id);
 		if (res.success) {
-			details = res.data;
+			details = res.data.result;
 			setSelectedPlacesMap((prev) => ({
 				...prev,
-				[place_id]: details,
+				[place_id]: { ...details, uuid: res.data.uuid },
 			}));
+			setApiCallLogs((prev) => [...prev, ...res.data.apiCallLogs]);
 		} else {
 			showError(res.error);
 			setLoading(false);

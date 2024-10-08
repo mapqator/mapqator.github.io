@@ -37,6 +37,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 		distanceMatrix,
 		currentInformation,
 		setQueryStatus,
+		apiCallLogs,
 	} = useContext(GlobalContext);
 	const router = useRouter();
 	const { queries, setQueries, savedPlacesMap } = useContext(AppContext);
@@ -57,6 +58,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 				// pois: poisMap,
 				directions: directionInformation,
 			},
+			api_call_logs: apiCallLogs,
 		};
 
 		if (query.id === undefined) {

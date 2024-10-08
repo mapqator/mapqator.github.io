@@ -20,8 +20,9 @@ import { AppContext } from "@/contexts/AppContext";
 import PlaceAddButton from "../Buttons/PlaceAddButton";
 import { useAuth } from "@/contexts/AuthContext";
 import { LoadingButton } from "@mui/lab";
+import { GlobalContext } from "@/contexts/GlobalContext";
 
-function SearchPlaceCard({ place, index, length }) {
+function SearchPlaceCard({ place, index, length, uuid }) {
 	// Issue: Name overlaps with Add button
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 	const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ function SearchPlaceCard({ place, index, length }) {
 							setLoading(true);
 							setSavedPlacesMap((prev) => ({
 								...prev,
-								[place.id]: place,
+								[place.id]: { ...place, uuid },
 							}));
 							setLoading(false);
 						}}
@@ -66,6 +67,8 @@ export default function AutocompleteSearchBox() {
 	const { savedPlacesMap } = useContext(AppContext);
 	const [notFound, setNotFound] = useState(false);
 	const { isAuthenticated } = useAuth();
+	const { apiCallLogs, setApiCallLogs } = useContext(GlobalContext);
+	const [uuid, setUuid] = useState(0);
 	const fuseOptions = {
 		keys: ["name", "formatted_address"],
 		threshold: 0.3,
@@ -84,9 +87,11 @@ export default function AutocompleteSearchBox() {
 		setLoading(true);
 		const response = await mapApi.searchNew(query);
 		if (response.success) {
-			setMapResults([...response.data.places]);
-			console.log("Map Results: ", response.data);
-			if (response.data.places.length === 0) {
+			const places = response.data.result.places;
+			setMapResults([...places]);
+			setApiCallLogs((prev) => [...prev, ...response.data.apiCallLogs]);
+			setUuid(response.data.uuid);
+			if (places.length === 0) {
 				setNotFound(true);
 			}
 		} else {
@@ -210,6 +215,7 @@ export default function AutocompleteSearchBox() {
 					<ul className="max-h-72 overflow-y-auto">
 						{mapResults.map((place, index) => (
 							<SearchPlaceCard
+								uuid={uuid}
 								place={place}
 								index={index}
 								length={results.length}

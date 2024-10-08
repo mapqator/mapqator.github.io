@@ -47,10 +47,16 @@ export default function DirectionForm({
 	newDirection,
 	setNewDirection,
 }) {
-	const { selectedPlacesMap, directionInformation, setDirectionInformation } =
-		useContext(GlobalContext);
+	const {
+		selectedPlacesMap,
+		directionInformation,
+		setDirectionInformation,
+		setApiCallLogs,
+	} = useContext(GlobalContext);
 	const { savedPlacesMap } = useContext(AppContext);
 	const [routes, setRoutes] = useState([]);
+	const [apiCalls, setApiCalls] = useState([]);
+	const [uuid, setUuid] = useState();
 	const initialData = {
 		origin: "",
 		destination: "",
@@ -109,7 +115,9 @@ export default function DirectionForm({
 				},
 				routes: routes,
 				showSteps: true,
+				uuid: uuid,
 			});
+			setApiCallLogs((prev) => [...prev, ...apiCalls]);
 			setDirectionInformation(newDirectionInfo);
 		} else {
 			showError("Couldn't find directions between the two places");
@@ -122,8 +130,10 @@ export default function DirectionForm({
 		// Fetch the direction between the two places from google maps
 		setLoading(true);
 		const response = await mapApi.getDirectionsNew(data);
-		if (response.success && response.data.routes) {
-			setRoutes(response.data.routes);
+		if (response.success && response.data.result.routes) {
+			setRoutes(response.data.result.routes);
+			setApiCalls(response.data.apiCallLogs);
+			setUuid(response.data.uuid);
 		} else {
 			showError("Couldn't find directions between the two places");
 		}
