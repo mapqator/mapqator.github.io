@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import mapApi from "@/api/mapApi";
 import {
 	Box,
@@ -10,6 +10,7 @@ import {
 	InputLabel,
 	ListItemText,
 	MenuItem,
+	Paper,
 	Select,
 	Switch,
 	Typography,
@@ -26,6 +27,8 @@ import { AppContext } from "@/contexts/AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
 import DirectionComponent from "../GoogleMap/DirectionComponent";
+import MultiRouteComponent from "../GoogleMap/MultiRouteComponent";
+import debounce from "lodash/debounce";
 
 const avoidMap = {
 	avoidTolls: "Tolls",
@@ -47,6 +50,7 @@ export default function DirectionForm({
 	const { selectedPlacesMap, directionInformation, setDirectionInformation } =
 		useContext(GlobalContext);
 	const { savedPlacesMap } = useContext(AppContext);
+	const [routes, setRoutes] = useState([]);
 	const initialData = {
 		origin: "",
 		destination: "",
@@ -170,200 +174,241 @@ export default function DirectionForm({
 		}
 		setLoading(false);
 	};
+
+	const computeRoutes = async () => {
+		if (newDirection.origin === "" || newDirection.destination === "")
+			return;
+		// Fetch the direction between the two places from google maps
+		setLoading(true);
+		const response = await mapApi.getDirectionsNew(newDirection);
+		if (response.success && response.data.routes) {
+			setRoutes(response.data.routes);
+		} else {
+			showError("Couldn't find directions between the two places");
+		}
+		setLoading(false);
+	};
+
+	const debouncedComputeRoutes = useCallback(debounce(computeRoutes, 1000), [
+		newDirection,
+	]);
+	useEffect(() => {
+		debouncedComputeRoutes(newDirection);
+	}, [newDirection, debouncedComputeRoutes]);
 	return (
 		newDirection && (
-			<Grid container spacing={2}>
-				<Grid item xs={12}>
-					<PlaceSelectionField
-						label="Origin"
-						value={newDirection.origin}
-						onChange={(event) => {
-							setNewDirection((prev) => ({
-								...prev,
-								origin: event.target.value,
-							}));
-						}}
-						handlePlaceAdd={handlePlaceAdd}
-					/>
-				</Grid>
-				<Grid item xs={12} className="flex justify-center">
-					<IconButton
-						onClick={() => {
-							setNewDirection((prev) => ({
-								...prev,
-								origin: newDirection.destination,
-								destination: newDirection.origin,
-							}));
-						}}
-					>
-						<FontAwesomeIcon
-							icon={faRightLeft}
-							style={{
-								transform: "rotate(90deg)",
-								color: "#000",
-							}}
-						/>
-					</IconButton>
-				</Grid>
-				<Grid item xs={12}>
-					<PlaceSelectionField
-						label="Destination"
-						value={newDirection.destination}
-						onChange={(event) => {
-							setNewDirection((prev) => ({
-								...prev,
-								destination: event.target.value,
-							}));
-						}}
-						handlePlaceAdd={handlePlaceAdd}
-					/>
-				</Grid>
-
-				<Grid item xs={12}>
-					<TravelSelectionField
-						mode={newDirection.travelMode}
-						setMode={(value) =>
-							setNewDirection((prev) => ({
-								...prev,
-								travelMode: value,
-							}))
-						}
-					/>
-				</Grid>
-
-				<Box className="w-full p-3 pb-0 flex flex-row justify-start items-center gap-2">
-					<Switch
-						onChange={() => {
-							setNewDirection((prev) => ({
-								...prev,
-								computeAlternativeRoutes:
-									!prev.computeAlternativeRoutes,
-							}));
-						}}
-						checked={newDirection.computeAlternativeRoutes}
-						size="small"
-						disabled={newDirection.intermediates.length > 0}
-					/>
-					<h6 className="text-base">Compute alternative routes</h6>
-				</Box>
-
-				{newDirection.travelMode !== "TRANSIT" && (
-					<>
+			<Box className="flex flex-row gap-4">
+				<Box className="w-1/2">
+					<Grid container spacing={2}>
 						<Grid item xs={12}>
-							<FormControl fullWidth size="small" required>
-								<InputLabel>Intermediates</InputLabel>
-								<Select
-									multiple
-									value={newDirection.intermediates}
-									onChange={(event) => {
-										setNewDirection((prev) => ({
-											...prev,
-											intermediates: event.target.value,
-										}));
-									}}
-									label={"Intermediates"}
-									renderValue={(selected) =>
-										!newDirection.optimizeWaypointOrder ? (
-											<Box
-												sx={{
-													display: "flex",
-													flexWrap: "wrap",
-													gap: 0.5,
-													alignItems: "center",
-												}}
-											>
-												{selected.map(
-													(value, index) => (
-														<>
-															<Typography variant="body2">
-																{
-																	savedPlacesMap[
-																		value
-																	]
-																		.displayName
-																		.text
-																}
-															</Typography>
-															{index <
-																selected.length -
-																	1 && (
-																<ArrowRightAlt />
-															)}
-														</>
-													)
-												)}
-											</Box>
-										) : (
-											<Box
-												sx={{
-													display: "flex",
-													flexWrap: "wrap",
-													gap: 0.5,
-												}}
-											>
-												{selected.map((value) => (
-													<Chip
-														key={value}
-														label={
-															savedPlacesMap[
-																value
-															].displayName?.text
-														}
-														size="small"
-													/>
-												))}
-											</Box>
-										)
-									}
-								>
-									{Object.keys(savedPlacesMap).map(
-										(place_id) => (
-											<MenuItem
-												key={place_id}
-												value={place_id}
-											>
-												{
-													savedPlacesMap[place_id]
-														.displayName?.text
-												}
-											</MenuItem>
-										)
-									)}
-								</Select>
-							</FormControl>
-							<h6 className="px-2  text-sm">
-								If your desired place is not listed here, you
-								need to{" "}
-								<a
-									className="underline font-semibold cursor-pointer hover:text-blue-500"
-									onClick={handlePlaceAdd}
-								>
-									add it
-								</a>{" "}
-								first.
-							</h6>
+							<PlaceSelectionField
+								label="Origin"
+								value={newDirection.origin}
+								onChange={(event) => {
+									setNewDirection((prev) => ({
+										...prev,
+										origin: event.target.value,
+									}));
+								}}
+								handlePlaceAdd={handlePlaceAdd}
+							/>
 						</Grid>
+						<Grid item xs={12} className="flex justify-center">
+							<IconButton
+								onClick={() => {
+									setNewDirection((prev) => ({
+										...prev,
+										origin: newDirection.destination,
+										destination: newDirection.origin,
+									}));
+								}}
+							>
+								<FontAwesomeIcon
+									icon={faRightLeft}
+									style={{
+										transform: "rotate(90deg)",
+										color: "#000",
+									}}
+								/>
+							</IconButton>
+						</Grid>
+						<Grid item xs={12}>
+							<PlaceSelectionField
+								label="Destination"
+								value={newDirection.destination}
+								onChange={(event) => {
+									setNewDirection((prev) => ({
+										...prev,
+										destination: event.target.value,
+									}));
+								}}
+								handlePlaceAdd={handlePlaceAdd}
+							/>
+						</Grid>
+
+						<Grid item xs={12}>
+							<TravelSelectionField
+								mode={newDirection.travelMode}
+								setMode={(value) =>
+									setNewDirection((prev) => ({
+										...prev,
+										travelMode: value,
+									}))
+								}
+							/>
+						</Grid>
+
 						<Box className="w-full p-3 pb-0 flex flex-row justify-start items-center gap-2">
 							<Switch
 								onChange={() => {
 									setNewDirection((prev) => ({
 										...prev,
-										optimizeWaypointOrder:
-											!prev.optimizeWaypointOrder,
+										computeAlternativeRoutes:
+											!prev.computeAlternativeRoutes,
 									}));
 								}}
-								checked={newDirection.optimizeWaypointOrder}
+								checked={newDirection.computeAlternativeRoutes}
 								size="small"
-								disabled={newDirection.intermediates.length < 2}
+								disabled={newDirection.intermediates.length > 0}
 							/>
 							<h6 className="text-base">
-								Optimize intermediates order
+								Compute alternative routes
 							</h6>
 						</Box>
-					</>
-				)}
 
-				{/* {(newDirection.travelMode === "transit" ||
+						{newDirection.travelMode !== "TRANSIT" && (
+							<>
+								<Grid item xs={12}>
+									<FormControl
+										fullWidth
+										size="small"
+										required
+									>
+										<InputLabel>Intermediates</InputLabel>
+										<Select
+											multiple
+											value={newDirection.intermediates}
+											onChange={(event) => {
+												setNewDirection((prev) => ({
+													...prev,
+													intermediates:
+														event.target.value,
+												}));
+											}}
+											label={"Intermediates"}
+											renderValue={(selected) =>
+												!newDirection.optimizeWaypointOrder ? (
+													<Box
+														sx={{
+															display: "flex",
+															flexWrap: "wrap",
+															gap: 0.5,
+															alignItems:
+																"center",
+														}}
+													>
+														{selected.map(
+															(value, index) => (
+																<>
+																	<Typography variant="body2">
+																		{
+																			savedPlacesMap[
+																				value
+																			]
+																				.displayName
+																				.text
+																		}
+																	</Typography>
+																	{index <
+																		selected.length -
+																			1 && (
+																		<ArrowRightAlt />
+																	)}
+																</>
+															)
+														)}
+													</Box>
+												) : (
+													<Box
+														sx={{
+															display: "flex",
+															flexWrap: "wrap",
+															gap: 0.5,
+														}}
+													>
+														{selected.map(
+															(value) => (
+																<Chip
+																	key={value}
+																	label={
+																		savedPlacesMap[
+																			value
+																		]
+																			.displayName
+																			?.text
+																	}
+																	size="small"
+																/>
+															)
+														)}
+													</Box>
+												)
+											}
+										>
+											{Object.keys(savedPlacesMap).map(
+												(place_id) => (
+													<MenuItem
+														key={place_id}
+														value={place_id}
+													>
+														{
+															savedPlacesMap[
+																place_id
+															].displayName?.text
+														}
+													</MenuItem>
+												)
+											)}
+										</Select>
+									</FormControl>
+									<h6 className="px-2  text-sm">
+										If your desired place is not listed
+										here, you need to{" "}
+										<a
+											className="underline font-semibold cursor-pointer hover:text-blue-500"
+											onClick={handlePlaceAdd}
+										>
+											add it
+										</a>{" "}
+										first.
+									</h6>
+								</Grid>
+								<Box className="w-full p-3 pb-0 flex flex-row justify-start items-center gap-2">
+									<Switch
+										onChange={() => {
+											setNewDirection((prev) => ({
+												...prev,
+												optimizeWaypointOrder:
+													!prev.optimizeWaypointOrder,
+											}));
+										}}
+										checked={
+											newDirection.optimizeWaypointOrder
+										}
+										size="small"
+										disabled={
+											newDirection.intermediates.length <
+											2
+										}
+									/>
+									<h6 className="text-base">
+										Optimize intermediates order
+									</h6>
+								</Box>
+							</>
+						)}
+
+						{/* {(newDirection.travelMode === "transit" ||
 				newDirection.travelMode === "driving") && (
 				<Grid item xs={12}>
 					<DepartureTimeField
@@ -377,7 +422,7 @@ export default function DirectionForm({
 					/>
 				</Grid>
 			)} */}
-				{/* <Grid item xs={12}>
+						{/* <Grid item xs={12}>
 						<iframe
 							width="100%"
 							height="450"
@@ -394,117 +439,171 @@ export default function DirectionForm({
 						/>
 					</Grid> */}
 
-				{["DRIVE", "TWO_WHEELER"].includes(newDirection.travelMode) && (
-					<Grid item xs={12}>
-						<FormControl fullWidth size="small">
-							<InputLabel>Avoid</InputLabel>
-							<Select
-								// input={<OutlinedInput label="Tag" />}
-								value={Object.entries(
-									newDirection.routeModifiers
-								)
-									.map(([key, value]) => (value ? key : null))
-									.filter((x) => x)}
-								onChange={(e) => {
-									const newOptions = {
-										...newDirection.routeModifiers,
-									};
-									Object.keys(avoidMap).forEach((key) => {
-										newOptions[key] =
-											e.target.value.includes(key);
-									});
-									setNewDirection((prev) => ({
-										...prev,
-										routeModifiers: newOptions,
-									}));
-								}}
-								label={"Avoid"}
-								multiple
-								renderValue={(selected) => {
-									if (selected.length === 0) {
-										return <em>Any</em>; // Custom label for empty array
-									}
-									return selected
-										.map((value) => avoidMap[value])
-										.join(", ");
-								}}
-							>
-								{Object.keys(avoidMap).map((key) => (
-									<MenuItem key={key} value={key}>
-										<Checkbox
-											checked={
-												newDirection.routeModifiers[key]
+						{["DRIVE", "TWO_WHEELER"].includes(
+							newDirection.travelMode
+						) && (
+							<Grid item xs={12}>
+								<FormControl fullWidth size="small">
+									<InputLabel>Avoid</InputLabel>
+									<Select
+										// input={<OutlinedInput label="Tag" />}
+										value={Object.entries(
+											newDirection.routeModifiers
+										)
+											.map(([key, value]) =>
+												value ? key : null
+											)
+											.filter((x) => x)}
+										onChange={(e) => {
+											const newOptions = {
+												...newDirection.routeModifiers,
+											};
+											Object.keys(avoidMap).forEach(
+												(key) => {
+													newOptions[key] =
+														e.target.value.includes(
+															key
+														);
+												}
+											);
+											setNewDirection((prev) => ({
+												...prev,
+												routeModifiers: newOptions,
+											}));
+										}}
+										label={"Avoid"}
+										multiple
+										renderValue={(selected) => {
+											if (selected.length === 0) {
+												return <em>Any</em>; // Custom label for empty array
 											}
-										/>
-										<ListItemText primary={avoidMap[key]} />
-									</MenuItem>
-								))}
-							</Select>
-						</FormControl>
-					</Grid>
-				)}
+											return selected
+												.map((value) => avoidMap[value])
+												.join(", ");
+										}}
+									>
+										{Object.keys(avoidMap).map((key) => (
+											<MenuItem key={key} value={key}>
+												<Checkbox
+													checked={
+														newDirection
+															.routeModifiers[key]
+													}
+												/>
+												<ListItemText
+													primary={avoidMap[key]}
+												/>
+											</MenuItem>
+										))}
+									</Select>
+								</FormControl>
+							</Grid>
+						)}
 
-				{newDirection.travelMode === "TRANSIT" && (
-					<Grid item xs={12}>
-						<FormControl fullWidth size="small">
-							<InputLabel>Prefer</InputLabel>
-							<Select
-								// input={<OutlinedInput label="Tag" />}
-								value={
-									newDirection.transitPreferences
-										.allowedTravelModes
+						{newDirection.travelMode === "TRANSIT" && (
+							<Grid item xs={12}>
+								<FormControl fullWidth size="small">
+									<InputLabel>Prefer</InputLabel>
+									<Select
+										// input={<OutlinedInput label="Tag" />}
+										value={
+											newDirection.transitPreferences
+												.allowedTravelModes
+										}
+										onChange={(e) => {
+											setNewDirection((prev) => ({
+												...prev,
+												transitPreferences: {
+													allowedTravelModes:
+														e.target.value,
+												},
+											}));
+										}}
+										label={"Prefer"}
+										multiple
+										renderValue={(selected) => {
+											if (selected.length === 0) {
+												return <em>Any</em>; // Custom label for empty array
+											}
+											return selected
+												.map(
+													(value) =>
+														transitModeMap[value]
+												)
+												.join(", ");
+										}}
+									>
+										{Object.keys(transitModeMap).map(
+											(key) => (
+												<MenuItem key={key} value={key}>
+													<Checkbox
+														checked={
+															newDirection.transitPreferences.allowedTravelModes.indexOf(
+																key
+															) > -1
+														}
+													/>
+													<ListItemText
+														primary={
+															transitModeMap[key]
+														}
+													/>
+												</MenuItem>
+											)
+										)}
+									</Select>
+								</FormControl>
+							</Grid>
+						)}
+
+						<Grid item xs={12}>
+							<LoadingButton
+								variant="contained"
+								fullWidth
+								onClick={handleDirectionAdd}
+								loading={loading}
+								loadingPosition="start"
+								startIcon={<Add />}
+							>
+								Add alternative routes
+							</LoadingButton>
+						</Grid>
+					</Grid>
+				</Box>
+
+				<Box className="w-1/2">
+					<Paper elevation={2}>
+						<Box>
+							<Typography
+								variant="h6"
+								className="font-bold bg-zinc-200 p-2 text-center border-b-2 border-black"
+							>
+								Map View
+							</Typography>
+						</Box>
+						{newDirection.origin === "" &&
+						newDirection.destination === "" ? (
+							<Box className="h-[457px] flex flex-row items-center justify-center">
+								<h1
+									// variant="body1"
+									className="text-center p-4 text-xl text-zinc-400"
+								>
+									Select origin/destination to view route.
+								</h1>
+							</Box>
+						) : (
+							<MultiRouteComponent
+								height={"457px"}
+								routes={routes}
+								origin={savedPlacesMap[newDirection.origin]}
+								destination={
+									savedPlacesMap[newDirection.destination]
 								}
-								onChange={(e) => {
-									setNewDirection((prev) => ({
-										...prev,
-										transitPreferences: {
-											allowedTravelModes: e.target.value,
-										},
-									}));
-								}}
-								label={"Prefer"}
-								multiple
-								renderValue={(selected) => {
-									if (selected.length === 0) {
-										return <em>Any</em>; // Custom label for empty array
-									}
-									return selected
-										.map((value) => transitModeMap[value])
-										.join(", ");
-								}}
-							>
-								{Object.keys(transitModeMap).map((key) => (
-									<MenuItem key={key} value={key}>
-										<Checkbox
-											checked={
-												newDirection.transitPreferences.allowedTravelModes.indexOf(
-													key
-												) > -1
-											}
-										/>
-										<ListItemText
-											primary={transitModeMap[key]}
-										/>
-									</MenuItem>
-								))}
-							</Select>
-						</FormControl>
-					</Grid>
-				)}
-
-				<Grid item xs={12}>
-					<LoadingButton
-						variant="contained"
-						fullWidth
-						onClick={handleDirectionAdd}
-						loading={loading}
-						loadingPosition="start"
-						startIcon={<Add />}
-					>
-						Add alternative routes
-					</LoadingButton>
-				</Grid>
-			</Grid>
+							/>
+						)}
+					</Paper>
+				</Box>
+			</Box>
 		)
 	);
 }
