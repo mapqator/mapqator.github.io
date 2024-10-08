@@ -16,12 +16,14 @@ import { Directions } from "@mui/icons-material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import dayjs from "dayjs";
 import { template } from "@/database/templates";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWalking } from "@fortawesome/free-solid-svg-icons";
 export default function PoiList({
 	places,
 	// handleTogglePlace,
 	mode,
 	locationBias,
+	routingSummaries,
 }) {
 	const { setNewDirection, setActiveStep } = useContext(GlobalContext);
 	console.log("Places:", places);
@@ -56,7 +58,12 @@ export default function PoiList({
 												place.priceLevel
 										  )}`
 										: ""
-								}`}
+								} |🚶🏾‍➡️${
+									routingSummaries[index].legs[0].duration
+								} (${
+									routingSummaries[index].legs[0]
+										.distanceMeters
+								}m)`}
 								primaryTypographyProps={{ noWrap: true }}
 								secondaryTypographyProps={{ noWrap: true }}
 							/>

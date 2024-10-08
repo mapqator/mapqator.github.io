@@ -104,6 +104,7 @@ function NearbyCardDetails({
 			<PoiList
 				places={entry.places}
 				// handleTogglePlace={handleTogglePlace}
+				routingSummaries={entry.routingSummaries}
 				mode={mode}
 				locationBias={entry.locationBias}
 			/>

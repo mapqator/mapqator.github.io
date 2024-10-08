@@ -61,6 +61,7 @@ export default function NearbyForm({
 		useContext(GlobalContext);
 	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 	const [list, setList] = useState([]);
+	const [routingSummaries, setRoutingSummaries] = useState([]);
 
 	const handleSave = async (place) => {
 		let details = savedPlacesMap[place.id];
@@ -102,6 +103,7 @@ export default function NearbyForm({
 				priceLevels: newNearbyPlaces.priceLevels,
 				rankBy: newNearbyPlaces.rankPreference,
 				places: places,
+				routingSummaries: routingSummaries,
 			});
 
 			setNearbyPlacesMap(newNearbyPlacesMap);
@@ -151,6 +153,7 @@ export default function NearbyForm({
 		if (response.success) {
 			const places = response.data.places;
 			setList(places);
+			setRoutingSummaries(response.data.routingSummaries);
 		} else {
 			showError("Couldn't find nearby places.");
 		}
