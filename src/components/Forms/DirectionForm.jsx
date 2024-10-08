@@ -312,7 +312,7 @@ export default function DirectionForm({
 											)}
 										</Select>
 									</FormControl>
-									<h6 className="px-2  text-sm">
+									<h6 className="px-2  text-xs">
 										If your desired place is not listed
 										here, you need to{" "}
 										<a
@@ -524,7 +524,7 @@ export default function DirectionForm({
 						</Box>
 						{newDirection.origin === "" &&
 						newDirection.destination === "" ? (
-							<Box className="h-[410px] flex flex-row items-center justify-center">
+							<Box className="h-[387px] flex flex-row items-center justify-center">
 								<h1
 									// variant="body1"
 									className="text-center p-4 text-xl text-zinc-400"
@@ -534,7 +534,7 @@ export default function DirectionForm({
 							</Box>
 						) : (
 							<MultiRouteComponent
-								height={"410px"}
+								height={"387px"}
 								routes={routes}
 								origin={savedPlacesMap[newDirection.origin]}
 								destination={
