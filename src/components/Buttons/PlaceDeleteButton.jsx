@@ -3,6 +3,7 @@ import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { AppContext } from "@/contexts/AppContext";
+import { showError } from "@/contexts/ToastProvider";
 
 export default function PlaceDeleteButton({ placeId, isSelected }) {
 	const {
@@ -11,6 +12,7 @@ export default function PlaceDeleteButton({ placeId, isSelected }) {
 		distanceMatrix,
 		directionInformation,
 		nearbyPlacesMap,
+		routePlacesMap,
 		poisMap,
 		// Setters
 		setDistanceMatrix,
@@ -55,15 +57,35 @@ export default function PlaceDeleteButton({ placeId, isSelected }) {
 		setSavedPlacesMap(tmp);
 	};
 
+	const searchPlaceIdInMaps = (place_id) => {
+		const selectedPlacesMapStr = JSON.stringify(selectedPlacesMap);
+		const directionInformationStr = JSON.stringify(directionInformation);
+		const nearbyPlacesMapStr = JSON.stringify(nearbyPlacesMap);
+		const routePlacesMapStr = JSON.stringify(routePlacesMap);
+
+		return (
+			selectedPlacesMapStr.includes(place_id) ||
+			directionInformationStr.includes(place_id) ||
+			nearbyPlacesMapStr.includes(place_id) ||
+			routePlacesMapStr.includes(place_id)
+		);
+	};
+
+	const check = (place_id) => {};
 	const deletePlace = (place_id) => {
-		deletePlaceFromDistanceMatrix(place_id);
-		deletePlaceFromDirections(place_id);
-		deletePlaceFromNearbyPlaces(place_id);
-		deletePlaceFromPois(place_id);
-		const newSelectedPlacesMap = { ...selectedPlacesMap };
-		delete newSelectedPlacesMap[place_id];
-		setSelectedPlacesMap(newSelectedPlacesMap);
-		if (!isSelected) deletePlaceFromSaved(place_id);
+		// deletePlaceFromDistanceMatrix(place_id);
+		// deletePlaceFromDirections(place_id);
+		// deletePlaceFromNearbyPlaces(place_id);
+		// deletePlaceFromPois(place_id);
+		// const newSelectedPlacesMap = { ...selectedPlacesMap };
+		// delete newSelectedPlacesMap[place_id];
+		// setSelectedPlacesMap(newSelectedPlacesMap);
+
+		if (searchPlaceIdInMaps(place_id)) {
+			showError("Place is in use");
+			return;
+		}
+		deletePlaceFromSaved(place_id);
 	};
 	return (
 		<IconButton onClick={() => deletePlace(placeId)}>

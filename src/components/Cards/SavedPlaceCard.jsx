@@ -159,10 +159,10 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 						<Typography variant="body2">Nearby</Typography>
 					</Box>
 				</div>
-				{/* <Divider />
+				<Divider />
 				<Box className="ml-auto">
 					<PlaceDeleteButton placeId={placeId} />
-				</Box> */}
+				</Box>
 			</CardContent>
 		</Card>
 	);
