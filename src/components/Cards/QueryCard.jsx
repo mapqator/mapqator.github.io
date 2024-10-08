@@ -268,11 +268,14 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 										nearbyPlacesMap={
 											entry.context_json.nearby_places
 										}
-										distanceMatrix={
-											entry.context_json.distance_matrix
-										}
+										// distanceMatrix={
+										// 	entry.context_json.distance_matrix
+										// }
 										directionInformation={
 											entry.context_json.directions
+										}
+										routePlacesMap={
+											entry.context_json.route_places
 										}
 									/>
 								</>

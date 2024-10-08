@@ -1,4 +1,4 @@
- import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
 	Box,
 	Typography,
@@ -24,6 +24,7 @@ import {
 	KeyboardDoubleArrowRight,
 	NextPlanTwoTone,
 	RemoveRedEye,
+	Route,
 	Save,
 	Send,
 	Settings,
@@ -45,6 +46,7 @@ import PlacesGrid from "@/components/Grids/PlacesGrid";
 import { LoadingButton } from "@mui/lab";
 import { setLoading } from "@/app/old-home/page";
 import { showError } from "@/contexts/ToastProvider";
+import RouteSearchGrid from "../Grids/RouteSearchGrid";
 
 function ContextStep({
 	step,
@@ -138,67 +140,87 @@ export default function ContextVisualize({
 	savedPlacesMap,
 	selectedPlacesMap,
 	nearbyPlacesMap,
-	distanceMatrix,
+	routePlacesMap,
 	directionInformation,
 }) {
 	console.log("SELECTED PLACES MAP", selectedPlacesMap);
 	const steps = [
 		{
-			label: "Add Information of Places",
+			label: "Add details of Places",
 			description: `Start by searching for a location. Type in a place name or address in the search bar below.`,
 			icon: <SearchIcon />,
 			additional: "Places you have added to the context.",
-			grid: Object.keys(selectedPlacesMap).length > 0 && (
-				<>
-					{/* <MapComponent /> */}
-					<PlacesGrid
-						{...{
-							savedPlacesMap,
-							selectedPlacesMap,
-						}}
-					/>
-				</>
-			),
+			grid: selectedPlacesMap &&
+				Object.keys(selectedPlacesMap).length > 0 && (
+					<>
+						{/* <MapComponent /> */}
+						<PlacesGrid
+							{...{
+								savedPlacesMap,
+								selectedPlacesMap,
+							}}
+						/>
+					</>
+				),
 		},
 		{
-			label: "Search for Nearby places or Explore the area",
+			label: "Search for Nearby places",
 			additional:
 				"List of places whose nearby pois are added to the context",
 			icon: <PlaceIcon />,
-			grid: Object.keys(nearbyPlacesMap).length > 0 && (
-				<NearbyGrid
-					{...{
-						nearbyPlacesMap,
-						savedPlacesMap,
-					}}
-				/>
-			),
+			grid: nearbyPlacesMap &&
+				Object.keys(nearbyPlacesMap).length > 0 && (
+					<NearbyGrid
+						{...{
+							nearbyPlacesMap,
+							savedPlacesMap,
+						}}
+					/>
+				),
 		},
+		// {
+		// 	label: "Get Distance Matrix",
+		// 	additional:
+		// 		"List of origin - destination pairs whose fastest route is added to the context",
+		// 	icon: <MapIcon />,
+		// 	grid: Object.keys(distanceMatrix).length > 0 && (
+		// 		<DistanceGrid
+		// 			{...{
+		// 				distanceMatrix,
+		// 				savedPlacesMap,
+		// 			}}
+		// 		/>
+		// 	),
+		// },
 		{
-			label: "Get Distance Matrix",
-			additional:
-				"List of origin - destination pairs whose fastest route is added to the context",
-			icon: <MapIcon />,
-			grid: Object.keys(distanceMatrix).length > 0 && (
-				<DistanceGrid
-					{...{
-						distanceMatrix,
-						savedPlacesMap,
-					}}
-				/>
-			),
-		},
-		{
-			label: "Get Alternative Routes",
+			abel: "Compute Routes",
 			additional:
 				"List of origin - destination pairs whose alternative routes are added to the context",
 			icon: <DirectionsIcon />,
-			grid: Object.keys(directionInformation).length > 0 && (
-				<DirectionGrid
+			grid: directionInformation &&
+				Object.keys(directionInformation).length > 0 && (
+					<DirectionGrid
+						{...{
+							directionInformation,
+							savedPlacesMap,
+						}}
+					/>
+				),
+		},
+		{
+			label: "Search Along Route",
+			description: `Utilize the Places API to find places along a route. Choose a route to find places along the route.`,
+			additional:
+				"List of origin - destination pairs whose alternative routes are added to the context",
+			icon: <Route />,
+			grid: routePlacesMap && Object.keys(routePlacesMap).length > 0 && (
+				<RouteSearchGrid
 					{...{
+						routePlacesMap,
 						directionInformation,
 						savedPlacesMap,
 					}}
+					mode="edit"
 				/>
 			),
 		},

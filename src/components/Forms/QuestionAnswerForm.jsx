@@ -37,6 +37,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 		distanceMatrix,
 		currentInformation,
 		setQueryStatus,
+		routePlacesMap,
 		apiCallLogs,
 	} = useContext(GlobalContext);
 	const router = useRouter();
@@ -57,6 +58,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 				// current_information: currentInformation,
 				// pois: poisMap,
 				directions: directionInformation,
+				route_places: routePlacesMap,
 			},
 			api_call_logs: apiCallLogs,
 		};
