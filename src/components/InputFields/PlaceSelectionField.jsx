@@ -56,7 +56,7 @@ export default function PlaceSelectionField({
 					))}
 				</Select>
 			</FormControl>
-			<h6 className="px-2  text-sm">
+			<h6 className="px-2  text-xs">
 				If your desired place is not listed here, you need to{" "}
 				<a
 					className="underline font-semibold cursor-pointer hover:text-blue-500"

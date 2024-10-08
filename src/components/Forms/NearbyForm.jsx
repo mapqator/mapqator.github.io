@@ -167,7 +167,7 @@ export default function NearbyForm({
 	}, [newNearbyPlaces, debouncedFetchNearbyPlaces]);
 	return (
 		newNearbyPlaces && (
-			<Box className="flex flex-row gap-4">
+			<Box className="flex flex-col md:flex-row gap-4">
 				<Box className="w-1/2">
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
@@ -412,7 +412,7 @@ export default function NearbyForm({
 							</Typography>
 						</Box>
 						{newNearbyPlaces.locationBias === "" ? (
-							<Box className="h-[447px] flex flex-row items-center justify-center">
+							<Box className="h-[422px] flex flex-row items-center justify-center">
 								<h1
 									// variant="body1"
 									className="text-center p-4 text-xl text-zinc-400"
@@ -422,7 +422,7 @@ export default function NearbyForm({
 							</Box>
 						) : (
 							<NearbyComponent
-								height={"447px"}
+								height={"422px"}
 								places={list}
 								locationBias={
 									savedPlacesMap[newNearbyPlaces.locationBias]

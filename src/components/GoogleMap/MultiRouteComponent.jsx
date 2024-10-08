@@ -135,7 +135,7 @@ export default function MultiRouteComponent({
 			onLoad={onLoad}
 			options={{ disableDefaultUI: true }}
 		>
-			{origin && (
+			{(origin || coords.length > 0) && (
 				<Marker
 					position={
 						coords.length > 0
@@ -148,7 +148,7 @@ export default function MultiRouteComponent({
 				/>
 			)}
 
-			{destination && (
+			{(destination || coords.length > 0) && (
 				<Marker
 					position={
 						coords.length > 0

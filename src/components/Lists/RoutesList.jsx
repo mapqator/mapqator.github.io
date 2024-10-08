@@ -116,7 +116,7 @@ function SingleRoute({ route, index, length }) {
 					</Paper>
 				</Grid>
 			</Grid>
-			<Box className="flex flex-row justify-center pb-4">
+			{/* <Box className="flex flex-row justify-center pb-4">
 				<Button
 					startIcon={<Search />}
 					variant="contained"
@@ -130,7 +130,7 @@ function SingleRoute({ route, index, length }) {
 				>
 					Search Along Route
 				</Button>
-			</Box>
+			</Box> */}
 		</>
 	);
 }

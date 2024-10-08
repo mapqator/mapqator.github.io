@@ -241,6 +241,8 @@ export default function GlobalContextProvider({ children }) {
 			avoidHighways: false,
 			avoidFerries: false,
 		},
+		computeAlternativeRoutes: false,
+		intermediates: [],
 		searchBy: "type",
 		type: "",
 		keyword: "",

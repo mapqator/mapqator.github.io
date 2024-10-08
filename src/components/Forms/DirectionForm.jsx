@@ -80,47 +80,9 @@ export default function DirectionForm({
 	const handleDirectionAdd = async () => {
 		if (newDirection.origin === "" || newDirection.destination === "")
 			return;
-		// Fetch the direction between the two places from google maps
 		setLoading(true);
-		const response = await mapApi.getDirectionsNew(newDirection);
-		if (response.success && response.data.routes) {
-			console.log("Directions: ", response.data.routes);
-			const routes = response.data.routes;
+		if (routes.length > 0) {
 			const newDirectionInfo = [...directionInformation];
-			const all_routes = [];
-			console.log("Routes: ", routes);
-			routes.forEach((route) => {
-				// const legs = [];
-				// route.legs.forEach((leg) => {
-				// 	const steps = [];
-				// 	console.log("Steps: ", route.legs[0].steps);
-				// 	leg.steps.forEach((step) => {
-				// 		console.log(step);
-				// 		if (step.navigationInstruction)
-				// 			steps.push(step.navigationInstruction.instructions);
-				// 	});
-				// 	legs.push({
-				// 		steps,
-				// 		localizedValues: leg.localizedValues,
-				// 	});
-				// });
-				// console.log("Legs: ", legs);
-				all_routes.push({
-					description: route.description,
-					localizedValues: route.localizedValues,
-					// duration: route.localizedValues.staticDuration.text,
-					// distance: route.localizedValues.distance.text,
-					legs: route.legs,
-					optimizedIntermediateWaypointIndex:
-						route.optimizedIntermediateWaypointIndex,
-					polyline: route.polyline,
-				});
-			});
-
-			console.log("All Routes: ", all_routes);
-			const o = newDirection.origin;
-			const d = newDirection.destination;
-
 			newDirectionInfo.push({
 				origin: newDirection.origin,
 				destination: newDirection.destination,
@@ -145,29 +107,9 @@ export default function DirectionForm({
 						? newDirection.routeModifiers.avoidFerries
 						: false,
 				},
-				routes: all_routes,
+				routes: routes,
 				showSteps: true,
 			});
-
-			// if (newDirectionInfo[o])
-			// 	newDirectionInfo[o][d] = {
-			// 		...newDirectionInfo[o][d],
-			// 		[newDirection.travelMode]: {
-
-			// 			routes: all_routes,
-			// 			showSteps: true,
-			// 		},
-			// 	};
-			// else {
-			// 	newDirectionInfo[o] = {
-			// 		[d]: {
-			// 			[newDirection.travelMode]: {
-			// 				routes: all_routes,
-			// 				showSteps: true,
-			// 			},
-			// 		},
-			// 	};
-			// }
 			setDirectionInformation(newDirectionInfo);
 		} else {
 			showError("Couldn't find directions between the two places");
@@ -175,12 +117,11 @@ export default function DirectionForm({
 		setLoading(false);
 	};
 
-	const computeRoutes = async () => {
-		if (newDirection.origin === "" || newDirection.destination === "")
-			return;
+	const computeRoutes = async (data) => {
+		if (data.origin === "" || data.destination === "") return;
 		// Fetch the direction between the two places from google maps
 		setLoading(true);
-		const response = await mapApi.getDirectionsNew(newDirection);
+		const response = await mapApi.getDirectionsNew(data);
 		if (response.success && response.data.routes) {
 			setRoutes(response.data.routes);
 		} else {
@@ -197,7 +138,7 @@ export default function DirectionForm({
 	}, [newDirection, debouncedComputeRoutes]);
 	return (
 		newDirection && (
-			<Box className="flex flex-row gap-4">
+			<Box className="flex flex-col md:flex-row gap-4">
 				<Box className="w-1/2">
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
@@ -583,7 +524,7 @@ export default function DirectionForm({
 						</Box>
 						{newDirection.origin === "" &&
 						newDirection.destination === "" ? (
-							<Box className="h-[457px] flex flex-row items-center justify-center">
+							<Box className="h-[410px] flex flex-row items-center justify-center">
 								<h1
 									// variant="body1"
 									className="text-center p-4 text-xl text-zinc-400"
@@ -593,7 +534,7 @@ export default function DirectionForm({
 							</Box>
 						) : (
 							<MultiRouteComponent
-								height={"457px"}
+								height={"410px"}
 								routes={routes}
 								origin={savedPlacesMap[newDirection.origin]}
 								destination={

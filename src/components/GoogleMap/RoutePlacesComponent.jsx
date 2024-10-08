@@ -54,6 +54,8 @@ export default function RoutePlacesComponent({
 	height,
 	places,
 	encodedPolyline,
+	origin,
+	destination,
 }) {
 	const { selectedPlacesMap } = useContext(GlobalContext);
 	const { savedPlacesMap } = useContext(AppContext);
@@ -142,24 +144,46 @@ export default function RoutePlacesComponent({
 	};
 
 	return (
-		locations.length > 0 && (
-			<GoogleMap
-				mapContainerStyle={mapStyles}
-				// zoom={zoom || 12}
-				// center={locations[locations.length - 1]}
-				onLoad={onLoad}
-				options={{ disableDefaultUI: true }}
-			>
-				{locations.map((location, index) => (
-					<Marker key={index} position={location} />
-				))}
-				<Marker position={coords[0]} icon={circleSymbol} />
+		<GoogleMap
+			mapContainerStyle={mapStyles}
+			// zoom={zoom || 12}
+			// center={locations[locations.length - 1]}
+			onLoad={onLoad}
+			options={{ disableDefaultUI: true }}
+		>
+			{locations.map((location, index) => (
+				<Marker key={index} position={location} />
+			))}
+
+			{(origin || coords.length > 0) && (
 				<Marker
-					position={coords[coords.length - 1]}
+					position={
+						coords.length > 0
+							? coords[0]
+							: {
+									lat: origin.location.latitude,
+									lng: origin.location.longitude,
+							  }
+					}
 					icon={circleSymbol}
 				/>
-				<PolylineF path={coords} options={po} />
-			</GoogleMap>
-		)
+			)}
+
+			{(destination || coords.length > 0) && (
+				<Marker
+					position={
+						coords.length > 0
+							? coords[coords.length - 1]
+							: {
+									lat: destination.location.latitude,
+									lng: destination.location.longitude,
+							  }
+					}
+					icon={circleSymbol}
+				/>
+			)}
+
+			{coords.length > 0 && <PolylineF path={coords} options={po} />}
+		</GoogleMap>
 	);
 }
