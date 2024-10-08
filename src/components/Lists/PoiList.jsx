@@ -59,7 +59,7 @@ export default function PoiList({
 										  )}`
 										: ""
 								} ${
-									routingSummaries &&
+									routingSummaries[index]?.legs[0] &&
 									"|🚶🏾‍➡️" +
 										routingSummaries[index].legs[0]
 											.duration +

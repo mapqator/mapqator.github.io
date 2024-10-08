@@ -16,7 +16,7 @@ export default function NearbyComponent({ height, places, locationBias }) {
 
 	useEffect(() => {
 		const list = [];
-		places.map((place) => {
+		places?.map((place) => {
 			const lat = place.location.latitude;
 			const lng = place.location.longitude;
 			list.push({ lat, lng });
