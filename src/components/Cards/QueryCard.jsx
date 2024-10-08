@@ -211,7 +211,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 			</div>
 			{expanded && (
 				<div className="p-4 bg-white">
-					{context && (
+					{/* {context && (
 						<Box sx={{ mb: 2 }}>
 							<Typography variant="h6" gutterBottom>
 								Context:
@@ -223,7 +223,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 								<CollapsedContext context={context} />
 							</Paper>
 						</Box>
-					)}
+					)} */}
 					<Box sx={{ mb: 2 }}>
 						<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
 							<div
