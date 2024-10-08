@@ -103,6 +103,9 @@ export default function RouteSearchForm({
 				rankBy: newRoutePlaces.rankPreference,
 				routes: routes,
 				places: places,
+				origin: newRoutePlaces.origin,
+				destination: newRoutePlaces.destination,
+				travelMode: newRoutePlaces.travelMode,
 			});
 
 			setRoutePlacesMap(newRoutePlacesMap);

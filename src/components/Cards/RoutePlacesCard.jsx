@@ -22,6 +22,8 @@ import { LoadingButton } from "@mui/lab";
 import mapApi from "@/api/mapApi";
 import MapComponent from "../GoogleMap/MapComponent";
 import RoutePlacesComponent from "../GoogleMap/RoutePlacesComponent";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
 const priceMap = {
 	PRICE_LEVEL_INEXPENSIVE: "Inexpensive",
@@ -68,22 +70,20 @@ function RoutePlacesSummary({
 	// console.log("Nearby:", routePlacesMap[place_id][index]);
 	return (
 		<>
-			<Box
-				display="flex"
-				justifyContent="space-between"
-				alignItems="start"
-				className="gap-1"
-			>
-				{/* <Typography variant="h6" component="div">
-					{savedPlacesMap[place_id].displayName?.text}
-				</Typography> */}
-				{/* {mode === "edit" && (
-					<Box className="flex flex-col items-end justify-start">
-						<IconButton onClick={handleDelete} size="small">
-							<Delete color="error" />
-						</IconButton>
-					</Box>
-				)} */}
+			<Box className={`flex flex-col items-center w-full`}>
+				<h6 className="text-base md:text-xl text-center md:font-semibold">
+					{
+						savedPlacesMap[routePlacesMap[index].origin].displayName
+							?.text
+					}
+				</h6>
+				<FontAwesomeIcon icon={faArrowDown} />
+				<h6 className="text-base md:text-xl text-center md:font-semibold">
+					{
+						savedPlacesMap[routePlacesMap[index].destination]
+							.displayName?.text
+					}
+				</h6>
 			</Box>
 			<Box display="flex" justifyContent="space-between">
 				<Box

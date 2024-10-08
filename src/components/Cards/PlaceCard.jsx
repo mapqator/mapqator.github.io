@@ -25,6 +25,7 @@ import { convertFromSnake } from "@/services/utils";
 import PlaceDeleteButton from "../Buttons/PlaceDeleteButton";
 import { template } from "@/database/templates";
 import textualFields from "@/database/textualFields";
+import { Delete } from "@mui/icons-material";
 function PlaceCardSummary({
 	placeId,
 	expanded,
@@ -203,10 +204,21 @@ export default function PlaceCard({
 							mt: "auto",
 						}}
 					>
-						<PlaceDeleteButton
+						{/* <PlaceDeleteButton
 							placeId={placeId}
 							isSelected={true}
-						/>
+						/> */}
+						<IconButton
+							onClick={() => {
+								setSelectedPlacesMap((prev) => {
+									const newMap = { ...prev };
+									delete newMap[placeId];
+									return newMap;
+								});
+							}}
+						>
+							<Delete color="error" />
+						</IconButton>
 					</Box>
 				)}
 			</CardContent>
