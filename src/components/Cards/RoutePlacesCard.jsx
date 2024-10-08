@@ -220,7 +220,9 @@ export default function RoutePlacesCard({
 								places={entry.places}
 								height={"320px"}
 								zoom={14}
-								encodedPolyline={entry.encodedPolyline}
+								encodedPolyline={
+									entry.routes[0].polyline.encodedPolyline
+								}
 							/>
 						</Paper>
 					</Grid>

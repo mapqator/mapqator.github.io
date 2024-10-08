@@ -232,7 +232,15 @@ export default function GlobalContextProvider({ children }) {
 	});
 
 	const [newRoutePlaces, setNewRoutePlaces] = useState({
+		origin: "",
+		destination: "",
+		travelMode: "WALK",
 		encodedPolyline: "",
+		routeModifiers: {
+			avoidTolls: false,
+			avoidHighways: false,
+			avoidFerries: false,
+		},
 		searchBy: "type",
 		type: "",
 		keyword: "",

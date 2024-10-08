@@ -16,6 +16,7 @@ import {
 	ListItemText,
 	Checkbox,
 	OutlinedInput,
+	Divider,
 } from "@mui/material";
 import types from "@/database/newtypes.json";
 import { LoadingButton } from "@mui/lab";
@@ -33,6 +34,7 @@ import {
 	Marker,
 } from "@react-google-maps/api";
 import PoiSelectionField from "../InputFields/PoiSelectionField";
+import TravelSelectionField from "../InputFields/TravelSelectionField.";
 
 const placeTypes = [];
 for (const category in types) {
@@ -47,7 +49,11 @@ const priceMap = {
 	PRICE_LEVEL_EXPENSIVE: "Expensive",
 	PRICE_LEVEL_VERY_EXPENSIVE: "Very Expensive",
 };
-
+const avoidMap = {
+	avoidTolls: "Tolls",
+	avoidHighways: "Highways",
+	avoidFerries: "Ferries",
+};
 export default function RouteSearchForm({
 	handlePlaceAdd,
 	newRoutePlaces,
@@ -69,8 +75,7 @@ export default function RouteSearchForm({
 
 	const [loading, setLoading] = useState(false);
 	const searchNearbyPlaces = async () => {
-		if (newRoutePlaces.encodedPolyline === "" || newRoutePlaces.type === "")
-			return;
+		if (newRoutePlaces.type === "") return;
 		setLoading(true);
 
 		if (!placeTypes.includes(newRoutePlaces.type)) {
@@ -82,7 +87,10 @@ export default function RouteSearchForm({
 
 		console.log("Searching for nearby places: ", newRoutePlaces);
 		const response = await mapApi.searchAlongRoute({
-			encodedPolyline: newRoutePlaces.encodedPolyline,
+			origin: newRoutePlaces.origin,
+			destination: newRoutePlaces.destination,
+			travelMode: newRoutePlaces.travelMode,
+			routeModifiers: newRoutePlaces.routeModifiers,
 			searchBy: newRoutePlaces.searchBy,
 			type: newRoutePlaces.type,
 			keyword: newRoutePlaces.keyword,
@@ -93,10 +101,8 @@ export default function RouteSearchForm({
 		});
 
 		if (response.success) {
-			const places = response.data.places;
-			console.log("Nearby Places: ", response.data);
 			const newRoutePlacesMap = [...routePlacesMap];
-
+			const places = response.data.nearby_response.places;
 			// const placesWithSelection = places.map((place) => ({
 			// 	id: place.id,
 			// 	displayName: place.displayName,
@@ -108,7 +114,7 @@ export default function RouteSearchForm({
 			// }));
 
 			newRoutePlacesMap.push({
-				encodedPolyline: newRoutePlaces.encodedPolyline,
+				routes: response.data.route_response.routes,
 				type:
 					newRoutePlaces.searchBy === "type"
 						? newRoutePlaces.type
@@ -140,17 +146,101 @@ export default function RouteSearchForm({
 		newRoutePlaces && (
 			<Grid container spacing={2}>
 				<Grid item xs={12}>
-					{/* <PlaceSelectionField
-						label="Location"
-						value={newRoutePlaces.locationBias}
-						onChange={(e) =>
+					<PlaceSelectionField
+						label="Origin"
+						value={newRoutePlaces.origin}
+						onChange={(event) => {
 							setNewRoutePlaces((prev) => ({
 								...prev,
-								locationBias: e.target.value,
+								origin: event.target.value,
+							}));
+						}}
+						handlePlaceAdd={handlePlaceAdd}
+					/>
+				</Grid>
+
+				<Grid item xs={12}>
+					<PlaceSelectionField
+						label="Destination"
+						value={newRoutePlaces.destination}
+						onChange={(event) => {
+							setNewRoutePlaces((prev) => ({
+								...prev,
+								destination: event.target.value,
+							}));
+						}}
+						handlePlaceAdd={handlePlaceAdd}
+					/>
+				</Grid>
+
+				<Grid item xs={12}>
+					<TravelSelectionField
+						mode={newRoutePlaces.travelMode}
+						setMode={(value) =>
+							setNewRoutePlaces((prev) => ({
+								...prev,
+								travelMode: value,
 							}))
 						}
-						handlePlaceAdd={handlePlaceAdd}
-					/> */}
+					/>
+				</Grid>
+
+				{["DRIVE", "TWO_WHEELER"].includes(
+					newRoutePlaces.travelMode
+				) && (
+					<Grid item xs={12}>
+						<FormControl fullWidth size="small">
+							<InputLabel>Avoid</InputLabel>
+							<Select
+								// input={<OutlinedInput label="Tag" />}
+								value={Object.entries(
+									newRoutePlaces.routeModifiers
+								)
+									.map(([key, value]) => (value ? key : null))
+									.filter((x) => x)}
+								onChange={(e) => {
+									const newOptions = {
+										...newRoutePlaces.routeModifiers,
+									};
+									Object.keys(avoidMap).forEach((key) => {
+										newOptions[key] =
+											e.target.value.includes(key);
+									});
+									setNewRoutePlaces((prev) => ({
+										...prev,
+										routeModifiers: newOptions,
+									}));
+								}}
+								label={"Avoid"}
+								multiple
+								renderValue={(selected) => {
+									if (selected.length === 0) {
+										return <em>Any</em>; // Custom label for empty array
+									}
+									return selected
+										.map((value) => avoidMap[value])
+										.join(", ");
+								}}
+							>
+								{Object.keys(avoidMap).map((key) => (
+									<MenuItem key={key} value={key}>
+										<Checkbox
+											checked={
+												newRoutePlaces.routeModifiers[
+													key
+												]
+											}
+										/>
+										<ListItemText primary={avoidMap[key]} />
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</Grid>
+				)}
+
+				<Grid item xs={12}>
+					<Divider className="w-full pt-4" />
 				</Grid>
 
 				<Grid item xs={12}>
