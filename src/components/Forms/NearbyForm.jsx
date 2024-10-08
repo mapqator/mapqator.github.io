@@ -187,7 +187,7 @@ export default function NearbyForm({
 							/>
 						</Grid>
 
-						<Grid item xs={12}>
+						{/* <Grid item xs={12}>
 							<RadioGroup
 								row
 								value={newNearbyPlaces.searchBy}
@@ -209,35 +209,34 @@ export default function NearbyForm({
 									label="Search by keyword"
 								/>
 							</RadioGroup>
-						</Grid>
+						</Grid> */}
 
 						<Grid item xs={12}>
-							{newNearbyPlaces.searchBy === "type" ? (
-								<TypeSelectionField
-									type={newNearbyPlaces.type}
-									setType={(newValue) => {
-										console.log("New Value: ", newValue);
-										setNewNearbyPlaces((prev) => ({
-											...prev,
-											type: newValue,
-										}));
-									}}
-								/>
-							) : (
-								<TextField
-									fullWidth
-									size="small"
-									label="Keyword"
-									value={newNearbyPlaces.keyword}
-									onChange={(e) =>
-										setNewNearbyPlaces((prev) => ({
-											...prev,
-											keyword: e.target.value,
-										}))
-									}
-								/>
-							)}
+							<TypeSelectionField
+								type={newNearbyPlaces.type}
+								setType={(newValue) => {
+									console.log("New Value: ", newValue);
+									setNewNearbyPlaces((prev) => ({
+										...prev,
+										type: newValue,
+									}));
+								}}
+							/>
 						</Grid>
+						{/* <Grid item xs={12}>
+							<TextField
+								fullWidth
+								size="small"
+								label="Keyword"
+								value={newNearbyPlaces.keyword}
+								onChange={(e) =>
+									setNewNearbyPlaces((prev) => ({
+										...prev,
+										keyword: e.target.value,
+									}))
+								}
+							/>
+						</Grid> */}
 
 						{/* {newNearbyPlaces.locationBias &&
 				((newNearbyPlaces.searchBy === "type" &&
@@ -415,7 +414,7 @@ export default function NearbyForm({
 							</Typography>
 						</Box>
 						{newNearbyPlaces.locationBias === "" ? (
-							<Box className="h-[422px] flex flex-row items-center justify-center">
+							<Box className="h-[365px] flex flex-row items-center justify-center">
 								<h1
 									// variant="body1"
 									className="text-center p-4 text-xl text-zinc-400"
@@ -425,7 +424,7 @@ export default function NearbyForm({
 							</Box>
 						) : (
 							<NearbyComponent
-								height={"422px"}
+								height={"365px"}
 								places={list}
 								locationBias={
 									savedPlacesMap[newNearbyPlaces.locationBias]

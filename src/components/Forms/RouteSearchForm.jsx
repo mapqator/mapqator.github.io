@@ -84,12 +84,12 @@ export default function RouteSearchForm({
 		if (newRoutePlaces.type === "") return;
 		setLoading(true);
 
-		if (!placeTypes.includes(newRoutePlaces.type)) {
-			newRoutePlaces.keyword = newRoutePlaces.type;
-			newRoutePlaces.type = "";
-		} else {
-			newRoutePlaces.keyword = "";
-		}
+		// if (!placeTypes.includes(newRoutePlaces.type)) {
+		// 	newRoutePlaces.keyword = newRoutePlaces.type;
+		// 	newRoutePlaces.type = "";
+		// } else {
+		// 	newRoutePlaces.keyword = "";
+		// }
 
 		if (routes.length > 0 && places.length > 0) {
 			const newRoutePlacesMap = [...routePlacesMap];
@@ -260,10 +260,10 @@ export default function RouteSearchForm({
 						)}
 
 						<Grid item xs={12}>
-							<Divider className="w-full pt-2" />
+							<Divider className="w-full" />
 						</Grid>
 
-						<Grid item xs={12}>
+						{/* <Grid item xs={12}>
 							<RadioGroup
 								row
 								value={newRoutePlaces.searchBy}
@@ -285,34 +285,19 @@ export default function RouteSearchForm({
 									label="Search by keyword"
 								/>
 							</RadioGroup>
-						</Grid>
+						</Grid> */}
 
 						<Grid item xs={12}>
-							{newRoutePlaces.searchBy === "type" ? (
-								<TypeSelectionField
-									type={newRoutePlaces.type}
-									setType={(newValue) => {
-										console.log("New Value: ", newValue);
-										setNewRoutePlaces((prev) => ({
-											...prev,
-											type: newValue,
-										}));
-									}}
-								/>
-							) : (
-								<TextField
-									fullWidth
-									size="small"
-									label="Keyword"
-									value={newRoutePlaces.keyword}
-									onChange={(e) =>
-										setNewRoutePlaces((prev) => ({
-											...prev,
-											keyword: e.target.value,
-										}))
-									}
-								/>
-							)}
+							<TypeSelectionField
+								type={newRoutePlaces.type}
+								setType={(newValue) => {
+									console.log("New Value: ", newValue);
+									setNewRoutePlaces((prev) => ({
+										...prev,
+										type: newValue,
+									}));
+								}}
+							/>
 						</Grid>
 
 						<Grid item xs={12}>
@@ -445,17 +430,18 @@ export default function RouteSearchForm({
 						</Box>
 						{newRoutePlaces.origin === "" &&
 						newRoutePlaces.destination === "" ? (
-							<Box className="h-[575px] flex flex-row items-center justify-center">
+							<Box className="h-[509px] flex flex-row items-center justify-center">
 								<h1
 									// variant="body1"
 									className="text-center p-4 text-xl text-zinc-400"
 								>
-									Select origin/destination to view route.
+									Select origin/destination to search along
+									route.
 								</h1>
 							</Box>
 						) : (
 							<RoutePlacesComponent
-								height={"575px"}
+								height={"509px"}
 								encodedPolyline={
 									routes[0]?.polyline.encodedPolyline
 								}
