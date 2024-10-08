@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import PlaceSelectionField from "../InputFields/PlaceSelectionField";
 import { LoadingButton } from "@mui/lab";
 import { Add } from "@mui/icons-material";
@@ -44,30 +44,32 @@ export default function PlacesForm({ handlePlaceAdd }) {
 	};
 
 	return (
-		<Grid container spacing={2}>
-			<Grid item xs={12}>
-				<PlaceSelectionField
-					label="Place"
-					onChange={(event) => {
-						setPlaceId(event.target.value);
-					}}
-					value={placeId}
-					handlePlaceAdd={handlePlaceAdd}
-				/>
+		<Box className="w-full md:w-[30rem] mx-auto">
+			<Grid container spacing={2}>
+				<Grid item xs={12}>
+					<PlaceSelectionField
+						label="Place"
+						onChange={(event) => {
+							setPlaceId(event.target.value);
+						}}
+						value={placeId}
+						handlePlaceAdd={handlePlaceAdd}
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<LoadingButton
+						variant="contained"
+						fullWidth
+						onClick={() => handleAddSave(placeId)}
+						startIcon={<Add />}
+						loading={loading}
+						loadingPosition="start"
+						disabled={!placeId || selectedPlacesMap[placeId]}
+					>
+						Add Place
+					</LoadingButton>
+				</Grid>
 			</Grid>
-			<Grid item xs={12}>
-				<LoadingButton
-					variant="contained"
-					fullWidth
-					onClick={() => handleAddSave(placeId)}
-					startIcon={<Add />}
-					loading={loading}
-					loadingPosition="start"
-					disabled={!placeId || selectedPlacesMap[placeId]}
-				>
-					Add Place
-				</LoadingButton>
-			</Grid>
-		</Grid>
+		</Box>
 	);
 }
