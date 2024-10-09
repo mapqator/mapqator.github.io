@@ -29,6 +29,7 @@ import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
 import DirectionComponent from "../GoogleMap/DirectionComponent";
 import MultiRouteComponent from "../GoogleMap/MultiRouteComponent";
 import debounce from "lodash/debounce";
+import MultiStopComponent from "../GoogleMap/MultiStopComponent";
 
 const avoidMap = {
 	avoidTolls: "Tolls",
@@ -542,7 +543,7 @@ export default function DirectionForm({
 									Select origin/destination to view route.
 								</h1>
 							</Box>
-						) : (
+						) : newDirection.intermediates.length === 0 ? (
 							<MultiRouteComponent
 								height={"387px"}
 								routes={routes}
@@ -550,6 +551,19 @@ export default function DirectionForm({
 								destination={
 									savedPlacesMap[newDirection.destination]
 								}
+							/>
+						) : (
+							<MultiStopComponent
+								height={"387px"}
+								routes={routes}
+								origin={savedPlacesMap[newDirection.origin]}
+								destination={
+									savedPlacesMap[newDirection.destination]
+								}
+								intermediates={newDirection.intermediates.map(
+									(intermediate) =>
+										savedPlacesMap[intermediate]
+								)}
 							/>
 						)}
 					</Paper>

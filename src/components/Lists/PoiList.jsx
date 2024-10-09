@@ -59,14 +59,16 @@ export default function PoiList({
 										  )}`
 										: ""
 								} ${
-									routingSummaries[index]?.legs[0] &&
-									"|🚶🏾‍➡️" +
-										routingSummaries[index].legs[0]
-											.duration +
-										" (" +
-										routingSummaries[index].legs[0]
-											.distanceMeters +
-										"m)"
+									routingSummaries &&
+									routingSummaries[index]?.legs[0]
+										? "|🚶🏾‍➡️" +
+										  routingSummaries[index].legs[0]
+												.duration +
+										  " (" +
+										  routingSummaries[index].legs[0]
+												.distanceMeters +
+										  "m)"
+										: ""
 								}`}
 								primaryTypographyProps={{ noWrap: true }}
 								secondaryTypographyProps={{ noWrap: true }}

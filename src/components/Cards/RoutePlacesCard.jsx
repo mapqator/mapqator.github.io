@@ -68,6 +68,7 @@ function RoutePlacesSummary({
 	// 	setRoutePlacesMap(newNearbyPlacesMap);
 	// };
 	// console.log("Nearby:", routePlacesMap[place_id][index]);
+	const { setApiCallLogs } = useContext(GlobalContext);
 	return (
 		<>
 			<Box

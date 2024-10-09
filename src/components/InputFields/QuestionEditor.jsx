@@ -196,7 +196,7 @@ export default function QuestionEditor({ index }) {
 					minRows={4}
 					inputRef={inputRef}
 				/>
-				<Tooltip title="Generate Question with AI">
+				{/* <Tooltip title="Generate Question with AI">
 					<IconButton
 						onClick={handleGenerateQuestion}
 						disabled={isGenerating}
@@ -215,7 +215,7 @@ export default function QuestionEditor({ index }) {
 					>
 						<SmartToyIcon />
 					</IconButton>
-				</Tooltip>
+				</Tooltip> */}
 				{showMentions && (
 					<List
 						sx={{
