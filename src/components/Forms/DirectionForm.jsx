@@ -141,9 +141,10 @@ export default function DirectionForm({
 		setLoading(false);
 	};
 
-	const debouncedComputeRoutes = useCallback(debounce(computeRoutes, 1000), [
-		newDirection,
-	]);
+	const debouncedComputeRoutes = useCallback(
+		debounce(computeRoutes, 1000),
+		[]
+	);
 	useEffect(() => {
 		debouncedComputeRoutes(newDirection);
 	}, [newDirection, debouncedComputeRoutes]);

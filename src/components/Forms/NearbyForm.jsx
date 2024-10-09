@@ -170,7 +170,7 @@ export default function NearbyForm({
 	// Wrap the fetchNearbyPlaces function with debounce
 	const debouncedFetchNearbyPlaces = useCallback(
 		debounce(fetchNearbyPlaces, 1000),
-		[newNearbyPlaces]
+		[]
 	);
 
 	useEffect(() => {

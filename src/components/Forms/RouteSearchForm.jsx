@@ -158,9 +158,7 @@ export default function RouteSearchForm({
 		setLoading(false);
 	};
 
-	const debouncedCompute = useCallback(debounce(compute, 1000), [
-		newRoutePlaces,
-	]);
+	const debouncedCompute = useCallback(debounce(compute, 1000), []);
 
 	useEffect(() => {
 		debouncedCompute(newRoutePlaces);
