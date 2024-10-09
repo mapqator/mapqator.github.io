@@ -269,7 +269,7 @@ export default function QuestionCreationPage() {
 					</div>
 				</>
 			)} */}
-				{queryStatus === "saved" && (
+				{/* {queryStatus === "saved" && (
 					<Box
 						// mt={3}
 						// p={2}
@@ -297,7 +297,7 @@ export default function QuestionCreationPage() {
 							</Button>
 						</Box>
 					</Box>
-				)}
+				)} */}
 			</Box>
 		</Container>
 	);
