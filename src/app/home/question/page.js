@@ -23,7 +23,7 @@ import { AppContext } from "@/contexts/AppContext";
 import { useRouter } from "next/navigation";
 import QuestionAnswerForm from "@/components/Forms/QuestionAnswerForm";
 import { Assessment, ExpandMore } from "@mui/icons-material";
-import ContextVisualize from "@/components/Viewer/ContextVisualize";
+import ContextPreview from "@/components/GoogleMaps/ContextPreview";
 
 export default function QuestionCreationPage() {
 	const {
@@ -41,10 +41,11 @@ export default function QuestionCreationPage() {
 		queryStatus,
 		setQueryStatus,
 		routePlacesMap,
+		savedPlacesMap,
 	} = useContext(GlobalContext);
 
 	const router = useRouter();
-	const { queries, setQueries, savedPlacesMap } = useContext(AppContext);
+	const { queries, setQueries } = useContext(AppContext);
 	const { isAuthenticated } = useAuth();
 
 	// useEffect(() => {
@@ -77,85 +78,6 @@ export default function QuestionCreationPage() {
 		event.preventDefault();
 		setQueryStatus("saved");
 		onFinish();
-		return;
-
-		const newQuery = {
-			...query,
-			context: ContextGeneratorService.convertContextToText(context),
-			context_json: {
-				saved_places: savedPlacesMap,
-				distance_matrix: distanceMatrix,
-				places: selectedPlacesMap,
-				nearby_places: nearbyPlacesMap,
-				current_information: currentInformation,
-				pois: poisMap,
-				directions: directionInformation,
-			},
-		};
-		console.log(newQuery);
-		if (isAuthenticated) {
-			if (query.id === undefined) {
-				const res = await queryApi.createQuery(newQuery);
-				if (res.success) {
-					// update the queries
-					showSuccess("Query saved successfully");
-					console.log("Saved query: ", res.data[0]);
-					const newQueries = [...queries];
-					newQueries.unshift(res.data[0]);
-					setQueries(newQueries);
-					window.scrollTo(document.getElementById("questions"));
-					// handleReset();
-					onFinish();
-				} else {
-					showError("Can't save this query");
-					window.scrollTo(0, 0);
-				}
-			} else {
-				const res = await queryApi.updateQuery(query.id, newQuery);
-				if (res.success) {
-					setQueries((prev) =>
-						prev.map((q) =>
-							q.id === res.data[0].id ? res.data[0] : q
-						)
-					);
-					// update the queries
-					showSuccess("Query edited successfully");
-					// handleReset();
-					onFinish();
-				} else {
-					showError("Can't update this query");
-					window.scrollTo(0, 0);
-				}
-			}
-		} else {
-			if (query.id === undefined) {
-				const new_id =
-					"G-" +
-					queries.filter((item) => item.username === getUserName())
-						.length;
-				const newQueries = [...queries];
-				newQueries.unshift({
-					...newQuery,
-					id: new_id,
-					username: getUserName(),
-					human: {
-						answer: "",
-						explanation: "",
-						username: "",
-					},
-				});
-				setQueries(newQueries);
-				window.scrollTo(document.getElementById("questions"));
-				showSuccess("Query saved successfully");
-			} else {
-				setQueries((prev) =>
-					prev.map((q) => (q.id === query.id ? newQuery : q))
-				);
-				showSuccess("Query edited successfully");
-			}
-			// handleReset();
-			onFinish();
-		}
 	};
 
 	return (
@@ -225,7 +147,7 @@ export default function QuestionCreationPage() {
 											mt: 2,
 										}}
 									/>
-									<ContextVisualize
+									<ContextPreview
 										savedPlacesMap={savedPlacesMap}
 										selectedPlacesMap={selectedPlacesMap}
 										nearbyPlacesMap={nearbyPlacesMap}
@@ -239,19 +161,9 @@ export default function QuestionCreationPage() {
 						</Paper>
 					</Box>
 				</Paper>
-				{/* <ContextVisualize context={context} /> */}
+
 				<Box sx={{ mb: 2 }}></Box>
 
-				{/* <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
-				<Typography variant="h6">AI Generated Questions</Typography>
-				<Divider sx={{ my: 2 }} />
-				<ul className="list-disc pl-4">
-					<li>Dummy Question 1</li>
-					<li>Dummy Question 2</li>
-					<li>Dummy Question 3</li>
-					<li>Dummy Question 4</li>
-				</ul>
-			</Paper> */}
 				<QuestionAnswerForm
 					handleSubmit={handleSubmit}
 					handleReset={handleReset}

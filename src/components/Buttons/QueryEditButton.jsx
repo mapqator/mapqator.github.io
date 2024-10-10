@@ -19,9 +19,9 @@ export default function QueryEditButton({ onEdit, query }) {
 		setPoisMap,
 		setApiCallLogs,
 		setRoutePlacesMap,
+		savedPlacesMap,
+		setSavedPlacesMap,
 	} = useContext(GlobalContext);
-
-	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 
 	const handleSave = async (place_id) => {
 		if (savedPlacesMap[place_id]) return;

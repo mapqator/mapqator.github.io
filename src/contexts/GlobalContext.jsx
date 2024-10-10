@@ -299,8 +299,7 @@ export default function GlobalContextProvider({ children }) {
 		questions: [initQuery],
 	});
 
-	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
-
+	const [savedPlacesMap, setSavedPlacesMap] = useState({});
 	const [apiCallLogs, setApiCallLogs] = useState([]);
 	useEffect(() => {
 		setContext({
@@ -417,6 +416,8 @@ export default function GlobalContextProvider({ children }) {
 				setRoutePlacesMap,
 				newRoutePlaces,
 				setNewRoutePlaces,
+				savedPlacesMap,
+				setSavedPlacesMap,
 			}}
 		>
 			{children}

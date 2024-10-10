@@ -39,9 +39,10 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 		setQueryStatus,
 		routePlacesMap,
 		apiCallLogs,
+		savedPlacesMap,
 	} = useContext(GlobalContext);
 	const router = useRouter();
-	const { queries, setQueries, savedPlacesMap } = useContext(AppContext);
+	const { queries, setQueries } = useContext(AppContext);
 	const [loading, setLoading] = useState(false);
 	const { isAuthenticated } = useAuth();
 

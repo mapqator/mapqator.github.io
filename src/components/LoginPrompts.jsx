@@ -14,9 +14,9 @@ const LoginPrompt = ({ onLogin }) => {
 		nearbyPlacesMap,
 		directionInformation,
 		routePlacesMap,
+		savedPlacesMap,
 	} = useContext(GlobalContext);
 
-	const { savedPlacesMap } = useContext(AppContext);
 	const handleDownload = () => {
 		const jsonString = JSON.stringify(
 			{

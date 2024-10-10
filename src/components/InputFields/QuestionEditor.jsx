@@ -18,8 +18,7 @@ import gptApi from "@/api/gptApi";
 import { AppContext } from "@/contexts/AppContext";
 
 export default function QuestionEditor({ index }) {
-	const { query, setQuery } = useContext(GlobalContext);
-	const { savedPlacesMap } = useContext(AppContext);
+	const { query, setQuery, savedPlacesMap } = useContext(GlobalContext);
 	const [isGenerating, setIsGenerating] = useState(false);
 	const { context } = useContext(GlobalContext);
 	const [showMentions, setShowMentions] = useState(false);

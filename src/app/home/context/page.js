@@ -3,13 +3,13 @@ import { useContext, useEffect, useState } from "react";
 import { Box, Container, Typography } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import ContextGeneratorService from "@/services/contextGeneratorService";
-import ContextStepper from "@/components/Steppers/ContextStepper";
 import { AppContext } from "@/contexts/AppContext";
 import example from "@/database/newexample.json";
 import mapApi from "@/api/mapApi";
 import dayjs from "dayjs";
 import KeyStoreButton from "@/components/Buttons/KeyStoreButton";
 import { useRouter } from "next/navigation";
+import ContextEditor from "@/components/GoogleMaps/ContextEditor";
 export default function ContextGenerator() {
 	const {
 		selectedPlacesMap,
@@ -29,9 +29,9 @@ export default function ContextGenerator() {
 		queryStatus,
 		activeStep,
 		setActiveStep,
+		savedPlacesMap,
+		setSavedPlacesMap,
 	} = useContext(GlobalContext);
-
-	const { savedPlacesMap, setSavedPlacesMap } = useContext(AppContext);
 
 	useEffect(() => {
 		const page = window.location.hash.substring(1);
@@ -174,7 +174,7 @@ export default function ContextGenerator() {
 				<h1 className="text-3xl md:text-4xl font-normal pb-5">
 					Create Geo-Spatial Context Using Map Services
 				</h1>
-				<ContextStepper
+				<ContextEditor
 					{...{
 						handleReset,
 						onFinish,

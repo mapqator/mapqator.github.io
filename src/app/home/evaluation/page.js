@@ -73,8 +73,9 @@ export default function LiveEvaluation() {
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 	const { isAuthenticated } = useAuth();
-	const { setEvaluationStatus, queryStatus } = useContext(GlobalContext);
-	const { queries, setQueries, savedPlacesMap } = useContext(AppContext);
+	const { setEvaluationStatus, queryStatus, savedPlacesMap } =
+		useContext(GlobalContext);
+	const { queries, setQueries } = useContext(AppContext);
 
 	// useEffect(() => {
 	// 	if (queryStatus === "empty") {

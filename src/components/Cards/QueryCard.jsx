@@ -13,13 +13,6 @@ import {
 	Divider,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faChevronDown,
-	faChevronUp,
-	faUser,
-} from "@fortawesome/free-solid-svg-icons";
-import Annotation from "@/components/Forms/Annotation";
 import LLMAnswers from "../Tables/LLMAnswers";
 import QueryEditButton from "@/components/Buttons/QueryEditButton";
 import CollapsedContext from "./CollapsedContext";
@@ -36,13 +29,10 @@ import {
 } from "@mui/icons-material";
 import { useAuth } from "@/contexts/AuthContext";
 import { showError, showSuccess } from "@/contexts/ToastProvider";
-import { FormControl, Select, MenuItem, InputLabel } from "@mui/material";
-import categories from "@/database/categories.json";
-import { convertFromSnake } from "@/services/utils";
 import { AppContext } from "@/contexts/AppContext";
 import ContextGeneratorService from "@/services/contextGeneratorService";
-import ContextVisualize from "../Viewer/ContextVisualize";
 import Pluralize from "pluralize";
+import ContextPreview from "../GoogleMaps/ContextPreview";
 export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 	const [flag, setFlag] = useState(false);
 	const { setQueries } = useContext(AppContext);
@@ -258,7 +248,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 											mt: 2,
 										}}
 									/>
-									<ContextVisualize
+									<ContextPreview
 										savedPlacesMap={
 											entry.context_json.places
 										}
