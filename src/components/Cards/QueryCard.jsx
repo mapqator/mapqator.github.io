@@ -26,6 +26,7 @@ import {
 	GetApp,
 	Rule,
 	AssignmentTurnedIn,
+	Api,
 } from "@mui/icons-material";
 import { useAuth } from "@/contexts/AuthContext";
 import { showError, showSuccess } from "@/contexts/ToastProvider";
@@ -311,34 +312,6 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 				<div className="w-full flex flex-row justify-between gap-2 p-2 items-center">
 					{getUserName() === "admin" ? (
 						<div className="flex flex-row gap-2 mr-auto">
-							{/* <FormControl
-										variant="outlined"
-										className="w-[20rem]"
-										size="small"
-										required
-									>
-										<InputLabel>Category</InputLabel>
-										<Select
-											required
-											label={"Category"}
-											placeholder="Choose a category of the question"
-											id="outlined-adornment"
-											className="outlined-input"
-											value={category}
-											onChange={(e) => {
-												setCategory(e.target.value);
-											}}
-										>
-											{categories.map((value, index) => (
-												<MenuItem
-													key={index}
-													value={value}
-												>
-													{convertFromSnake(value)}
-												</MenuItem>
-											))}
-										</Select>
-									</FormControl> */}
 							<Button
 								variant="contained"
 								color="primary"
@@ -372,17 +345,30 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 							</Button>
 						</div>
 					) : (
-						<Chip
-							icon={<AssignmentTurnedIn />}
-							label={Pluralize(
-								"Question",
-								entry.questions.length ?? 0,
-								true
-							)}
-							// size="small"
-							color="primary"
-							variant="outlined"
-						/>
+						<div className="flex flex-row gap-2">
+							<Chip
+								icon={<AssignmentTurnedIn />}
+								label={Pluralize(
+									"Question",
+									entry.questions.length ?? 0,
+									true
+								)}
+								// size="small"
+								color="primary"
+								variant="outlined"
+							/>
+							<Chip
+								icon={<Api />}
+								label={Pluralize(
+									"API Call",
+									entry.api_call_logs?.length ?? 0,
+									true
+								)}
+								// size="small"
+								color="primary"
+								variant="outlined"
+							/>
+						</div>
 					)}
 
 					<div className="flex gap-2">
@@ -395,14 +381,14 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 							</>
 						) : (
 							<>
-								{/* <Button
-								color="primary"
-								startIcon={<GetApp />}
-								onClick={handleDownloadQuery}
-							>
-								Download Query
-							</Button> */}
 								<Button
+									color="primary"
+									startIcon={<GetApp />}
+									onClick={handleDownloadQuery}
+								>
+									Download Query
+								</Button>
+								{/* <Button
 									color="primary"
 									startIcon={<Rule />}
 									onClick={async () => {
@@ -436,7 +422,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 									}}
 								>
 									Evaluate
-								</Button>
+								</Button> */}
 								<Button
 									// variant="contained"
 									color="error"

@@ -55,7 +55,7 @@ export default function WorkFlow() {
 					}}
 				/>
 			),
-			label: "Create Question",
+			label: "Create QA Pairs",
 			description:
 				"Easily create relevant questions based on the map contexts you've generated.",
 			key: "question",

@@ -88,7 +88,7 @@ export default function QuestionCreationPage() {
 		>
 			<Box sx={{ mt: 4, mb: 4 }}>
 				<h1 className="text-3xl md:text-4xl font-normal pb-5">
-					Create MCQ Questions based on the Context
+					Create QA Pairs based on the Context
 				</h1>
 				<Paper elevation={2} sx={{ p: 3, mb: 4 }}>
 					<Box
