@@ -11,36 +11,48 @@ import {
 	MenuItem,
 } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import OptionsEditor from "./OptionsEditor";
 
-const MCQAnswer = ({ value, options, onChange }) => (
-	<RadioGroup value={value} onChange={(e) => onChange(e.target.value)}>
-		<FormControlLabel
-			key={-1}
-			value={-1}
-			control={<Radio />}
-			label="None"
-		/>
-		{options.map((option, index) => (
+const MCQAnswer = ({ value, options, onChange, index }) => (
+	<>
+		<OptionsEditor index={index} />
+		<Typography variant="h6" sx={{ mt: 2 }}>
+			Correct Answer:
+		</Typography>
+		<RadioGroup value={value} onChange={(e) => onChange(e.target.value)}>
 			<FormControlLabel
-				key={index}
-				value={index}
+				key={-1}
+				value={-1}
 				control={<Radio />}
-				label={`Option ${index + 1}`}
+				label="None"
 			/>
-		))}
-	</RadioGroup>
+			{options.map((option, index) => (
+				<FormControlLabel
+					key={index}
+					value={index}
+					control={<Radio />}
+					label={`Option ${index + 1}`}
+				/>
+			))}
+		</RadioGroup>
+	</>
 );
 
 const ShortAnswer = ({ value, onChange }) => (
-	<TextField
-		fullWidth
-		variant="outlined"
-		value={value || ""}
-		onChange={(e) => onChange(e.target.value)}
-		placeholder="Enter the correct answer"
-		sx={{ mt: 1 }}
-		multiline
-	/>
+	<>
+		<Typography variant="h6" sx={{ mt: 2 }}>
+			Correct Answer:
+		</Typography>
+		<TextField
+			fullWidth
+			variant="outlined"
+			value={value || ""}
+			onChange={(e) => onChange(e.target.value)}
+			placeholder="Enter the correct answer"
+			sx={{ mt: 1 }}
+			multiline
+		/>
+	</>
 );
 
 // Answer type strategy
@@ -86,17 +98,17 @@ export default function CorrectAnswerEditor({ index }) {
 
 	return (
 		<FormControl component="fieldset" sx={{ display: "block", mb: 2 }}>
+			{/* <Typography variant="h6">Answer {index + 1}</Typography> */}
 			<Box
 				sx={{
 					display: "flex",
 					alignItems: "center",
 					mb: 2,
-					justifyContent: "space-between",
+					// justifyContent: "space-between",
+					gap: 2,
 				}}
 			>
-				<Typography variant="h6" sx={{ mr: 2 }}>
-					Correct Answer:
-				</Typography>
+				<Typography variant="h6">Answer Type:</Typography>
 				<Select
 					value={query.questions[index].answer.type}
 					onChange={(e) => handleTypeChange(e.target.value)}
@@ -108,13 +120,11 @@ export default function CorrectAnswerEditor({ index }) {
 				</Select>
 			</Box>
 
-			{/* <Typography variant="h6" sx={{ mt: 2 }}>
-				Correct Answer:
-			</Typography> */}
 			<AnswerComponent
 				value={query.questions[index].answer.correct}
 				options={query.questions[index].answer.options}
 				onChange={handleChange}
+				index={index}
 			/>
 		</FormControl>
 	);

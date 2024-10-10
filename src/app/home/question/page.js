@@ -40,6 +40,7 @@ export default function QuestionCreationPage() {
 		contextStatus,
 		queryStatus,
 		setQueryStatus,
+		routePlacesMap,
 	} = useContext(GlobalContext);
 
 	const router = useRouter();
@@ -228,10 +229,10 @@ export default function QuestionCreationPage() {
 										savedPlacesMap={savedPlacesMap}
 										selectedPlacesMap={selectedPlacesMap}
 										nearbyPlacesMap={nearbyPlacesMap}
-										distanceMatrix={distanceMatrix}
 										directionInformation={
 											directionInformation
 										}
+										routePlacesMap={routePlacesMap}
 									/>
 								</>
 							)}

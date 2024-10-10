@@ -84,7 +84,7 @@ export default function CategorySelectionField({ index }) {
 		<FormControl
 			variant="outlined"
 			className="w-[20rem]"
-			sx={{ mt: 2 }}
+			// sx={{ mt: 2 }}
 			// size="small"
 			required
 		>

@@ -112,7 +112,7 @@ export default function OptionsEditor({ index }) {
 	};
 	return (
 		<FormControl component="fieldset" fullWidth>
-			<Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
+			<Typography variant="h6" gutterBottom>
 				Options:
 			</Typography>
 			{query.questions[index].answer.options.map((option, i) => (

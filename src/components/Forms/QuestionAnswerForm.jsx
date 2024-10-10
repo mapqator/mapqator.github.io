@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Box, Button, IconButton, Paper } from "@mui/material";
+import { Box, Button, Divider, IconButton, Paper } from "@mui/material";
 import {
 	Add,
 	Clear,
@@ -122,10 +122,16 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 			className="flex flex-col items-center"
 		>
 			{query.questions.map((question, index) => (
-				<Paper elevation={2} sx={{ p: 3, mb: 4 }} key={index}>
+				<Paper
+					elevation={2}
+					sx={{ p: 3, mb: 4 }}
+					key={index}
+					className="w-full flex flex-col gap-4"
+				>
 					<QuestionEditor index={index} />
 					<CategorySelectionField index={index} />
-					<OptionsEditor index={index} />
+					<Divider />
+					{/* <OptionsEditor index={index} /> */}
 					<CorrectAnswerEditor index={index} />
 					<Box className="flex flex-row justify-end">
 						<IconButton
