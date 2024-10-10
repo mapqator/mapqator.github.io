@@ -102,18 +102,20 @@ export default function CorrectAnswerEditor({ index }) {
 			<Box
 				sx={{
 					display: "flex",
-					alignItems: "center",
-					mb: 2,
+					// alignItems: "center",
+					flexDirection: "col",
+					mb: 4,
 					// justifyContent: "space-between",
-					gap: 2,
+					gap: 1,
 				}}
+				className="flex flex-col justify-between"
 			>
 				<Typography variant="h6">Answer Type:</Typography>
 				<Select
 					value={query.questions[index].answer.type}
 					onChange={(e) => handleTypeChange(e.target.value)}
-					sx={{ minWidth: 200 }}
-					size="small"
+					sx={{ width: "20rem" }}
+					// size="small"
 				>
 					<MenuItem value="mcq">Multiple Choice</MenuItem>
 					<MenuItem value="short">Short Answer</MenuItem>
