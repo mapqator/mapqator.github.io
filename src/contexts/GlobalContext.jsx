@@ -293,6 +293,7 @@ export default function GlobalContextProvider({ children }) {
 			correct: -1,
 		},
 		classification: "",
+		references: [],
 	};
 
 	const [query, setQuery] = useState({

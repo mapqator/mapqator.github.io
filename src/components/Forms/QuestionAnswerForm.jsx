@@ -23,6 +23,7 @@ import { AppContext } from "@/contexts/AppContext";
 import { useRouter } from "next/navigation";
 import queryApi from "@/api/queryApi";
 import { showError, showSuccess } from "@/contexts/ToastProvider";
+import ReferenceSelectionField from "../InputFields/ReferenceSelectionField";
 
 export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 	const {
@@ -134,6 +135,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 					<Divider />
 					{/* <OptionsEditor index={index} /> */}
 					<CorrectAnswerEditor index={index} />
+					<ReferenceSelectionField {...{ index, apiCallLogs }} />
 					<Box className="flex flex-row justify-end">
 						<IconButton
 							onClick={() =>
