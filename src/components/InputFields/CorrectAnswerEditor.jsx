@@ -19,7 +19,10 @@ const MCQAnswer = ({ value, options, onChange, index }) => (
 		<Typography variant="h6" sx={{ mt: 2 }}>
 			Correct Answer:
 		</Typography>
-		<RadioGroup value={value} onChange={(e) => onChange(e.target.value)}>
+		<RadioGroup
+			value={value}
+			onChange={(e) => onChange(parseInt(e.target.value))}
+		>	
 			<FormControlLabel
 				key={-1}
 				value={-1}
