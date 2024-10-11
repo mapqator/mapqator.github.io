@@ -1,7 +1,3 @@
-import { getGoogleMapsApiKey } from "@/api/base";
-import { AppContext } from "@/contexts/AppContext";
-import { useAuth } from "@/contexts/AuthContext";
-import { GlobalContext } from "@/contexts/GlobalContext";
 import {
 	GoogleMap,
 	LoadScript,

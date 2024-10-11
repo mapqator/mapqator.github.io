@@ -23,7 +23,7 @@ import { AppContext } from "@/contexts/AppContext";
 import { useRouter } from "next/navigation";
 import queryApi from "@/api/queryApi";
 import { showError, showSuccess } from "@/contexts/ToastProvider";
-import ReferenceSelectionField from "../InputFields/ReferenceSelectionField";
+import ReferenceSelectionField from "../GoogleMaps/InputFields/ReferenceSelectionField";
 
 export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 	const {

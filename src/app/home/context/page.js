@@ -31,6 +31,7 @@ export default function ContextGenerator() {
 		setActiveStep,
 		savedPlacesMap,
 		setSavedPlacesMap,
+		setRoutePlacesMap,
 	} = useContext(GlobalContext);
 
 	useEffect(() => {
@@ -45,6 +46,7 @@ export default function ContextGenerator() {
 
 	const router = useRouter();
 	const {
+		initRoutePlacesMap,
 		initSelectedPlacesMap,
 		initNearbyPlacesMap,
 		initPoisMap,
@@ -59,6 +61,7 @@ export default function ContextGenerator() {
 		setNearbyPlacesMap(initNearbyPlacesMap);
 		setCurrentInformation(initCurrentInformation);
 		setDirectionInformation(initDirectionInformation);
+		setRoutePlacesMap(initRoutePlacesMap);
 		setSelectedPlacesMap(initSelectedPlacesMap);
 		setSavedPlacesMap({});
 		setActiveStep(1);
