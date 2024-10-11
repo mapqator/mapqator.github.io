@@ -54,14 +54,6 @@ import { list as searchAlongRouteList } from "@/tools/SearchAlongRoute";
 import Image from "next/image";
 import MapServiceSelector from "../MapServiceSelector";
 
-const toolOptions = {
-	textSearch: textSearchList,
-	placeDetails: placeDetailsList,
-	nearbySearch: nearbySearchList,
-	computeRoutes: computeRoutesList,
-	searchAlongRoute: searchAlongRouteList,
-};
-
 function ContextStep({
 	step,
 	index,
@@ -73,12 +65,16 @@ function ContextStep({
 	loadExample,
 }) {
 	const [loading, setLoading] = useState(false);
-	const { tools, setTools } = useContext(GlobalContext);
+	const { tools, setTools, mapService } = useContext(GlobalContext);
 	const stepRef = useRef(null);
 
-	useEffect(() => {
-		console.log("Compute Routes", tools.computeRoutes.constructor);
-	}, [tools]);
+	const toolOptions = {
+		textSearch: textSearchList[mapService],
+		placeDetails: placeDetailsList[mapService],
+		nearbySearch: nearbySearchList[mapService],
+		computeRoutes: computeRoutesList[mapService],
+		searchAlongRoute: searchAlongRouteList[mapService],
+	};
 
 	return (
 		<div ref={stepRef}>
@@ -106,56 +102,67 @@ function ContextStep({
 						{step.label}
 					</Typography>
 
-					{step.key && index === activeStep && (
-						<Select
-							value={toolOptions[step.key].findIndex(
-								(option) =>
-									option.instance.constructor ===
-									tools[step.key].constructor
-							)}
-							onChange={(e) => {
-								setTools((prev) => ({
-									...prev,
-									[step.key]:
-										toolOptions[step.key][e.target.value]
-											.instance,
-								}));
-							}}
-							// label={step.label}
-							size="small"
-							className="min-w-[15rem]"
-							renderValue={(selected) => (
-								<div className="flex flex-row gap-2 w-full">
-									<img
-										src={
-											toolOptions[step.key][selected].icon
-										}
-										className="w-5 h-5"
-										alt={
-											toolOptions[step.key][selected].name
-										}
-									/>
+					{step.key &&
+						index === activeStep &&
+						toolOptions[step.key] &&
+						tools[step.key] && (
+							<Select
+								value={
+									toolOptions[step.key]
+										? toolOptions[step.key].findIndex(
+												(option) =>
+													option.instance
+														.constructor ===
+													tools[step.key].constructor
+										  )
+										: null
+								}
+								onChange={(e) => {
+									setTools((prev) => ({
+										...prev,
+										[step.key]:
+											toolOptions[step.key][
+												e.target.value
+											].instance,
+									}));
+								}}
+								// label={step.label}
+								size="small"
+								className="min-w-[15rem]"
+								renderValue={(selected) => (
+									<div className="flex flex-row gap-2 w-full">
+										<img
+											src={
+												toolOptions[step.key][selected]
+													?.icon
+											}
+											className="w-5 h-5"
+											alt={
+												toolOptions[step.key][selected]
+													?.name
+											}
+										/>
 
-									{toolOptions[step.key][selected].name}
-								</div>
-							)}
-						>
-							{toolOptions[step.key].map((option, index) => (
-								<MenuItem
-									key={index}
-									value={index}
-									className="flex flex-row gap-2"
-								>
-									<img
-										src={option.icon}
-										className="w-5 h-5"
-										alt={option.name}
-									/>
-									{option.name}
-								</MenuItem>
-							))}
-						</Select>
-					)}
+										{toolOptions[step.key][selected]?.name}
+									</div>
+								)}
+							>
+								{toolOptions[step.key]?.map((option, index) => (
+									<MenuItem
+										key={index}
+										value={index}
+										className="flex flex-row gap-2"
+									>
+										<img
+											src={option.icon}
+											className="w-5 h-5"
+											alt={option.name}
+										/>
+										{option.name}
+									</MenuItem>
+								))}
+							</Select>
+						)}
 				</Box>
 			</StepLabel>
 			<StepContent>
@@ -348,7 +355,7 @@ export default function ContextEditor({
 			form: <AutocompleteSearchBox />,
 			grid: Object.keys(savedPlacesMap).length > 0 && (
 				<>
-					<MapComponent locations={locations} />
+					<MapComponent locations={locations} zoom={16} />
 					<SavedPlacesGrid
 						{...{
 							selectedPlacesMap,

@@ -156,22 +156,26 @@ class NominatimApi extends TextSearch {
 	};
 }
 
-export const list = [
-	{
-		name: "Google Places API (New)",
-		icon: "/images/google-maps.png",
-		instance: new GooglePlacesApiNew(),
-	},
-	{
-		name: "Google Places API",
-		icon: "/images/google-maps.png",
-		instance: new GooglePlacesApi(),
-	},
-	{
-		name: "Nominatim API",
-		icon: "/images/openstreetmap.logo.png",
-		instance: new NominatimApi(),
-	},
-];
+export const list = {
+	googleMaps: [
+		{
+			name: "Google Places API (New)",
+			icon: "/images/google-maps.png",
+			instance: new GooglePlacesApiNew(),
+		},
+		{
+			name: "Google Places API",
+			icon: "/images/google-maps.png",
+			instance: new GooglePlacesApi(),
+		},
+	],
+	openStreetMap: [
+		{
+			name: "Nominatim API",
+			icon: "/images/openstreetmap.logo.png",
+			instance: new NominatimApi(),
+		},
+	],
+};
 
 export default TextSearch;

@@ -80,10 +80,12 @@ class GooglePlacesApiNew extends NearbySearch {
 	};
 }
 
-export const list = [
-	{
-		name: "Google Places API (New)",
-		icon: "/images/google-maps.png",
-		instance: new GooglePlacesApiNew(),
-	},
-];
+export const list = {
+	googleMaps: [
+		{
+			name: "Google Places API (New)",
+			icon: "/images/google-maps.png",
+			instance: new GooglePlacesApiNew(),
+		},
+	],
+};

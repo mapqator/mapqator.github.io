@@ -116,15 +116,19 @@ class NominatimApi extends PlaceDetails {
 	};
 }
 
-export const list = [
-	{
-		name: "Google Places API (New)",
-		icon: "/images/google-maps.png",
-		instance: new GooglePlacesApiNew(),
-	},
-	{
-		name: "Nominatim API",
-		icon: "/images/openstreetmap.logo.png",
-		instance: new NominatimApi(),
-	},
-];
+export const list = {
+	googleMaps: [
+		{
+			name: "Google Places API (New)",
+			icon: "/images/google-maps.png",
+			instance: new GooglePlacesApiNew(),
+		},
+	],
+	openStreetMap: [
+		{
+			name: "Nominatim API",
+			icon: "/images/openstreetmap.logo.png",
+			instance: new NominatimApi(),
+		},
+	],
+};

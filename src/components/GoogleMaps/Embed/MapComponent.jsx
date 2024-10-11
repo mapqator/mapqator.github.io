@@ -21,6 +21,18 @@ export default function MapComponent({ locations, height, zoom }) {
 			mapRef.current.fitBounds(bounds);
 		}
 	};
+
+	// After the map has adjusted the bounds, check the zoom level
+	const onIdle = () => {
+		if (mapRef.current) {
+			const currentZoom = mapRef.current.getZoom();
+			console.log("Current Zoom: ", currentZoom);
+			if (currentZoom > zoom) {
+				mapRef.current.setZoom(zoom);
+			}
+		}
+	};
+
 	const onLoad = (map) => {
 		mapRef.current = map;
 		adjustBounds();
@@ -33,6 +45,7 @@ export default function MapComponent({ locations, height, zoom }) {
 			<GoogleMap
 				mapContainerStyle={mapStyles}
 				// zoom={zoom || 12}
+				onIdle={onIdle} // Listen for the idle event to check the zoom level
 				// center={locations[locations.length - 1]}
 				onLoad={onLoad}
 				options={{ disableDefaultUI: true }}

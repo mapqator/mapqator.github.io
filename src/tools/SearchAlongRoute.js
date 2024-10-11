@@ -133,10 +133,12 @@ class GoogleRoutesApi extends SearchAlongRoute {
 	};
 }
 
-export const list = [
-	{
-		name: "Google Routes + Places(New) API",
-		icon: "/images/google-maps.png",
-		instance: new GoogleRoutesApi(),
-	},
-];
+export const list = {
+	googleMaps: [
+		{
+			name: "Google Routes + Places(New) API",
+			icon: "/images/google-maps.png",
+			instance: new GoogleRoutesApi(),
+		},
+	],
+};

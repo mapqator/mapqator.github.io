@@ -310,12 +310,23 @@ export default function GlobalContextProvider({ children }) {
 	const [savedPlacesMap, setSavedPlacesMap] = useState({});
 	const [apiCallLogs, setApiCallLogs] = useState([]);
 
+	const [mapService, setMapService] = useState("googleMaps");
 	const [tools, setTools] = useState({
-		textSearch: textSearchList[0].instance,
-		placeDetails: placeDetailsList[0].instance,
-		nearbySearch: nearbySearchList[0].instance,
-		computeRoutes: computeRoutesList[0].instance,
-		searchAlongRoute: searchAlongRouteList[0].instance,
+		textSearch:
+			textSearchList[mapService] &&
+			textSearchList[mapService][0]?.instance,
+		placeDetails:
+			placeDetailsList[mapService] &&
+			placeDetailsList[mapService][0]?.instance,
+		nearbySearch:
+			nearbySearchList[mapService] &&
+			nearbySearchList[mapService][0]?.instance,
+		computeRoutes:
+			computeRoutesList[mapService] &&
+			computeRoutesList[mapService][0]?.instance,
+		searchAlongRoute:
+			searchAlongRouteList[mapService] &&
+			searchAlongRouteList[mapService][0]?.instance,
 	});
 	useEffect(() => {
 		setContext({
@@ -436,6 +447,8 @@ export default function GlobalContextProvider({ children }) {
 				setSavedPlacesMap,
 				tools,
 				setTools,
+				mapService,
+				setMapService,
 			}}
 		>
 			{children}

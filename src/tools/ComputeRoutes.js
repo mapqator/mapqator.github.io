@@ -294,15 +294,19 @@ class GraphHopperApi extends ComputeRoutes {
 	};
 }
 
-export const list = [
-	{
-		name: "Google Routes API",
-		icon: "/images/google-maps.png",
-		instance: new GoogleRoutesApi(),
-	},
-	{
-		name: "GraphHopper API",
-		icon: "/images/graphhopper.png",
-		instance: new GraphHopperApi(),
-	},
-];
+export const list = {
+	googleMaps: [
+		{
+			name: "Google Routes API",
+			icon: "/images/google-maps.png",
+			instance: new GoogleRoutesApi(),
+		},
+	],
+	openStreetMap: [
+		{
+			name: "GraphHopper API",
+			icon: "/images/graphhopper.png",
+			instance: new GraphHopperApi(),
+		},
+	],
+};
