@@ -90,10 +90,12 @@ export default function PlaceCard({
 	mode,
 }) {
 	const [expanded, setExpanded] = useState(index === 0);
-	const { setApiCallLogs } = useContext(GlobalContext);
+	const { setApiCallLogs, tools } = useContext(GlobalContext);
 	// useEffect(() => {
 	// 	setExpanded(index === 0);
 	// }, [index]);
+
+	console.log("Textual Fields:", tools.placeDetails.getFields());
 	return (
 		<Card variant="outlined">
 			<CardContent
@@ -130,31 +132,36 @@ export default function PlaceCard({
 									</Typography>
 								</Box>
 								<Box className="h-[350px] overflow-auto">
-									{textualFields.map((attribute, index) => (
-										<Box key={attribute}>
-											{index > 0 && <Divider />}
+									{tools.placeDetails
+										.getFields()
+										.map((attribute, index) => (
+											<Box key={attribute}>
+												{index > 0 && <Divider />}
 
-											<Typography
-												variant="body2"
-												className="p-2"
-												// color="textSecondary"
-											>
-												<span className="font-bold underline">
-													{convertFromSnake(
-														attribute
-													)}
-													:
-												</span>{" "}
-												{template[attribute]
-													? template[attribute](
-															selectedPlacesMap[
-																placeId
-															][attribute]
-													  )
-													: "N/A"}
-											</Typography>
-										</Box>
-									))}
+												<Typography
+													variant="body2"
+													className="p-2"
+													// color="textSecondary"
+												>
+													<span className="font-bold underline">
+														{convertFromSnake(
+															attribute
+														)}
+														:
+													</span>{" "}
+													{template[attribute]
+														? template[attribute](
+																selectedPlacesMap[
+																	placeId
+																][attribute] ||
+																	savedPlacesMap[
+																		placeId
+																	][attribute]
+														  )
+														: "N/A"}
+												</Typography>
+											</Box>
+										))}
 								</Box>
 							</Paper>
 						</Grid>

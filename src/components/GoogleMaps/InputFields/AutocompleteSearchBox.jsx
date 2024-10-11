@@ -24,7 +24,8 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 
 function SearchPlaceCard({ place, index, length, uuid }) {
 	// Issue: Name overlaps with Add button
-	const { savedPlacesMap, setSavedPlacesMap } = useContext(GlobalContext);
+	const { savedPlacesMap, setSavedPlacesMap, tools } =
+		useContext(GlobalContext);
 	const [loading, setLoading] = useState(false);
 	return (
 		<React.Fragment key={index}>
@@ -37,11 +38,25 @@ function SearchPlaceCard({ place, index, length, uuid }) {
 					{/* <PlaceAddButton place_id={place.id} /> */}
 					<LoadingButton
 						startIcon={<Add />}
-						onClick={() => {
+						onClick={async () => {
 							setLoading(true);
+
+							let location = place.location;
+							if (!location) {
+								const res = await tools.textSearch.getLocation(
+									place
+								);
+								if (res.success) {
+									location = res.data.result.location;
+								} else {
+									console.error(res.error);
+									setLoading(false);
+									return;
+								}
+							}
 							setSavedPlacesMap((prev) => ({
 								...prev,
-								[place.id]: { ...place, uuid },
+								[place.id]: { ...place, location, uuid },
 							}));
 							setLoading(false);
 						}}

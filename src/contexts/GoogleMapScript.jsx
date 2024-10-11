@@ -16,7 +16,10 @@ export default function GoogleMapWrapper({ children }) {
 	}, [isAuthenticated]);
 
 	return (
-		<LoadScript googleMapsApiKey="AIzaSyA8FR4zPdFgUNu4Rr_iuMYgcOb6gCCr21M">
+		<LoadScript
+			googleMapsApiKey="AIzaSyA8FR4zPdFgUNu4Rr_iuMYgcOb6gCCr21M"
+			language="en"
+		>
 			{children}
 		</LoadScript>
 	);

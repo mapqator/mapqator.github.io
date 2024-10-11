@@ -56,15 +56,6 @@ export default function PlacesForm({ handlePlaceAdd }) {
 		return <div>Loading...</div>;
 	}
 
-	const handleAdd = (details) => {
-		const place_id = details["id"];
-		if (place_id === "" || selectedPlacesMap[place_id]) return;
-		setSelectedPlacesMap((prev) => ({
-			...prev,
-			[place_id]: true,
-		}));
-	};
-
 	return (
 		<Box className="w-full md:w-[30rem] mx-auto">
 			<Grid container spacing={2}>

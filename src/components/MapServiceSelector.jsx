@@ -15,29 +15,7 @@ import { list as nearbySearchList } from "@/tools/NearbySearch";
 import { list as computeRoutesList } from "@/tools/ComputeRoutes";
 import { list as searchAlongRouteList } from "@/tools/SearchAlongRoute";
 import { IconButton } from "@mui/material";
-
-const mapServices = {
-	googleMaps: {
-		name: "Google Maps",
-		icon: "🌎",
-		image: "/images/google-maps.png",
-	},
-	openStreetMap: {
-		name: "OpenStreetMap",
-		icon: "🗺️",
-		image: "/images/openstreetmap.logo.png",
-	},
-	tomtom: {
-		name: "TomTom",
-		icon: "🚗",
-		image: "/images/tomtom.png",
-	},
-	azureMaps: {
-		name: "Azure Maps",
-		icon: "☁️",
-		image: "/images/azure-maps.png",
-	},
-};
+import mapServices from "@/tools/MapServices";
 
 const MapServiceSelector = () => {
 	const {
@@ -88,7 +66,7 @@ const MapServiceSelector = () => {
 		setRoutePlacesMap(initRoutePlacesMap);
 		setSelectedPlacesMap(initSelectedPlacesMap);
 		setSavedPlacesMap({});
-		setActiveStep(1);
+		setActiveStep(0);
 		setContext([]);
 	}, [mapService]);
 
@@ -100,9 +78,9 @@ const MapServiceSelector = () => {
 			>
 				<div className="flex items-center">
 					<Map className="mr-2" size={24} />
-					<span className="text-xl font-bold mr-2">Map Service:</span>
+					<span className="text-xl font-bold mr-4">Map Service:</span>
 					{mapService ? (
-						<div className="flex items-center">
+						<div className="flex items-center text-white bg-blue-500 p-2 rounded-full px-4">
 							<img
 								src={mapServices[mapService].image}
 								alt={mapServices[mapService].name}

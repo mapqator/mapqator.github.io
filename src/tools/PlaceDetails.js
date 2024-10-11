@@ -13,6 +13,54 @@ class PlaceDetails extends Api {
 	run = async (query) => {
 		throw new Error("Method 'run()' must be implemented.");
 	};
+
+	getFields = () => {
+		return [
+			"location",
+			"shortFormattedAddress",
+			"accessibilityOptions",
+			"businessStatus",
+			"googleMapsUri",
+			"primaryType",
+			"internationalPhoneNumber",
+			"nationalPhoneNumber",
+			"priceLevel",
+			"rating",
+			"regularOpeningHours",
+			"userRatingCount",
+			"websiteUri",
+			"allowsDogs",
+			"curbsidePickup",
+			"delivery",
+			"dineIn",
+			"editorialSummary",
+			"evChargeOptions",
+			"fuelOptions",
+			"goodForChildren",
+			"goodForGroups",
+			"goodForWatchingSports",
+			"liveMusic",
+			"menuForChildren",
+			"parkingOptions",
+			"paymentOptions",
+			"outdoorSeating",
+			"reservable",
+			"restroom",
+			"servesBeer",
+			"servesBreakfast",
+			"servesBrunch",
+			"servesCocktails",
+			"servesCoffee",
+			"servesDessert",
+			"servesDinner",
+			"servesLunch",
+			"servesVegetarianFood",
+			"servesWine",
+			"takeout",
+			"generativeSummary",
+			"areaSummary",
+		];
+	};
 }
 
 export default PlaceDetails;
@@ -52,6 +100,52 @@ class GooglePlacesApiNew extends PlaceDetails {
 			success: false,
 		};
 	};
+
+	getFields = () => {
+		return [
+			"location",
+			"shortFormattedAddress",
+			"accessibilityOptions",
+			"businessStatus",
+			"googleMapsUri",
+			"primaryType",
+			"internationalPhoneNumber",
+			"nationalPhoneNumber",
+			"priceLevel",
+			"rating",
+			"regularOpeningHours",
+			"userRatingCount",
+			"websiteUri",
+			"allowsDogs",
+			"curbsidePickup",
+			"delivery",
+			"dineIn",
+			"editorialSummary",
+			"evChargeOptions",
+			"fuelOptions",
+			"goodForChildren",
+			"goodForGroups",
+			"goodForWatchingSports",
+			"liveMusic",
+			"menuForChildren",
+			"parkingOptions",
+			"paymentOptions",
+			"outdoorSeating",
+			"reservable",
+			"restroom",
+			"servesBeer",
+			"servesBreakfast",
+			"servesBrunch",
+			"servesCocktails",
+			"servesCoffee",
+			"servesDessert",
+			"servesDinner",
+			"servesLunch",
+			"servesVegetarianFood",
+			"servesWine",
+			"takeout",
+		];
+	};
 }
 
 class NominatimApi extends PlaceDetails {
@@ -76,7 +170,7 @@ class NominatimApi extends PlaceDetails {
 		if (response.success) {
 			const details = {
 				id: response.data.place_id,
-				display_name: {
+				displayName: {
 					text: response.data.names["name:en"],
 				},
 				location: {
@@ -114,6 +208,77 @@ class NominatimApi extends PlaceDetails {
 			success: false,
 		};
 	};
+
+	getFields = () => {
+		return [
+			"location",
+			"shortFormattedAddress",
+			"accessibilityOptions",
+			"primaryType",
+			"internationalPhoneNumber",
+			"regularOpeningHours",
+			"websiteUri",
+		];
+	};
+}
+
+class MapBoxApi extends PlaceDetails {
+	run = async (place_id) => {
+		const apiCall = {
+			url:
+				"https://api.mapbox.com/search/searchbox/v1/retrieve/" +
+				place_id,
+			method: "GET",
+			params: {
+				access_token: "key:MAPBOX_ACCESS_TOKEN",
+				session_token: "key:MAPBOX_SESSION_TOKEN",
+			},
+		};
+
+		const epochId = Date.now(); // Unique ID for this tool call
+		const response = await this.post("/map/cached", apiCall);
+
+		if (response.success) {
+			const e = response.data.features[0].properties;
+			const details = {
+				id: e.mapbox_id,
+				displayName: {
+					text: e.name,
+				},
+				shortFormattedAddress: e.full_address,
+				location: {
+					latitude: e.coordinates.latitude,
+					longitude: e.coordinates.longitude,
+				},
+				types: e.poi_category_ids,
+				accessibilityOptions: {
+					wheelchairAccessibleEntrance:
+						e.metadata.wheelchair_accessible,
+				},
+			};
+			return {
+				success: true,
+				data: {
+					result: details,
+					apiCallLogs: [
+						{
+							...apiCall,
+							uuid: epochId,
+							result: response.data,
+						},
+					],
+					uuid: epochId,
+				},
+			};
+		}
+		return {
+			success: false,
+		};
+	};
+
+	getFields = () => {
+		return ["location", "shortFormattedAddress", "accessibilityOptions"];
+	};
 }
 
 export const list = {
@@ -129,6 +294,14 @@ export const list = {
 			name: "Nominatim API",
 			icon: "/images/openstreetmap.logo.png",
 			instance: new NominatimApi(),
+		},
+	],
+
+	mapbox: [
+		{
+			name: "Mapbox API",
+			icon: "/images/mapbox.png",
+			instance: new MapBoxApi(),
 		},
 	],
 };

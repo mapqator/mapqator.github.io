@@ -27,7 +27,7 @@ export const template = {
 			options.push("Wheelchair Accessible Restroom");
 		if (value.wheelchairAccessibleSeating)
 			options.push("Wheelchair Accessible Seating");
-		return options.join(", ");
+		return options.join(", ") || "N/A";
 	},
 	businessStatus: (value) => businessMap[value] || "Unspecified",
 	googleMapsUri: (value) => (value ? value : "N/A"),
