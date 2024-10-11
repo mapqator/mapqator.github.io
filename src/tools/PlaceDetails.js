@@ -281,6 +281,75 @@ class MapBoxApi extends PlaceDetails {
 	};
 }
 
+class TomTomApi extends PlaceDetails {
+	run = async (place_id) => {
+		const apiCall = {
+			url: "https://api.tomtom.com/search/2/place.json",
+			method: "GET",
+			params: {
+				key: "key:TOMTOM_API_KEY",
+				entityId: place_id,
+				language: "en-US",
+			},
+		};
+
+		const epochId = Date.now(); // Unique ID for this tool call
+		const response = await this.post("/map/cached", apiCall);
+
+		if (response.success) {
+			const e = response.data.results[0];
+			const details = {
+				id: e.id,
+				displayName: {
+					text: e.poi.name,
+				},
+				internationalPhoneNumber: e.poi.phone,
+				websiteUri: e.poi.url,
+				shortFormattedAddress: e.address.freeformAddress,
+				location: {
+					latitude: e.position.lat,
+					longitude: e.position.lon,
+				},
+				viewport: {
+					low: {
+						latitude: e.viewport.topLeftPoint.lat,
+						longitude: e.viewport.topLeftPoint.lon,
+					},
+					high: {
+						latitude: e.viewport.btmRightPoint.lat,
+						longitude: e.viewport.btmRightPoint.lon,
+					},
+				},
+			};
+			return {
+				success: true,
+				data: {
+					result: details,
+					apiCallLogs: [
+						{
+							...apiCall,
+							uuid: epochId,
+							result: response.data,
+						},
+					],
+					uuid: epochId,
+				},
+			};
+		}
+		return {
+			success: false,
+		};
+	};
+
+	getFields = () => {
+		return [
+			"location",
+			"shortFormattedAddress",
+			"internationalPhoneNumber",
+			"websiteUri",
+		];
+	};
+}
 export const list = {
 	googleMaps: [
 		{
@@ -302,6 +371,14 @@ export const list = {
 			name: "Mapbox API",
 			icon: "/images/mapbox.png",
 			instance: new MapBoxApi(),
+		},
+	],
+
+	tomtom: [
+		{
+			name: "TomTom API",
+			icon: "/images/tomtom.png",
+			instance: new TomTomApi(),
 		},
 	],
 };

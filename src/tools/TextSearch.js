@@ -248,6 +248,55 @@ class MapBoxApi extends TextSearch {
 	};
 }
 
+class TomTomApi extends TextSearch {
+	run = async (query) => {
+		const apiCall = {
+			url: "https://api.tomtom.com/search/2/search/" + query + ".json",
+			method: "GET",
+			params: {
+				key: "key:TOMTOM_API_KEY",
+
+				// Optional parameters
+				limit: 5,
+				language: "en-US",
+			},
+		};
+
+		const epochId = Date.now(); // Unique ID for this tool call
+		const response = await this.post("/map/cached", apiCall);
+
+		if (response.success) {
+			const places = response.data.results.map((place) => ({
+				id: place.id,
+				displayName: {
+					text: place.poi.name,
+				},
+				shortFormattedAddress: place.address.freeformAddress,
+				location: {
+					latitude: place.position.lat,
+					longitude: place.position.lon,
+				},
+			}));
+			return {
+				success: true,
+				data: {
+					result: { places },
+					apiCallLogs: [
+						{
+							...apiCall,
+							uuid: epochId,
+							result: response.data,
+						},
+					],
+					uuid: epochId,
+				},
+			};
+		}
+		return {
+			success: false,
+		};
+	};
+}
 export const list = {
 	googleMaps: [
 		{
@@ -273,6 +322,13 @@ export const list = {
 			name: "Mapbox API",
 			icon: "/images/mapbox.png",
 			instance: new MapBoxApi(),
+		},
+	],
+	tomtom: [
+		{
+			name: "TomTom API",
+			icon: "/images/tomtom.png",
+			instance: new TomTomApi(),
 		},
 	],
 };
