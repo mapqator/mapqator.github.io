@@ -26,6 +26,7 @@ import PlaceDeleteButton from "../Buttons/PlaceDeleteButton";
 import { template } from "@/database/templates";
 import textualFields from "@/database/textualFields";
 import { Delete } from "@mui/icons-material";
+import SinglePlaceComponent from "../Embed/SinglePlaceComponent";
 function PlaceCardSummary({
 	placeId,
 	expanded,
@@ -178,7 +179,7 @@ export default function PlaceCard({
 										Map View
 									</Typography>
 								</Box>
-								<iframe
+								{/* <iframe
 									width="100%"
 									// className="aspect-square"
 									height="350"
@@ -191,7 +192,11 @@ export default function PlaceCard({
 									// allowfullscreen
 									referrerPolicy="no-referrer-when-downgrade"
 									src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=place_id:${placeId}`}
-								></iframe>
+								></iframe> */}
+								<SinglePlaceComponent
+									place={savedPlacesMap[placeId]}
+									height={"350px"}
+								/>
 							</Paper>
 						</Grid>
 					</Grid>
