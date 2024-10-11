@@ -35,7 +35,7 @@ export default function PlacesForm({ handlePlaceAdd }) {
 	const handleAddSave = async (place_id) => {
 		setLoading(true);
 		let details = savedPlacesMap[place_id];
-		const res = await tools.placeDetails.run(place_id);
+		const res = await tools.placeDetails.run(details);
 		if (res.success) {
 			details = res.data.result;
 			setSelectedPlacesMap((prev) => ({

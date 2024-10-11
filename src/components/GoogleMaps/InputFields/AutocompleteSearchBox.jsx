@@ -42,9 +42,10 @@ function SearchPlaceCard({ place, index, length, uuid }) {
 							setLoading(true);
 
 							let location = place.location;
+							let details = { ...place, uuid };
 							if (!location) {
 								const res = await tools.textSearch.getLocation(
-									place
+									details
 								);
 								if (res.success) {
 									location = res.data.result.location;
@@ -54,9 +55,10 @@ function SearchPlaceCard({ place, index, length, uuid }) {
 									return;
 								}
 							}
+
 							setSavedPlacesMap((prev) => ({
 								...prev,
-								[place.id]: { ...place, location, uuid },
+								[place.id]: { ...details, location },
 							}));
 							setLoading(false);
 						}}

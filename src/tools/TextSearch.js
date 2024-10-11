@@ -1,4 +1,5 @@
 import Api from "@/api/base";
+import { head } from "lodash";
 
 class TextSearch extends Api {
 	constructor() {
@@ -217,7 +218,7 @@ class MapBoxApi extends TextSearch {
 			},
 		};
 
-		const epochId = Date.now(); // Unique ID for this tool call
+		const epochId = place.uuid; // Unique ID for this tool call
 		const response = await this.post("/map/cached", apiCall);
 
 		if (response.success) {
@@ -297,6 +298,122 @@ class TomTomApi extends TextSearch {
 		};
 	};
 }
+
+class HereApi extends TextSearch {
+	run = async (query) => {
+		const apiCall = {
+			url: "https://discover.search.hereapi.com/v1/discover",
+			method: "GET",
+			params: {
+				apikey: "key:HERE_API_KEY",
+				at: "23.75628863547386,90.38468295345672",
+				q: query,
+				lang: "en-US",
+				limit: 5,
+			},
+		};
+
+		const epochId = Date.now(); // Unique ID for this tool call
+		const response = await this.post("/map/cached", apiCall);
+
+		if (response.success) {
+			const places = response.data.items.map((place) => ({
+				id: place.id,
+				displayName: {
+					text: place.title,
+				},
+				shortFormattedAddress: place.address.label,
+				location: {
+					latitude: place.position.lat,
+					longitude: place.position.lng,
+				},
+			}));
+			return {
+				success: true,
+				data: {
+					result: { places },
+					apiCallLogs: [
+						{
+							...apiCall,
+							uuid: epochId,
+							result: response.data,
+						},
+					],
+					uuid: epochId,
+				},
+			};
+		}
+		return {
+			success: false,
+		};
+	};
+}
+
+class AzureMapsApi extends TextSearch {
+	run = async (query) => {
+		const apiCall = {
+			url: "https://atlas.microsoft.com/search/fuzzy/json",
+			method: "GET",
+			params: {
+				"api-version": "1.0",
+				query: query,
+				"subscription-key": "key:AZURE_MAPS_API_KEY",
+				limit: 5,
+			},
+			headers: {
+				"Accept-Language": "en", // Add this header to request response in English
+			},
+		};
+
+		const epochId = Date.now(); // Unique ID for this tool call
+		const response = await this.post("/map/cached", apiCall);
+
+		if (response.success) {
+			const places = response.data.results.map((place) => ({
+				id: place.id,
+				displayName: {
+					text: place.poi.name,
+				},
+				shortFormattedAddress: place.address.freeformAddress,
+				location: {
+					latitude: place.position.lat,
+					longitude: place.position.lon,
+				},
+				internationalPhoneNumber: place.poi.phone,
+				website: place.poi.url,
+				types: place.poi.categories,
+				viewport: {
+					low: {
+						latitude: place.viewport.topLeftPoint.lat,
+						longitude: place.viewport.topLeftPoint.lon,
+					},
+					high: {
+						latitude: place.viewport.btmRightPoint.lat,
+						longitude: place.viewport.btmRightPoint.lon,
+					},
+				},
+			}));
+			return {
+				success: true,
+				data: {
+					result: { places },
+					apiCallLogs: [
+						{
+							...apiCall,
+							uuid: epochId,
+							result: response.data,
+						},
+					],
+					uuid: epochId,
+				},
+			};
+		}
+		return {
+			success: false,
+		};
+	};
+}
+
 export const list = {
 	googleMaps: [
 		{
@@ -329,6 +446,21 @@ export const list = {
 			name: "TomTom API",
 			icon: "/images/tomtom.png",
 			instance: new TomTomApi(),
+		},
+	],
+	here: [
+		{
+			name: "HERE API",
+			icon: "/images/here.png",
+			instance: new HereApi(),
+		},
+	],
+
+	azureMaps: [
+		{
+			name: "Azure Maps API",
+			icon: "/images/azure-maps.png",
+			instance: new AzureMapsApi(),
 		},
 	],
 };

@@ -107,7 +107,7 @@ const MapServiceSelector = () => {
 			</button>
 			{isExpanded && (
 				<div className="p-4">
-					<div className="grid grid-cols-2 gap-4">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						{Object.entries(mapServices).map(([key, service]) => (
 							<button
 								key={key}

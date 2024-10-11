@@ -49,7 +49,7 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 	const handleAddSave = async (place_id) => {
 		setAddingPlace(true);
 		let details = savedPlacesMap[place_id];
-		const res = await tools.placeDetails.run(place_id);
+		const res = await tools.placeDetails.run(details);
 		if (res.success) {
 			details = res.data.result;
 			setSelectedPlacesMap((prev) => ({

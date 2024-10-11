@@ -10,7 +10,7 @@ class PlaceDetails extends Api {
 		super();
 	}
 
-	run = async (query) => {
+	run = async (place) => {
 		throw new Error("Method 'run()' must be implemented.");
 	};
 
@@ -66,7 +66,8 @@ class PlaceDetails extends Api {
 export default PlaceDetails;
 
 class GooglePlacesApiNew extends PlaceDetails {
-	run = async (place_id) => {
+	run = async (place) => {
+		const place_id = place.id;
 		const apiCall = {
 			url: "https://places.googleapis.com/v1/places/" + place_id,
 			method: "GET",
@@ -149,7 +150,8 @@ class GooglePlacesApiNew extends PlaceDetails {
 }
 
 class NominatimApi extends PlaceDetails {
-	run = async (place_id) => {
+	run = async (place) => {
+		const place_id = place.id;
 		const apiCall = {
 			url: "https://nominatim.openstreetmap.org/details",
 			method: "GET",
@@ -223,7 +225,8 @@ class NominatimApi extends PlaceDetails {
 }
 
 class MapBoxApi extends PlaceDetails {
-	run = async (place_id) => {
+	run = async (place) => {
+		const place_id = place.id;
 		const apiCall = {
 			url:
 				"https://api.mapbox.com/search/searchbox/v1/retrieve/" +
@@ -282,7 +285,8 @@ class MapBoxApi extends PlaceDetails {
 }
 
 class TomTomApi extends PlaceDetails {
-	run = async (place_id) => {
+	run = async (place) => {
+		const place_id = place.id;
 		const apiCall = {
 			url: "https://api.tomtom.com/search/2/place.json",
 			method: "GET",
@@ -350,6 +354,105 @@ class TomTomApi extends PlaceDetails {
 		];
 	};
 }
+
+class HereApi extends PlaceDetails {
+	run = async (place) => {
+		const place_id = place.id;
+		const apiCall = {
+			url: "https://lookup.search.hereapi.com/v1/lookup",
+			method: "GET",
+			params: {
+				id: place_id,
+				apikey: "key:HERE_API_KEY",
+				lang: "en-US",
+			},
+		};
+
+		const epochId = Date.now(); // Unique ID for this tool call
+		const response = await this.post("/map/cached", apiCall);
+
+		if (response.success) {
+			const e = response.data;
+			const details = {
+				id: e.id,
+				displayName: {
+					text: e.title,
+				},
+				shortFormattedAddress: e.address.label,
+				location: {
+					latitude: e.position.lat,
+					longitude: e.position.lng,
+				},
+				internationalPhoneNumber: e.contacts[0].phone[0].value,
+				websiteUri: e.contacts[0].www[0].value,
+			};
+			return {
+				success: true,
+				data: {
+					result: details,
+					apiCallLogs: [
+						{
+							...apiCall,
+							uuid: epochId,
+							result: response.data,
+						},
+					],
+					uuid: epochId,
+				},
+			};
+		}
+		return {
+			success: false,
+		};
+	};
+
+	getFields = () => {
+		return [
+			"location",
+			"shortFormattedAddress",
+			"internationalPhoneNumber",
+			"websiteUri",
+		];
+	};
+}
+
+class AzureMapsApi extends PlaceDetails {
+	run = async (place) => {
+		if (place) {
+			const epochId = place.uuid;
+			const details = {
+				id: place.id,
+				displayName: place.displayName,
+				shortFormattedAddress: place.shortFormattedAddress,
+				location: place.location,
+				internationalPhoneNumber: place.internationalPhoneNumber,
+				websiteUri: place.websiteUri,
+				viewport: place.viewport,
+				types: place.types,
+			};
+			return {
+				success: true,
+				data: {
+					result: details,
+					apiCallLogs: [],
+					uuid: epochId,
+				},
+			};
+		}
+		return {
+			success: false,
+		};
+	};
+
+	getFields = () => {
+		return [
+			"location",
+			"shortFormattedAddress",
+			"internationalPhoneNumber",
+			"websiteUri",
+		];
+	};
+}
 export const list = {
 	googleMaps: [
 		{
@@ -379,6 +482,22 @@ export const list = {
 			name: "TomTom API",
 			icon: "/images/tomtom.png",
 			instance: new TomTomApi(),
+		},
+	],
+
+	here: [
+		{
+			name: "HERE API",
+			icon: "/images/here.png",
+			instance: new HereApi(),
+		},
+	],
+
+	azureMaps: [
+		{
+			name: "Azure Maps API",
+			icon: "/images/azure-maps.png",
+			instance: new AzureMapsApi(),
 		},
 	],
 };
