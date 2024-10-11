@@ -47,7 +47,7 @@ function PlaceCardSummary({
 					<Typography variant="h6" component="div" noWrap>
 						{savedPlacesMap[placeId].displayName?.text}
 					</Typography>
-					<Typography color="textSecondary" gutterBottom noWrap>
+					<Typography color="textSecondary" gutterBottom>
 						{savedPlacesMap[placeId].shortFormattedAddress}
 					</Typography>
 				</div>
@@ -194,7 +194,7 @@ export default function PlaceCard({
 									src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyAKIdJ1vNr9NoFovmiymReEOfQEsFXyKCs&language=en&q=place_id:${placeId}`}
 								></iframe> */}
 								<SinglePlaceComponent
-									place={savedPlacesMap[placeId]}
+									place={selectedPlacesMap[placeId]}
 									height={"350px"}
 								/>
 							</Paper>

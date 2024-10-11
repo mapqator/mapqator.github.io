@@ -13,13 +13,13 @@ class MapApi extends Api {
 				params.lat +
 				"&lng=" +
 				params.lng +
-				(params.rankBy !== "distance"
+				(params.rankPreference !== "distance"
 					? "&radius=" + params.radius
 					: "") +
 				(params.type !== "" ? "&type=" + params.type : "") +
 				(params.keyword !== "" ? "&keyword=" + params.keyword : "") +
 				"&rankby=" +
-				params.rankBy +
+				params.rankPreference +
 				"&location=" +
 				params.location
 		);

@@ -40,14 +40,10 @@ export default function SinglePlaceComponent({ place, height }) {
 	}, [place]);
 
 	return (
-		place && (
+		place &&
+		(place.viewport ? (
 			<GoogleMap
 				mapContainerStyle={mapStyles}
-				// center={{
-				// 	lat: place.location.latitude,
-				// 	lng: place.location.longitude,
-				// }} // Center based on place location
-				// zoom={zoom || 12}
 				onLoad={onLoad}
 				options={{ disableDefaultUI: true }}
 			>
@@ -58,6 +54,22 @@ export default function SinglePlaceComponent({ place, height }) {
 					}}
 				/>
 			</GoogleMap>
-		)
+		) : (
+			<GoogleMap
+				mapContainerStyle={mapStyles}
+				zoom={16}
+				center={{
+					lat: place.location.latitude,
+					lng: place.location.longitude,
+				}}
+			>
+				<Marker
+					position={{
+						lat: place.location.latitude,
+						lng: place.location.longitude,
+					}}
+				/>
+			</GoogleMap>
+		))
 	);
 }

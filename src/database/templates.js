@@ -16,7 +16,7 @@ const businessMap = {
 export const template = {
 	location: (value) => `${value.latitude}, ${value.longitude}`,
 	displayName: (value) => value.text,
-	shortFormattedAddress: (value) => `${value}`,
+	shortFormattedAddress: (value) => (value ? value : "N/A"),
 	accessibilityOptions: (value) => {
 		const options = [];
 		if (value.wheelchairAccessibleEntrance)
@@ -37,7 +37,9 @@ export const template = {
 	priceLevel: (value) => priceMap[value] || "Unspecified",
 	rating: (value) => `${value} ratings`,
 	regularOpeningHours: (value) =>
-		`${value?.weekdayDescriptions.join(", ")}.\n`,
+		Array.isArray(value?.weekdayDescriptions)
+			? `${value.weekdayDescriptions.join(", ")}`
+			: value.weekdayDescriptions,
 	userRatingCount: (value) => `${value}`,
 	websiteUri: (value) => (value ? value : "N/A"),
 	allowsDogs: (value) => (value ? "Allows Dogs" : "Does not allow Dogs"),

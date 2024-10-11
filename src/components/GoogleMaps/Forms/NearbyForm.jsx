@@ -63,6 +63,7 @@ export default function NearbyForm({
 		setNearbyPlacesMap,
 		savedPlacesMap,
 		setSavedPlacesMap,
+		tools,
 	} = useContext(GlobalContext);
 
 	const [list, setList] = useState([]);
@@ -71,6 +72,18 @@ export default function NearbyForm({
 	const [uuid, setUuid] = useState("");
 
 	const { apiCallLogs, setApiCallLogs } = useContext(GlobalContext);
+
+	const [mapsApi, setMapsApi] = useState(null);
+	useEffect(() => {
+		const loadMapsApi = async () => {
+			const mapsModule = await import(
+				process.env.NEXT_PUBLIC_MAPS_API_PATH
+			);
+			setMapsApi(mapsModule.default);
+		};
+
+		loadMapsApi();
+	}, []);
 
 	const handleSave = async (place) => {
 		let details = savedPlacesMap[place.id];
@@ -104,13 +117,11 @@ export default function NearbyForm({
 
 			newNearbyPlacesMap.push({
 				locationBias: newNearbyPlaces.locationBias,
-				type:
-					newNearbyPlaces.searchBy === "type"
-						? newNearbyPlaces.type
-						: newNearbyPlaces.keyword,
+				type: newNearbyPlaces.type,
+				keyword: newNearbyPlaces.keyword,
 				minRating: newNearbyPlaces.minRating,
 				priceLevels: newNearbyPlaces.priceLevels,
-				rankBy: newNearbyPlaces.rankPreference,
+				rankPreference: newNearbyPlaces.rankPreference,
 				places: places,
 				routingSummaries: routingSummaries,
 				uuid,
@@ -135,6 +146,7 @@ export default function NearbyForm({
 	};
 
 	const fetchNearbyPlaces = async (data) => {
+		if (!mapsApi) return;
 		if (data.locationBias === "" || data.type === "") return;
 		setLoading(true);
 		const location = savedPlacesMap[data.locationBias].location;
@@ -148,7 +160,7 @@ export default function NearbyForm({
 			data.keyword = "";
 		}
 
-		const response = await mapApi.getNearbyNew({
+		const response = await tools.nearbySearch.run({
 			lat,
 			lng,
 			locationBias: data.locationBias,
@@ -175,12 +187,17 @@ export default function NearbyForm({
 	// Wrap the fetchNearbyPlaces function with debounce
 	const debouncedFetchNearbyPlaces = useCallback(
 		debounce(fetchNearbyPlaces, 1000),
-		[]
+		[tools]
 	);
 
 	useEffect(() => {
 		debouncedFetchNearbyPlaces(newNearbyPlaces);
 	}, [newNearbyPlaces, debouncedFetchNearbyPlaces]);
+
+	if (!mapsApi) {
+		return <div>Loading...</div>;
+	}
+
 	return (
 		newNearbyPlaces && (
 			<Box className="flex flex-col md:flex-row gap-4">

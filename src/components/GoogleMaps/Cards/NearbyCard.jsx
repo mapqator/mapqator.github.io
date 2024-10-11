@@ -168,9 +168,9 @@ function NearbyCardSummary({
 							color="primary"
 							size="small"
 						/>
-						{entry.rankBy === "DISTANCE" && (
+						{entry.rankPreference === "DISTANCE" && (
 							<Chip
-								label={"Rankby " + entry.rankBy}
+								label={"Rankby " + entry.rankPreference}
 								color="success"
 								size="small"
 							/>

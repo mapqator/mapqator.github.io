@@ -63,7 +63,7 @@ export default function AutocompleteSearchBox() {
 	const [loading, setLoading] = useState(false);
 	const [notFound, setNotFound] = useState(false);
 	const { isAuthenticated } = useAuth();
-	const { apiCallLogs, setApiCallLogs, savedPlacesMap } =
+	const { apiCallLogs, setApiCallLogs, savedPlacesMap, tools } =
 		useContext(GlobalContext);
 	const [uuid, setUuid] = useState(0);
 	const fuseOptions = {
@@ -82,7 +82,7 @@ export default function AutocompleteSearchBox() {
 
 	const searchMap = async (query) => {
 		setLoading(true);
-		const response = await mapApi.searchNew(query);
+		const response = await tools.textSearch.run(query);
 		if (response.success) {
 			const places = response.data.result.places;
 			setMapResults([...places]);
@@ -96,7 +96,7 @@ export default function AutocompleteSearchBox() {
 			setNotFound(true);
 		}
 		setLoading(false);
-		setShouldFetchFromAPI(false);
+		// setShouldFetchFromAPI(false);
 	};
 
 	const handleSearch = useCallback(
@@ -144,7 +144,7 @@ export default function AutocompleteSearchBox() {
 	const handleKeyPress = (event) => {
 		console.log("Key Pressed: ", event.key);
 		if (event.key === "Enter") {
-			setShouldFetchFromAPI(true);
+			// setShouldFetchFromAPI(true);
 			searchMap(search);
 		}
 	};

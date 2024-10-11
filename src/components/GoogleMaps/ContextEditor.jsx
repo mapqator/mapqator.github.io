@@ -10,6 +10,8 @@ import {
 	Paper,
 	Divider,
 	CardContent,
+	Select,
+	MenuItem,
 } from "@mui/material";
 import MapIcon from "@mui/icons-material/Map";
 import SearchIcon from "@mui/icons-material/Search";
@@ -43,6 +45,22 @@ import PlacesForm from "./Forms/PlacesForm";
 import RouteSearchGrid from "./Grids/RouteSearchGrid";
 import RouteSearchForm from "./Forms/RouteSearchForm";
 import DirectionGrid from "./Grids/DirectionGrid";
+
+import { list as textSearchList } from "@/tools/TextSearch";
+import { list as placeDetailsList } from "@/tools/PlaceDetails";
+import { list as nearbySearchList } from "@/tools/NearbySearch";
+import { list as computeRoutesList } from "@/tools/ComputeRoutes";
+import { list as searchAlongRouteList } from "@/tools/SearchAlongRoute";
+import Image from "next/image";
+
+const toolOptions = {
+	textSearch: textSearchList,
+	placeDetails: placeDetailsList,
+	nearbySearch: nearbySearchList,
+	computeRoutes: computeRoutesList,
+	searchAlongRoute: searchAlongRouteList,
+};
+
 function ContextStep({
 	step,
 	index,
@@ -54,7 +72,12 @@ function ContextStep({
 	loadExample,
 }) {
 	const [loading, setLoading] = useState(false);
+	const { tools, setTools } = useContext(GlobalContext);
 	const stepRef = useRef(null);
+
+	useEffect(() => {
+		console.log("Compute Routes", tools.computeRoutes.constructor);
+	}, [tools]);
 
 	return (
 		<div ref={stepRef}>
@@ -72,13 +95,67 @@ function ContextStep({
 					if (index !== activeStep) setActiveStep(index);
 				}}
 			>
-				<Typography
-					className={`cursor-pointer flex ${
-						index === activeStep && "!text-blue-500 !font-semibold"
-					}`}
-				>
-					{step.label}
-				</Typography>
+				<Box className="flex flex-row w-full justify-between items-center">
+					<Typography
+						className={`cursor-pointer flex ${
+							index === activeStep &&
+							"!text-blue-500 !font-semibold"
+						}`}
+					>
+						{step.label}
+					</Typography>
+
+					{step.key && index === activeStep && (
+						<Select
+							value={toolOptions[step.key].findIndex(
+								(option) =>
+									option.instance.constructor ===
+									tools[step.key].constructor
+							)}
+							onChange={(e) => {
+								setTools((prev) => ({
+									...prev,
+									[step.key]:
+										toolOptions[step.key][e.target.value]
+											.instance,
+								}));
+							}}
+							// label={step.label}
+							size="small"
+							className="min-w-[15rem]"
+							renderValue={(selected) => (
+								<div className="flex flex-row gap-2 w-full">
+									<img
+										src={
+											toolOptions[step.key][selected].icon
+										}
+										className="w-5 h-5"
+										alt={
+											toolOptions[step.key][selected].name
+										}
+									/>
+
+									{toolOptions[step.key][selected].name}
+								</div>
+							)}
+						>
+							{toolOptions[step.key].map((option, index) => (
+								<MenuItem
+									key={index}
+									value={index}
+									className="flex flex-row gap-2"
+								>
+									<img
+										src={option.icon}
+										className="w-5 h-5"
+										alt={option.name}
+									/>
+									{option.name}
+								</MenuItem>
+							))}
+						</Select>
+					)}
+				</Box>
 			</StepLabel>
 			<StepContent>
 				<div className="flex flex-col">
@@ -262,6 +339,7 @@ export default function ContextEditor({
 			icon: <Flag />,
 		},
 		{
+			key: "textSearch",
 			label: "Search for Places",
 			description: `Start by searching for a location. Type in a place name or address in the search bar below.`,
 			icon: <SearchIcon />,
@@ -282,6 +360,7 @@ export default function ContextEditor({
 			),
 		},
 		{
+			key: "placeDetails",
 			label: "Add details of Places",
 			description: `Add full details of a place.`,
 			icon: <AddLocationAlt />,
@@ -302,6 +381,7 @@ export default function ContextEditor({
 			context: context.places,
 		},
 		{
+			key: "nearbySearch",
 			label: "Search for Nearby places",
 			description: `Use the Nearby Search Tool to discover points of interest around your selected location. You just need to select a location and the type of poi you are looking for. 
 			Additionally you can specify the order in which results are listed. Possible values are Prominence and Distance. When prominence is specified, the radius parameter is required. 
@@ -330,6 +410,7 @@ export default function ContextEditor({
 			context: context.nearby,
 		},
 		{
+			key: "computeRoutes",
 			label: "Compute Routes",
 			description: `Utilize the Directions API to find routes between two points. Choose origin, destination and travel mode to find possible routes between them.`,
 			additional:
@@ -353,6 +434,7 @@ export default function ContextEditor({
 			context: context.direction,
 		},
 		{
+			key: "searchAlongRoute",
 			label: "Search Along Route",
 			description: `Utilize the Places API to find places along a route. Choose a route to find places along the route.`,
 			additional:

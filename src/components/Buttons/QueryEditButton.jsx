@@ -23,22 +23,6 @@ export default function QueryEditButton({ onEdit, query }) {
 		setSavedPlacesMap,
 	} = useContext(GlobalContext);
 
-	const handleSave = async (place_id) => {
-		if (savedPlacesMap[place_id]) return;
-		const res = await mapApi.getDetailsNew(place_id);
-		if (res.success) {
-			const details = res.data;
-			console.log("saving place_id", place_id, details);
-			setSavedPlacesMap((prev) => ({
-				...prev,
-				[place_id]: details,
-			}));
-		} else {
-			console.error("Error fetching data: ", res.error);
-			return;
-		}
-	};
-
 	const handleEdit = async () => {
 		// if (query.context_json.places) {
 		setSavedPlacesMap(query.context_json.places);

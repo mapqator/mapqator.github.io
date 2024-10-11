@@ -197,7 +197,9 @@ const ContextGeneratorService = {
 					  "price levels of " +
 					  e.priceLevels.map((p) => priceMap[p]).join(" or ")
 					: ""
-			} are:${e.rankBy === "DISTANCE" ? " (Rank by Distance)" : ""}\n`;
+			} are:${
+				e.rankPreference === "DISTANCE" ? " (Rank by Distance)" : ""
+			}\n`;
 			let counter = 1;
 			e.places.forEach((near_place) => {
 				if (near_place.selected) {

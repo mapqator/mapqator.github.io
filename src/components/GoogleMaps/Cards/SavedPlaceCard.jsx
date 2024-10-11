@@ -13,12 +13,13 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import { Directions } from "@mui/icons-material";
 import { AppContext } from "@/contexts/AppContext";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import textualFields from "@/database/textualFields";
 import mapApi from "@/api/mapApi";
 import { LoadingButton } from "@mui/lab";
 import dayjs from "dayjs";
+import { showError } from "@/contexts/ToastProvider";
 export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 	const {
 		selectedPlacesMap,
@@ -28,13 +29,27 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 		setNewNearbyPlaces,
 		setNewDirection,
 		setApiCallLogs,
+		tools,
 	} = useContext(GlobalContext);
 
 	const [addingPlace, setAddingPlace] = useState(false);
+
+	const [mapsApi, setMapsApi] = useState(null);
+	useEffect(() => {
+		const loadMapsApi = async () => {
+			const mapsModule = await import(
+				process.env.NEXT_PUBLIC_MAPS_API_PATH
+			);
+			setMapsApi(mapsModule.default);
+		};
+
+		loadMapsApi();
+	}, []);
+
 	const handleAddSave = async (place_id) => {
 		setAddingPlace(true);
 		let details = savedPlacesMap[place_id];
-		const res = await mapApi.getDetailsNew(place_id);
+		const res = await tools.placeDetails.run(place_id);
 		if (res.success) {
 			details = res.data.result;
 			setSelectedPlacesMap((prev) => ({
@@ -60,6 +75,10 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 			[place_id]: true,
 		}));
 	};
+
+	if (!mapsApi) {
+		return <div>Loading...</div>;
+	}
 
 	return (
 		<Card variant="outlined" className="h-full">

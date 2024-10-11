@@ -70,12 +70,25 @@ export default function RouteSearchForm({
 		setApiCallLogs,
 		savedPlacesMap,
 		setSavedPlacesMap,
+		tools,
 	} = useContext(GlobalContext);
 
 	const [routes, setRoutes] = useState([]);
 	const [places, setPlaces] = useState([]);
 	const [apiCalls, setApiCalls] = useState([]);
 	const [uuid, setUuid] = useState("");
+	const [loading, setLoading] = useState(false);
+	const [mapsApi, setMapsApi] = useState(null);
+	useEffect(() => {
+		const loadMapsApi = async () => {
+			const mapsModule = await import(
+				process.env.NEXT_PUBLIC_MAPS_API_PATH
+			);
+			setMapsApi(mapsModule.default);
+		};
+
+		loadMapsApi();
+	}, []);
 
 	const handleSave = async (place) => {
 		let details = savedPlacesMap[place.id];
@@ -87,7 +100,6 @@ export default function RouteSearchForm({
 		}
 	};
 
-	const [loading, setLoading] = useState(false);
 	const searchNearbyPlaces = async () => {
 		if (newRoutePlaces.type === "") return;
 		setLoading(true);
@@ -108,12 +120,14 @@ export default function RouteSearchForm({
 						: newRoutePlaces.keyword,
 				minRating: newRoutePlaces.minRating,
 				priceLevels: newRoutePlaces.priceLevels,
-				rankBy: newRoutePlaces.rankPreference,
+				rankPreference: newRoutePlaces.rankPreference,
 				routes: routes,
 				places: places,
 				origin: newRoutePlaces.origin,
 				destination: newRoutePlaces.destination,
 				travelMode: newRoutePlaces.travelMode,
+				routeModifiers: newRoutePlaces.routeModifiers,
+				maxResultCount: newRoutePlaces.maxResultCount,
 				uuid,
 			});
 
@@ -136,20 +150,28 @@ export default function RouteSearchForm({
 	};
 
 	const compute = async (data) => {
+		if (!mapsApi) return;
 		if (data.origin === "" || data.destination === "") {
 			return;
 		}
 		setLoading(true);
 
 		if (data.type === "") {
-			const response = await mapApi.getDirectionsNew(data);
+			const response = await tools.computeRoutes.run({
+				origin: savedPlacesMap[data.origin],
+				destination: savedPlacesMap[data.destination],
+				travelMode: data.travelMode,
+				routeModifiers: data.routeModifiers,
+				optimizeWaypointOrder: data.optimizeWaypointOrder,
+				computeAlternativeRoutes: data.computeAlternativeRoutes,
+			});
 			if (response.success) {
 				setRoutes(response.data.result.routes);
 				setApiCalls(response.data.apiCallLogs);
 				setUuid(response.data.uuid);
 			}
 		} else {
-			const response = await mapApi.searchAlongRoute(data);
+			const response = await tools.searchAlongRoute.run(data);
 			if (response.success) {
 				setRoutes(response.data.route_response.routes);
 				setPlaces(response.data.nearby_response.places);
@@ -160,11 +182,15 @@ export default function RouteSearchForm({
 		setLoading(false);
 	};
 
-	const debouncedCompute = useCallback(debounce(compute, 1000), []);
+	const debouncedCompute = useCallback(debounce(compute, 1000), [tools]);
 
 	useEffect(() => {
 		debouncedCompute(newRoutePlaces);
 	}, [newRoutePlaces, debouncedCompute]);
+
+	if (!mapsApi) {
+		return <div>Loading...</div>;
+	}
 	return (
 		newRoutePlaces && (
 			<Box className="flex flex-col md:flex-row gap-4">

@@ -128,6 +128,15 @@ export default function MultiStopComponent({
 		mapRef.current = map;
 		adjustBounds();
 	};
+
+	const circleSymbol = {
+		path: window.google.maps.SymbolPath.CIRCLE,
+		scale: 5,
+		fillColor: "#EA4335",
+		fillOpacity: 0.9,
+		strokeWeight: 2,
+		strokeColor: "#B41412",
+	};
 	return (
 		<GoogleMap
 			mapContainerStyle={mapStyles}
@@ -136,7 +145,7 @@ export default function MultiStopComponent({
 			onLoad={onLoad}
 			options={{ disableDefaultUI: true }}
 		>
-			{/* {(origin || coords.length > 0) && (
+			{(origin || coords.length > 0) && (
 				<Marker
 					position={
 						coords.length > 0
@@ -147,12 +156,16 @@ export default function MultiStopComponent({
 							  }
 					}
 				/>
-			)} */}
+			)}
 
 			{(intermediates.length > 0 || coords.length > 0) &&
-			coords.length > 0
+			coords.length > 1
 				? coords.map((coord, index) => (
-						<Marker key={index} position={coord[0]} />
+						<Marker
+							key={index}
+							position={coord[0]}
+							icon={circleSymbol}
+						/>
 				  ))
 				: intermediates.map((inter, index) => (
 						<Marker
@@ -161,6 +174,7 @@ export default function MultiStopComponent({
 								lat: inter.location.latitude,
 								lng: inter.location.longitude,
 							}}
+							icon={circleSymbol}
 						/>
 				  ))}
 

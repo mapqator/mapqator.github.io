@@ -54,6 +54,7 @@ export default function DirectionForm({
 		setDirectionInformation,
 		setApiCallLogs,
 		savedPlacesMap,
+		tools,
 	} = useContext(GlobalContext);
 
 	const [routes, setRoutes] = useState([]);
@@ -81,6 +82,19 @@ export default function DirectionForm({
 		},
 	};
 	const [loading, setLoading] = useState(false);
+
+	const [mapsApi, setMapsApi] = useState(null);
+
+	const loadMapsApi = async () => {
+		const mapsModule = await import(process.env.NEXT_PUBLIC_MAPS_API_PATH);
+		console.log("Direction Maps Module", mapsModule.default);
+		setMapsApi(mapsModule.default);
+	};
+
+	useEffect(() => {
+		loadMapsApi();
+	}, []);
+
 	// { from, to, mode, routes: [{label, duration, distance, steps:[]}]}
 	// useEffect(() => {
 	// 	setNewDirection(initialData);
@@ -128,10 +142,21 @@ export default function DirectionForm({
 	};
 
 	const computeRoutes = async (data) => {
+		console.log("Computing routes", tools.computeRoutes.constructor);
 		if (data.origin === "" || data.destination === "") return;
 		// Fetch the direction between the two places from google maps
 		setLoading(true);
-		const response = await mapApi.getDirectionsNew(data);
+		const response = await tools.computeRoutes.run({
+			origin: savedPlacesMap[data.origin],
+			destination: savedPlacesMap[data.destination],
+			intermediates: data.intermediates.map(
+				(intermediate) => savedPlacesMap[intermediate]
+			),
+			travelMode: data.travelMode,
+			routeModifiers: data.routeModifiers,
+			optimizeWaypointOrder: data.optimizeWaypointOrder,
+			computeAlternativeRoutes: data.computeAlternativeRoutes,
+		});
 		if (response.success && response.data.result.routes) {
 			setRoutes(response.data.result.routes);
 			setApiCalls(response.data.apiCallLogs);
@@ -142,13 +167,17 @@ export default function DirectionForm({
 		setLoading(false);
 	};
 
-	const debouncedComputeRoutes = useCallback(
-		debounce(computeRoutes, 1000),
-		[]
-	);
+	const debouncedComputeRoutes = useCallback(debounce(computeRoutes, 1000), [
+		tools,
+	]);
 	useEffect(() => {
 		debouncedComputeRoutes(newDirection);
 	}, [newDirection, debouncedComputeRoutes]);
+
+	if (!mapsApi) {
+		return <div>Loading...</div>;
+	}
+
 	return (
 		newDirection && (
 			<Box className="flex flex-col md:flex-row gap-4">
@@ -352,7 +381,7 @@ export default function DirectionForm({
 										size="small"
 										disabled={
 											newDirection.intermediates.length <
-											2
+											1
 										}
 									/>
 									<h6 className="text-base">

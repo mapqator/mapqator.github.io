@@ -135,7 +135,17 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 					<Divider />
 					{/* <OptionsEditor index={index} /> */}
 					<CorrectAnswerEditor index={index} />
-					<ReferenceSelectionField {...{ index, apiCallLogs }} />
+					<ReferenceSelectionField
+						{...{
+							index,
+							apiCallLogs,
+							savedPlacesMap,
+							selectedPlacesMap,
+							nearbyPlacesMap,
+							directionInformation,
+							routePlacesMap,
+						}}
+					/>
 					<Box className="flex flex-row justify-end">
 						<IconButton
 							onClick={() =>

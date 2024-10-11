@@ -3,7 +3,14 @@ import React, { createContext, useState, useContext, useEffect } from "react";
 import dayjs from "dayjs";
 import { AppContext } from "./AppContext";
 import ContextGeneratorService from "@/services/contextGeneratorService";
+import mapsApi from "@/api/googleMapsApi";
 export const GlobalContext = createContext();
+
+import { list as textSearchList } from "@/tools/TextSearch";
+import { list as placeDetailsList } from "@/tools/PlaceDetails";
+import { list as nearbySearchList } from "@/tools/NearbySearch";
+import { list as computeRoutesList } from "@/tools/ComputeRoutes";
+import { list as searchAlongRouteList } from "@/tools/SearchAlongRoute";
 
 export default function GlobalContextProvider({ children }) {
 	const exampleDistanceMatrix = {
@@ -302,6 +309,14 @@ export default function GlobalContextProvider({ children }) {
 
 	const [savedPlacesMap, setSavedPlacesMap] = useState({});
 	const [apiCallLogs, setApiCallLogs] = useState([]);
+
+	const [tools, setTools] = useState({
+		textSearch: textSearchList[0].instance,
+		placeDetails: placeDetailsList[0].instance,
+		nearbySearch: nearbySearchList[0].instance,
+		computeRoutes: computeRoutesList[0].instance,
+		searchAlongRoute: searchAlongRouteList[0].instance,
+	});
 	useEffect(() => {
 		setContext({
 			places: ContextGeneratorService.getPlacesContext(
@@ -419,6 +434,8 @@ export default function GlobalContextProvider({ children }) {
 				setNewRoutePlaces,
 				savedPlacesMap,
 				setSavedPlacesMap,
+				tools,
+				setTools,
 			}}
 		>
 			{children}

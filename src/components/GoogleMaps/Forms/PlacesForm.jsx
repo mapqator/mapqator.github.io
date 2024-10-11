@@ -2,11 +2,12 @@ import { Box, Grid } from "@mui/material";
 import PlaceSelectionField from "../InputFields/PlaceSelectionField";
 import { LoadingButton } from "@mui/lab";
 import { Add } from "@mui/icons-material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "@/contexts/AppContext";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import mapApi from "@/api/mapApi";
 import textualFields from "@/database/textualFields.json";
+import { showError } from "@/contexts/ToastProvider";
 
 export default function PlacesForm({ handlePlaceAdd }) {
 	const [placeId, setPlaceId] = useState();
@@ -15,13 +16,26 @@ export default function PlacesForm({ handlePlaceAdd }) {
 		setSelectedPlacesMap,
 		setApiCallLogs,
 		savedPlacesMap,
+		tools,
 	} = useContext(GlobalContext);
 	const [loading, setLoading] = useState(false);
+
+	const [mapsApi, setMapsApi] = useState(null);
+	useEffect(() => {
+		const loadMapsApi = async () => {
+			const mapsModule = await import(
+				process.env.NEXT_PUBLIC_MAPS_API_PATH
+			);
+			setMapsApi(mapsModule.default);
+		};
+
+		loadMapsApi();
+	}, []);
 
 	const handleAddSave = async (place_id) => {
 		setLoading(true);
 		let details = savedPlacesMap[place_id];
-		const res = await mapApi.getDetailsNew(place_id);
+		const res = await tools.placeDetails.run(place_id);
 		if (res.success) {
 			details = res.data.result;
 			setSelectedPlacesMap((prev) => ({
@@ -37,6 +51,10 @@ export default function PlacesForm({ handlePlaceAdd }) {
 		// handleAdd(details);
 		setLoading(false);
 	};
+
+	if (!mapsApi) {
+		return <div>Loading...</div>;
+	}
 
 	const handleAdd = (details) => {
 		const place_id = details["id"];
