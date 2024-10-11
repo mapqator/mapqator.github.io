@@ -52,6 +52,7 @@ import { list as nearbySearchList } from "@/tools/NearbySearch";
 import { list as computeRoutesList } from "@/tools/ComputeRoutes";
 import { list as searchAlongRouteList } from "@/tools/SearchAlongRoute";
 import Image from "next/image";
+import MapServiceSelector from "../MapServiceSelector";
 
 const toolOptions = {
 	textSearch: textSearchList,
@@ -461,6 +462,7 @@ export default function ContextEditor({
 	];
 	return (
 		<>
+			<MapServiceSelector />
 			<Stepper activeStep={activeStep} orientation="vertical">
 				{steps.map((step, index) => (
 					<Step key={step.label}>
