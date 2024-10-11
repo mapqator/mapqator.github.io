@@ -1,5 +1,5 @@
 import Api from "@/api/base";
-
+import config from "@/config/config";
 class PlaceDetails extends Api {
 	constructor() {
 		if (new.target === PlaceDetails) {
@@ -457,14 +457,14 @@ export const list = {
 	googleMaps: [
 		{
 			name: "Google Places API (New)",
-			icon: "/images/google-maps.png",
+			icon: config.baseUrl + "/images/google-maps.png",
 			instance: new GooglePlacesApiNew(),
 		},
 	],
 	openStreetMap: [
 		{
 			name: "Nominatim API",
-			icon: "/images/openstreetmap.logo.png",
+			icon: config.baseUrl + "/images/openstreetmap.logo.png",
 			instance: new NominatimApi(),
 		},
 	],
@@ -472,7 +472,7 @@ export const list = {
 	mapbox: [
 		{
 			name: "Mapbox API",
-			icon: "/images/mapbox.png",
+			icon: config.baseUrl + "/images/mapbox.png",
 			instance: new MapBoxApi(),
 		},
 	],
@@ -480,7 +480,7 @@ export const list = {
 	tomtom: [
 		{
 			name: "TomTom API",
-			icon: "/images/tomtom.png",
+			icon: config.baseUrl + "/images/tomtom.png",
 			instance: new TomTomApi(),
 		},
 	],
@@ -488,7 +488,7 @@ export const list = {
 	here: [
 		{
 			name: "HERE API",
-			icon: "/images/here.png",
+			icon: config.baseUrl + "/images/here.png",
 			instance: new HereApi(),
 		},
 	],
@@ -496,7 +496,7 @@ export const list = {
 	azureMaps: [
 		{
 			name: "Azure Maps API",
-			icon: "/images/azure-maps.png",
+			icon: config.baseUrl + "/images/azure-maps.png",
 			instance: new AzureMapsApi(),
 		},
 	],

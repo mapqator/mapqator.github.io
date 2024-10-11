@@ -1,33 +1,35 @@
+import config from "@/config/config";
+
 const mapServices = {
 	googleMaps: {
 		name: "Google Maps",
 		// icon: "🌎",
-		image: "/images/google-maps.png",
+		image: config.baseUrl+"/images/google-maps.png",
 	},
 	openStreetMap: {
 		name: "OpenStreetMap",
 		// icon: "🗺️",
-		image: "/images/openstreetmap.logo.png",
+		image: config.baseUrl+"/images/openstreetmap.logo.png",
 	},
 	mapbox: {
 		name: "Mapbox",
 		// icon: "🗺️"
-		image: "/images/mapbox.png",
+		image: config.baseUrl+"/images/mapbox.png",
 	},
 	tomtom: {
 		name: "TomTom",
 		// icon: "🚗",
-		image: "/images/tomtom.png",
+		image: config.baseUrl+"/images/tomtom.png",
 	},
 	here: {
 		name: "HERE",
 		// icon: "📍"
-		image: "/images/here.png",
+		image: config.baseUrl+"/images/here.png",
 	},
 	azureMaps: {
 		name: "Azure Maps",
 		// icon: "☁️",
-		image: "/images/azure-maps.png",
+		image: config.baseUrl+"/images/azure-maps.png",
 	},
 };
 

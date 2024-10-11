@@ -1,5 +1,5 @@
 import Api from "@/api/base";
-
+import config from "@/config/config";
 class NearbySearch extends Api {
 	constructor() {
 		if (new.target === NearbySearch) {
@@ -84,7 +84,7 @@ export const list = {
 	googleMaps: [
 		{
 			name: "Google Places API (New)",
-			icon: "/images/google-maps.png",
+			icon: config.baseUrl + "/images/google-maps.png",
 			instance: new GooglePlacesApiNew(),
 		},
 	],

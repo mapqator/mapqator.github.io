@@ -1,5 +1,6 @@
 import Api from "@/api/base";
 import { distance } from "framer-motion";
+import config from "@/config/config";
 
 class ComputeRoutes extends Api {
 	constructor() {
@@ -298,14 +299,14 @@ export const list = {
 	googleMaps: [
 		{
 			name: "Google Routes API",
-			icon: "/images/google-maps.png",
+			icon: config.baseUrl+"/images/google-maps.png",
 			instance: new GoogleRoutesApi(),
 		},
 	],
 	openStreetMap: [
 		{
 			name: "GraphHopper API",
-			icon: "/images/graphhopper.png",
+			icon: config.baseUrl+"/images/graphhopper.png",
 			instance: new GraphHopperApi(),
 		},
 	],

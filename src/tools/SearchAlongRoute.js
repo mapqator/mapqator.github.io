@@ -1,5 +1,5 @@
 import Api from "@/api/base";
-
+import config from "@/config/config";
 class SearchAlongRoute extends Api {
 	constructor() {
 		if (new.target === SearchAlongRoute) {
@@ -137,7 +137,7 @@ export const list = {
 	googleMaps: [
 		{
 			name: "Google Routes + Places(New) API",
-			icon: "/images/google-maps.png",
+			icon: config.baseUrl + "/images/google-maps.png",
 			instance: new GoogleRoutesApi(),
 		},
 	],
