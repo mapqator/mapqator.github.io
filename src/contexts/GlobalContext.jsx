@@ -330,6 +330,26 @@ export default function GlobalContextProvider({ children }) {
 			searchAlongRouteList[mapService][0]?.instance,
 	});
 	useEffect(() => {
+		setTools({
+			textSearch:
+				textSearchList[mapService] &&
+				textSearchList[mapService][0]?.instance,
+			placeDetails:
+				placeDetailsList[mapService] &&
+				placeDetailsList[mapService][0]?.instance,
+			nearbySearch:
+				nearbySearchList[mapService] &&
+				nearbySearchList[mapService][0]?.instance,
+			computeRoutes:
+				computeRoutesList[mapService] &&
+				computeRoutesList[mapService][0]?.instance,
+			searchAlongRoute:
+				searchAlongRouteList[mapService] &&
+				searchAlongRouteList[mapService][0]?.instance,
+		});
+	}, [mapService]);
+
+	useEffect(() => {
 		setContext({
 			places: ContextGeneratorService.getPlacesContext(
 				selectedPlacesMap,

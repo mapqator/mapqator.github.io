@@ -22,7 +22,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { LoadingButton } from "@mui/lab";
 import { GlobalContext } from "@/contexts/GlobalContext";
 
-function SearchPlaceCard({ place, index, length, uuid }) {
+function SearchPlaceCard({ place, index, length, uuid, onAdd }) {
 	// Issue: Name overlaps with Add button
 	const { savedPlacesMap, setSavedPlacesMap, tools } =
 		useContext(GlobalContext);
@@ -61,6 +61,7 @@ function SearchPlaceCard({ place, index, length, uuid }) {
 								[place.id]: { ...details, location },
 							}));
 							setLoading(false);
+							onAdd();
 						}}
 						disabled={savedPlacesMap[place.id]}
 						loading={loading}
@@ -79,6 +80,7 @@ export default function AutocompleteSearchBox() {
 	const [mapResults, setMapResults] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [notFound, setNotFound] = useState(false);
+	const [apiCalls, setApiCalls] = useState([]);
 	const { isAuthenticated } = useAuth();
 	const { apiCallLogs, setApiCallLogs, savedPlacesMap, tools } =
 		useContext(GlobalContext);
@@ -103,8 +105,9 @@ export default function AutocompleteSearchBox() {
 		if (response.success) {
 			const places = response.data.result.places;
 			setMapResults([...places]);
-			setApiCallLogs((prev) => [...prev, ...response.data.apiCallLogs]);
+			// setApiCallLogs((prev) => [...prev, ...response.data.apiCallLogs]);
 			setUuid(response.data.uuid);
+			setApiCalls(response.data.apiCallLogs);
 			if (places.length === 0) {
 				setNotFound(true);
 			}
@@ -234,6 +237,12 @@ export default function AutocompleteSearchBox() {
 								index={index}
 								length={results.length}
 								key={index}
+								onAdd={() => {
+									setApiCallLogs((prev) => [
+										...prev,
+										...apiCalls,
+									]);
+								}}
 							/>
 						))}
 					</ul>

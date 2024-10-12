@@ -18,6 +18,7 @@ export const template = {
 	displayName: (value) => value.text,
 	shortFormattedAddress: (value) => (value ? value : "N/A"),
 	accessibilityOptions: (value) => {
+		if (!value) return "N/A";
 		const options = [];
 		if (value.wheelchairAccessibleEntrance)
 			options.push("Wheelchair Accessible Entrance");
@@ -36,10 +37,12 @@ export const template = {
 	nationalPhoneNumber: (value) => value || "N/A",
 	priceLevel: (value) => priceMap[value] || "Unspecified",
 	rating: (value) => `${value} ratings`,
-	regularOpeningHours: (value) =>
-		Array.isArray(value?.weekdayDescriptions)
+	regularOpeningHours: (value) => {
+		if (!value) return "N/A";
+		return Array.isArray(value?.weekdayDescriptions)
 			? `${value.weekdayDescriptions.join(", ")}`
-			: value.weekdayDescriptions,
+			: value.weekdayDescriptions;
+	},
 	userRatingCount: (value) => `${value}`,
 	websiteUri: (value) => (value ? value : "N/A"),
 	allowsDogs: (value) => (value ? "Allows Dogs" : "Does not allow Dogs"),

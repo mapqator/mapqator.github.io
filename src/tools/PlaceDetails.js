@@ -15,6 +15,7 @@ class PlaceDetails extends Api {
 	};
 
 	getFields = () => {
+		throw new Error("Method 'getFields()' must be implemented.");
 		return [
 			"location",
 			"shortFormattedAddress",

@@ -37,13 +37,13 @@ const MapServiceSelector = () => {
 
 		setTools,
 	} = useContext(GlobalContext);
-	const [isExpanded, setIsExpanded] = useState(true);
+	const [isExpanded, setIsExpanded] = useState(false);
 
 	const toggleExpand = () => {
 		setIsExpanded(!isExpanded);
 	};
 
-	useEffect(() => {
+	const reset = () => {
 		setTools({
 			textSearch:
 				textSearchList[mapService] &&
@@ -68,7 +68,7 @@ const MapServiceSelector = () => {
 		setSavedPlacesMap({});
 		setActiveStep(0);
 		setContext([]);
-	}, [mapService]);
+	};
 
 	return (
 		<div className="border rounded-lg overflow-hidden mb-4">
@@ -117,6 +117,7 @@ const MapServiceSelector = () => {
 										: "bg-white hover:bg-gray-100"
 								}`}
 								onClick={() => {
+									reset();
 									setMapService(key);
 									setIsExpanded(false); // Collapse after selection
 								}}
