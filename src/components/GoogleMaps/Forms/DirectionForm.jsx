@@ -142,7 +142,7 @@ export default function DirectionForm({
 	};
 
 	const computeRoutes = async (data) => {
-		console.log("Computing routes", tools.computeRoutes.constructor);
+		// console.log("Computing routes", tools.computeRoutes.constructor);
 		if (data.origin === "" || data.destination === "") return;
 		// Fetch the direction between the two places from google maps
 		setLoading(true);
