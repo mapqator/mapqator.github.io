@@ -176,10 +176,6 @@ export default function DirectionForm({
 		debouncedComputeRoutes(newDirection);
 	}, [newDirection, debouncedComputeRoutes]);
 
-	if (!mapsApi) {
-		return <div>Loading...</div>;
-	}
-
 	return newDirection && tools.computeRoutes ? (
 		<Box className="flex flex-col md:flex-row gap-4">
 			<Box className="w-1/2">

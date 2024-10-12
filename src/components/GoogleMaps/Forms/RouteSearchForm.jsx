@@ -192,9 +192,6 @@ export default function RouteSearchForm({
 		debouncedCompute(newRoutePlaces);
 	}, [newRoutePlaces, debouncedCompute]);
 
-	if (!mapsApi) {
-		return <div>Loading...</div>;
-	}
 	return newRoutePlaces && tools.searchAlongRoute ? (
 		<Box className="flex flex-col md:flex-row gap-4">
 			<Box className="w-1/2">

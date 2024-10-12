@@ -86,10 +86,6 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 		}));
 	};
 
-	if (!mapsApi) {
-		return <div>Loading...</div>;
-	}
-
 	return (
 		<Card variant="outlined" className="h-full">
 			<CardContent className="flex flex-col justify-between h-full gap-2">

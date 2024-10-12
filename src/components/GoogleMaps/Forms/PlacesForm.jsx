@@ -153,10 +153,6 @@ export default function PlacesForm({ handlePlaceAdd }) {
 		setLoading(false);
 	};
 
-	if (!mapsApi) {
-		return <div>Loading...</div>;
-	}
-
 	return tools.placeDetails ? (
 		<Box className="w-full md:w-[30rem] mx-auto">
 			<Grid container spacing={2}>
