@@ -120,7 +120,7 @@ function NearbyCardSummary({
 	setNearbyPlacesMap,
 	savedPlacesMap,
 }) {
-	const { setApiCallLogs } = useContext(GlobalContext);
+	const { setApiCallLogs, tools } = useContext(GlobalContext);
 	const handleDelete = () => {
 		const newNearbyPlacesMap = [...nearbyPlacesMap];
 
@@ -161,7 +161,9 @@ function NearbyCardSummary({
 					<div className="flex gap-2">
 						<Chip
 							label={Pluralize(
-								convertFromSnake(entry.type),
+								tools.nearbySearch.formatPoiCategory(
+									entry.type
+								),
 								nearbyPlacesMap[index].places.length,
 								true
 							)}
@@ -224,7 +226,7 @@ export default function NearbyCard({
 	const [expanded, setExpanded] = useState(false);
 	const [locations, setLocations] = useState([]);
 	const [loading, setLoading] = useState(false);
-	const { setNewDistance, setActiveStep } = useContext(GlobalContext);
+	const { setNewDistance, setActiveStep, tools } = useContext(GlobalContext);
 	useEffect(() => {
 		setExpanded(index === 0);
 	}, [index]);
@@ -271,7 +273,11 @@ export default function NearbyCard({
 									className="font-bold bg-zinc-200 p-2 text-center border-b-2 border-black"
 								>
 									Nearby{" "}
-									{Pluralize(convertFromSnake(entry.type))}
+									{Pluralize(
+										tools.nearbySearch.formatPoiCategory(
+											entry.type
+										)
+									)}
 								</Typography>
 							</Box>
 							<Box className="h-[320px] overflow-auto">

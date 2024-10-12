@@ -26,7 +26,7 @@ import { Add, Search } from "@mui/icons-material";
 import PlaceSelectionField from "@/components/GoogleMaps/InputFields/PlaceSelectionField";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { useContext } from "react";
-import TypeSelectionField from "@/components/GoogleMaps/InputFields/TypeSelectionField";
+import TypeSelectionField from "@/mapServices/GoogleMaps/TypeSelectionField";
 import { AppContext } from "@/contexts/AppContext";
 import { showError } from "@/contexts/ToastProvider";
 import {

@@ -41,6 +41,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 		routePlacesMap,
 		apiCallLogs,
 		savedPlacesMap,
+		mapService,
 	} = useContext(GlobalContext);
 	const router = useRouter();
 	const { queries, setQueries } = useContext(AppContext);
@@ -61,6 +62,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 				// pois: poisMap,
 				directions: directionInformation,
 				route_places: routePlacesMap,
+				map_service: mapService,
 			},
 			api_call_logs: apiCallLogs,
 		};

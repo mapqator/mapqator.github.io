@@ -1,5 +1,13 @@
 import Api from "@/api/base";
 import config from "@/config/config";
+import TypeSelectionField, {
+	formatType,
+} from "@/mapServices/GoogleMaps/TypeSelectionField";
+
+import CategorySelectionField, {
+	formatCategory,
+} from "@/mapServices/TomTom/CategorySelectionField";
+
 class NearbySearch extends Api {
 	constructor() {
 		if (new.target === NearbySearch) {
@@ -12,6 +20,15 @@ class NearbySearch extends Api {
 
 	run = async (query) => {
 		throw new Error("Method 'run()' must be implemented.");
+	};
+
+	PoiCategorySelectionField = null;
+	formatPoiCategory = null;
+	allowedParams = {
+		rankPreference: true,
+		minRating: true,
+		priceLevels: true,
+		maxResultCount: true,
 	};
 }
 
@@ -78,6 +95,81 @@ class GooglePlacesApiNew extends NearbySearch {
 			success: false,
 		};
 	};
+
+	PoiCategorySelectionField = TypeSelectionField;
+	formatPoiCategory = formatType;
+
+	allowedParams = {
+		rankPreference: true,
+		minRating: true,
+		priceLevels: true,
+		maxResultCount: true,
+		radius: false,
+	};
+}
+
+class TomTomApi extends NearbySearch {
+	run = async (params) => {
+		const apiCall = {
+			url: "https://api.tomtom.com/search/2/nearbySearch/.json",
+			method: "GET",
+			params: {
+				key: "key:TOMTOM_API_KEY",
+				query: params.keyword,
+				lat: params.lat,
+				lon: params.lng,
+				limit: params.maxResultCount || 5,
+				categorySet: params.type,
+				radius: params.radius === 0 ? undefined : params.radius,
+			},
+		};
+		const epochId = Date.now(); // Unique ID for this tool call
+		const response = await this.post("/map/cached", apiCall);
+
+		console.log("Tom Tom:", response);
+		if (response.success) {
+			const places = response.data.results.map((place) => ({
+				id: place.id,
+				displayName: {
+					text: place.poi.name,
+				},
+				formattedAddress: place.address.freeformAddress,
+				shortFormattedAddress: place.address.freeformAddress,
+				location: {
+					latitude: place.position.lat,
+					longitude: place.position.lon,
+				},
+			}));
+			return {
+				success: true,
+				data: {
+					result: { places },
+					apiCallLogs: [
+						{
+							...apiCall,
+							uuid: epochId,
+							result: response.data,
+						},
+					],
+					uuid: epochId,
+				},
+			};
+		}
+		return {
+			success: false,
+		};
+	};
+
+	PoiCategorySelectionField = CategorySelectionField;
+	formatPoiCategory = formatCategory;
+
+	allowedParams = {
+		rankPreference: false,
+		minRating: false,
+		priceLevels: false,
+		maxResultCount: true,
+		radius: false,
+	};
 }
 
 export const list = {
@@ -86,6 +178,14 @@ export const list = {
 			name: "Google Places API (New)",
 			icon: config.baseUrl + "/images/google-maps.png",
 			instance: new GooglePlacesApiNew(),
+		},
+	],
+
+	tomtom: [
+		{
+			name: "TomTom API",
+			icon: config.baseUrl + "/images/tomtom.png",
+			instance: new TomTomApi(),
 		},
 	],
 };

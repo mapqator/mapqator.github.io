@@ -154,16 +154,10 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 						<Button
 							variant="outlined"
 							onClick={() => {
-								setNewNearbyPlaces({
+								setNewNearbyPlaces((prev) => ({
+									...prev,
 									locationBias: placeId,
-									searchBy: "type",
-									type: "",
-									keyword: "",
-									rankPreference: "RELEVANCE",
-									minRating: 0, // Values are rounded up to the nearest 0.5.
-									priceLevels: [],
-									maxResultCount: 5, // 1 to 20
-								});
+								}));
 								setActiveStep(3);
 							}}
 							sx={{

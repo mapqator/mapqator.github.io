@@ -51,7 +51,7 @@ export default function PoiList({
 										  " (" +
 										  place.userRatingCount +
 										  ")"
-										: ""
+										: place.shortFormattedAddress
 								} ${
 									place.priceLevel
 										? `| ${template["priceLevel"](

@@ -233,6 +233,7 @@ export default function GlobalContextProvider({ children }) {
 		type: "",
 		keyword: "",
 		rankPreference: "RELEVANCE",
+		radius: 0,
 		minRating: 0, // Values are rounded up to the nearest 0.5.
 		priceLevels: [],
 		maxResultCount: 5, // 1 to 20

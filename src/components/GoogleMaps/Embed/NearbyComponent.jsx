@@ -7,10 +7,18 @@ import {
 	LoadScript,
 	Marker,
 	PolylineF,
+	CircleF,
+	Circle,
 } from "@react-google-maps/api";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 
-export default function NearbyComponent({ height, places, locationBias }) {
+export default function NearbyComponent({
+	height,
+	places,
+	locationBias,
+	radius,
+}) {
+	console.log("Radius: ", radius);
 	const [locations, setLocations] = useState([]);
 	const [center, setCenter] = useState(locationBias);
 
@@ -87,6 +95,32 @@ export default function NearbyComponent({ height, places, locationBias }) {
 				<Marker key={index} position={location} />
 			))}
 			<Marker position={center} icon={circleSymbol} />
+			{/* {radius ? (
+				<Circle
+					center={center}
+					radius={radius}
+					options={{
+						fillColor: "#FF0000",
+						fillOpacity: 0.35,
+						strokeColor: "#FF0000",
+						strokeOpacity: 0.8,
+						strokeWeight: 2,
+					}}
+				/>
+			) : (
+				<></>
+			)} */}
+			{/* <Circle
+				center={center}
+				radius={radius}
+				options={{
+					fillColor: "#FF0000",
+					fillOpacity: 0.35,
+					strokeColor: "#FF0000",
+					strokeOpacity: 0.8,
+					strokeWeight: 2,
+				}}
+			/> */}
 		</GoogleMap>
 	);
 }
