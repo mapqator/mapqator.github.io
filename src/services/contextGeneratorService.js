@@ -180,6 +180,7 @@ const ContextGeneratorService = {
 	},
 	getNearbyContext: (nearbyPlacesMap, savedPlacesMap) => {
 		let newContext = "";
+		return newContext;
 		nearbyPlacesMap.forEach((e, index) => {
 			if (newContext.length > 0) {
 				newContext += "\n";
@@ -525,21 +526,21 @@ const ContextGeneratorService = {
 	},
 	convertContextToText: (context) => {
 		let text = "";
-		text += context.places !== "" ? context.places : "";
-		text +=
-			context.nearby !== ""
-				? (text !== "" ? "\n" : "") + context.nearby
-				: "";
+		// text += context.places !== "" ? context.places : "";
+		// text +=
+		// 	context.nearby !== ""
+		// 		? (text !== "" ? "\n" : "") + context.nearby
+		// 		: "";
 		// text +=
 		// 	context.area !== "" ? (text !== "" ? "\n" : "") + context.area : "";
-		text +=
-			context.distance !== ""
-				? (text !== "" ? "\n" : "") + context.distance
-				: "";
-		text +=
-			context.direction !== ""
-				? (text !== "" ? "\n" : "") + context.direction
-				: "";
+		// text +=
+		// 	context.distance !== ""
+		// 		? (text !== "" ? "\n" : "") + context.distance
+		// 		: "";
+		// text +=
+		// 	context.direction !== ""
+		// 		? (text !== "" ? "\n" : "") + context.direction
+		// 		: "";
 		// text +=
 		// 	context.params !== ""
 		// 		? (text !== "" ? "\n" : "") + context.params
