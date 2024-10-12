@@ -22,6 +22,13 @@ import {
 import { AppContext } from "@/contexts/AppContext";
 import DirectionComponent from "../Embed/DirectionComponent";
 
+function formatDuration(value) {
+	return (
+		(value.staticDuration.text ? value.staticDuration.text : "") +
+		(value.distance.text ? " (" + value.distance.text + ")" : "")
+	);
+}
+
 function SingleRoute({ route, index, length }) {
 	const {
 		selectedPlacesMap,
@@ -38,15 +45,12 @@ function SingleRoute({ route, index, length }) {
 			<Box className="p-4">
 				<div className="flex flex-row justify-between w-full">
 					<h1 className="w-[60%] text-wrap text-lg font-semibold">
-						{"Via " + route.description}{" "}
+						{route.description ? "Via " + route.description : ""}{" "}
 						{index === 0 && length > 1 && "(Recommended)"}
 					</h1>
 					<div className="flex flex-col w-[40%] text-right">
 						<h1 className="font-semibold">
-							{route.localizedValues.staticDuration.text +
-								" (" +
-								route.localizedValues.distance.text +
-								")"}
+							{formatDuration(route.localizedValues)}
 						</h1>
 					</div>
 				</div>
@@ -79,17 +83,9 @@ function SingleRoute({ route, index, length }) {
 														className="p-2"
 													/>
 													<h1 className="text-sm text-right px-2 py-1 text-zinc-500">
-														{
+														{formatDuration(
 															step.localizedValues
-																.staticDuration
-																.text
-														}{" "}
-														(
-														{
-															step.localizedValues
-																.distance.text
-														}
-														)
+														)}
 													</h1>
 												</>
 											)
@@ -141,14 +137,11 @@ function MultiLeg({ route, savedPlacesMap, waypoints }) {
 			<Box className="p-4">
 				<div className="flex flex-row justify-between w-full">
 					<h1 className="w-[60%] text-wrap text-lg font-semibold">
-						{"Via " + route.description}
+						{route.description ? "Via " + route.description : ""}
 					</h1>
 					<div className="flex flex-col w-[40%] text-right">
 						<h1 className="font-semibold">
-							{route.localizedValues.staticDuration.text +
-								" (" +
-								route.localizedValues.distance.text +
-								")"}
+							{formatDuration(route.localizedValues)}
 						</h1>
 					</div>
 				</div>
@@ -172,10 +165,7 @@ function MultiLeg({ route, savedPlacesMap, waypoints }) {
 								variant="body2"
 								className="w-[10rem] text-right"
 							>
-								{leg.localizedValues.staticDuration.text +
-									" (" +
-									leg.localizedValues.distance.text +
-									")"}
+								{formatDuration(leg.localizedValues)}
 							</Typography>
 						</div>
 					</Paper>
@@ -206,17 +196,9 @@ function MultiLeg({ route, savedPlacesMap, waypoints }) {
 														className="p-2"
 													/>
 													<h1 className="text-sm text-right px-2 py-1 text-zinc-500">
-														{
+														{formatDuration(
 															step.localizedValues
-																.staticDuration
-																.text
-														}{" "}
-														(
-														{
-															step.localizedValues
-																.distance.text
-														}
-														)
+														)}
 													</h1>
 												</>
 											)

@@ -24,7 +24,7 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 
 function SearchPlaceCard({ place, index, length, uuid, onAdd }) {
 	// Issue: Name overlaps with Add button
-	const { savedPlacesMap, setSavedPlacesMap, tools } =
+	const { savedPlacesMap, setSavedPlacesMap, tools, mapService } =
 		useContext(GlobalContext);
 	const [loading, setLoading] = useState(false);
 	return (
@@ -58,7 +58,11 @@ function SearchPlaceCard({ place, index, length, uuid, onAdd }) {
 
 							setSavedPlacesMap((prev) => ({
 								...prev,
-								[place.id]: { ...details, location },
+								[place.id]: {
+									...details,
+									location,
+									mapService: mapService,
+								},
 							}));
 							setLoading(false);
 							onAdd();

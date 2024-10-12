@@ -68,7 +68,7 @@ class GoogleRoutesApi extends ComputeRoutes {
 						? params.transitPreferences
 						: undefined,
 				optimizeWaypointOrder:
-					params.intermediates.length > 0 &&
+					params.intermediates.length > 1 &&
 					params.travelMode !== "TRANSIT"
 						? params.optimizeWaypointOrder
 						: false,
@@ -127,7 +127,7 @@ class GoogleRoutesApi extends ComputeRoutes {
 	};
 }
 
-// [car, car_delivery, car_avoid_ferry, car_avoid_motorway, car_avoid_toll, truck, small_truck, small_truck_delivery, scooter, scooter_delivery, bike, mtb, racingbike, foot, hike, as_the_crow_flies
+// [car, car_delivery, car_avoid_ferry, car_avoid_motorway, car_avoid_toll, truck, small_truck, small_truck_delivery, scooter, scooter_delivery, bike, mtb, racingbike, foot, hike, as_the_crow_flies]
 function formatDuration(milliseconds) {
 	const totalSeconds = Math.floor(milliseconds / 1000);
 	const totalMinutes = Math.floor(totalSeconds / 60);
@@ -209,10 +209,14 @@ class GraphHopperApi extends ComputeRoutes {
 						? "alternative_route"
 						: undefined,
 				alternative_route: {
-					max_paths: params.computeAlternativeRoutes ? 3 : 1,
+					max_paths:
+						params.intermediates.length === 0 &&
+						params.computeAlternativeRoutes
+							? 3
+							: 1,
 				},
 				optimize:
-					params.intermediates.length > 0
+					params.intermediates.length > 1
 						? params.optimizeWaypointOrder
 						: false,
 			},
@@ -312,6 +316,188 @@ class GraphHopperApi extends ComputeRoutes {
 	};
 }
 
+class TomTomApi extends ComputeRoutes {
+	run = async (params) => {
+		console.log("TomTom API");
+		const avoidOptions = [];
+		if (params.routeModifiers.avoidTolls) avoidOptions.push("tollRoads");
+		if (params.routeModifiers.avoidHighways) avoidOptions.push("motorways");
+		if (params.routeModifiers.avoidFerries) avoidOptions.push("ferries");
+
+		const intermediates = params.intermediates
+			.map(
+				(intermediate) =>
+					intermediate.location.latitude +
+					"," +
+					intermediate.location.longitude
+			)
+			.join(":");
+
+		const p = {
+			language: "en-US",
+			key: "key:TOMTOM_API_KEY",
+			travelMode:
+				params.travelMode === "DRIVE"
+					? "car"
+					: params.travelMode === "BICYCLE"
+					? "bicycle"
+					: params.travelMode === "TWO_WHEELER"
+					? "motorcycle"
+					: "pedestrian",
+			routeType: "fastest",
+			traffic: false,
+			avoid: avoidOptions,
+			instructionsType: "text", // text
+			computeBestOrder:
+				params.intermediates.length > 1 && params.optimizeWaypointOrder,
+			maxAlternatives:
+				params.intermediates.length == 0 &&
+				params.computeAlternativeRoutes
+					? 2
+					: 0,
+			routeRepresentation: "encodedPolyline", // Request encoded polyline
+			computeTravelTimeFor: "all",
+		};
+		const apiCall = {
+			url:
+				"https://api.tomtom.com/routing/1/calculateRoute/" +
+				params.origin.location.latitude +
+				"," +
+				params.origin.location.longitude +
+				(intermediates ? ":" + intermediates : "") +
+				":" +
+				params.destination.location.latitude +
+				"," +
+				params.destination.location.longitude +
+				"/json?" +
+				"language=" +
+				p.language +
+				"&key=" +
+				p.key +
+				"&travelMode=" +
+				p.travelMode +
+				"&routeType=" +
+				p.routeType +
+				"&traffic=" +
+				p.traffic +
+				(p.avoid.length > 0
+					? "&avoid=" + p.avoid.join("&avoid=")
+					: "") +
+				"&instructionsType=" +
+				p.instructionsType +
+				"&computeBestOrder=" +
+				p.computeBestOrder +
+				"&maxAlternatives=" +
+				p.maxAlternatives +
+				"&routeRepresentation=" +
+				p.routeRepresentation +
+				"&computeTravelTimeFor=" +
+				p.computeTravelTimeFor,
+			method: "GET",
+		};
+
+		const epochId = Date.now(); // Unique ID for this tool call
+		const response = await this.post("/map/cached", apiCall);
+
+		console.log(response);
+		// return null;
+		if (response.success) {
+			const routes = response.data.routes.map((route) => {
+				return {
+					legs: route.legs.map((leg, index) => {
+						return {
+							steps: route.guidance.instructions.map(
+								(step, si) => {
+									return {
+										navigationInstruction: {
+											instructions: step.message,
+											maneuver: step.maneuver,
+										},
+										// travelMode: step.travelMode,
+										localizedValues: {
+											distance: {
+												// text:
+												// 	si > 0
+												// 		? formatDistance(
+												// 				step.length
+												// 		  )
+												// 		: formatDistance(0),
+											},
+											staticDuration: {
+												// text: formatDuration(
+												// 	step.travelTimeInSeconds *
+												// 		1000
+												// ),
+											},
+										},
+									};
+								}
+							),
+							polyline: {
+								encodedPolyline: leg.encodedPolyline,
+							},
+							localizedValues: {
+								distance: {
+									text: formatDistance(
+										leg.summary.lengthInMeters
+									),
+								},
+								staticDuration: {
+									text: formatDuration(
+										leg.summary
+											.noTrafficTravelTimeInSeconds * 1000
+									),
+								},
+							},
+						};
+					}),
+					distanceMeters: route.summary.lengthInMeters,
+					staticDuration: `${route.summary.noTrafficTravelTimeInSeconds}s`,
+					polyline: {
+						encodedPolyline: route.legs[0].encodedPolyline,
+					},
+					localizedValues: {
+						distance: {
+							text: formatDistance(route.summary.lengthInMeters),
+						},
+						staticDuration: {
+							text: formatDuration(
+								route.summary.travelTimeInSeconds * 1000
+							),
+						},
+					},
+					optimizedIntermediateWaypointIndex: response.data
+						.optimizedWaypoints
+						? response.data.optimizedWaypoints.map(
+								(waypoint) => waypoint.optimizedIndex
+						  )
+						: undefined,
+				};
+			});
+			return {
+				success: true,
+				data: {
+					result: { routes },
+					apiCallLogs: [
+						{
+							...apiCall,
+							uuid: epochId,
+							result: response.data,
+						},
+					],
+					uuid: epochId,
+				},
+			};
+		}
+
+		return {
+			success: false,
+		};
+	};
+
+	allowedTravelModes = ["CAR", "BICYCLE", "TWO_WHEELER", "WALK"];
+}
+
 export const list = {
 	googleMaps: [
 		{
@@ -325,6 +511,14 @@ export const list = {
 			name: "GraphHopper API",
 			icon: config.baseUrl + "/images/graphhopper.png",
 			instance: new GraphHopperApi(),
+		},
+	],
+
+	tomtom: [
+		{
+			name: "TomTom API",
+			icon: config.baseUrl + "/images/tomtom.png",
+			instance: new TomTomApi(),
 		},
 	],
 };

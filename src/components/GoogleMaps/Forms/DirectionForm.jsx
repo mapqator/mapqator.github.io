@@ -368,7 +368,7 @@ export default function DirectionForm({
 									checked={newDirection.optimizeWaypointOrder}
 									size="small"
 									disabled={
-										newDirection.intermediates.length < 1
+										newDirection.intermediates.length < 2
 									}
 								/>
 								<h6 className="text-base">

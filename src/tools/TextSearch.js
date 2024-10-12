@@ -252,7 +252,7 @@ class MapBoxApi extends TextSearch {
 class TomTomApi extends TextSearch {
 	run = async (query) => {
 		const apiCall = {
-			url: "https://api.tomtom.com/search/2/search/" + query + ".json",
+			url: "https://api.tomtom.com/search/2/poiSearch/" + query + ".json",
 			method: "GET",
 			params: {
 				key: "key:TOMTOM_API_KEY",
