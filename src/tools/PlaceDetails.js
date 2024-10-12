@@ -67,6 +67,10 @@ class PlaceDetails extends Api {
 export default PlaceDetails;
 
 class GooglePlacesApiNew extends PlaceDetails {
+	constructor() {
+		super();
+		this.family = "googleMaps";
+	}
 	run = async (place) => {
 		const place_id = place.id;
 		const apiCall = {
@@ -151,6 +155,10 @@ class GooglePlacesApiNew extends PlaceDetails {
 }
 
 class NominatimApi extends PlaceDetails {
+	constructor() {
+		super();
+		this.family = "openStreetMap";
+	}
 	run = async (place) => {
 		const place_id = place.id;
 		const apiCall = {
@@ -226,6 +234,10 @@ class NominatimApi extends PlaceDetails {
 }
 
 class MapBoxApi extends PlaceDetails {
+	constructor() {
+		super();
+		this.family = "mapbox";
+	}
 	run = async (place) => {
 		const place_id = place.id;
 		const apiCall = {
@@ -286,6 +298,11 @@ class MapBoxApi extends PlaceDetails {
 }
 
 class TomTomApi extends PlaceDetails {
+	constructor() {
+		super();
+		this.family = "tomtom";
+	}
+
 	run = async (place) => {
 		const place_id = place.id;
 		const apiCall = {
@@ -357,6 +374,11 @@ class TomTomApi extends PlaceDetails {
 }
 
 class HereApi extends PlaceDetails {
+	constructor() {
+		super();
+		this.family = "here";
+	}
+
 	run = async (place) => {
 		const place_id = place.id;
 		const apiCall = {
@@ -418,6 +440,10 @@ class HereApi extends PlaceDetails {
 }
 
 class AzureMapsApi extends PlaceDetails {
+	constructor() {
+		super();
+		this.family = "azureMaps";
+	}
 	run = async (place) => {
 		if (place) {
 			const epochId = place.uuid;
@@ -457,7 +483,7 @@ class AzureMapsApi extends PlaceDetails {
 export const list = {
 	googleMaps: [
 		{
-			name: "Google Places API (New)",
+			name: "Place Details API (New)",
 			icon: config.baseUrl + "/images/google-maps.png",
 			instance: new GooglePlacesApiNew(),
 		},

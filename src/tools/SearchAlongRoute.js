@@ -144,7 +144,7 @@ class GoogleRoutesApi extends SearchAlongRoute {
 export const list = {
 	googleMaps: [
 		{
-			name: "Google Routes + Places(New) API",
+			name: "Google Maps API (New)",
 			icon: config.baseUrl + "/images/google-maps.png",
 			instance: new GoogleRoutesApi(),
 		},

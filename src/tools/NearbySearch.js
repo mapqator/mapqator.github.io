@@ -35,6 +35,10 @@ class NearbySearch extends Api {
 export default NearbySearch;
 
 class GooglePlacesApiNew extends NearbySearch {
+	constructor() {
+		super();
+		this.family = "googleMaps";
+	}
 	run = async (params) => {
 		const apiCall = {
 			url: "https://places.googleapis.com/v1/places:searchText",
@@ -109,6 +113,10 @@ class GooglePlacesApiNew extends NearbySearch {
 }
 
 class TomTomApi extends NearbySearch {
+	constructor() {
+		super();
+		this.family = "tomtom";
+	}
 	run = async (params) => {
 		const apiCall = {
 			url: "https://api.tomtom.com/search/2/nearbySearch/.json",
@@ -175,7 +183,7 @@ class TomTomApi extends NearbySearch {
 export const list = {
 	googleMaps: [
 		{
-			name: "Google Places API (New)",
+			name: "Text Search API (New)",
 			icon: config.baseUrl + "/images/google-maps.png",
 			instance: new GooglePlacesApiNew(),
 		},

@@ -25,7 +25,6 @@ class GoogleRoutesApi extends ComputeRoutes {
 		this.family = "googleMaps";
 	}
 	run = async (params) => {
-		console.log("Google Routes API");
 		const apiCall = {
 			url: "https://routes.googleapis.com/directions/v2:computeRoutes",
 			method: "POST",
@@ -38,19 +37,21 @@ class GoogleRoutesApi extends ComputeRoutes {
 			body: {
 				origin: {
 					location: {
-						latlng: params.origin.location,
+						latLng: params.origin.location,
 					},
 				},
 				destination: {
 					location: {
-						latlng: params.destination.location,
+						latLng: params.destination.location,
 					},
 				},
 				travelMode: params.travelMode,
 				intermediates:
 					params.travelMode !== "TRANSIT"
 						? params.intermediates?.map((intermediate) => ({
-								placeId: intermediate.id,
+								location: {
+									latLng: intermediate.location,
+								},
 						  }))
 						: undefined,
 				routeModifiers: {
