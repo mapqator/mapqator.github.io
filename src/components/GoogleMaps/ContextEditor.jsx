@@ -72,7 +72,6 @@ function ContextStep({
 	const stepRef = useRef(null);
 	const toolOptions = getToolOptions(mapService);
 
-	// eslint-disable-next-line react-hooks/exhaustive-de
 	return (
 		<div ref={stepRef}>
 			<StepLabel
