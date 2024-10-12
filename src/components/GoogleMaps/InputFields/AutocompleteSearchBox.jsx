@@ -166,7 +166,7 @@ export default function AutocompleteSearchBox() {
 		}
 	};
 
-	return (
+	return tools.textSearch ? (
 		<div className="flex flex-col gap-4 mx-auto w-full md:w-[30rem]">
 			<TextField
 				autoComplete="off"
@@ -310,5 +310,7 @@ export default function AutocompleteSearchBox() {
 				</div>
 			</div> */}
 		</div>
+	) : (
+		<p className="text-center">No API Available</p>
 	);
 }

@@ -191,117 +191,112 @@ export default function RouteSearchForm({
 	if (!mapsApi) {
 		return <div>Loading...</div>;
 	}
-	return (
-		newRoutePlaces && (
-			<Box className="flex flex-col md:flex-row gap-4">
-				<Box className="w-1/2">
-					<Grid container spacing={2}>
-						<Grid item xs={12}>
-							<PlaceSelectionField
-								label="Origin"
-								value={newRoutePlaces.origin}
-								onChange={(event) => {
-									setNewRoutePlaces((prev) => ({
-										...prev,
-										origin: event.target.value,
-									}));
-								}}
-								handlePlaceAdd={handlePlaceAdd}
-							/>
-						</Grid>
+	return newRoutePlaces && tools.searchAlongRoute ? (
+		<Box className="flex flex-col md:flex-row gap-4">
+			<Box className="w-1/2">
+				<Grid container spacing={2}>
+					<Grid item xs={12}>
+						<PlaceSelectionField
+							label="Origin"
+							value={newRoutePlaces.origin}
+							onChange={(event) => {
+								setNewRoutePlaces((prev) => ({
+									...prev,
+									origin: event.target.value,
+								}));
+							}}
+							handlePlaceAdd={handlePlaceAdd}
+						/>
+					</Grid>
 
-						<Grid item xs={12}>
-							<PlaceSelectionField
-								label="Destination"
-								value={newRoutePlaces.destination}
-								onChange={(event) => {
-									setNewRoutePlaces((prev) => ({
-										...prev,
-										destination: event.target.value,
-									}));
-								}}
-								handlePlaceAdd={handlePlaceAdd}
-							/>
-						</Grid>
+					<Grid item xs={12}>
+						<PlaceSelectionField
+							label="Destination"
+							value={newRoutePlaces.destination}
+							onChange={(event) => {
+								setNewRoutePlaces((prev) => ({
+									...prev,
+									destination: event.target.value,
+								}));
+							}}
+							handlePlaceAdd={handlePlaceAdd}
+						/>
+					</Grid>
 
-						<Grid item xs={12}>
-							<TravelSelectionField
-								mode={newRoutePlaces.travelMode}
-								setMode={(value) =>
-									setNewRoutePlaces((prev) => ({
-										...prev,
-										travelMode: value,
-									}))
-								}
-							/>
-						</Grid>
+					<Grid item xs={12}>
+						<TravelSelectionField
+							mode={newRoutePlaces.travelMode}
+							setMode={(value) =>
+								setNewRoutePlaces((prev) => ({
+									...prev,
+									travelMode: value,
+								}))
+							}
+						/>
+					</Grid>
 
-						{["DRIVE", "TWO_WHEELER"].includes(
-							newRoutePlaces.travelMode
-						) && (
-							<Grid item xs={12}>
-								<FormControl fullWidth size="small">
-									<InputLabel>Avoid</InputLabel>
-									<Select
-										// input={<OutlinedInput label="Tag" />}
-										value={Object.entries(
-											newRoutePlaces.routeModifiers
+					{["DRIVE", "TWO_WHEELER"].includes(
+						newRoutePlaces.travelMode
+					) && (
+						<Grid item xs={12}>
+							<FormControl fullWidth size="small">
+								<InputLabel>Avoid</InputLabel>
+								<Select
+									// input={<OutlinedInput label="Tag" />}
+									value={Object.entries(
+										newRoutePlaces.routeModifiers
+									)
+										.map(([key, value]) =>
+											value ? key : null
 										)
-											.map(([key, value]) =>
-												value ? key : null
-											)
-											.filter((x) => x)}
-										onChange={(e) => {
-											const newOptions = {
-												...newRoutePlaces.routeModifiers,
-											};
-											Object.keys(avoidMap).forEach(
-												(key) => {
-													newOptions[key] =
-														e.target.value.includes(
-															key
-														);
+										.filter((x) => x)}
+									onChange={(e) => {
+										const newOptions = {
+											...newRoutePlaces.routeModifiers,
+										};
+										Object.keys(avoidMap).forEach((key) => {
+											newOptions[key] =
+												e.target.value.includes(key);
+										});
+										setNewRoutePlaces((prev) => ({
+											...prev,
+											routeModifiers: newOptions,
+										}));
+									}}
+									label={"Avoid"}
+									multiple
+									renderValue={(selected) => {
+										if (selected.length === 0) {
+											return <em>Any</em>; // Custom label for empty array
+										}
+										return selected
+											.map((value) => avoidMap[value])
+											.join(", ");
+									}}
+								>
+									{Object.keys(avoidMap).map((key) => (
+										<MenuItem key={key} value={key}>
+											<Checkbox
+												checked={
+													newRoutePlaces
+														.routeModifiers[key]
 												}
-											);
-											setNewRoutePlaces((prev) => ({
-												...prev,
-												routeModifiers: newOptions,
-											}));
-										}}
-										label={"Avoid"}
-										multiple
-										renderValue={(selected) => {
-											if (selected.length === 0) {
-												return <em>Any</em>; // Custom label for empty array
-											}
-											return selected
-												.map((value) => avoidMap[value])
-												.join(", ");
-										}}
-									>
-										{Object.keys(avoidMap).map((key) => (
-											<MenuItem key={key} value={key}>
-												<Checkbox
-													checked={
-														newRoutePlaces
-															.routeModifiers[key]
-													}
-												/>
-												<ListItemText
-													primary={avoidMap[key]}
-												/>
-											</MenuItem>
-										))}
-									</Select>
-								</FormControl>
-							</Grid>
-						)}
-
-						<Grid item xs={12}>
-							<Divider className="w-full" />
+											/>
+											<ListItemText
+												primary={avoidMap[key]}
+											/>
+										</MenuItem>
+									))}
+								</Select>
+							</FormControl>
 						</Grid>
+					)}
 
-						{/* <Grid item xs={12}>
+					<Grid item xs={12}>
+						<Divider className="w-full" />
+					</Grid>
+
+					{/* <Grid item xs={12}>
 							<RadioGroup
 								row
 								value={newRoutePlaces.searchBy}
@@ -325,174 +320,171 @@ export default function RouteSearchForm({
 							</RadioGroup>
 						</Grid> */}
 
-						<Grid item xs={12}>
-							<TypeSelectionField
-								type={newRoutePlaces.type}
-								setType={(newValue) => {
-									console.log("New Value: ", newValue);
-									setNewRoutePlaces((prev) => ({
-										...prev,
-										type: newValue,
-									}));
-								}}
-							/>
-						</Grid>
-
-						<Grid item xs={12}>
-							<TextField
-								type="number"
-								value={newRoutePlaces.minRating}
-								label="Min Rating"
-								onChange={(e) =>
-									setNewRoutePlaces((prev) => ({
-										...prev,
-										minRating: e.target.value,
-									}))
-								}
-								inputProps={{ step: 0.5, min: 0, max: 5 }}
-								size="small"
-								fullWidth
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<FormControl fullWidth size="small">
-								<InputLabel>Price</InputLabel>
-								<Select
-									// input={<OutlinedInput label="Tag" />}
-									value={newRoutePlaces.priceLevels}
-									onChange={(e) =>
-										setNewRoutePlaces((prev) => ({
-											...prev,
-											priceLevels: e.target.value,
-										}))
-									}
-									label={"Price"}
-									multiple
-									renderValue={(selected) => {
-										if (selected.length === 0) {
-											return <em>Any</em>; // Custom label for empty array
-										}
-										return selected
-											.map(
-												(value) =>
-													priceMap[value] || value
-											)
-											.join(", ");
-									}}
-								>
-									{Object.keys(priceMap).map((key) => (
-										<MenuItem key={key} value={key}>
-											<Checkbox
-												checked={
-													newRoutePlaces.priceLevels.indexOf(
-														key
-													) > -1
-												}
-											/>
-											<ListItemText
-												primary={priceMap[key]}
-											/>
-										</MenuItem>
-									))}
-								</Select>
-							</FormControl>
-							<Typography variant="caption">
-								The default is to select all price levels.
-							</Typography>
-						</Grid>
-						<Grid item xs={12}>
-							<RadioGroup
-								row
-								value={newRoutePlaces.rankPreference}
-								onChange={(e) =>
-									setNewRoutePlaces((prev) => ({
-										...prev,
-										rankPreference: e.target.value,
-									}))
-								}
-							>
-								<FormControlLabel
-									value="RELEVANCE"
-									control={<Radio />}
-									label="Rank by Relevance"
-								/>
-								<FormControlLabel
-									value="DISTANCE"
-									control={<Radio />}
-									label="Rank by Distance"
-								/>
-							</RadioGroup>
-						</Grid>
-
-						<Grid item xs={12}>
-							<TextField
-								type="number"
-								label="Max Results (1 to 20)"
-								value={newRoutePlaces.maxResultCount}
-								onChange={(e) =>
-									setNewRoutePlaces((prev) => ({
-										...prev,
-										maxResultCount: e.target.value,
-									}))
-								}
-								fullWidth
-								size="small"
-								inputProps={{ min: 1, max: 20, step: 1 }}
-							/>
-						</Grid>
-
-						<Grid item xs={12}>
-							<LoadingButton
-								variant="contained"
-								fullWidth
-								onClick={searchNearbyPlaces}
-								startIcon={<Add />}
-								loading={loading}
-								loadingPosition="start"
-							>
-								Add Places
-							</LoadingButton>
-						</Grid>
+					<Grid item xs={12}>
+						<TypeSelectionField
+							type={newRoutePlaces.type}
+							setType={(newValue) => {
+								console.log("New Value: ", newValue);
+								setNewRoutePlaces((prev) => ({
+									...prev,
+									type: newValue,
+								}));
+							}}
+						/>
 					</Grid>
-				</Box>
 
-				<Box className="w-1/2">
-					<Paper elevation={2}>
-						<Box>
-							<Typography
-								variant="h6"
-								className="font-bold bg-zinc-200 p-2 text-center border-b-2 border-black"
+					<Grid item xs={12}>
+						<TextField
+							type="number"
+							value={newRoutePlaces.minRating}
+							label="Min Rating"
+							onChange={(e) =>
+								setNewRoutePlaces((prev) => ({
+									...prev,
+									minRating: e.target.value,
+								}))
+							}
+							inputProps={{ step: 0.5, min: 0, max: 5 }}
+							size="small"
+							fullWidth
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<FormControl fullWidth size="small">
+							<InputLabel>Price</InputLabel>
+							<Select
+								// input={<OutlinedInput label="Tag" />}
+								value={newRoutePlaces.priceLevels}
+								onChange={(e) =>
+									setNewRoutePlaces((prev) => ({
+										...prev,
+										priceLevels: e.target.value,
+									}))
+								}
+								label={"Price"}
+								multiple
+								renderValue={(selected) => {
+									if (selected.length === 0) {
+										return <em>Any</em>; // Custom label for empty array
+									}
+									return selected
+										.map(
+											(value) => priceMap[value] || value
+										)
+										.join(", ");
+								}}
 							>
-								Map View
-							</Typography>
-						</Box>
-						{newRoutePlaces.origin === "" &&
-						newRoutePlaces.destination === "" ? (
-							<Box className="h-[509px] flex flex-row items-center justify-center">
-								<h1
-									// variant="body1"
-									className="text-center p-4 text-xl text-zinc-400"
-								>
-									Select origin/destination to search along
-									route.
-								</h1>
-							</Box>
-						) : (
-							<RoutePlacesComponent
-								height={"509px"}
-								encodedPolyline={
-									routes[0]?.polyline.encodedPolyline
-								}
-								places={places}
-								origin={savedPlacesMap[newRoutePlaces.origin]}
-								destination={
-									savedPlacesMap[newRoutePlaces.destination]
-								}
+								{Object.keys(priceMap).map((key) => (
+									<MenuItem key={key} value={key}>
+										<Checkbox
+											checked={
+												newRoutePlaces.priceLevels.indexOf(
+													key
+												) > -1
+											}
+										/>
+										<ListItemText primary={priceMap[key]} />
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+						<Typography variant="caption">
+							The default is to select all price levels.
+						</Typography>
+					</Grid>
+					<Grid item xs={12}>
+						<RadioGroup
+							row
+							value={newRoutePlaces.rankPreference}
+							onChange={(e) =>
+								setNewRoutePlaces((prev) => ({
+									...prev,
+									rankPreference: e.target.value,
+								}))
+							}
+						>
+							<FormControlLabel
+								value="RELEVANCE"
+								control={<Radio />}
+								label="Rank by Relevance"
 							/>
-						)}
-					</Paper>
-				</Box>
+							<FormControlLabel
+								value="DISTANCE"
+								control={<Radio />}
+								label="Rank by Distance"
+							/>
+						</RadioGroup>
+					</Grid>
+
+					<Grid item xs={12}>
+						<TextField
+							type="number"
+							label="Max Results (1 to 20)"
+							value={newRoutePlaces.maxResultCount}
+							onChange={(e) =>
+								setNewRoutePlaces((prev) => ({
+									...prev,
+									maxResultCount: e.target.value,
+								}))
+							}
+							fullWidth
+							size="small"
+							inputProps={{ min: 1, max: 20, step: 1 }}
+						/>
+					</Grid>
+
+					<Grid item xs={12}>
+						<LoadingButton
+							variant="contained"
+							fullWidth
+							onClick={searchNearbyPlaces}
+							startIcon={<Add />}
+							loading={loading}
+							loadingPosition="start"
+						>
+							Add Places
+						</LoadingButton>
+					</Grid>
+				</Grid>
 			</Box>
-		)
+
+			<Box className="w-1/2">
+				<Paper elevation={2}>
+					<Box>
+						<Typography
+							variant="h6"
+							className="font-bold bg-zinc-200 p-2 text-center border-b-2 border-black"
+						>
+							Map View
+						</Typography>
+					</Box>
+					{newRoutePlaces.origin === "" &&
+					newRoutePlaces.destination === "" ? (
+						<Box className="h-[509px] flex flex-row items-center justify-center">
+							<h1
+								// variant="body1"
+								className="text-center p-4 text-xl text-zinc-400"
+							>
+								Select origin/destination to search along route.
+							</h1>
+						</Box>
+					) : (
+						<RoutePlacesComponent
+							height={"509px"}
+							encodedPolyline={
+								routes[0]?.polyline.encodedPolyline
+							}
+							places={places}
+							origin={savedPlacesMap[newRoutePlaces.origin]}
+							destination={
+								savedPlacesMap[newRoutePlaces.destination]
+							}
+						/>
+					)}
+				</Paper>
+			</Box>
+		</Box>
+	) : (
+		<p className="text-center">No API Available</p>
 	);
 }

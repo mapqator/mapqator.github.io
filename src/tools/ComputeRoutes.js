@@ -117,6 +117,14 @@ class GoogleRoutesApi extends ComputeRoutes {
 			success: false,
 		};
 	};
+
+	allowedTravelModes = ["DRIVE", "BICYCLE", "TWO_WHEELER", "WALK"];
+	allowedParams = {
+		intermediates: true,
+		routeModifiers: true,
+		computeAlternativeRoutes: true,
+		optimizeWaypointOrder: true,
+	};
 }
 
 // [car, car_delivery, car_avoid_ferry, car_avoid_motorway, car_avoid_toll, truck, small_truck, small_truck_delivery, scooter, scooter_delivery, bike, mtb, racingbike, foot, hike, as_the_crow_flies
@@ -293,20 +301,29 @@ class GraphHopperApi extends ComputeRoutes {
 			};
 		}
 	};
+
+	allowedTravelModes = ["DRIVE", "BICYCLE", "TWO_WHEELER", "WALK"];
+
+	allowedParams = {
+		intermediates: true,
+		routeModifiers: true,
+		computeAlternativeRoutes: true,
+		optimizeWaypointOrder: true,
+	};
 }
 
 export const list = {
 	googleMaps: [
 		{
 			name: "Google Routes API",
-			icon: config.baseUrl+"/images/google-maps.png",
+			icon: config.baseUrl + "/images/google-maps.png",
 			instance: new GoogleRoutesApi(),
 		},
 	],
 	openStreetMap: [
 		{
 			name: "GraphHopper API",
-			icon: config.baseUrl+"/images/graphhopper.png",
+			icon: config.baseUrl + "/images/graphhopper.png",
 			instance: new GraphHopperApi(),
 		},
 	],

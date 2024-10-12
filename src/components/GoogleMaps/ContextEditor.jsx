@@ -75,8 +75,7 @@ function ContextStep({
 		computeRoutes: computeRoutesList[mapService],
 		searchAlongRoute: searchAlongRouteList[mapService],
 	};
-	
-	
+
 	return (
 		<div ref={stepRef}>
 			<StepLabel
@@ -339,10 +338,11 @@ export default function ContextEditor({
 			label: "Guidelines",
 			description: `Welcome to the Context Generator! This tool helps you create rich, place-related contexts using Google Maps APIs. Here's how it works:
 
-    		1. Add Places: Start by searching for and adding key locations to your context.
-			2. Add Place Details: Add detailed information about a place.
-			3. Explore Nearby Places: Discover nearby places and points of interest around your selected locations.
-			4. Get Directions: Find routes between places or multi-stop routes.
+    		1. Text Search: Start by searching for and adding key locations to your context.
+			2. Place Details: Add detailed information about a place.
+			3. Nearby Search: Discover nearby places and points of interest around your selected locations.
+			4. Compute Routes: Find routes between places or multi-stop routes.
+			5. Search Along Route: Find places along a route.
 
 			Let's begin!`,
 			icon: <Flag />,

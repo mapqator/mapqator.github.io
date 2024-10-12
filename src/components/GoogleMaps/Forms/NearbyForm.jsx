@@ -179,218 +179,218 @@ export default function NearbyForm({
 		debouncedFetchNearbyPlaces(newNearbyPlaces);
 	}, [newNearbyPlaces, debouncedFetchNearbyPlaces]);
 
-	return (
-		newNearbyPlaces && (
-			<Box className="flex flex-col md:flex-row gap-4">
-				<Box className="w-1/2">
-					<Grid container spacing={2}>
+	return newNearbyPlaces && tools.nearbySearch ? (
+		<Box className="flex flex-col md:flex-row gap-4">
+			<Box className="w-1/2">
+				<Grid container spacing={2}>
+					<Grid item xs={12}>
+						<PlaceSelectionField
+							label="Location"
+							value={newNearbyPlaces.locationBias}
+							onChange={(e) =>
+								setNewNearbyPlaces((prev) => ({
+									...prev,
+									locationBias: e.target.value,
+								}))
+							}
+							handlePlaceAdd={handlePlaceAdd}
+						/>
+					</Grid>
+
+					<Grid item xs={12}>
+						<tools.nearbySearch.PoiCategorySelectionField
+							type={newNearbyPlaces.type}
+							setType={(newValue) => {
+								setNewNearbyPlaces((prev) => ({
+									...prev,
+									type: newValue,
+								}));
+							}}
+						/>
+					</Grid>
+
+					{tools.nearbySearch.allowedParams.minRating && (
 						<Grid item xs={12}>
-							<PlaceSelectionField
-								label="Location"
-								value={newNearbyPlaces.locationBias}
+							<TextField
+								type="number"
+								value={newNearbyPlaces.minRating}
+								label="Min Rating"
 								onChange={(e) =>
 									setNewNearbyPlaces((prev) => ({
 										...prev,
-										locationBias: e.target.value,
+										minRating: e.target.value,
 									}))
 								}
-								handlePlaceAdd={handlePlaceAdd}
+								inputProps={{ step: 0.5, min: 0, max: 5 }}
+								size="small"
+								fullWidth
 							/>
 						</Grid>
+					)}
 
+					{tools.nearbySearch.allowedParams.priceLevels && (
 						<Grid item xs={12}>
-							<tools.nearbySearch.PoiCategorySelectionField
-								type={newNearbyPlaces.type}
-								setType={(newValue) => {
+							<FormControl fullWidth size="small">
+								<InputLabel>Price</InputLabel>
+								<Select
+									// input={<OutlinedInput label="Tag" />}
+									value={newNearbyPlaces.priceLevels}
+									onChange={(e) =>
+										setNewNearbyPlaces((prev) => ({
+											...prev,
+											priceLevels: e.target.value,
+										}))
+									}
+									label={"Price"}
+									multiple
+									renderValue={(selected) => {
+										if (selected.length === 0) {
+											return <em>Any</em>; // Custom label for empty array
+										}
+										return selected
+											.map(
+												(value) =>
+													priceMap[value] || value
+											)
+											.join(", ");
+									}}
+								>
+									{Object.keys(priceMap).map((key) => (
+										<MenuItem key={key} value={key}>
+											<Checkbox
+												checked={
+													newNearbyPlaces.priceLevels.indexOf(
+														key
+													) > -1
+												}
+											/>
+											<ListItemText
+												primary={priceMap[key]}
+											/>
+										</MenuItem>
+									))}
+								</Select>
+							</FormControl>
+							<Typography variant="caption">
+								The default is to select all price levels.
+							</Typography>
+						</Grid>
+					)}
+
+					{tools.nearbySearch.allowedParams.rankPreference && (
+						<Grid item xs={12}>
+							<RadioGroup
+								row
+								value={newNearbyPlaces.rankPreference}
+								onChange={(e) =>
 									setNewNearbyPlaces((prev) => ({
 										...prev,
-										type: newValue,
-									}));
-								}}
-							/>
+										rankPreference: e.target.value,
+									}))
+								}
+							>
+								<FormControlLabel
+									value="RELEVANCE"
+									control={<Radio />}
+									label="Rank by Relevance"
+								/>
+								<FormControlLabel
+									value="DISTANCE"
+									control={<Radio />}
+									label="Rank by Distance"
+								/>
+							</RadioGroup>
 						</Grid>
+					)}
 
-						{tools.nearbySearch.allowedParams.minRating && (
-							<Grid item xs={12}>
-								<TextField
-									type="number"
-									value={newNearbyPlaces.minRating}
-									label="Min Rating"
-									onChange={(e) =>
-										setNewNearbyPlaces((prev) => ({
-											...prev,
-											minRating: e.target.value,
-										}))
-									}
-									inputProps={{ step: 0.5, min: 0, max: 5 }}
-									size="small"
-									fullWidth
-								/>
-							</Grid>
-						)}
-
-						{tools.nearbySearch.allowedParams.priceLevels && (
-							<Grid item xs={12}>
-								<FormControl fullWidth size="small">
-									<InputLabel>Price</InputLabel>
-									<Select
-										// input={<OutlinedInput label="Tag" />}
-										value={newNearbyPlaces.priceLevels}
-										onChange={(e) =>
-											setNewNearbyPlaces((prev) => ({
-												...prev,
-												priceLevels: e.target.value,
-											}))
-										}
-										label={"Price"}
-										multiple
-										renderValue={(selected) => {
-											if (selected.length === 0) {
-												return <em>Any</em>; // Custom label for empty array
-											}
-											return selected
-												.map(
-													(value) =>
-														priceMap[value] || value
-												)
-												.join(", ");
-										}}
-									>
-										{Object.keys(priceMap).map((key) => (
-											<MenuItem key={key} value={key}>
-												<Checkbox
-													checked={
-														newNearbyPlaces.priceLevels.indexOf(
-															key
-														) > -1
-													}
-												/>
-												<ListItemText
-													primary={priceMap[key]}
-												/>
-											</MenuItem>
-										))}
-									</Select>
-								</FormControl>
-								<Typography variant="caption">
-									The default is to select all price levels.
-								</Typography>
-							</Grid>
-						)}
-
-						{tools.nearbySearch.allowedParams.rankPreference && (
-							<Grid item xs={12}>
-								<RadioGroup
-									row
-									value={newNearbyPlaces.rankPreference}
-									onChange={(e) =>
-										setNewNearbyPlaces((prev) => ({
-											...prev,
-											rankPreference: e.target.value,
-										}))
-									}
-								>
-									<FormControlLabel
-										value="RELEVANCE"
-										control={<Radio />}
-										label="Rank by Relevance"
-									/>
-									<FormControlLabel
-										value="DISTANCE"
-										control={<Radio />}
-										label="Rank by Distance"
-									/>
-								</RadioGroup>
-							</Grid>
-						)}
-
-						{tools.nearbySearch.allowedParams.radius && (
-							<Grid item xs={12}>
-								<TextField
-									fullWidth
-									size="small"
-									label="Radius (meters)"
-									type="number"
-									value={newNearbyPlaces.radius}
-									onChange={(e) =>
-										setNewNearbyPlaces((prev) => ({
-											...prev,
-											radius: e.target.value,
-										}))
-									}
-								/>
-							</Grid>
-						)}
-
-						{tools.nearbySearch.allowedParams.maxResultCount && (
-							<Grid item xs={12}>
-								<TextField
-									type="number"
-									label="Max Results (1 to 20)"
-									value={newNearbyPlaces.maxResultCount}
-									onChange={(e) =>
-										setNewNearbyPlaces((prev) => ({
-											...prev,
-											maxResultCount: e.target.value,
-										}))
-									}
-									fullWidth
-									size="small"
-									inputProps={{ min: 1, max: 20, step: 1 }}
-								/>
-							</Grid>
-						)}
-
+					{tools.nearbySearch.allowedParams.radius && (
 						<Grid item xs={12}>
-							<LoadingButton
-								variant="contained"
+							<TextField
 								fullWidth
-								onClick={searchNearbyPlaces}
-								startIcon={<Add />}
-								loading={loading}
-								loadingPosition="start"
-							>
-								Add Nearby POIs
-							</LoadingButton>
-						</Grid>
-					</Grid>
-				</Box>
-
-				<Box className="w-1/2">
-					<Paper elevation={2}>
-						<Box>
-							<Typography
-								variant="h6"
-								className="font-bold bg-zinc-200 p-2 text-center border-b-2 border-black"
-							>
-								Map View
-							</Typography>
-						</Box>
-						{newNearbyPlaces.locationBias === "" ? (
-							<Box className="h-[365px] flex flex-row items-center justify-center">
-								<h1
-									// variant="body1"
-									className="text-center p-4 text-xl text-zinc-400"
-								>
-									Select a location to view nearby places.
-								</h1>
-							</Box>
-						) : (
-							<NearbyComponent
-								height={"365px"}
-								places={list}
-								locationBias={
-									savedPlacesMap[newNearbyPlaces.locationBias]
-								}
-								radius={
-									tools.nearbySearch.allowedParams.radius &&
-									newNearbyPlaces.radius
+								size="small"
+								label="Radius (meters)"
+								type="number"
+								value={newNearbyPlaces.radius}
+								onChange={(e) =>
+									setNewNearbyPlaces((prev) => ({
+										...prev,
+										radius: e.target.value,
+									}))
 								}
 							/>
-						)}
-					</Paper>
-				</Box>
+						</Grid>
+					)}
+
+					{tools.nearbySearch.allowedParams.maxResultCount && (
+						<Grid item xs={12}>
+							<TextField
+								type="number"
+								label="Max Results (1 to 20)"
+								value={newNearbyPlaces.maxResultCount}
+								onChange={(e) =>
+									setNewNearbyPlaces((prev) => ({
+										...prev,
+										maxResultCount: e.target.value,
+									}))
+								}
+								fullWidth
+								size="small"
+								inputProps={{ min: 1, max: 20, step: 1 }}
+							/>
+						</Grid>
+					)}
+
+					<Grid item xs={12}>
+						<LoadingButton
+							variant="contained"
+							fullWidth
+							onClick={searchNearbyPlaces}
+							startIcon={<Add />}
+							loading={loading}
+							loadingPosition="start"
+						>
+							Add Nearby POIs
+						</LoadingButton>
+					</Grid>
+				</Grid>
 			</Box>
-		)
+
+			<Box className="w-1/2">
+				<Paper elevation={2}>
+					<Box>
+						<Typography
+							variant="h6"
+							className="font-bold bg-zinc-200 p-2 text-center border-b-2 border-black"
+						>
+							Map View
+						</Typography>
+					</Box>
+					{newNearbyPlaces.locationBias === "" ? (
+						<Box className="h-[365px] flex flex-row items-center justify-center">
+							<h1
+								// variant="body1"
+								className="text-center p-4 text-xl text-zinc-400"
+							>
+								Select a location to view nearby places.
+							</h1>
+						</Box>
+					) : (
+						<NearbyComponent
+							height={"365px"}
+							places={list}
+							locationBias={
+								savedPlacesMap[newNearbyPlaces.locationBias]
+							}
+							radius={
+								tools.nearbySearch.allowedParams.radius &&
+								newNearbyPlaces.radius
+							}
+						/>
+					)}
+				</Paper>
+			</Box>
+		</Box>
+	) : (
+		<p className="text-center">No API Available</p>
 	);
 }

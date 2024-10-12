@@ -56,7 +56,7 @@ export default function PlacesForm({ handlePlaceAdd }) {
 		return <div>Loading...</div>;
 	}
 
-	return (
+	return tools.placeDetails ? (
 		<Box className="w-full md:w-[30rem] mx-auto">
 			<Grid container spacing={2}>
 				<Grid item xs={12}>
@@ -84,5 +84,7 @@ export default function PlacesForm({ handlePlaceAdd }) {
 				</Grid>
 			</Grid>
 		</Box>
+	) : (
+		<p className="text-center">No API Available</p>
 	);
 }
