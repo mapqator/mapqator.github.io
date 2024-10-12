@@ -95,7 +95,11 @@ export default function RouteSearchForm({
 		if (details === undefined) {
 			setSavedPlacesMap((prev) => ({
 				...prev,
-				[place.id]: place,
+				[place.id]: {
+					...place,
+					uuid,
+					mapService: tools.searchAlongRoute.family,
+				},
 			}));
 		}
 	};

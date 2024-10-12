@@ -20,6 +20,10 @@ class ComputeRoutes extends Api {
 export default ComputeRoutes;
 
 class GoogleRoutesApi extends ComputeRoutes {
+	constructor() {
+		super();
+		this.family = "googleMaps";
+	}
 	run = async (params) => {
 		console.log("Google Routes API");
 		const apiCall = {
@@ -33,10 +37,14 @@ class GoogleRoutesApi extends ComputeRoutes {
 			},
 			body: {
 				origin: {
-					placeId: params.origin.id,
+					location: {
+						latlng: params.origin.location,
+					},
 				},
 				destination: {
-					placeId: params.destination.id,
+					location: {
+						latlng: params.destination.location,
+					},
 				},
 				travelMode: params.travelMode,
 				intermediates:
@@ -157,6 +165,10 @@ function formatDistance(meters) {
 }
 
 class GraphHopperApi extends ComputeRoutes {
+	constructor() {
+		super();
+		this.family = "openStreetMap";
+	}
 	run = async (params) => {
 		console.log("GraphHopper API");
 		const apiCall = {

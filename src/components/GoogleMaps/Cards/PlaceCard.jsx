@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useContext, useEffect, useState } from "react";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -27,6 +28,8 @@ import { template } from "@/database/templates";
 import textualFields from "@/database/textualFields";
 import { Delete } from "@mui/icons-material";
 import SinglePlaceComponent from "../Embed/SinglePlaceComponent";
+import { list as placeDetailsTools } from "@/tools/PlaceDetails";
+import mapServices from "@/tools/MapServices";
 function PlaceCardSummary({
 	placeId,
 	expanded,
@@ -132,7 +135,9 @@ export default function PlaceCard({
 									</Typography>
 								</Box>
 								<Box className="h-[350px] overflow-auto">
-									{tools.placeDetails
+									{placeDetailsTools[
+										selectedPlacesMap[placeId].mapService
+									][0].instance
 										.getFields()
 										.map((attribute, index) => (
 											<Box key={attribute}>
@@ -213,14 +218,20 @@ export default function PlaceCard({
 					<Box
 						sx={{
 							display: "flex",
-							justifyContent: "flex-end",
-							mt: "auto",
+							justifyContent: "space-between",
+							pt: "2",
+							alignItems: "center",
 						}}
+						className="mt-2"
 					>
-						{/* <PlaceDeleteButton
-							placeId={placeId}
-							isSelected={true}
-						/> */}
+						<img
+							src={
+								mapServices[savedPlacesMap[placeId].mapService]
+									.image
+							}
+							alt=""
+							className="h-6"
+						/>
 						<IconButton
 							onClick={() => {
 								setSelectedPlacesMap((prev) => {

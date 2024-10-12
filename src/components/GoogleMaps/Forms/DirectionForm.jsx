@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import mapApi from "@/api/mapApi";
 import {
@@ -30,6 +31,7 @@ import DirectionComponent from "../Embed/DirectionComponent";
 import MultiRouteComponent from "../Embed/MultiRouteComponent";
 import debounce from "lodash/debounce";
 import MultiStopComponent from "../Embed/MultiStopComponent";
+import mapServices from "@/tools/MapServices";
 
 const avoidMap = {
 	avoidTolls: "Tolls",
@@ -334,11 +336,38 @@ export default function DirectionForm({
 												<MenuItem
 													key={place_id}
 													value={place_id}
+													className="flex flex-row gap-2"
 												>
-													{
-														savedPlacesMap[place_id]
-															.displayName?.text
-													}
+													<img
+														src={
+															mapServices[
+																savedPlacesMap[
+																	place_id
+																].mapService
+															].image
+														}
+														alt=""
+														className="h-6"
+													/>
+													<Typography
+														noWrap
+														className="max-w-[26rem] truncate text-ellipsis"
+													>
+														{
+															savedPlacesMap[
+																place_id
+															].displayName?.text
+														}{" "}
+														|{" "}
+														<span className="text-gray-500">
+															{
+																savedPlacesMap[
+																	place_id
+																]
+																	.shortFormattedAddress
+															}
+														</span>
+													</Typography>
 												</MenuItem>
 											)
 										)}

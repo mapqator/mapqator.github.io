@@ -222,6 +222,7 @@ export default function GlobalContextProvider({ children }) {
 		initCurrentInformation
 	);
 
+	const [newPlaceId, setNewPlaceId] = useState();
 	const [newDistance, setNewDistance] = useState({
 		origins: [],
 		destinations: [],
@@ -311,42 +312,44 @@ export default function GlobalContextProvider({ children }) {
 	const [savedPlacesMap, setSavedPlacesMap] = useState({});
 	const [apiCallLogs, setApiCallLogs] = useState([]);
 
-	const [mapService, setMapService] = useState("googleMaps");
+	const [mapService, setMapService] = useState("all");
 	const [tools, setTools] = useState({
-		textSearch:
-			textSearchList[mapService] &&
-			textSearchList[mapService][0]?.instance,
-		placeDetails:
-			placeDetailsList[mapService] &&
-			placeDetailsList[mapService][0]?.instance,
-		nearbySearch:
-			nearbySearchList[mapService] &&
-			nearbySearchList[mapService][0]?.instance,
-		computeRoutes:
-			computeRoutesList[mapService] &&
-			computeRoutesList[mapService][0]?.instance,
-		searchAlongRoute:
-			searchAlongRouteList[mapService] &&
-			searchAlongRouteList[mapService][0]?.instance,
+		textSearch: null,
+		placeDetails: null,
+		nearbySearch: null,
+		computeRoutes: null,
+		searchAlongRoute: null,
 	});
 	useEffect(() => {
-		setTools({
-			textSearch:
-				textSearchList[mapService] &&
-				textSearchList[mapService][0]?.instance,
-			placeDetails:
-				placeDetailsList[mapService] &&
-				placeDetailsList[mapService][0]?.instance,
-			nearbySearch:
-				nearbySearchList[mapService] &&
-				nearbySearchList[mapService][0]?.instance,
-			computeRoutes:
-				computeRoutesList[mapService] &&
-				computeRoutesList[mapService][0]?.instance,
-			searchAlongRoute:
-				searchAlongRouteList[mapService] &&
-				searchAlongRouteList[mapService][0]?.instance,
-		});
+		console.log("mapService", mapService);
+		if (mapService === "all") {
+			setTools({
+				textSearch: textSearchList["googleMaps"][0].instance,
+				placeDetails: placeDetailsList["googleMaps"][0].instance,
+				nearbySearch: nearbySearchList["googleMaps"][0].instance,
+				computeRoutes: computeRoutesList["googleMaps"][0].instance,
+				searchAlongRoute:
+					searchAlongRouteList["googleMaps"][0].instance,
+			});
+		} else {
+			setTools({
+				textSearch:
+					textSearchList[mapService] &&
+					textSearchList[mapService][0]?.instance,
+				placeDetails:
+					placeDetailsList[mapService] &&
+					placeDetailsList[mapService][0]?.instance,
+				nearbySearch:
+					nearbySearchList[mapService] &&
+					nearbySearchList[mapService][0]?.instance,
+				computeRoutes:
+					computeRoutesList[mapService] &&
+					computeRoutesList[mapService][0]?.instance,
+				searchAlongRoute:
+					searchAlongRouteList[mapService] &&
+					searchAlongRouteList[mapService][0]?.instance,
+			});
+		}
 	}, [mapService]);
 
 	useEffect(() => {
@@ -470,6 +473,8 @@ export default function GlobalContextProvider({ children }) {
 				setTools,
 				mapService,
 				setMapService,
+				newPlaceId,
+				setNewPlaceId,
 			}}
 		>
 			{children}

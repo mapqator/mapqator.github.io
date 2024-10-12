@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useContext, useEffect, useRef, useState } from "react";
 import {
 	Box,
@@ -53,6 +54,7 @@ import { list as computeRoutesList } from "@/tools/ComputeRoutes";
 import { list as searchAlongRouteList } from "@/tools/SearchAlongRoute";
 import Image from "next/image";
 import MapServiceSelector from "../MapServiceSelector";
+import { getToolOptions } from "@/services/utils";
 
 function ContextStep({
 	step,
@@ -65,17 +67,12 @@ function ContextStep({
 	loadExample,
 }) {
 	const [loading, setLoading] = useState(false);
-	const { tools, setTools, mapService } = useContext(GlobalContext);
+	const { tools, setTools, mapService, newPlaceId, savedPlacesMap } =
+		useContext(GlobalContext);
 	const stepRef = useRef(null);
+	const toolOptions = getToolOptions(mapService);
 
-	const toolOptions = {
-		textSearch: textSearchList[mapService],
-		placeDetails: placeDetailsList[mapService],
-		nearbySearch: nearbySearchList[mapService],
-		computeRoutes: computeRoutesList[mapService],
-		searchAlongRoute: searchAlongRouteList[mapService],
-	};
-
+	// eslint-disable-next-line react-hooks/exhaustive-de
 	return (
 		<div ref={stepRef}>
 			<StepLabel
@@ -105,7 +102,8 @@ function ContextStep({
 					{step.key &&
 						index === activeStep &&
 						toolOptions[step.key] &&
-						tools[step.key] && (
+						tools[step.key] &&
+						step.key !== "placeDetails" && (
 							<Select
 								value={
 									toolOptions[step.key]
@@ -147,7 +145,73 @@ function ContextStep({
 									</div>
 								)}
 							>
-								{toolOptions[step.key]?.map((option, index) => (
+								{toolOptions[step.key].map((option, index) => (
+									<MenuItem
+										key={index}
+										value={index}
+										className="flex flex-row gap-2"
+									>
+										<img
+											src={option.icon}
+											className="w-5 h-5"
+											alt={option.name}
+										/>
+										{option.name}
+									</MenuItem>
+								))}
+							</Select>
+						)}
+
+					{step.key &&
+						index === activeStep &&
+						toolOptions[step.key] &&
+						tools[step.key] &&
+						step.key === "placeDetails" &&
+						newPlaceId && (
+							<Select
+								value={
+									toolOptions[step.key]
+										? toolOptions[step.key].findIndex(
+												(option) =>
+													option.instance
+														.constructor ===
+													tools[step.key].constructor
+										  )
+										: null
+								}
+								onChange={(e) => {
+									setTools((prev) => ({
+										...prev,
+										[step.key]:
+											toolOptions[step.key][
+												e.target.value
+											].instance,
+									}));
+								}}
+								// label={step.label}
+								size="small"
+								className="min-w-[15rem]"
+								renderValue={(selected) => (
+									<div className="flex flex-row gap-2 w-full">
+										<img
+											src={
+												toolOptions[step.key][selected]
+													?.icon
+											}
+											className="w-5 h-5"
+											alt={
+												toolOptions[step.key][selected]
+													?.name
+											}
+										/>
+
+										{toolOptions[step.key][selected]?.name}
+									</div>
+								)}
+							>
+								{placeDetailsList[
+									savedPlacesMap[newPlaceId].mapService
+								]?.map((option, index) => (
 									<MenuItem
 										key={index}
 										value={index}
@@ -470,7 +534,7 @@ export default function ContextEditor({
 	];
 	return (
 		<>
-			<MapServiceSelector />
+			{/* <MapServiceSelector /> */}
 			<Stepper activeStep={activeStep} orientation="vertical">
 				{steps.map((step, index) => (
 					<Step key={step.label}>

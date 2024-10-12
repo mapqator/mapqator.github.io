@@ -18,6 +18,10 @@ class SearchAlongRoute extends Api {
 export default SearchAlongRoute;
 
 class GoogleRoutesApi extends SearchAlongRoute {
+	constructor() {
+		super();
+		this.family = "googleMaps";
+	}
 	run = async (params) => {
 		const apiCall1 = {
 			url: "https://routes.googleapis.com/directions/v2:computeRoutes",
@@ -30,10 +34,14 @@ class GoogleRoutesApi extends SearchAlongRoute {
 			},
 			body: {
 				origin: {
-					placeId: params.origin,
+					location: {
+						latlng: params.origin.location,
+					},
 				},
 				destination: {
-					placeId: params.destination,
+					location: {
+						latlng: params.destination.location,
+					},
 				},
 				travelMode: params.travelMode,
 				intermediates: undefined,

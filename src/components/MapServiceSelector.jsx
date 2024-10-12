@@ -117,7 +117,7 @@ const MapServiceSelector = () => {
 										: "bg-white hover:bg-gray-100"
 								}`}
 								onClick={() => {
-									reset();
+									// reset();
 									setMapService(key);
 									setIsExpanded(false); // Collapse after selection
 								}}

@@ -21,6 +21,10 @@ class TextSearch extends Api {
 }
 
 class GooglePlacesApiNew extends TextSearch {
+	constructor() {
+		super();
+		this.family = "googleMaps";
+	}
 	run = async (query) => {
 		const apiCall = {
 			url: "https://places.googleapis.com/v1/places:searchText",
@@ -63,6 +67,10 @@ class GooglePlacesApiNew extends TextSearch {
 }
 
 class GooglePlacesApi extends TextSearch {
+	constructor() {
+		super();
+		this.family = "googleMaps";
+	}
 	run = async (query) => {
 		const apiCall = {
 			url: "https://maps.googleapis.com/maps/api/place/textsearch/json",
@@ -111,6 +119,10 @@ class GooglePlacesApi extends TextSearch {
 }
 
 class NominatimApi extends TextSearch {
+	constructor() {
+		super();
+		this.family = "openStreetMap";
+	}
 	run = async (query) => {
 		const apiCall = {
 			url: "https://nominatim.openstreetmap.org/search",
@@ -162,6 +174,10 @@ class NominatimApi extends TextSearch {
 }
 
 class MapBoxApi extends TextSearch {
+	constructor() {
+		super();
+		this.family = "mapbox";
+	}
 	run = async (query) => {
 		// https://api.mapbox.com/search/searchbox/v1/suggest?q=louvre&access_token=pk.eyJ1IjoibWFoaXJsYWJpYmRpaGFuIiwiYSI6ImNsemNwbmI2dTBlNDUycm9wM2p3cWUzMXYifQ._tllxLBR12HcsegDwPVyRQ&session_token=03e32083-4e22-4b18-8192-7c9c009d0ba8&limit=5
 		const apiCall = {
@@ -250,6 +266,10 @@ class MapBoxApi extends TextSearch {
 }
 
 class TomTomApi extends TextSearch {
+	constructor() {
+		super();
+		this.family = "tomtom";
+	}
 	run = async (query) => {
 		const apiCall = {
 			url: "https://api.tomtom.com/search/2/poiSearch/" + query + ".json",
@@ -300,6 +320,10 @@ class TomTomApi extends TextSearch {
 }
 
 class HereApi extends TextSearch {
+	constructor() {
+		super();
+		this.family = "here";
+	}
 	run = async (query) => {
 		const apiCall = {
 			url: "https://discover.search.hereapi.com/v1/discover",
@@ -350,6 +374,10 @@ class HereApi extends TextSearch {
 }
 
 class AzureMapsApi extends TextSearch {
+	constructor() {
+		super();
+		this.family = "azureMaps";
+	}
 	run = async (query) => {
 		const apiCall = {
 			url: "https://atlas.microsoft.com/search/fuzzy/json",
@@ -417,12 +445,12 @@ class AzureMapsApi extends TextSearch {
 export const list = {
 	googleMaps: [
 		{
-			name: "Google Places API (New)",
+			name: "Text Search API (New)",
 			icon: config.baseUrl + "/images/google-maps.png",
 			instance: new GooglePlacesApiNew(),
 		},
 		{
-			name: "Google Places API",
+			name: "Text Search API",
 			icon: config.baseUrl + "/images/google-maps.png",
 			instance: new GooglePlacesApi(),
 		},

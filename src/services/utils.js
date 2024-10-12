@@ -37,3 +37,39 @@ export function convertTravelModeToIcon(mode) {
 		<FontAwesomeIcon icon={faBus} />
 	) : null;
 }
+
+import { list as textSearchList } from "@/tools/TextSearch";
+import { list as placeDetailsList } from "@/tools/PlaceDetails";
+import { list as nearbySearchList } from "@/tools/NearbySearch";
+import { list as computeRoutesList } from "@/tools/ComputeRoutes";
+import { list as searchAlongRouteList } from "@/tools/SearchAlongRoute";
+
+export function getToolOptions(mapService) {
+	if (mapService === "all") {
+		return {
+			textSearch: Object.values(textSearchList)
+				.map((family) => family)
+				.flat(),
+			placeDetails: Object.values(placeDetailsList)
+				.map((family) => family)
+				.flat(),
+			nearbySearch: Object.values(nearbySearchList)
+				.map((family) => family)
+				.flat(),
+			computeRoutes: Object.values(computeRoutesList)
+				.map((family) => family)
+				.flat(),
+			searchAlongRoute: Object.values(searchAlongRouteList)
+				.map((family) => family)
+				.flat(),
+		};
+	} else {
+		return {
+			textSearch: textSearchList[mapService],
+			placeDetails: placeDetailsList[mapService],
+			nearbySearch: nearbySearchList[mapService],
+			computeRoutes: computeRoutesList[mapService],
+			searchAlongRoute: searchAlongRouteList[mapService],
+		};
+	}
+}

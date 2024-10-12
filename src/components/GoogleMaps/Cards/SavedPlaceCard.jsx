@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import {
 	Box,
 	Button,
@@ -20,6 +21,8 @@ import mapApi from "@/api/mapApi";
 import { LoadingButton } from "@mui/lab";
 import dayjs from "dayjs";
 import { showError } from "@/contexts/ToastProvider";
+import mapServices from "@/tools/MapServices";
+import { list as placeDetailsTools } from "@/tools/PlaceDetails";
 export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 	const {
 		selectedPlacesMap,
@@ -30,6 +33,7 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 		setNewDirection,
 		setApiCallLogs,
 		tools,
+		setNewPlaceId,
 	} = useContext(GlobalContext);
 
 	const [addingPlace, setAddingPlace] = useState(false);
@@ -49,12 +53,18 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 	const handleAddSave = async (place_id) => {
 		setAddingPlace(true);
 		let details = savedPlacesMap[place_id];
-		const res = await tools.placeDetails.run(details);
+		const res = await placeDetailsTools[
+			savedPlacesMap[place_id].mapService
+		][0].instance.run(details);
 		if (res.success) {
 			details = res.data.result;
 			setSelectedPlacesMap((prev) => ({
 				...prev,
-				[place_id]: { ...details, uuid: res.data.uuid },
+				[place_id]: {
+					...details,
+					uuid: res.data.uuid,
+					mapService: savedPlacesMap[place_id].mapService,
+				},
 			}));
 			setApiCallLogs((prev) => [...prev, ...res.data.apiCallLogs]);
 		} else {
@@ -91,7 +101,7 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 						{savedPlacesMap[placeId].shortFormattedAddress}
 					</Typography>
 				</div>
-				<div className="flex justify-center gap-4">
+				<div className="flex justify-center gap-4 mt-auto">
 					<Box
 						className={"flex flex-col gap-1 items-center"}
 						sx={{
@@ -130,7 +140,10 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 					>
 						<LoadingButton
 							variant="outlined"
-							onClick={() => handleAddSave(placeId)}
+							onClick={() => {
+								setNewPlaceId(placeId);
+								setActiveStep(2);
+							}}
 							loading={addingPlace}
 							disabled={selectedPlacesMap[placeId]}
 							sx={{
@@ -174,7 +187,15 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 					</Box>
 				</div>
 				<Divider />
-				<Box className="ml-auto">
+				<Box className="flex flex-row justify-between items-center">
+					<img
+						src={
+							mapServices[savedPlacesMap[placeId].mapService]
+								.image
+						}
+						alt=""
+						className="h-6"
+					/>
 					<PlaceDeleteButton placeId={placeId} />
 				</Box>
 			</CardContent>
