@@ -400,7 +400,7 @@ export default function ContextEditor({
 	const steps = [
 		{
 			label: "Guidelines",
-			description: `Welcome to the Context Generator! This tool helps you create rich, place-related contexts using Google Maps APIs. Here's how it works:
+			description: `Welcome to the Context Generator! This tool helps you create rich, place-related contexts using Maps APIs. Here's how it works:
 
     		1. Text Search: Start by searching for and adding key locations to your context.
 			2. Place Details: Add detailed information about a place.

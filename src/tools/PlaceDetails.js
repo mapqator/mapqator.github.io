@@ -483,7 +483,7 @@ class AzureMapsApi extends PlaceDetails {
 export const list = {
 	googleMaps: [
 		{
-			name: "Place Details API (New)",
+			name: "Google Maps API (New)",
 			icon: config.baseUrl + "/images/google-maps.png",
 			instance: new GooglePlacesApiNew(),
 		},

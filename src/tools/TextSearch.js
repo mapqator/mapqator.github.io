@@ -445,12 +445,12 @@ class AzureMapsApi extends TextSearch {
 export const list = {
 	googleMaps: [
 		{
-			name: "Text Search API (New)",
+			name: "Google Maps API (New)",
 			icon: config.baseUrl + "/images/google-maps.png",
 			instance: new GooglePlacesApiNew(),
 		},
 		{
-			name: "Text Search API",
+			name: "Google Maps API",
 			icon: config.baseUrl + "/images/google-maps.png",
 			instance: new GooglePlacesApi(),
 		},

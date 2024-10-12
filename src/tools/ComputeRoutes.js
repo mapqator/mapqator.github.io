@@ -514,7 +514,7 @@ class TomTomApi extends ComputeRoutes {
 export const list = {
 	googleMaps: [
 		{
-			name: "Google Routes API",
+			name: "Google Maps API (New)",
 			icon: config.baseUrl + "/images/google-maps.png",
 			instance: new GoogleRoutesApi(),
 		},
