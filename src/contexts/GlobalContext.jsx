@@ -358,21 +358,21 @@ export default function GlobalContextProvider({ children }) {
 	}, [mapService]);
 
 	useEffect(() => {
-		setNewNearbyPlaces({
-			...initNewNearbyPlaces,
+		setNewNearbyPlaces((prev) => ({
+			...prev,
 			type: "",
-		});
-		setNewDirection({
-			...initNewDirection,
+		}));
+		setNewDirection((prev) => ({
+			...prev,
 			travelMode: "",
 			routeModifiers: {},
-		});
-		setNewRoutePlaces({
-			...initNewRoutePlaces,
+		}));
+		setNewRoutePlaces((prev) => ({
+			...prev,
 			travelMode: "",
 			routeModifiers: {},
 			type: "",
-		});
+		}));
 	}, [tools]);
 
 	useEffect(() => {

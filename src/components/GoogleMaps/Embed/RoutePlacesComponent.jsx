@@ -72,6 +72,7 @@ export default function RoutePlacesComponent({
 		return [];
 	}, [encodedPolyline]);
 
+	console.log("destination: ", destination);
 	console.log("RoutePlacesComponent: ", coords);
 
 	const mapStyles = {
@@ -93,6 +94,19 @@ export default function RoutePlacesComponent({
 			coords.forEach((coord) => {
 				bounds.extend(coord);
 			});
+
+			if (origin)
+				bounds.extend({
+					lat: origin.location.latitude,
+					lng: origin.location.longitude,
+				});
+
+			if (destination)
+				bounds.extend({
+					lat: destination.location.latitude,
+					lng: destination.location.longitude,
+				});
+
 			mapRef.current.fitBounds(bounds);
 		}
 	};
@@ -102,7 +116,7 @@ export default function RoutePlacesComponent({
 	};
 	useEffect(() => {
 		adjustBounds(); // Recenter and adjust zoom whenever coords change
-	}, [locations, coords]);
+	}, [locations, coords, origin, destination]);
 	const po = useMemo(() => {
 		try {
 			return JSON.parse(polylineOptions);

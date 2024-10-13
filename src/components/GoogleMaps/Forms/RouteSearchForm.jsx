@@ -90,6 +90,14 @@ export default function RouteSearchForm({
 		loadMapsApi();
 	}, []);
 
+	console.log(
+		"Destination",
+		newRoutePlaces.destination,
+		newRoutePlaces.destination
+			? savedPlacesMap[newRoutePlaces.destination]
+			: "'"
+	);
+
 	const handleSave = async (place) => {
 		let details = savedPlacesMap[place.id];
 		if (details === undefined) {
@@ -154,19 +162,23 @@ export default function RouteSearchForm({
 	};
 
 	const compute = async (data) => {
-		if (data.origin === "" || data.destination === "") {
+		if (
+			data.origin === "" ||
+			data.destination === "" ||
+			data.travelMode === ""
+		) {
 			return;
 		}
 		setLoading(true);
 
 		if (data.type === "") {
-			const response = await tools.computeRoutes.run({
+			const response = await tools.searchAlongRoute.run({
 				...data,
 				origin: savedPlacesMap[data.origin],
 				destination: savedPlacesMap[data.destination],
 			});
 			if (response.success) {
-				setRoutes(response.data.result.routes);
+				setRoutes(response.data.route_response.routes);
 				setApiCalls(response.data.apiCallLogs);
 				setUuid(response.data.uuid);
 			}
@@ -225,7 +237,7 @@ export default function RouteSearchForm({
 					</Grid>
 
 					<Grid item xs={12}>
-						<TravelSelectionField
+						<tools.searchAlongRoute.TravelSelectionField
 							mode={newRoutePlaces.travelMode}
 							setMode={(value) =>
 								setNewRoutePlaces((prev) => ({
@@ -236,7 +248,12 @@ export default function RouteSearchForm({
 						/>
 					</Grid>
 
-					{["DRIVE", "TWO_WHEELER"].includes(
+					<tools.searchAlongRoute.AvoidSelectionField
+						form={newRoutePlaces}
+						setForm={setNewRoutePlaces}
+					/>
+
+					{/* {["DRIVE", "TWO_WHEELER"].includes(
 						newRoutePlaces.travelMode
 					) && (
 						<Grid item xs={12}>
@@ -291,7 +308,7 @@ export default function RouteSearchForm({
 								</Select>
 							</FormControl>
 						</Grid>
-					)}
+					)} */}
 
 					<Grid item xs={12}>
 						<Divider className="w-full" />
@@ -322,7 +339,7 @@ export default function RouteSearchForm({
 						</Grid> */}
 
 					<Grid item xs={12}>
-						<TypeSelectionField
+						<tools.searchAlongRoute.PoiCategorySelectionField
 							type={newRoutePlaces.type}
 							setType={(newValue) => {
 								console.log("New Value: ", newValue);
@@ -334,105 +351,118 @@ export default function RouteSearchForm({
 						/>
 					</Grid>
 
-					<Grid item xs={12}>
-						<TextField
-							type="number"
-							value={newRoutePlaces.minRating}
-							label="Min Rating"
-							onChange={(e) =>
-								setNewRoutePlaces((prev) => ({
-									...prev,
-									minRating: e.target.value,
-								}))
-							}
-							inputProps={{ step: 0.5, min: 0, max: 5 }}
-							size="small"
-							fullWidth
-						/>
-					</Grid>
-					<Grid item xs={12}>
-						<FormControl fullWidth size="small">
-							<InputLabel>Price</InputLabel>
-							<Select
-								// input={<OutlinedInput label="Tag" />}
-								value={newRoutePlaces.priceLevels}
+					{tools.searchAlongRoute.allowedParams.minRating && (
+						<Grid item xs={12}>
+							<TextField
+								type="number"
+								value={newRoutePlaces.minRating}
+								label="Min Rating"
 								onChange={(e) =>
 									setNewRoutePlaces((prev) => ({
 										...prev,
-										priceLevels: e.target.value,
+										minRating: e.target.value,
 									}))
 								}
-								label={"Price"}
-								multiple
-								renderValue={(selected) => {
-									if (selected.length === 0) {
-										return <em>Any</em>; // Custom label for empty array
-									}
-									return selected
-										.map(
-											(value) => priceMap[value] || value
-										)
-										.join(", ");
-								}}
-							>
-								{Object.keys(priceMap).map((key) => (
-									<MenuItem key={key} value={key}>
-										<Checkbox
-											checked={
-												newRoutePlaces.priceLevels.indexOf(
-													key
-												) > -1
-											}
-										/>
-										<ListItemText primary={priceMap[key]} />
-									</MenuItem>
-								))}
-							</Select>
-						</FormControl>
-						<Typography variant="caption">
-							The default is to select all price levels.
-						</Typography>
-					</Grid>
-					<Grid item xs={12}>
-						<RadioGroup
-							row
-							value={newRoutePlaces.rankPreference}
-							onChange={(e) =>
-								setNewRoutePlaces((prev) => ({
-									...prev,
-									rankPreference: e.target.value,
-								}))
-							}
-						>
-							<FormControlLabel
-								value="RELEVANCE"
-								control={<Radio />}
-								label="Rank by Relevance"
+								inputProps={{ step: 0.5, min: 0, max: 5 }}
+								size="small"
+								fullWidth
 							/>
-							<FormControlLabel
-								value="DISTANCE"
-								control={<Radio />}
-								label="Rank by Distance"
-							/>
-						</RadioGroup>
-					</Grid>
+						</Grid>
+					)}
 
-					<Grid item xs={12}>
-						<TextField
-							type="number"
-							label="Max Results (1 to 20)"
-							value={newRoutePlaces.maxResultCount}
-							onChange={(e) =>
-								setNewRoutePlaces((prev) => ({
-									...prev,
-									maxResultCount: e.target.value,
-								}))
-							}
-							fullWidth
-							size="small"
-							inputProps={{ min: 1, max: 20, step: 1 }}
-						/>
-					</Grid>
+					{tools.searchAlongRoute.allowedParams.priceLevels && (
+						<Grid item xs={12}>
+							<FormControl fullWidth size="small">
+								<InputLabel>Price</InputLabel>
+								<Select
+									// input={<OutlinedInput label="Tag" />}
+									value={newRoutePlaces.priceLevels}
+									onChange={(e) =>
+										setNewRoutePlaces((prev) => ({
+											...prev,
+											priceLevels: e.target.value,
+										}))
+									}
+									label={"Price"}
+									multiple
+									renderValue={(selected) => {
+										if (selected.length === 0) {
+											return <em>Any</em>; // Custom label for empty array
+										}
+										return selected
+											.map(
+												(value) =>
+													priceMap[value] || value
+											)
+											.join(", ");
+									}}
+								>
+									{Object.keys(priceMap).map((key) => (
+										<MenuItem key={key} value={key}>
+											<Checkbox
+												checked={
+													newRoutePlaces.priceLevels.indexOf(
+														key
+													) > -1
+												}
+											/>
+											<ListItemText
+												primary={priceMap[key]}
+											/>
+										</MenuItem>
+									))}
+								</Select>
+							</FormControl>
+							<Typography variant="caption">
+								The default is to select all price levels.
+							</Typography>
+						</Grid>
+					)}
+
+					{tools.searchAlongRoute.allowedParams.rankPreference && (
+						<Grid item xs={12}>
+							<RadioGroup
+								row
+								value={newRoutePlaces.rankPreference}
+								onChange={(e) =>
+									setNewRoutePlaces((prev) => ({
+										...prev,
+										rankPreference: e.target.value,
+									}))
+								}
+							>
+								<FormControlLabel
+									value="RELEVANCE"
+									control={<Radio />}
+									label="Rank by Relevance"
+								/>
+								<FormControlLabel
+									value="DISTANCE"
+									control={<Radio />}
+									label="Rank by Distance"
+								/>
+							</RadioGroup>
+						</Grid>
+					)}
+
+					{tools.searchAlongRoute.allowedParams.maxResultCount && (
+						<Grid item xs={12}>
+							<TextField
+								type="number"
+								label="Max Results (1 to 20)"
+								value={newRoutePlaces.maxResultCount}
+								onChange={(e) =>
+									setNewRoutePlaces((prev) => ({
+										...prev,
+										maxResultCount: e.target.value,
+									}))
+								}
+								fullWidth
+								size="small"
+								inputProps={{ min: 1, max: 20, step: 1 }}
+							/>
+						</Grid>
+					)}
 
 					<Grid item xs={12}>
 						<LoadingButton

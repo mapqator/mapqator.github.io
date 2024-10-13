@@ -200,7 +200,7 @@ class TomTomApi extends NearbySearch {
 			method: "GET",
 			params: {
 				key: "key:TOMTOM_API_KEY",
-				query: params.keyword,
+				query: params.type,
 				lat: params.lat,
 				lon: params.lng,
 				limit: params.maxResultCount || 5,

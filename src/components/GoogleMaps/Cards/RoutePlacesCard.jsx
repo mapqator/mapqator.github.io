@@ -68,7 +68,7 @@ function RoutePlacesSummary({
 	// 	setRoutePlacesMap(newNearbyPlacesMap);
 	// };
 	// console.log("Nearby:", routePlacesMap[place_id][index]);
-	const { setApiCallLogs } = useContext(GlobalContext);
+	const { setApiCallLogs, tools } = useContext(GlobalContext);
 	return (
 		<>
 			<Box
@@ -133,7 +133,9 @@ function RoutePlacesSummary({
 					<div className="flex gap-2">
 						<Chip
 							label={Pluralize(
-								convertFromSnake(entry.type),
+								tools.searchAlongRoute.formatPoiCategory(
+									entry.type
+								),
 								routePlacesMap[index].places.length,
 								true
 							)}
@@ -193,7 +195,7 @@ export default function RoutePlacesCard({
 	entry,
 }) {
 	const [expanded, setExpanded] = useState(false);
-
+	const { tools } = useContext(GlobalContext);
 	useEffect(() => {
 		setExpanded(index === 0);
 	}, [index]);
@@ -226,7 +228,11 @@ export default function RoutePlacesCard({
 									variant="h6"
 									className="font-bold bg-zinc-200 p-2 text-center border-b-2 border-black"
 								>
-									{Pluralize(convertFromSnake(entry.type))}{" "}
+									{Pluralize(
+										tools.searchAlongRoute.formatPoiCategory(
+											entry.type
+										)
+									)}{" "}
 									Along Route
 								</Typography>
 							</Box>
