@@ -185,7 +185,7 @@ export default function DirectionForm({
 
 	return newDirection && tools.computeRoutes ? (
 		<Box className="flex flex-col md:flex-row gap-4">
-			<Box className="w-1/2">
+			<Box className="w-full md:w-1/2">
 				<Grid container spacing={2}>
 					<Grid item xs={12}>
 						<PlaceSelectionField
@@ -511,7 +511,7 @@ export default function DirectionForm({
 				</Grid>
 			</Box>
 
-			<Box className="w-1/2">
+			<Box className="w-full md:w-1/2">
 				<Paper elevation={2}>
 					<Box>
 						<Typography
