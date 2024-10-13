@@ -16,35 +16,35 @@ export function convertFromSnake(text) {
 		.join(" ");
 }
 
-export function convertTravelModeToLabel(mode) {
-	return mode === "WALK"
-		? "Walking"
-		: mode === "DRIVE"
-		? "Driving"
-		: mode === "BICYCLE"
-		? "Bicycling"
-		: mode === "TRANSIT"
-		? "Transit"
-		: mode === "TWO_WHEELER"
-		? "Two Wheeler"
-		: "Unknown";
-}
+// export function convertTravelModeToLabel(mode) {
+// 	return mode === "WALK"
+// 		? "Walking"
+// 		: mode === "DRIVE"
+// 		? "Driving"
+// 		: mode === "BICYCLE"
+// 		? "Bicycling"
+// 		: mode === "TRANSIT"
+// 		? "Transit"
+// 		: mode === "TWO_WHEELER"
+// 		? "Two Wheeler"
+// 		: "Unknown";
+// }
 
-export function convertTravelModeToIcon(mode) {
-	return mode === "WALK" ? (
-		<FontAwesomeIcon icon={faWalking} />
-	) : mode === "DRIVE" ? (
-		<FontAwesomeIcon icon={faCar} />
-	) : mode === "BICYCLE" ? (
-		<FontAwesomeIcon icon={faBicycle} />
-	) : mode === "TRANSIT" ? (
-		<FontAwesomeIcon icon={faBus} />
-	) : mode === "TWO_WHEELER" ? (
-		<FontAwesomeIcon icon={faMotorcycle} />
-	) : (
-		""
-	);
-}
+// export function convertTravelModeToIcon(mode) {
+// 	return mode === "WALK" ? (
+// 		<FontAwesomeIcon icon={faWalking} />
+// 	) : mode === "DRIVE" ? (
+// 		<FontAwesomeIcon icon={faCar} />
+// 	) : mode === "BICYCLE" ? (
+// 		<FontAwesomeIcon icon={faBicycle} />
+// 	) : mode === "TRANSIT" ? (
+// 		<FontAwesomeIcon icon={faBus} />
+// 	) : mode === "TWO_WHEELER" ? (
+// 		<FontAwesomeIcon icon={faMotorcycle} />
+// 	) : (
+// 		""
+// 	);
+// }
 
 import { list as textSearchList } from "@/tools/TextSearch";
 import { list as placeDetailsList } from "@/tools/PlaceDetails";

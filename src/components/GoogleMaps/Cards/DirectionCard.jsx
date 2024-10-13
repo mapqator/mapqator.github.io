@@ -21,10 +21,6 @@ import { Delete, ExpandMore } from "@mui/icons-material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { AppContext } from "@/contexts/AppContext";
 import Pluralize from "pluralize";
-import {
-	convertTravelModeToIcon,
-	convertTravelModeToLabel,
-} from "@/services/utils";
 import RoutesList from "../Lists/RoutesList";
 import RouteSummary from "../Box/RouteSummary";
 
@@ -103,7 +99,7 @@ function DirectionCardSummary({
 	savedPlacesMap,
 	mode,
 }) {
-	const { setApiCallLogs } = useContext(GlobalContext);
+	const { setApiCallLogs, tools } = useContext(GlobalContext);
 	return (
 		<>
 			<Box
@@ -167,7 +163,9 @@ function DirectionCardSummary({
 					gap={1}
 					// mt={1}
 				>
-					{convertTravelModeToIcon(direction.travelMode)}
+					{tools.computeRoutes.convertTravelModeToIcon(
+						direction.travelMode
+					)}
 					{direction.intermediates.length === 0 ? (
 						<Chip
 							label={Pluralize(
