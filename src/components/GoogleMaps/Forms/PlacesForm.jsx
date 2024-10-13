@@ -20,6 +20,7 @@ import textualFields from "@/database/textualFields.json";
 import { showError } from "@/contexts/ToastProvider";
 import { list as placeDetailsTools } from "@/tools/PlaceDetails";
 import mapServices from "@/tools/MapServices";
+import { list as placeDetailsList } from "@/tools/PlaceDetails";
 
 function UnsavedPlaceSelectionField({
 	label,
@@ -111,6 +112,7 @@ export default function PlacesForm({ handlePlaceAdd }) {
 		tools,
 		newPlaceId,
 		setNewPlaceId,
+		setTools,
 	} = useContext(GlobalContext);
 	const [loading, setLoading] = useState(false);
 
@@ -131,7 +133,7 @@ export default function PlacesForm({ handlePlaceAdd }) {
 		let details = savedPlacesMap[place_id];
 		const res = await placeDetailsTools[
 			savedPlacesMap[place_id].mapService
-		][0].instance.run(details);
+		][0].instance.fetch(details);
 		if (res.success) {
 			details = res.data.result;
 			setSelectedPlacesMap((prev) => ({
@@ -153,6 +155,19 @@ export default function PlacesForm({ handlePlaceAdd }) {
 		setLoading(false);
 	};
 
+	useEffect(() => {
+		if (
+			tools.placeDetails.family !== savedPlacesMap[newPlaceId].mapService
+		) {
+			setTools((prev) => ({
+				...prev,
+				placeDetails:
+					placeDetailsList[savedPlacesMap[newPlaceId].mapService][0]
+						.instance,
+			}));
+		}
+	}, [tools.placeDetails, newPlaceId]);
+
 	return tools.placeDetails ? (
 		<Box className="w-full md:w-[30rem] mx-auto">
 			<Grid container spacing={2}>
@@ -160,6 +175,7 @@ export default function PlacesForm({ handlePlaceAdd }) {
 					<UnsavedPlaceSelectionField
 						label="Place"
 						onChange={(event) => {
+							const id = event.target.value;
 							setNewPlaceId(event.target.value);
 						}}
 						value={newPlaceId}
