@@ -154,7 +154,6 @@ export default function RouteSearchForm({
 	};
 
 	const compute = async (data) => {
-		if (!mapsApi) return;
 		if (data.origin === "" || data.destination === "") {
 			return;
 		}
@@ -162,12 +161,9 @@ export default function RouteSearchForm({
 
 		if (data.type === "") {
 			const response = await tools.computeRoutes.run({
+				...data,
 				origin: savedPlacesMap[data.origin],
 				destination: savedPlacesMap[data.destination],
-				travelMode: data.travelMode,
-				routeModifiers: data.routeModifiers,
-				optimizeWaypointOrder: data.optimizeWaypointOrder,
-				computeAlternativeRoutes: data.computeAlternativeRoutes,
 			});
 			if (response.success) {
 				setRoutes(response.data.result.routes);
@@ -175,7 +171,11 @@ export default function RouteSearchForm({
 				setUuid(response.data.uuid);
 			}
 		} else {
-			const response = await tools.searchAlongRoute.run(data);
+			const response = await tools.searchAlongRoute.run({
+				...data,
+				origin: savedPlacesMap[data.origin],
+				destination: savedPlacesMap[data.destination],
+			});
 			if (response.success) {
 				setRoutes(response.data.route_response.routes);
 				setPlaces(response.data.nearby_response.places);

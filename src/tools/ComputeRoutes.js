@@ -12,8 +12,33 @@ class ComputeRoutes extends Api {
 		super();
 	}
 
-	run = async (query) => {
-		throw new Error("Method 'run()' must be implemented.");
+	run = async (params) => {
+		const adaptedRequest = this.convertRequest(params);
+
+		const epochId = Date.now(); // Unique ID for this tool call
+		const response = await this.post("/map/cached", adaptedRequest);
+
+		if (response.success) {
+			const adaptedResponse = this.convertResponse(response.data);
+			return {
+				success: true,
+				data: {
+					result: adaptedResponse,
+					apiCallLogs: [
+						{
+							...adaptedRequest,
+							uuid: epochId,
+							result: response.data,
+						},
+					],
+					uuid: epochId,
+				},
+			};
+		}
+
+		return {
+			success: false,
+		};
 	};
 }
 
@@ -24,8 +49,9 @@ class GoogleRoutesApi extends ComputeRoutes {
 		super();
 		this.family = "googleMaps";
 	}
-	run = async (params) => {
-		const apiCall = {
+
+	convertRequest = (params) => {
+		return {
 			url: "https://routes.googleapis.com/directions/v2:computeRoutes",
 			method: "POST",
 			headers: {
@@ -77,7 +103,7 @@ class GoogleRoutesApi extends ComputeRoutes {
 						? params.transitPreferences
 						: undefined,
 				optimizeWaypointOrder:
-					params.intermediates.length > 1 &&
+					params.intermediates?.length > 1 &&
 					params.travelMode !== "TRANSIT"
 						? params.optimizeWaypointOrder
 						: false,
@@ -94,38 +120,119 @@ class GoogleRoutesApi extends ComputeRoutes {
 						? undefined
 						: "TRAFFIC_UNAWARE",
 				computeAlternativeRoutes:
-					params.intermediates.length === 0
-						? params.computeAlternativeRoutes === undefined
-							? true
-							: params.computeAlternativeRoutes
+					params.intermediates?.length === 0
+						? params.computeAlternativeRoutes
 						: false,
 			},
 		};
-
-		const epochId = Date.now(); // Unique ID for this tool call
-		const response = await this.post("/map/cached", apiCall);
-
-		if (response.success) {
-			return {
-				success: true,
-				data: {
-					result: response.data,
-					apiCallLogs: [
-						{
-							...apiCall,
-							uuid: epochId,
-							result: response.data,
-						},
-					],
-					uuid: epochId,
-				},
-			};
-		}
-
-		return {
-			success: false,
-		};
 	};
+
+	convertResponse = (data) => {
+		return data;
+	};
+
+	// run = async (params) => {
+	// 	const apiCall = {
+	// 		url: "https://routes.googleapis.com/directions/v2:computeRoutes",
+	// 		method: "POST",
+	// 		headers: {
+	// 			"Content-Type": "application/json",
+	// 			"X-Goog-FieldMask":
+	// 				"routes.distanceMeters,routes.staticDuration,routes.description,routes.localizedValues,routes.optimized_intermediate_waypoint_index,routes.legs.steps.navigationInstruction,routes.legs.steps.transitDetails,routes.legs.localizedValues,routes.legs.steps.travelMode,routes.legs.steps.localizedValues,routes.legs.polyline,routes.polyline",
+	// 			"X-Goog-Api-Key": "key:GOOGLE_MAPS_API_KEY",
+	// 		},
+	// 		data: {
+	// 			origin: {
+	// 				location: {
+	// 					latLng: params.origin.location,
+	// 				},
+	// 			},
+	// 			destination: {
+	// 				location: {
+	// 					latLng: params.destination.location,
+	// 				},
+	// 			},
+	// 			travelMode: params.travelMode,
+	// 			intermediates:
+	// 				params.travelMode !== "TRANSIT"
+	// 					? params.intermediates?.map((intermediate) => ({
+	// 							location: {
+	// 								latLng: intermediate.location,
+	// 							},
+	// 					  }))
+	// 					: undefined,
+	// 			routeModifiers: {
+	// 				avoidTolls: ["DRIVE", "TWO_WHEELER"].includes(
+	// 					params.travelMode
+	// 				)
+	// 					? params.routeModifiers.avoidTolls
+	// 					: false,
+	// 				avoidHighways: ["DRIVE", "TWO_WHEELER"].includes(
+	// 					params.travelMode
+	// 				)
+	// 					? params.routeModifiers.avoidHighways
+	// 					: false,
+	// 				avoidFerries: ["DRIVE", "TWO_WHEELER"].includes(
+	// 					params.travelMode
+	// 				)
+	// 					? params.routeModifiers.avoidFerries
+	// 					: false,
+	// 				avoidIndoor: false,
+	// 			},
+	// 			transitPreferences:
+	// 				params.travelMode === "TRANSIT"
+	// 					? params.transitPreferences
+	// 					: undefined,
+	// 			optimizeWaypointOrder:
+	// 				params.intermediates.length > 1 &&
+	// 				params.travelMode !== "TRANSIT"
+	// 					? params.optimizeWaypointOrder
+	// 					: false,
+	// 			extraComputations:
+	// 				params.travelMode === "TRANSIT"
+	// 					? []
+	// 					: ["HTML_FORMATTED_NAVIGATION_INSTRUCTIONS"],
+	// 			units: "METRIC",
+	// 			languageCode: "en",
+	// 			routingPreference:
+	// 				params.travelMode === "WALK" ||
+	// 				params.travelMode === "BICYCLE" ||
+	// 				params.travelMode === "TRANSIT"
+	// 					? undefined
+	// 					: "TRAFFIC_UNAWARE",
+	// 			computeAlternativeRoutes:
+	// 				params.intermediates.length === 0
+	// 					? params.computeAlternativeRoutes === undefined
+	// 						? true
+	// 						: params.computeAlternativeRoutes
+	// 					: false,
+	// 		},
+	// 	};
+
+	// 	const epochId = Date.now(); // Unique ID for this tool call
+	// 	const response = await this.post("/map/cached", apiCall);
+
+	// 	if (response.success) {
+	// 		return {
+	// 			success: true,
+	// 			data: {
+	// 				result: response.data,
+	// 				apiCallLogs: [
+	// 					{
+	// 						...apiCall,
+	// 						uuid: epochId,
+	// 						result: response.data,
+	// 					},
+	// 				],
+	// 				uuid: epochId,
+	// 			},
+	// 		};
+	// 	}
+
+	// 	return {
+	// 		success: false,
+	// 	};
+	// };
 
 	allowedTravelModes = ["DRIVE", "BICYCLE", "TWO_WHEELER", "WALK"];
 	allowedParams = {
@@ -170,9 +277,9 @@ class GraphHopperApi extends ComputeRoutes {
 		super();
 		this.family = "openStreetMap";
 	}
-	run = async (params) => {
-		console.log("GraphHopper API");
-		const apiCall = {
+
+	convertRequest = (params) => {
+		return {
 			url: "https://graphhopper.com/api/1/route",
 			method: "POST",
 			data: {
@@ -237,87 +344,216 @@ class GraphHopperApi extends ComputeRoutes {
 				key: "key:GRAPHHOPPER_API_KEY",
 			},
 		};
+	};
 
-		const epochId = Date.now(); // Unique ID for this tool call
-		const response = await this.post("/map/cached", apiCall);
-
-		if (response.success) {
-			const routes = response.data.paths.map((path) => {
-				return {
-					legs: [
-						{
-							// description: path.instructions,
-							// legs: path.points.coordinates.map((point) => {
-							// 	return {
-							// 		polyline: point,
-							// 	};
-							// }),
-							steps: path.instructions.map((instruction) => {
-								return {
-									navigationInstruction: {
-										instructions: instruction.text,
-									},
-									// travelMode: instruction.type,
-									localizedValues: {
-										distance: {
-											text: formatDistance(
-												instruction.distance
-											),
-										},
-										staticDuration: {
-											text: formatDuration(
-												instruction.time
-											),
-										},
-									},
-								};
-							}),
-							polyline: {
-								encodedPolyline: path.points,
-							},
-							localizedValues: {
-								distance: {
-									text: formatDistance(path.distance),
-								},
-								staticDuration: {
-									text: formatDuration(path.time),
-								},
-							},
-						},
-					],
-					distanceMeters: path.distance,
-					staticDuration: `${Math.round(path.time / 1000)}s`,
-					polyline: {
-						encodedPolyline: path.points,
-					},
-					localizedValues: {
-						distance: {
-							text: formatDistance(path.distance),
-						},
-						staticDuration: {
-							text: formatDuration(path.time),
-						},
-					},
-				};
-			});
+	convertResponse = (data) => {
+		const routes = data.paths.map((path) => {
 			return {
-				success: true,
-				data: {
-					result: {
-						routes: routes,
-					},
-					apiCallLogs: [
-						{
-							...apiCall,
-							uuid: epochId,
-							result: response.data,
+				legs: [
+					{
+						// description: path.instructions,
+						// legs: path.points.coordinates.map((point) => {
+						// 	return {
+						// 		polyline: point,
+						// 	};
+						// }),
+						steps: path.instructions.map((instruction) => {
+							return {
+								navigationInstruction: {
+									instructions: instruction.text,
+								},
+								// travelMode: instruction.type,
+								localizedValues: {
+									distance: {
+										text: formatDistance(
+											instruction.distance
+										),
+									},
+									staticDuration: {
+										text: formatDuration(instruction.time),
+									},
+								},
+							};
+						}),
+						polyline: {
+							encodedPolyline: path.points,
 						},
-					],
-					uuid: epochId,
+						localizedValues: {
+							distance: {
+								text: formatDistance(path.distance),
+							},
+							staticDuration: {
+								text: formatDuration(path.time),
+							},
+						},
+					},
+				],
+				distanceMeters: path.distance,
+				staticDuration: `${Math.round(path.time / 1000)}s`,
+				polyline: {
+					encodedPolyline: path.points,
+				},
+				localizedValues: {
+					distance: {
+						text: formatDistance(path.distance),
+					},
+					staticDuration: {
+						text: formatDuration(path.time),
+					},
 				},
 			};
-		}
+		});
+		return { routes };
 	};
+
+	// run = async (params) => {
+	// 	console.log("GraphHopper API");
+	// 	const apiCall = {
+	// 		url: "https://graphhopper.com/api/1/route",
+	// 		method: "POST",
+	// 		data: {
+	// 			points: [
+	// 				[
+	// 					params.origin.location.longitude,
+	// 					params.origin.location.latitude,
+	// 				],
+	// 				// Add intermediate points
+	// 				...params.intermediates.map((intermediate) => [
+	// 					intermediate.location.longitude,
+	// 					intermediate.location.latitude,
+	// 				]),
+	// 				[
+	// 					params.destination.location.longitude,
+	// 					params.destination.location.latitude,
+	// 				],
+	// 			],
+	// 			vehicle:
+	// 				params.travelMode == "DRIVE"
+	// 					? params.routeModifiers.avoidTolls
+	// 						? "car_avoid_toll"
+	// 						: params.routeModifiers.avoidFerries
+	// 						? "car_avoid_ferry"
+	// 						: params.routeModifiers.avoidHighways
+	// 						? "car_avoid_motorway"
+	// 						: "car"
+	// 					: params.travelMode == "BICYCLE"
+	// 					? "bike"
+	// 					: params.travelMode == "TWO_WHEELER"
+	// 					? "scooter"
+	// 					: "foot",
+	// 			locale: "en",
+	// 			instructions: true,
+	// 			points_encoded: true,
+	// 			weighting: "fastest",
+	// 			avoid: params.routeModifiers.avoidTolls
+	// 				? "toll"
+	// 				: params.routeModifiers.avoidHighways
+	// 				? "motorway"
+	// 				: params.routeModifiers.avoidFerries
+	// 				? "ferry"
+	// 				: undefined,
+	// 			algorithm:
+	// 				params.intermediates.length === 0 &&
+	// 				params.computeAlternativeRoutes
+	// 					? "alternative_route"
+	// 					: undefined,
+	// 			alternative_route: {
+	// 				max_paths:
+	// 					params.intermediates.length === 0 &&
+	// 					params.computeAlternativeRoutes
+	// 						? 3
+	// 						: 1,
+	// 			},
+	// 			optimize:
+	// 				params.intermediates.length > 1
+	// 					? params.optimizeWaypointOrder
+	// 					: false,
+	// 		},
+	// 		params: {
+	// 			key: "key:GRAPHHOPPER_API_KEY",
+	// 		},
+	// 	};
+
+	// 	const epochId = Date.now(); // Unique ID for this tool call
+	// 	const response = await this.post("/map/cached", apiCall);
+
+	// 	if (response.success) {
+	// 		const routes = response.data.paths.map((path) => {
+	// 			return {
+	// 				legs: [
+	// 					{
+	// 						// description: path.instructions,
+	// 						// legs: path.points.coordinates.map((point) => {
+	// 						// 	return {
+	// 						// 		polyline: point,
+	// 						// 	};
+	// 						// }),
+	// 						steps: path.instructions.map((instruction) => {
+	// 							return {
+	// 								navigationInstruction: {
+	// 									instructions: instruction.text,
+	// 								},
+	// 								// travelMode: instruction.type,
+	// 								localizedValues: {
+	// 									distance: {
+	// 										text: formatDistance(
+	// 											instruction.distance
+	// 										),
+	// 									},
+	// 									staticDuration: {
+	// 										text: formatDuration(
+	// 											instruction.time
+	// 										),
+	// 									},
+	// 								},
+	// 							};
+	// 						}),
+	// 						polyline: {
+	// 							encodedPolyline: path.points,
+	// 						},
+	// 						localizedValues: {
+	// 							distance: {
+	// 								text: formatDistance(path.distance),
+	// 							},
+	// 							staticDuration: {
+	// 								text: formatDuration(path.time),
+	// 							},
+	// 						},
+	// 					},
+	// 				],
+	// 				distanceMeters: path.distance,
+	// 				staticDuration: `${Math.round(path.time / 1000)}s`,
+	// 				polyline: {
+	// 					encodedPolyline: path.points,
+	// 				},
+	// 				localizedValues: {
+	// 					distance: {
+	// 						text: formatDistance(path.distance),
+	// 					},
+	// 					staticDuration: {
+	// 						text: formatDuration(path.time),
+	// 					},
+	// 				},
+	// 			};
+	// 		});
+	// 		return {
+	// 			success: true,
+	// 			data: {
+	// 				result: {
+	// 					routes: routes,
+	// 				},
+	// 				apiCallLogs: [
+	// 					{
+	// 						...apiCall,
+	// 						uuid: epochId,
+	// 						result: response.data,
+	// 					},
+	// 				],
+	// 				uuid: epochId,
+	// 			},
+	// 		};
+	// 	}
+	// };
 
 	allowedTravelModes = ["DRIVE", "BICYCLE", "TWO_WHEELER", "WALK"];
 
@@ -330,8 +566,12 @@ class GraphHopperApi extends ComputeRoutes {
 }
 
 class TomTomApi extends ComputeRoutes {
-	run = async (params) => {
-		console.log("TomTom API");
+	constructor() {
+		super();
+		this.family = "tomtom";
+	}
+
+	convertRequest = (params) => {
 		const avoidOptions = [];
 		if (params.routeModifiers.avoidTolls) avoidOptions.push("tollRoads");
 		if (params.routeModifiers.avoidHighways) avoidOptions.push("motorways");
@@ -346,32 +586,7 @@ class TomTomApi extends ComputeRoutes {
 			)
 			.join(":");
 
-		const p = {
-			language: "en-US",
-			key: "key:TOMTOM_API_KEY",
-			travelMode:
-				params.travelMode === "DRIVE"
-					? "car"
-					: params.travelMode === "BICYCLE"
-					? "bicycle"
-					: params.travelMode === "TWO_WHEELER"
-					? "motorcycle"
-					: "pedestrian",
-			routeType: "fastest",
-			traffic: false,
-			avoid: avoidOptions,
-			instructionsType: "text", // text
-			computeBestOrder:
-				params.intermediates.length > 1 && params.optimizeWaypointOrder,
-			maxAlternatives:
-				params.intermediates.length == 0 &&
-				params.computeAlternativeRoutes
-					? 2
-					: 0,
-			routeRepresentation: "encodedPolyline", // Request encoded polyline
-			computeTravelTimeFor: "all",
-		};
-		const apiCall = {
+		return {
 			url:
 				"https://api.tomtom.com/routing/1/calculateRoute/" +
 				params.origin.location.latitude +
@@ -384,129 +599,293 @@ class TomTomApi extends ComputeRoutes {
 				params.destination.location.longitude +
 				"/json?" +
 				"language=" +
-				p.language +
+				"en-US" +
 				"&key=" +
-				p.key +
+				"key:TOMTOM_API_KEY" +
 				"&travelMode=" +
-				p.travelMode +
+				(params.travelMode === "DRIVE"
+					? "car"
+					: params.travelMode === "BICYCLE"
+					? "bicycle"
+					: params.travelMode === "TWO_WHEELER"
+					? "motorcycle"
+					: "pedestrian") +
 				"&routeType=" +
-				p.routeType +
+				"fastest" +
 				"&traffic=" +
-				p.traffic +
-				(p.avoid.length > 0
-					? "&avoid=" + p.avoid.join("&avoid=")
+				false +
+				(avoidOptions.length > 0
+					? "&avoid=" + avoidOptions.join("&avoid=")
 					: "") +
 				"&instructionsType=" +
-				p.instructionsType +
+				"text" +
 				"&computeBestOrder=" +
-				p.computeBestOrder +
+				(params.intermediates.length > 1 &&
+					params.optimizeWaypointOrder) +
 				"&maxAlternatives=" +
-				p.maxAlternatives +
+				(params.intermediates.length == 0 &&
+				params.computeAlternativeRoutes
+					? 2
+					: 0) +
 				"&routeRepresentation=" +
-				p.routeRepresentation +
+				"encodedPolyline" +
 				"&computeTravelTimeFor=" +
-				p.computeTravelTimeFor,
+				"all",
 			method: "GET",
 		};
-
-		const epochId = Date.now(); // Unique ID for this tool call
-		const response = await this.post("/map/cached", apiCall);
-
-		console.log(response);
-		// return null;
-		if (response.success) {
-			const routes = response.data.routes.map((route) => {
-				return {
-					legs: route.legs.map((leg, index) => {
-						return {
-							steps: route.guidance.instructions.map(
-								(step, si) => {
-									return {
-										navigationInstruction: {
-											instructions: step.message,
-											maneuver: step.maneuver,
-										},
-										// travelMode: step.travelMode,
-										localizedValues: {
-											distance: {
-												// text:
-												// 	si > 0
-												// 		? formatDistance(
-												// 				step.length
-												// 		  )
-												// 		: formatDistance(0),
-											},
-											staticDuration: {
-												// text: formatDuration(
-												// 	step.travelTimeInSeconds *
-												// 		1000
-												// ),
-											},
-										},
-									};
-								}
-							),
-							polyline: {
-								encodedPolyline: leg.encodedPolyline,
-							},
-							localizedValues: {
-								distance: {
-									text: formatDistance(
-										leg.summary.lengthInMeters
-									),
-								},
-								staticDuration: {
-									text: formatDuration(
-										leg.summary
-											.noTrafficTravelTimeInSeconds * 1000
-									),
-								},
-							},
-						};
-					}),
-					distanceMeters: route.summary.lengthInMeters,
-					staticDuration: `${route.summary.noTrafficTravelTimeInSeconds}s`,
-					polyline: {
-						encodedPolyline: route.legs[0].encodedPolyline,
-					},
-					localizedValues: {
-						distance: {
-							text: formatDistance(route.summary.lengthInMeters),
-						},
-						staticDuration: {
-							text: formatDuration(
-								route.summary.travelTimeInSeconds * 1000
-							),
-						},
-					},
-					optimizedIntermediateWaypointIndex: response.data
-						.optimizedWaypoints
-						? response.data.optimizedWaypoints.map(
-								(waypoint) => waypoint.optimizedIndex
-						  )
-						: undefined,
-				};
-			});
-			return {
-				success: true,
-				data: {
-					result: { routes },
-					apiCallLogs: [
-						{
-							...apiCall,
-							uuid: epochId,
-							result: response.data,
-						},
-					],
-					uuid: epochId,
-				},
-			};
-		}
-
-		return {
-			success: false,
-		};
 	};
+
+	convertResponse = (data) => {
+		const routes = data.routes.map((route) => {
+			return {
+				legs: route.legs.map((leg, index) => {
+					return {
+						steps: route.guidance.instructions.map((step, si) => {
+							return {
+								navigationInstruction: {
+									instructions: step.message,
+									maneuver: step.maneuver,
+								},
+								// travelMode: step.travelMode,
+								localizedValues: {
+									distance: {
+										// text:
+										// 	si > 0
+										// 		? formatDistance(
+										// 				step.length
+										// 		  )
+										// 		: formatDistance(0),
+									},
+									staticDuration: {
+										// text: formatDuration(
+										// 	step.travelTimeInSeconds *
+										// 		1000
+										// ),
+									},
+								},
+							};
+						}),
+						polyline: {
+							encodedPolyline: leg.encodedPolyline,
+						},
+						localizedValues: {
+							distance: {
+								text: formatDistance(
+									leg.summary.lengthInMeters
+								),
+							},
+							staticDuration: {
+								text: formatDuration(
+									leg.summary.noTrafficTravelTimeInSeconds *
+										1000
+								),
+							},
+						},
+					};
+				}),
+				distanceMeters: route.summary.lengthInMeters,
+				staticDuration: `${route.summary.noTrafficTravelTimeInSeconds}s`,
+				polyline: {
+					encodedPolyline: route.legs[0].encodedPolyline,
+				},
+				localizedValues: {
+					distance: {
+						text: formatDistance(route.summary.lengthInMeters),
+					},
+					staticDuration: {
+						text: formatDuration(
+							route.summary.travelTimeInSeconds * 1000
+						),
+					},
+				},
+				optimizedIntermediateWaypointIndex: response.data
+					.optimizedWaypoints
+					? response.data.optimizedWaypoints.map(
+							(waypoint) => waypoint.optimizedIndex
+					  )
+					: undefined,
+			};
+		});
+		return { routes };
+	};
+
+	// run = async (params) => {
+	// 	console.log("TomTom API");
+	// 	const avoidOptions = [];
+	// 	if (params.routeModifiers.avoidTolls) avoidOptions.push("tollRoads");
+	// 	if (params.routeModifiers.avoidHighways) avoidOptions.push("motorways");
+	// 	if (params.routeModifiers.avoidFerries) avoidOptions.push("ferries");
+
+	// 	const intermediates = params.intermediates
+	// 		.map(
+	// 			(intermediate) =>
+	// 				intermediate.location.latitude +
+	// 				"," +
+	// 				intermediate.location.longitude
+	// 		)
+	// 		.join(":");
+
+	// 	const p = {
+	// 		language: "en-US",
+	// 		key: "key:TOMTOM_API_KEY",
+	// 		travelMode:
+	// 			params.travelMode === "DRIVE"
+	// 				? "car"
+	// 				: params.travelMode === "BICYCLE"
+	// 				? "bicycle"
+	// 				: params.travelMode === "TWO_WHEELER"
+	// 				? "motorcycle"
+	// 				: "pedestrian",
+	// 		routeType: "fastest",
+	// 		traffic: false,
+	// 		avoid: avoidOptions,
+	// 		instructionsType: "text", // text
+	// 		computeBestOrder:
+	// 			params.intermediates.length > 1 && params.optimizeWaypointOrder,
+	// 		maxAlternatives:
+	// 			params.intermediates.length == 0 &&
+	// 			params.computeAlternativeRoutes
+	// 				? 2
+	// 				: 0,
+	// 		routeRepresentation: "encodedPolyline", // Request encoded polyline
+	// 		computeTravelTimeFor: "all",
+	// 	};
+	// 	const apiCall = {
+	// 		url:
+	// 			"https://api.tomtom.com/routing/1/calculateRoute/" +
+	// 			params.origin.location.latitude +
+	// 			"," +
+	// 			params.origin.location.longitude +
+	// 			(intermediates ? ":" + intermediates : "") +
+	// 			":" +
+	// 			params.destination.location.latitude +
+	// 			"," +
+	// 			params.destination.location.longitude +
+	// 			"/json?" +
+	// 			"language=" +
+	// 			p.language +
+	// 			"&key=" +
+	// 			p.key +
+	// 			"&travelMode=" +
+	// 			p.travelMode +
+	// 			"&routeType=" +
+	// 			p.routeType +
+	// 			"&traffic=" +
+	// 			p.traffic +
+	// 			(p.avoid.length > 0
+	// 				? "&avoid=" + p.avoid.join("&avoid=")
+	// 				: "") +
+	// 			"&instructionsType=" +
+	// 			p.instructionsType +
+	// 			"&computeBestOrder=" +
+	// 			p.computeBestOrder +
+	// 			"&maxAlternatives=" +
+	// 			p.maxAlternatives +
+	// 			"&routeRepresentation=" +
+	// 			p.routeRepresentation +
+	// 			"&computeTravelTimeFor=" +
+	// 			p.computeTravelTimeFor,
+	// 		method: "GET",
+	// 	};
+
+	// 	const epochId = Date.now(); // Unique ID for this tool call
+	// 	const response = await this.post("/map/cached", apiCall);
+
+	// 	console.log(response);
+	// 	// return null;
+	// 	if (response.success) {
+	// 		const routes = response.data.routes.map((route) => {
+	// 			return {
+	// 				legs: route.legs.map((leg, index) => {
+	// 					return {
+	// 						steps: route.guidance.instructions.map(
+	// 							(step, si) => {
+	// 								return {
+	// 									navigationInstruction: {
+	// 										instructions: step.message,
+	// 										maneuver: step.maneuver,
+	// 									},
+	// 									// travelMode: step.travelMode,
+	// 									localizedValues: {
+	// 										distance: {
+	// 											// text:
+	// 											// 	si > 0
+	// 											// 		? formatDistance(
+	// 											// 				step.length
+	// 											// 		  )
+	// 											// 		: formatDistance(0),
+	// 										},
+	// 										staticDuration: {
+	// 											// text: formatDuration(
+	// 											// 	step.travelTimeInSeconds *
+	// 											// 		1000
+	// 											// ),
+	// 										},
+	// 									},
+	// 								};
+	// 							}
+	// 						),
+	// 						polyline: {
+	// 							encodedPolyline: leg.encodedPolyline,
+	// 						},
+	// 						localizedValues: {
+	// 							distance: {
+	// 								text: formatDistance(
+	// 									leg.summary.lengthInMeters
+	// 								),
+	// 							},
+	// 							staticDuration: {
+	// 								text: formatDuration(
+	// 									leg.summary
+	// 										.noTrafficTravelTimeInSeconds * 1000
+	// 								),
+	// 							},
+	// 						},
+	// 					};
+	// 				}),
+	// 				distanceMeters: route.summary.lengthInMeters,
+	// 				staticDuration: `${route.summary.noTrafficTravelTimeInSeconds}s`,
+	// 				polyline: {
+	// 					encodedPolyline: route.legs[0].encodedPolyline,
+	// 				},
+	// 				localizedValues: {
+	// 					distance: {
+	// 						text: formatDistance(route.summary.lengthInMeters),
+	// 					},
+	// 					staticDuration: {
+	// 						text: formatDuration(
+	// 							route.summary.travelTimeInSeconds * 1000
+	// 						),
+	// 					},
+	// 				},
+	// 				optimizedIntermediateWaypointIndex: response.data
+	// 					.optimizedWaypoints
+	// 					? response.data.optimizedWaypoints.map(
+	// 							(waypoint) => waypoint.optimizedIndex
+	// 					  )
+	// 					: undefined,
+	// 			};
+	// 		});
+	// 		return {
+	// 			success: true,
+	// 			data: {
+	// 				result: { routes },
+	// 				apiCallLogs: [
+	// 					{
+	// 						...apiCall,
+	// 						uuid: epochId,
+	// 						result: response.data,
+	// 					},
+	// 				],
+	// 				uuid: epochId,
+	// 			},
+	// 		};
+	// 	}
+
+	// 	return {
+	// 		success: false,
+	// 	};
+	// };
 
 	allowedTravelModes = ["CAR", "BICYCLE", "TWO_WHEELER", "WALK"];
 }

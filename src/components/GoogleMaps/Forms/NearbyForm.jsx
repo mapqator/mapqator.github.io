@@ -149,7 +149,7 @@ export default function NearbyForm({
 		const lat = location.latitude;
 		const lng = location.longitude;
 
-		const response = await tools.nearbySearch.run({
+		const response = await tools.nearbySearch.fetch({
 			lat,
 			lng,
 			locationBias: data.locationBias,

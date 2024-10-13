@@ -131,6 +131,15 @@ export default function RoutePlacesComponent({
 		strokeColor: "#0000FF",
 	};
 
+	const redCircleSymbol = {
+		path: window.google.maps.SymbolPath.CIRCLE,
+		scale: 5,
+		fillColor: "#EA4335",
+		fillOpacity: 0.9,
+		strokeWeight: 2,
+		strokeColor: "#B41412",
+	};
+
 	return (
 		<GoogleMap
 			mapContainerStyle={mapStyles}
@@ -167,7 +176,7 @@ export default function RoutePlacesComponent({
 									lng: destination.location.longitude,
 							  }
 					}
-					icon={circleSymbol}
+					icon={redCircleSymbol}
 				/>
 			)}
 

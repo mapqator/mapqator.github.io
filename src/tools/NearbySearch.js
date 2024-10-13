@@ -18,8 +18,40 @@ class NearbySearch extends Api {
 		super();
 	}
 
-	run = async (query) => {
-		throw new Error("Method 'run()' must be implemented.");
+	convertRequest = (query) => {
+		throw new Error("Method 'convertRequest()' must be implemented.");
+	};
+
+	convertResponse = (data) => {
+		throw new Error("Method 'convertResponse()' must be implemented.");
+	};
+
+	fetch = async (params) => {
+		const adaptedRequest = this.convertRequest(params);
+
+		const epochId = Date.now(); // Unique ID for this tool call
+		const response = await this.post("/map/cached", adaptedRequest);
+
+		if (response.success) {
+			const adaptedResponse = this.convertResponse(response.data);
+			return {
+				success: true,
+				data: {
+					result: adaptedResponse,
+					apiCallLogs: [
+						{
+							...adaptedRequest,
+							uuid: epochId,
+							result: response.data,
+						},
+					],
+					uuid: epochId,
+				},
+			};
+		}
+		return {
+			success: false,
+		};
 	};
 
 	PoiCategorySelectionField = null;
@@ -39,8 +71,9 @@ class GooglePlacesApiNew extends NearbySearch {
 		super();
 		this.family = "googleMaps";
 	}
-	run = async (params) => {
-		const apiCall = {
+
+	convertRequest = (params) => {
+		return {
 			url: "https://places.googleapis.com/v1/places:searchText",
 			method: "POST",
 			headers: {
@@ -76,29 +109,72 @@ class GooglePlacesApiNew extends NearbySearch {
 				},
 			},
 		};
-		const epochId = Date.now(); // Unique ID for this tool call
-		const response = await this.post("/map/cached", apiCall);
-
-		if (response.success) {
-			return {
-				success: true,
-				data: {
-					result: response.data,
-					apiCallLogs: [
-						{
-							...apiCall,
-							uuid: epochId,
-							result: response.data,
-						},
-					],
-					uuid: epochId,
-				},
-			};
-		}
-		return {
-			success: false,
-		};
 	};
+
+	convertResponse = (data) => {
+		return data;
+	};
+
+	// run = async (params) => {
+	// 	const apiCall = {
+	// 		url: "https://places.googleapis.com/v1/places:searchText",
+	// 		method: "POST",
+	// 		headers: {
+	// 			"Content-Type": "application/json",
+	// 			"X-Goog-FieldMask":
+	// 				"places.id,places.displayName,places.formattedAddress,places.rating,places.priceLevel,places.shortFormattedAddress,places.userRatingCount,places.location,routingSummaries",
+	// 			"X-Goog-Api-Key": "key:GOOGLE_MAPS_API_KEY",
+	// 		},
+	// 		data: {
+	// 			textQuery: params.type + " " + params.keyword,
+	// 			rankPreference: params.rankPreference || "RELEVANCE", // DISTANCE/RELEVANCE/RANK_PREFERENCE_UNSPECIFIED
+	// 			includedType: params.type, // One type only
+	// 			minRating: params.minRating,
+	// 			priceLevels: params.priceLevels,
+	// 			maxResultCount: params.maxResultCount || 5,
+	// 			strictTypeFiltering: true,
+	// 			locationBias: {
+	// 				circle: {
+	// 					center: {
+	// 						latitude: params.lat,
+	// 						longitude: params.lng,
+	// 					},
+	// 					radius: 0,
+	// 				},
+	// 			},
+	// 			languageCode: "en",
+	// 			routingParameters: {
+	// 				origin: {
+	// 					latitude: params.lat,
+	// 					longitude: params.lng,
+	// 				},
+	// 				travelMode: "WALK",
+	// 			},
+	// 		},
+	// 	};
+	// 	const epochId = Date.now(); // Unique ID for this tool call
+	// 	const response = await this.post("/map/cached", apiCall);
+
+	// 	if (response.success) {
+	// 		return {
+	// 			success: true,
+	// 			data: {
+	// 				result: response.data,
+	// 				apiCallLogs: [
+	// 					{
+	// 						...apiCall,
+	// 						uuid: epochId,
+	// 						result: response.data,
+	// 					},
+	// 				],
+	// 				uuid: epochId,
+	// 			},
+	// 		};
+	// 	}
+	// 	return {
+	// 		success: false,
+	// 	};
+	// };
 
 	PoiCategorySelectionField = TypeSelectionField;
 	formatPoiCategory = formatType;
@@ -117,8 +193,9 @@ class TomTomApi extends NearbySearch {
 		super();
 		this.family = "tomtom";
 	}
-	run = async (params) => {
-		const apiCall = {
+
+	convertRequest = (params) => {
+		return {
 			url: "https://api.tomtom.com/search/2/nearbySearch/.json",
 			method: "GET",
 			params: {
@@ -131,42 +208,74 @@ class TomTomApi extends NearbySearch {
 				radius: params.radius === 0 ? undefined : params.radius,
 			},
 		};
-		const epochId = Date.now(); // Unique ID for this tool call
-		const response = await this.post("/map/cached", apiCall);
-
-		console.log("Tom Tom:", response);
-		if (response.success) {
-			const places = response.data.results.map((place) => ({
-				id: place.id,
-				displayName: {
-					text: place.poi.name,
-				},
-				formattedAddress: place.address.freeformAddress,
-				shortFormattedAddress: place.address.freeformAddress,
-				location: {
-					latitude: place.position.lat,
-					longitude: place.position.lon,
-				},
-			}));
-			return {
-				success: true,
-				data: {
-					result: { places },
-					apiCallLogs: [
-						{
-							...apiCall,
-							uuid: epochId,
-							result: response.data,
-						},
-					],
-					uuid: epochId,
-				},
-			};
-		}
-		return {
-			success: false,
-		};
 	};
+
+	convertResponse = (data) => {
+		const places = data.results.map((place) => ({
+			id: place.id,
+			displayName: {
+				text: place.poi.name,
+			},
+			formattedAddress: place.address.freeformAddress,
+			shortFormattedAddress: place.address.freeformAddress,
+			location: {
+				latitude: place.position.lat,
+				longitude: place.position.lon,
+			},
+		}));
+		return { places };
+	};
+
+	// run = async (params) => {
+	// 	const apiCall = {
+	// 		url: "https://api.tomtom.com/search/2/nearbySearch/.json",
+	// 		method: "GET",
+	// 		params: {
+	// 			key: "key:TOMTOM_API_KEY",
+	// 			query: params.keyword,
+	// 			lat: params.lat,
+	// 			lon: params.lng,
+	// 			limit: params.maxResultCount || 5,
+	// 			categorySet: params.type,
+	// 			radius: params.radius === 0 ? undefined : params.radius,
+	// 		},
+	// 	};
+	// 	const epochId = Date.now(); // Unique ID for this tool call
+	// 	const response = await this.post("/map/cached", apiCall);
+
+	// 	console.log("Tom Tom:", response);
+	// 	if (response.success) {
+	// 		const places = response.data.results.map((place) => ({
+	// 			id: place.id,
+	// 			displayName: {
+	// 				text: place.poi.name,
+	// 			},
+	// 			formattedAddress: place.address.freeformAddress,
+	// 			shortFormattedAddress: place.address.freeformAddress,
+	// 			location: {
+	// 				latitude: place.position.lat,
+	// 				longitude: place.position.lon,
+	// 			},
+	// 		}));
+	// 		return {
+	// 			success: true,
+	// 			data: {
+	// 				result: { places },
+	// 				apiCallLogs: [
+	// 					{
+	// 						...apiCall,
+	// 						uuid: epochId,
+	// 						result: response.data,
+	// 					},
+	// 				],
+	// 				uuid: epochId,
+	// 			},
+	// 		};
+	// 	}
+	// 	return {
+	// 		success: false,
+	// 	};
+	// };
 
 	PoiCategorySelectionField = CategorySelectionField;
 	formatPoiCategory = formatCategory;

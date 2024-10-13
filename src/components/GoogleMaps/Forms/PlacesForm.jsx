@@ -131,9 +131,7 @@ export default function PlacesForm({ handlePlaceAdd }) {
 	const handleAddSave = async (place_id) => {
 		setLoading(true);
 		let details = savedPlacesMap[place_id];
-		const res = await placeDetailsTools[
-			savedPlacesMap[place_id].mapService
-		][0].instance.fetch(details);
+		const res = await tools.placeDetails.fetch(details);
 		if (res.success) {
 			details = res.data.result;
 			setSelectedPlacesMap((prev) => ({
@@ -157,6 +155,7 @@ export default function PlacesForm({ handlePlaceAdd }) {
 
 	useEffect(() => {
 		if (
+			newPlaceId &&
 			tools.placeDetails.family !== savedPlacesMap[newPlaceId].mapService
 		) {
 			setTools((prev) => ({
