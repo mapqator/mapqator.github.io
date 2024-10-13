@@ -4,7 +4,7 @@ import { Grid } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Add } from "@mui/icons-material";
 import PlaceSelectionField from "@/components/GoogleMaps/InputFields/PlaceSelectionField";
-import TravelSelectionField from "@/components/GoogleMaps/InputFields/TravelSelectionField.";
+import TravelSelectionField from "@/mapServices/GoogleMaps/TravelSelectionField";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { showError } from "@/contexts/ToastProvider";
 

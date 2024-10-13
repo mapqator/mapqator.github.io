@@ -36,7 +36,7 @@ import {
 	Marker,
 } from "@react-google-maps/api";
 import PoiSelectionField from "../InputFields/PoiSelectionField";
-import TravelSelectionField from "../InputFields/TravelSelectionField.";
+import TravelSelectionField from "../../../mapServices/GoogleMaps/TravelSelectionField";
 import RoutePlacesComponent from "../Embed/RoutePlacesComponent";
 import debounce from "lodash/debounce";
 

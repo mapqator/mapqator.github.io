@@ -17,7 +17,7 @@ import { AppContext } from "@/contexts/AppContext";
 import PoiList from "@/components/GoogleMaps/Lists/PoiList";
 import Pluralize from "pluralize";
 import { convertFromSnake } from "@/services/utils";
-import TravelSelectionField from "../InputFields/TravelSelectionField.";
+import TravelSelectionField from "../../../mapServices/GoogleMaps/TravelSelectionField";
 import { LoadingButton } from "@mui/lab";
 import mapApi from "@/api/mapApi";
 import MapComponent from "../Embed/MapComponent";

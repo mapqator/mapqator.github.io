@@ -1,6 +1,24 @@
 import Api from "@/api/base";
 import { distance } from "framer-motion";
 import config from "@/config/config";
+import GMTravelSelectionField, {
+	convertTravelModeToIcon as convertTravelModeToIconGM,
+	convertTravelModeToLabel as convertTravelModeToLabelGM,
+} from "@/mapServices/GoogleMaps/TravelSelectionField";
+
+import GMAvoidSelectionField from "@/mapServices/GoogleMaps/AvoidSelectionField";
+
+import TTTravelSelectionField, {
+	convertTravelModeToIcon as convertTravelModeToIconTT,
+	convertTravelModeToLabel as convertTravelModeToLabelTT,
+} from "@/mapServices/TomTom/TravelSelectionField";
+import TTAvoidSelectionField from "@/mapServices/TomTom/AvoidSelectionField";
+
+import OSMTravelSelectionField, {
+	convertTravelModeToIcon as convertTravelModeToIconOSM,
+	convertTravelModeToLabel as convertTravelModeToLabelOSM,
+} from "@/mapServices/OpenStreetMap/TravelSelectionField";
+import OSMAvoidSelectionField from "@/mapServices/OpenStreetMap/AvoidSelectionField";
 
 class ComputeRoutes extends Api {
 	constructor() {
@@ -241,6 +259,11 @@ class GoogleRoutesApi extends ComputeRoutes {
 		computeAlternativeRoutes: true,
 		optimizeWaypointOrder: true,
 	};
+
+	TravelSelectionField = GMTravelSelectionField;
+	convertTravelModeToIcon = convertTravelModeToIconGM;
+	convertTravelModeToLabel = convertTravelModeToLabelGM;
+	AvoidSelectionField = GMAvoidSelectionField;
 }
 
 // [car, car_delivery, car_avoid_ferry, car_avoid_motorway, car_avoid_toll, truck, small_truck, small_truck_delivery, scooter, scooter_delivery, bike, mtb, racingbike, foot, hike, as_the_crow_flies]
@@ -298,20 +321,7 @@ class GraphHopperApi extends ComputeRoutes {
 						params.destination.location.latitude,
 					],
 				],
-				vehicle:
-					params.travelMode == "DRIVE"
-						? params.routeModifiers.avoidTolls
-							? "car_avoid_toll"
-							: params.routeModifiers.avoidFerries
-							? "car_avoid_ferry"
-							: params.routeModifiers.avoidHighways
-							? "car_avoid_motorway"
-							: "car"
-						: params.travelMode == "BICYCLE"
-						? "bike"
-						: params.travelMode == "TWO_WHEELER"
-						? "scooter"
-						: "foot",
+				vehicle: params.travelMode,
 				locale: "en",
 				instructions: true,
 				points_encoded: true,
@@ -563,6 +573,11 @@ class GraphHopperApi extends ComputeRoutes {
 		computeAlternativeRoutes: true,
 		optimizeWaypointOrder: true,
 	};
+
+	TravelSelectionField = OSMTravelSelectionField;
+	convertTravelModeToIcon = convertTravelModeToIconOSM;
+	convertTravelModeToLabel = convertTravelModeToLabelOSM;
+	AvoidSelectionField = OSMAvoidSelectionField;
 }
 
 class TomTomApi extends ComputeRoutes {
@@ -574,8 +589,14 @@ class TomTomApi extends ComputeRoutes {
 	convertRequest = (params) => {
 		const avoidOptions = [];
 		if (params.routeModifiers.avoidTolls) avoidOptions.push("tollRoads");
-		if (params.routeModifiers.avoidHighways) avoidOptions.push("motorways");
+		if (params.routeModifiers.avoidMotorways)
+			avoidOptions.push("motorways");
 		if (params.routeModifiers.avoidFerries) avoidOptions.push("ferries");
+		if (params.routeModifiers.avoidUnpaved)
+			avoidOptions.push("unpavedRoads");
+		if (params.routeModifiers.avoidCarPools) avoidOptions.push("carpools");
+		if (params.routeModifiers.avoidAlreadyUsed)
+			avoidOptions.push("alreadyUsedRoads");
 
 		const intermediates = params.intermediates
 			.map(
@@ -603,13 +624,7 @@ class TomTomApi extends ComputeRoutes {
 				"&key=" +
 				"key:TOMTOM_API_KEY" +
 				"&travelMode=" +
-				(params.travelMode === "DRIVE"
-					? "car"
-					: params.travelMode === "BICYCLE"
-					? "bicycle"
-					: params.travelMode === "TWO_WHEELER"
-					? "motorcycle"
-					: "pedestrian") +
+				params.travelMode +
 				"&routeType=" +
 				"fastest" +
 				"&traffic=" +
@@ -632,6 +647,28 @@ class TomTomApi extends ComputeRoutes {
 				"&computeTravelTimeFor=" +
 				"all",
 			method: "GET",
+			// params: {
+			// 	language: "en-US",
+			// 	key: "key:TOMTOM_API_KEY",
+			// 	travelMode: params.travelMode,
+			// 	routeType: "fastest",
+			// 	traffic: false,
+			// 	avoid:
+			// 		avoidOptions.length > 0
+			// 			? avoidOptions.join("&avoid=")
+			// 			: undefined,
+			// 	instructionsType: "text", // text
+			// 	computeBestOrder:
+			// 		params.intermediates.length > 1 &&
+			// 		params.optimizeWaypointOrder,
+			// 	maxAlternatives:
+			// 		params.intermediates.length == 0 &&
+			// 		params.computeAlternativeRoutes
+			// 			? 2
+			// 			: 0,
+			// 	routeRepresentation: "encodedPolyline", // Request encoded polyline
+			// 	computeTravelTimeFor: "all",
+			// },
 		};
 	};
 
@@ -698,9 +735,8 @@ class TomTomApi extends ComputeRoutes {
 						),
 					},
 				},
-				optimizedIntermediateWaypointIndex: response.data
-					.optimizedWaypoints
-					? response.data.optimizedWaypoints.map(
+				optimizedIntermediateWaypointIndex: data.optimizedWaypoints
+					? data.optimizedWaypoints.map(
 							(waypoint) => waypoint.optimizedIndex
 					  )
 					: undefined,
@@ -888,6 +924,11 @@ class TomTomApi extends ComputeRoutes {
 	// };
 
 	allowedTravelModes = ["CAR", "BICYCLE", "TWO_WHEELER", "WALK"];
+
+	TravelSelectionField = TTTravelSelectionField;
+	convertTravelModeToIcon = convertTravelModeToIconTT;
+	convertTravelModeToLabel = convertTravelModeToLabelTT;
+	AvoidSelectionField = TTAvoidSelectionField;
 }
 
 export const list = {

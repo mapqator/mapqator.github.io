@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import { Add, ArrowRight, ArrowRightAlt } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import TravelSelectionField from "@/components/GoogleMaps/InputFields/TravelSelectionField.";
+import TravelSelectionField from "@/mapServices/GoogleMaps/TravelSelectionField";
 import PlaceSelectionField from "@/components/GoogleMaps/InputFields/PlaceSelectionField";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { showError } from "@/contexts/ToastProvider";
@@ -145,7 +145,12 @@ export default function DirectionForm({
 
 	const computeRoutes = async (data) => {
 		// console.log("Computing routes", tools.computeRoutes.constructor);
-		if (data.origin === "" || data.destination === "") return;
+		if (
+			data.origin === "" ||
+			data.destination === "" ||
+			data.travelMode === ""
+		)
+			return;
 		// Fetch the direction between the two places from google maps
 		setLoading(true);
 		const response = await tools.computeRoutes.run({
@@ -159,6 +164,8 @@ export default function DirectionForm({
 			optimizeWaypointOrder: data.optimizeWaypointOrder,
 			computeAlternativeRoutes: data.computeAlternativeRoutes,
 		});
+
+		console.log("Compute Routes Response", response);
 		if (response.success && response.data.result.routes) {
 			setRoutes(response.data.result.routes);
 			setApiCalls(response.data.apiCallLogs);
@@ -227,7 +234,7 @@ export default function DirectionForm({
 					</Grid>
 
 					<Grid item xs={12}>
-						<TravelSelectionField
+						<tools.computeRoutes.TravelSelectionField
 							mode={newDirection.travelMode}
 							setMode={(value) =>
 								setNewDirection((prev) => ({
@@ -237,6 +244,10 @@ export default function DirectionForm({
 							}
 						/>
 					</Grid>
+					<tools.computeRoutes.AvoidSelectionField
+						form={newDirection}
+						setForm={setNewDirection}
+					/>
 
 					<Box className="w-full p-3 pb-0 flex flex-row justify-start items-center gap-2">
 						<Switch
@@ -433,64 +444,6 @@ export default function DirectionForm({
 							}
 						/>
 					</Grid> */}
-
-					{["DRIVE", "TWO_WHEELER"].includes(
-						newDirection.travelMode
-					) && (
-						<Grid item xs={12}>
-							<FormControl fullWidth size="small">
-								<InputLabel>Avoid</InputLabel>
-								<Select
-									// input={<OutlinedInput label="Tag" />}
-									value={Object.entries(
-										newDirection.routeModifiers
-									)
-										.map(([key, value]) =>
-											value ? key : null
-										)
-										.filter((x) => x)}
-									onChange={(e) => {
-										const newOptions = {
-											...newDirection.routeModifiers,
-										};
-										Object.keys(avoidMap).forEach((key) => {
-											newOptions[key] =
-												e.target.value.includes(key);
-										});
-										setNewDirection((prev) => ({
-											...prev,
-											routeModifiers: newOptions,
-										}));
-									}}
-									label={"Avoid"}
-									multiple
-									renderValue={(selected) => {
-										if (selected.length === 0) {
-											return <em>Any</em>; // Custom label for empty array
-										}
-										return selected
-											.map((value) => avoidMap[value])
-											.join(", ");
-									}}
-								>
-									{Object.keys(avoidMap).map((key) => (
-										<MenuItem key={key} value={key}>
-											<Checkbox
-												checked={
-													newDirection.routeModifiers[
-														key
-													]
-												}
-											/>
-											<ListItemText
-												primary={avoidMap[key]}
-											/>
-										</MenuItem>
-									))}
-								</Select>
-							</FormControl>
-						</Grid>
-					)}
 
 					{newDirection.travelMode === "TRANSIT" && (
 						<Grid item xs={12}>

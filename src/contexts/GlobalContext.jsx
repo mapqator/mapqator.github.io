@@ -228,7 +228,8 @@ export default function GlobalContextProvider({ children }) {
 		destinations: [],
 		travelMode: "WALK",
 	});
-	const [newNearbyPlaces, setNewNearbyPlaces] = useState({
+
+	const initNewNearbyPlaces = {
 		locationBias: "",
 		searchBy: "type",
 		type: "",
@@ -238,9 +239,10 @@ export default function GlobalContextProvider({ children }) {
 		minRating: 0, // Values are rounded up to the nearest 0.5.
 		priceLevels: [],
 		maxResultCount: 5, // 1 to 20
-	});
+	};
+	const [newNearbyPlaces, setNewNearbyPlaces] = useState(initNewNearbyPlaces);
 
-	const [newRoutePlaces, setNewRoutePlaces] = useState({
+	const initNewRoutePlaces = {
 		origin: "",
 		destination: "",
 		travelMode: "WALK",
@@ -259,30 +261,33 @@ export default function GlobalContextProvider({ children }) {
 		minRating: 0, // Values are rounded up to the nearest 0.5.
 		priceLevels: [],
 		maxResultCount: 5,
-	});
+	};
 
-	const [newDirection, setNewDirection] = useState({
+	const [newRoutePlaces, setNewRoutePlaces] = useState(initNewRoutePlaces);
+	const initNewDirection = {
 		origin: "",
 		destination: "",
 		intermediates: [],
-		travelMode: "WALK",
-		departureTime: {
-			type: "now",
-			date: dayjs(),
-			time: dayjs(),
-			departureTimestamp: new Date(),
-		},
+		travelMode: "",
+		// departureTime: {
+		// 	type: "now",
+		// 	date: dayjs(),
+		// 	time: dayjs(),
+		// 	departureTimestamp: new Date(),
+		// },
 		optimizeWaypointOrder: false,
-		transitPreferences: {
-			allowedTravelModes: [],
-		},
+		// transitPreferences: {
+		// 	allowedTravelModes: [],
+		// },
 		routeModifiers: {
-			avoidTolls: false,
-			avoidHighways: false,
-			avoidFerries: false,
+			// avoidTolls: false,
+			// avoidHighways: false,
+			// avoidFerries: false,
 		},
 		computeAlternativeRoutes: true,
-	});
+	};
+
+	const [newDirection, setNewDirection] = useState(initNewDirection);
 
 	// const initQuery = {
 	// 	question: "Time to go from Louvre to Eiffel Tower by car?",
@@ -351,6 +356,12 @@ export default function GlobalContextProvider({ children }) {
 			});
 		}
 	}, [mapService]);
+
+	useEffect(() => {
+		setNewNearbyPlaces(initNewNearbyPlaces);
+		setNewDirection(initNewDirection);
+		setNewRoutePlaces(initNewRoutePlaces);
+	}, [tools]);
 
 	useEffect(() => {
 		setContext({

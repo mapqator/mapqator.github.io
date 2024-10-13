@@ -1,7 +1,9 @@
 import {
 	faBicycle,
+	faBiking,
 	faBus,
 	faCar,
+	faMotorcycle,
 	faWalking,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,6 +25,8 @@ export function convertTravelModeToLabel(mode) {
 		? "Bicycling"
 		: mode === "TRANSIT"
 		? "Transit"
+		: mode === "TWO_WHEELER"
+		? "Two Wheeler"
 		: "Unknown";
 }
 
@@ -35,7 +39,11 @@ export function convertTravelModeToIcon(mode) {
 		<FontAwesomeIcon icon={faBicycle} />
 	) : mode === "TRANSIT" ? (
 		<FontAwesomeIcon icon={faBus} />
-	) : null;
+	) : mode === "TWO_WHEELER" ? (
+		<FontAwesomeIcon icon={faMotorcycle} />
+	) : (
+		""
+	);
 }
 
 import { list as textSearchList } from "@/tools/TextSearch";
