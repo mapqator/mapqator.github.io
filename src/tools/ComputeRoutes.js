@@ -34,7 +34,7 @@ class GoogleRoutesApi extends ComputeRoutes {
 					"routes.distanceMeters,routes.staticDuration,routes.description,routes.localizedValues,routes.optimized_intermediate_waypoint_index,routes.legs.steps.navigationInstruction,routes.legs.steps.transitDetails,routes.legs.localizedValues,routes.legs.steps.travelMode,routes.legs.steps.localizedValues,routes.legs.polyline,routes.polyline",
 				"X-Goog-Api-Key": "key:GOOGLE_MAPS_API_KEY",
 			},
-			body: {
+			data: {
 				origin: {
 					location: {
 						latLng: params.origin.location,
@@ -175,7 +175,7 @@ class GraphHopperApi extends ComputeRoutes {
 		const apiCall = {
 			url: "https://graphhopper.com/api/1/route",
 			method: "POST",
-			body: {
+			data: {
 				points: [
 					[
 						params.origin.location.longitude,

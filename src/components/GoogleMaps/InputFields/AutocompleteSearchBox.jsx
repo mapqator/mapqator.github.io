@@ -24,8 +24,13 @@ import { GlobalContext } from "@/contexts/GlobalContext";
 
 function SearchPlaceCard({ place, index, length, uuid, onAdd }) {
 	// Issue: Name overlaps with Add button
-	const { savedPlacesMap, setSavedPlacesMap, tools, mapService } =
-		useContext(GlobalContext);
+	const {
+		savedPlacesMap,
+		setSavedPlacesMap,
+		tools,
+		mapService,
+		setApiCallLogs,
+	} = useContext(GlobalContext);
 	const [loading, setLoading] = useState(false);
 	return (
 		<React.Fragment key={index}>
@@ -43,29 +48,31 @@ function SearchPlaceCard({ place, index, length, uuid, onAdd }) {
 
 							let location = place.location;
 							let details = { ...place, uuid };
-							if (!location) {
-								const res = await tools.textSearch.getLocation(
-									details
-								);
-								if (res.success) {
-									location = res.data.result.location;
-								} else {
-									console.error(res.error);
-									setLoading(false);
-									return;
-								}
-							}
 
-							setSavedPlacesMap((prev) => ({
-								...prev,
-								[place.id]: {
-									...details,
-									location,
-									mapService: tools.textSearch.family,
-								},
-							}));
-							setLoading(false);
-							onAdd();
+							const res = await tools.textSearch.retrieve(
+								details
+							);
+
+							if (res.success) {
+								details = res.data.result;
+								// setApiCallLogs((prev) => [
+								// 	...prev,
+								// 	...res.data.apiCallLogs,
+								// ]);
+								setSavedPlacesMap((prev) => ({
+									...prev,
+									[place.id]: {
+										...details,
+										mapService: tools.textSearch.family,
+									},
+								}));
+								setLoading(false);
+								onAdd(res.data.apiCallLogs);
+							} else {
+								console.error(res.error);
+								setLoading(false);
+								return;
+							}
 						}}
 						disabled={savedPlacesMap[place.id]}
 						loading={loading}
@@ -97,6 +104,10 @@ export default function AutocompleteSearchBox() {
 	const [fuse, setFuse] = useState(
 		new Fuse(Object.values(savedPlacesMap), fuseOptions)
 	);
+
+	useEffect(() => {
+		setMapResults([]);
+	}, [tools]);
 	// Update fuse object whenever savedPlacesMap changes
 	useEffect(() => {
 		const newFuse = new Fuse(Object.values(savedPlacesMap), fuseOptions);
@@ -105,7 +116,7 @@ export default function AutocompleteSearchBox() {
 
 	const searchMap = async (query) => {
 		setLoading(true);
-		const response = await tools.textSearch.run(query);
+		const response = await tools.textSearch.suggest(query);
 		if (response.success) {
 			const places = response.data.result.places;
 			setMapResults([...places]);
@@ -241,10 +252,11 @@ export default function AutocompleteSearchBox() {
 								index={index}
 								length={results.length}
 								key={index}
-								onAdd={() => {
+								onAdd={(retreiveApis) => {
 									setApiCallLogs((prev) => [
 										...prev,
 										...apiCalls,
+										...retreiveApis,
 									]);
 								}}
 							/>

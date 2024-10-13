@@ -49,7 +49,7 @@ class GooglePlacesApiNew extends NearbySearch {
 					"places.id,places.displayName,places.formattedAddress,places.rating,places.priceLevel,places.shortFormattedAddress,places.userRatingCount,places.location,routingSummaries",
 				"X-Goog-Api-Key": "key:GOOGLE_MAPS_API_KEY",
 			},
-			body: {
+			data: {
 				textQuery: params.type + " " + params.keyword,
 				rankPreference: params.rankPreference || "RELEVANCE", // DISTANCE/RELEVANCE/RANK_PREFERENCE_UNSPECIFIED
 				includedType: params.type, // One type only

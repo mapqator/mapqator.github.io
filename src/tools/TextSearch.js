@@ -11,8 +11,76 @@ class TextSearch extends Api {
 		super();
 	}
 
-	run = async (query) => {
-		throw new Error("Method 'run()' must be implemented.");
+	/**
+	 * Convert the query to the format required by the API
+	 *
+	 * @param {string} query - The query string
+	 */
+	convertRequest = (query) => {
+		throw new Error("Method 'convertRequest()' must be implemented.");
+	};
+
+	/**
+	 *
+	 * @param {Object} data - The response data from the API
+	 *
+	 * @returns {Object} - The formatted response data
+	 *
+	 * @example
+	 *
+	 * return {
+	 *  places: [
+	 *  {
+	 *  	id: 1,
+	 * 		displayName: { text: "Dhaka" },
+	 *  	shortFormattedAddress: "Dhaka, Bangladesh",
+	 *  	location: {
+	 * 			latitude: 23.8103,
+	 * 			longitude: 90.4125,
+	 * 		},
+	 *  },
+	 *  { ... }
+	 * ],
+	 * };
+	 */
+	convertResponse = (data) => {
+		throw new Error("Method 'convertResponse()' must be implemented.");
+	};
+
+	suggest = async (query) => {
+		const adaptedRequest = this.convertRequest(query);
+
+		const epochId = Date.now();
+		const response = await this.post("/map/cached", adaptedRequest);
+
+		if (response.success) {
+			const adaptedResponse = this.convertResponse(response.data);
+			return {
+				success: true,
+				data: {
+					result: adaptedResponse,
+					apiCallLogs: [
+						{
+							...adaptedRequest,
+							uuid: epochId,
+							result: response.data,
+						},
+					],
+					uuid: epochId,
+				},
+			};
+		}
+	};
+
+	retrieve = async (place) => {
+		return {
+			success: true,
+			data: {
+				result: place,
+				apiCallLogs: [],
+				uuid: place.uuid,
+			},
+		};
 	};
 
 	getLocation = async (place) => {
@@ -25,8 +93,9 @@ class GooglePlacesApiNew extends TextSearch {
 		super();
 		this.family = "googleMaps";
 	}
-	run = async (query) => {
-		const apiCall = {
+
+	convertRequest = (query) => {
+		return {
 			url: "https://places.googleapis.com/v1/places:searchText",
 			method: "POST",
 			headers: {
@@ -35,35 +104,67 @@ class GooglePlacesApiNew extends TextSearch {
 					"places.id,places.displayName,places.shortFormattedAddress,places.location",
 				"X-Goog-Api-Key": "key:GOOGLE_MAPS_API_KEY",
 			},
-			body: {
+			data: {
 				textQuery: query,
 				maxResultCount: 5,
 			},
 		};
-
-		const epochId = Date.now(); // Unique ID for this tool call
-		const response = await this.post("/map/cached", apiCall);
-
-		if (response.success) {
-			return {
-				success: true,
-				data: {
-					result: response.data,
-					apiCallLogs: [
-						{
-							...apiCall,
-							uuid: epochId,
-							result: response.data,
-						},
-					],
-					uuid: epochId,
-				},
-			};
-		}
-		return {
-			success: false,
-		};
 	};
+
+	convertResponse = (data) => {
+		const places = data.places.map((place) => ({
+			id: place.id,
+			displayName: {
+				text: place.displayName.text,
+			},
+			shortFormattedAddress: place.shortFormattedAddress,
+			location: {
+				latitude: place.location.latitude,
+				longitude: place.location.longitude,
+			},
+		}));
+		return { places };
+	};
+
+	// run = async (query) => {
+	// 	const apiCall = {
+	// 		url: "https://places.googleapis.com/v1/places:searchText",
+	// 		method: "POST",
+	// 		headers: {
+	// 			"Content-Type": "application/json",
+	// 			"X-Goog-FieldMask":
+	// 				"places.id,places.displayName,places.shortFormattedAddress,places.location",
+	// 			"X-Goog-Api-Key": "key:GOOGLE_MAPS_API_KEY",
+	// 		},
+	// 		data: {
+	// 			textQuery: query,
+	// 			maxResultCount: 5,
+	// 		},
+	// 	};
+
+	// 	const epochId = Date.now(); // Unique ID for this tool call
+	// 	const response = await this.post("/map/cached", apiCall);
+
+	// 	if (response.success) {
+	// 		return {
+	// 			success: true,
+	// 			data: {
+	// 				result: response.data,
+	// 				apiCallLogs: [
+	// 					{
+	// 						...apiCall,
+	// 						uuid: epochId,
+	// 						result: response.data,
+	// 					},
+	// 				],
+	// 				uuid: epochId,
+	// 			},
+	// 		};
+	// 	}
+	// 	return {
+	// 		success: false,
+	// 	};
+	// };
 }
 
 class GooglePlacesApi extends TextSearch {
@@ -71,8 +172,9 @@ class GooglePlacesApi extends TextSearch {
 		super();
 		this.family = "googleMaps";
 	}
-	run = async (query) => {
-		const apiCall = {
+
+	convertRequest = (query) => {
+		return {
 			url: "https://maps.googleapis.com/maps/api/place/textsearch/json",
 			method: "GET",
 			params: {
@@ -81,41 +183,68 @@ class GooglePlacesApi extends TextSearch {
 				language: "en",
 			},
 		};
-
-		const epochId = Date.now(); // Unique ID for this tool call
-		const response = await this.post("/map/cached", apiCall);
-
-		if (response.success) {
-			const places = response.data.results.map((place) => ({
-				id: place.place_id,
-				displayName: {
-					text: place.name,
-				},
-				shortFormattedAddress: place.formatted_address,
-				location: {
-					latitude: place.geometry.location.lat,
-					longitude: place.geometry.location.lng,
-				},
-			}));
-			return {
-				success: true,
-				data: {
-					result: { places },
-					apiCallLogs: [
-						{
-							...apiCall,
-							uuid: epochId,
-							result: response.data,
-						},
-					],
-					uuid: epochId,
-				},
-			};
-		}
-		return {
-			success: false,
-		};
 	};
+
+	convertResponse = (data) => {
+		const places = data.results.map((place) => ({
+			id: place.place_id,
+			displayName: {
+				text: place.name,
+			},
+			shortFormattedAddress: place.formatted_address,
+			location: {
+				latitude: place.geometry.location.lat,
+				longitude: place.geometry.location.lng,
+			},
+		}));
+		return { places };
+	};
+
+	// run = async (query) => {
+	// 	const apiCall = {
+	// 		url: "https://maps.googleapis.com/maps/api/place/textsearch/json",
+	// 		method: "GET",
+	// 		params: {
+	// 			query: query,
+	// 			key: "key:GOOGLE_MAPS_API_KEY",
+	// 			language: "en",
+	// 		},
+	// 	};
+
+	// 	const epochId = Date.now(); // Unique ID for this tool call
+	// 	const response = await this.post("/map/cached", apiCall);
+
+	// 	if (response.success) {
+	// 		const places = response.data.results.map((place) => ({
+	// 			id: place.place_id,
+	// 			displayName: {
+	// 				text: place.name,
+	// 			},
+	// 			shortFormattedAddress: place.formatted_address,
+	// 			location: {
+	// 				latitude: place.geometry.location.lat,
+	// 				longitude: place.geometry.location.lng,
+	// 			},
+	// 		}));
+	// 		return {
+	// 			success: true,
+	// 			data: {
+	// 				result: { places },
+	// 				apiCallLogs: [
+	// 					{
+	// 						...apiCall,
+	// 						uuid: epochId,
+	// 						result: response.data,
+	// 					},
+	// 				],
+	// 				uuid: epochId,
+	// 			},
+	// 		};
+	// 	}
+	// 	return {
+	// 		success: false,
+	// 	};
+	// };
 }
 
 class NominatimApi extends TextSearch {
@@ -123,8 +252,9 @@ class NominatimApi extends TextSearch {
 		super();
 		this.family = "openStreetMap";
 	}
-	run = async (query) => {
-		const apiCall = {
+
+	convertRequest = (query) => {
+		return {
 			url: "https://nominatim.openstreetmap.org/search",
 			method: "GET",
 			headers: {
@@ -136,41 +266,71 @@ class NominatimApi extends TextSearch {
 				limit: 5,
 			},
 		};
-
-		const epochId = Date.now(); // Unique ID for this tool call
-		const response = await this.post("/map/cached", apiCall);
-
-		if (response.success) {
-			const places = response.data.map((place) => ({
-				id: place.place_id,
-				displayName: {
-					text: place.name,
-				},
-				shortFormattedAddress: place.display_name,
-				location: {
-					latitude: parseFloat(place.lat),
-					longitude: parseFloat(place.lon),
-				},
-			}));
-			return {
-				success: true,
-				data: {
-					result: { places },
-					apiCallLogs: [
-						{
-							...apiCall,
-							uuid: epochId,
-							result: response.data,
-						},
-					],
-					uuid: epochId,
-				},
-			};
-		}
-		return {
-			success: false,
-		};
 	};
+
+	convertResponse = (data) => {
+		const places = data.map((place) => ({
+			id: place.place_id,
+			displayName: {
+				text: place.name,
+			},
+			shortFormattedAddress: place.display_name,
+			location: {
+				latitude: parseFloat(place.lat),
+				longitude: parseFloat(place.lon),
+			},
+		}));
+		return { places };
+	};
+
+	// run = async (query) => {
+	// 	const apiCall = {
+	// 		url: "https://nominatim.openstreetmap.org/search",
+	// 		method: "GET",
+	// 		headers: {
+	// 			"Accept-Language": "en", // Add this header to request response in English
+	// 		},
+	// 		params: {
+	// 			q: query,
+	// 			format: "jsonv2",
+	// 			limit: 5,
+	// 		},
+	// 	};
+
+	// 	const epochId = Date.now(); // Unique ID for this tool call
+	// 	const response = await this.post("/map/cached", apiCall);
+
+	// 	if (response.success) {
+	// 		const places = response.data.map((place) => ({
+	// 			id: place.place_id,
+	// 			displayName: {
+	// 				text: place.name,
+	// 			},
+	// 			shortFormattedAddress: place.display_name,
+	// 			location: {
+	// 				latitude: parseFloat(place.lat),
+	// 				longitude: parseFloat(place.lon),
+	// 			},
+	// 		}));
+	// 		return {
+	// 			success: true,
+	// 			data: {
+	// 				result: { places },
+	// 				apiCallLogs: [
+	// 					{
+	// 						...apiCall,
+	// 						uuid: epochId,
+	// 						result: response.data,
+	// 					},
+	// 				],
+	// 				uuid: epochId,
+	// 			},
+	// 		};
+	// 	}
+	// 	return {
+	// 		success: false,
+	// 	};
+	// };
 }
 
 class MapBoxApi extends TextSearch {
@@ -178,9 +338,9 @@ class MapBoxApi extends TextSearch {
 		super();
 		this.family = "mapbox";
 	}
-	run = async (query) => {
-		// https://api.mapbox.com/search/searchbox/v1/suggest?q=louvre&access_token=pk.eyJ1IjoibWFoaXJsYWJpYmRpaGFuIiwiYSI6ImNsemNwbmI2dTBlNDUycm9wM2p3cWUzMXYifQ._tllxLBR12HcsegDwPVyRQ&session_token=03e32083-4e22-4b18-8192-7c9c009d0ba8&limit=5
-		const apiCall = {
+
+	convertRequest = (query) => {
+		return {
 			url: "https://api.mapbox.com/search/searchbox/v1/suggest",
 			method: "GET",
 			params: {
@@ -190,39 +350,63 @@ class MapBoxApi extends TextSearch {
 				limit: 5,
 			},
 		};
-
-		const epochId = Date.now(); // Unique ID for this tool call
-		const response = await this.post("/map/cached", apiCall);
-
-		if (response.success) {
-			const places = response.data.suggestions.map((place) => ({
-				id: place.mapbox_id,
-				displayName: {
-					text: place.name,
-				},
-				shortFormattedAddress: place.full_address,
-			}));
-			return {
-				success: true,
-				data: {
-					result: { places },
-					apiCallLogs: [
-						{
-							...apiCall,
-							uuid: epochId,
-							result: response.data,
-						},
-					],
-					uuid: epochId,
-				},
-			};
-		}
-		return {
-			success: false,
-		};
 	};
 
-	getLocation = async (place) => {
+	convertResponse = (data) => {
+		const places = data.suggestions.map((place) => ({
+			id: place.mapbox_id,
+			displayName: {
+				text: place.name,
+			},
+			shortFormattedAddress: place.full_address,
+		}));
+		return { places };
+	};
+
+	// run = async (query) => {
+	// 	const apiCall = {
+	// 		url: "https://api.mapbox.com/search/searchbox/v1/suggest",
+	// 		method: "GET",
+	// 		params: {
+	// 			q: query,
+	// 			access_token: "key:MAPBOX_ACCESS_TOKEN",
+	// 			session_token: "key:MAPBOX_SESSION_TOKEN",
+	// 			limit: 5,
+	// 		},
+	// 	};
+
+	// 	const epochId = Date.now(); // Unique ID for this tool call
+	// 	const response = await this.post("/map/cached", apiCall);
+
+	// 	if (response.success) {
+	// 		const places = response.data.suggestions.map((place) => ({
+	// 			id: place.mapbox_id,
+	// 			displayName: {
+	// 				text: place.name,
+	// 			},
+	// 			shortFormattedAddress: place.full_address,
+	// 		}));
+	// 		return {
+	// 			success: true,
+	// 			data: {
+	// 				result: { places },
+	// 				apiCallLogs: [
+	// 					{
+	// 						...apiCall,
+	// 						uuid: epochId,
+	// 						result: response.data,
+	// 					},
+	// 				],
+	// 				uuid: epochId,
+	// 			},
+	// 		};
+	// 	}
+	// 	return {
+	// 		success: false,
+	// 	};
+	// };
+
+	retrieve = async (place) => {
 		const apiCall = {
 			url:
 				"https://api.mapbox.com/search/searchbox/v1/retrieve/" +
@@ -247,7 +431,7 @@ class MapBoxApi extends TextSearch {
 			return {
 				success: true,
 				data: {
-					result: { location },
+					result: { ...place, location },
 					apiCallLogs: [
 						{
 							...apiCall,
@@ -270,8 +454,9 @@ class TomTomApi extends TextSearch {
 		super();
 		this.family = "tomtom";
 	}
-	run = async (query) => {
-		const apiCall = {
+
+	convertRequest = (query) => {
+		return {
 			url: "https://api.tomtom.com/search/2/poiSearch/" + query + ".json",
 			method: "GET",
 			params: {
@@ -282,41 +467,70 @@ class TomTomApi extends TextSearch {
 				language: "en-US",
 			},
 		};
-
-		const epochId = Date.now(); // Unique ID for this tool call
-		const response = await this.post("/map/cached", apiCall);
-
-		if (response.success) {
-			const places = response.data.results.map((place) => ({
-				id: place.id,
-				displayName: {
-					text: place.poi.name,
-				},
-				shortFormattedAddress: place.address.freeformAddress,
-				location: {
-					latitude: place.position.lat,
-					longitude: place.position.lon,
-				},
-			}));
-			return {
-				success: true,
-				data: {
-					result: { places },
-					apiCallLogs: [
-						{
-							...apiCall,
-							uuid: epochId,
-							result: response.data,
-						},
-					],
-					uuid: epochId,
-				},
-			};
-		}
-		return {
-			success: false,
-		};
 	};
+
+	convertResponse = (data) => {
+		const places = data.results.map((place) => ({
+			id: place.id,
+			displayName: {
+				text: place.poi.name,
+			},
+			shortFormattedAddress: place.address.freeformAddress,
+			location: {
+				latitude: place.position.lat,
+				longitude: place.position.lon,
+			},
+		}));
+		return { places };
+	};
+
+	// run = async (query) => {
+	// 	const apiCall = {
+	// 		url: "https://api.tomtom.com/search/2/poiSearch/" + query + ".json",
+	// 		method: "GET",
+	// 		params: {
+	// 			key: "key:TOMTOM_API_KEY",
+
+	// 			// Optional parameters
+	// 			limit: 5,
+	// 			language: "en-US",
+	// 		},
+	// 	};
+
+	// 	const epochId = Date.now(); // Unique ID for this tool call
+	// 	const response = await this.post("/map/cached", apiCall);
+
+	// 	if (response.success) {
+	// 		const places = response.data.results.map((place) => ({
+	// 			id: place.id,
+	// 			displayName: {
+	// 				text: place.poi.name,
+	// 			},
+	// 			shortFormattedAddress: place.address.freeformAddress,
+	// 			location: {
+	// 				latitude: place.position.lat,
+	// 				longitude: place.position.lon,
+	// 			},
+	// 		}));
+	// 		return {
+	// 			success: true,
+	// 			data: {
+	// 				result: { places },
+	// 				apiCallLogs: [
+	// 					{
+	// 						...apiCall,
+	// 						uuid: epochId,
+	// 						result: response.data,
+	// 					},
+	// 				],
+	// 				uuid: epochId,
+	// 			},
+	// 		};
+	// 	}
+	// 	return {
+	// 		success: false,
+	// 	};
+	// };
 }
 
 class HereApi extends TextSearch {
@@ -324,53 +538,83 @@ class HereApi extends TextSearch {
 		super();
 		this.family = "here";
 	}
-	run = async (query) => {
-		const apiCall = {
+
+	convertRequest = (query) => {
+		return {
 			url: "https://discover.search.hereapi.com/v1/discover",
 			method: "GET",
 			params: {
 				apikey: "key:HERE_API_KEY",
-				at: "23.75628863547386,90.38468295345672",
+				at: "23.75628863547386,90.38468295345672", // Choose your location
 				q: query,
 				lang: "en-US",
 				limit: 5,
 			},
 		};
-
-		const epochId = Date.now(); // Unique ID for this tool call
-		const response = await this.post("/map/cached", apiCall);
-
-		if (response.success) {
-			const places = response.data.items.map((place) => ({
-				id: place.id,
-				displayName: {
-					text: place.title,
-				},
-				shortFormattedAddress: place.address.label,
-				location: {
-					latitude: place.position.lat,
-					longitude: place.position.lng,
-				},
-			}));
-			return {
-				success: true,
-				data: {
-					result: { places },
-					apiCallLogs: [
-						{
-							...apiCall,
-							uuid: epochId,
-							result: response.data,
-						},
-					],
-					uuid: epochId,
-				},
-			};
-		}
-		return {
-			success: false,
-		};
 	};
+
+	convertResponse = (data) => {
+		const places = data.items.map((place) => ({
+			id: place.id,
+			displayName: {
+				text: place.title,
+			},
+			shortFormattedAddress: place.address.label,
+			location: {
+				latitude: place.position.lat,
+				longitude: place.position.lng,
+			},
+		}));
+		return { places };
+	};
+
+	// run = async (query) => {
+	// 	const apiCall = {
+	// 		url: "https://discover.search.hereapi.com/v1/discover",
+	// 		method: "GET",
+	// 		params: {
+	// 			apikey: "key:HERE_API_KEY",
+	// 			at: "23.75628863547386,90.38468295345672",
+	// 			q: query,
+	// 			lang: "en-US",
+	// 			limit: 5,
+	// 		},
+	// 	};
+
+	// 	const epochId = Date.now(); // Unique ID for this tool call
+	// 	const response = await this.post("/map/cached", apiCall);
+
+	// 	if (response.success) {
+	// 		const places = response.data.items.map((place) => ({
+	// 			id: place.id,
+	// 			displayName: {
+	// 				text: place.title,
+	// 			},
+	// 			shortFormattedAddress: place.address.label,
+	// 			location: {
+	// 				latitude: place.position.lat,
+	// 				longitude: place.position.lng,
+	// 			},
+	// 		}));
+	// 		return {
+	// 			success: true,
+	// 			data: {
+	// 				result: { places },
+	// 				apiCallLogs: [
+	// 					{
+	// 						...apiCall,
+	// 						uuid: epochId,
+	// 						result: response.data,
+	// 					},
+	// 				],
+	// 				uuid: epochId,
+	// 			},
+	// 		};
+	// 	}
+	// 	return {
+	// 		success: false,
+	// 	};
+	// };
 }
 
 class AzureMapsApi extends TextSearch {
@@ -378,8 +622,9 @@ class AzureMapsApi extends TextSearch {
 		super();
 		this.family = "azureMaps";
 	}
-	run = async (query) => {
-		const apiCall = {
+
+	convertRequest = (query) => {
+		return {
 			url: "https://atlas.microsoft.com/search/fuzzy/json",
 			method: "GET",
 			params: {
@@ -392,54 +637,99 @@ class AzureMapsApi extends TextSearch {
 				"Accept-Language": "en", // Add this header to request response in English
 			},
 		};
-
-		const epochId = Date.now(); // Unique ID for this tool call
-		const response = await this.post("/map/cached", apiCall);
-
-		if (response.success) {
-			const places = response.data.results.map((place) => ({
-				id: place.id,
-				displayName: {
-					text: place.poi.name,
-				},
-				shortFormattedAddress: place.address.freeformAddress,
-				location: {
-					latitude: place.position.lat,
-					longitude: place.position.lon,
-				},
-				internationalPhoneNumber: place.poi.phone,
-				website: place.poi.url,
-				types: place.poi.categories,
-				viewport: {
-					low: {
-						latitude: place.viewport.topLeftPoint.lat,
-						longitude: place.viewport.topLeftPoint.lon,
-					},
-					high: {
-						latitude: place.viewport.btmRightPoint.lat,
-						longitude: place.viewport.btmRightPoint.lon,
-					},
-				},
-			}));
-			return {
-				success: true,
-				data: {
-					result: { places },
-					apiCallLogs: [
-						{
-							...apiCall,
-							uuid: epochId,
-							result: response.data,
-						},
-					],
-					uuid: epochId,
-				},
-			};
-		}
-		return {
-			success: false,
-		};
 	};
+
+	convertResponse = (data) => {
+		const places = data.results.map((place) => ({
+			id: place.id,
+			displayName: {
+				text: place.poi.name,
+			},
+			shortFormattedAddress: place.address.freeformAddress,
+			location: {
+				latitude: place.position.lat,
+				longitude: place.position.lon,
+			},
+			internationalPhoneNumber: place.poi.phone,
+			website: place.poi.url,
+			types: place.poi.categories,
+			viewport: {
+				low: {
+					latitude: place.viewport.topLeftPoint.lat,
+					longitude: place.viewport.topLeftPoint.lon,
+				},
+				high: {
+					latitude: place.viewport.btmRightPoint.lat,
+					longitude: place.viewport.btmRightPoint.lon,
+				},
+			},
+		}));
+
+		return { places };
+	};
+
+	// run = async (query) => {
+	// 	const apiCall = {
+	// 		url: "https://atlas.microsoft.com/search/fuzzy/json",
+	// 		method: "GET",
+	// 		params: {
+	// 			"api-version": "1.0",
+	// 			query: query,
+	// 			"subscription-key": "key:AZURE_MAPS_API_KEY",
+	// 			limit: 5,
+	// 		},
+	// 		headers: {
+	// 			"Accept-Language": "en", // Add this header to request response in English
+	// 		},
+	// 	};
+
+	// 	const epochId = Date.now(); // Unique ID for this tool call
+	// 	const response = await this.post("/map/cached", apiCall);
+
+	// 	if (response.success) {
+	// 		const places = response.data.results.map((place) => ({
+	// 			id: place.id,
+	// 			displayName: {
+	// 				text: place.poi.name,
+	// 			},
+	// 			shortFormattedAddress: place.address.freeformAddress,
+	// 			location: {
+	// 				latitude: place.position.lat,
+	// 				longitude: place.position.lon,
+	// 			},
+	// 			internationalPhoneNumber: place.poi.phone,
+	// 			website: place.poi.url,
+	// 			types: place.poi.categories,
+	// 			viewport: {
+	// 				low: {
+	// 					latitude: place.viewport.topLeftPoint.lat,
+	// 					longitude: place.viewport.topLeftPoint.lon,
+	// 				},
+	// 				high: {
+	// 					latitude: place.viewport.btmRightPoint.lat,
+	// 					longitude: place.viewport.btmRightPoint.lon,
+	// 				},
+	// 			},
+	// 		}));
+	// 		return {
+	// 			success: true,
+	// 			data: {
+	// 				result: { places },
+	// 				apiCallLogs: [
+	// 					{
+	// 						...apiCall,
+	// 						uuid: epochId,
+	// 						result: response.data,
+	// 					},
+	// 				],
+	// 				uuid: epochId,
+	// 			},
+	// 		};
+	// 	}
+	// 	return {
+	// 		success: false,
+	// 	};
+	// };
 }
 
 export const list = {

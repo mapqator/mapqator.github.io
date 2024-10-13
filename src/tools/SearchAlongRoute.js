@@ -32,7 +32,7 @@ class GoogleRoutesApi extends SearchAlongRoute {
 					"routes.distanceMeters,routes.staticDuration,routes.description,routes.localizedValues,routes.optimized_intermediate_waypoint_index,routes.legs.steps.navigationInstruction,routes.legs.steps.transitDetails,routes.legs.localizedValues,routes.legs.steps.travelMode,routes.legs.steps.localizedValues,routes.legs.polyline,routes.polyline",
 				"X-Goog-Api-Key": "key:GOOGLE_MAPS_API_KEY",
 			},
-			body: {
+			data: {
 				origin: {
 					location: {
 						latlng: params.origin.location,
@@ -92,7 +92,7 @@ class GoogleRoutesApi extends SearchAlongRoute {
 				"X-Goog-FieldMask":
 					"places.id,places.displayName,places.rating,places.priceLevel,places.shortFormattedAddress,places.userRatingCount,places.location",
 			},
-			body: {
+			data: {
 				textQuery:
 					params.searchBy === "type" ? params.type : params.keyword,
 				rankPreference: params.rankPreference || "RELEVANCE", // DISTANCE/RELEVANCE/RANK_PREFERENCE_UNSPECIFIED
