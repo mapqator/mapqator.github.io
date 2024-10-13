@@ -358,9 +358,21 @@ export default function GlobalContextProvider({ children }) {
 	}, [mapService]);
 
 	useEffect(() => {
-		setNewNearbyPlaces(initNewNearbyPlaces);
-		setNewDirection(initNewDirection);
-		setNewRoutePlaces(initNewRoutePlaces);
+		setNewNearbyPlaces({
+			...initNewNearbyPlaces,
+			type: "",
+		});
+		setNewDirection({
+			...initNewDirection,
+			travelMode: "",
+			routeModifiers: {},
+		});
+		setNewRoutePlaces({
+			...initNewRoutePlaces,
+			travelMode: "",
+			routeModifiers: {},
+			type: "",
+		});
 	}, [tools]);
 
 	useEffect(() => {
