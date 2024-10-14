@@ -94,6 +94,7 @@ export default function NearbyForm({
 					...place,
 					uuid,
 					mapService: tools.nearbySearch.family,
+					hidden: true,
 				},
 			}));
 		}
@@ -359,7 +360,7 @@ export default function NearbyForm({
 				</Grid>
 			</Box>
 
-		<Box className="w-full md:w-1/2">
+			<Box className="w-full md:w-1/2">
 				<Paper elevation={2}>
 					<Box>
 						<Typography

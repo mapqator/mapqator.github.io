@@ -64,6 +64,7 @@ function SearchPlaceCard({ place, index, length, uuid, onAdd }) {
 									[place.id]: {
 										...details,
 										mapService: tools.textSearch.family,
+										hidden: false,
 									},
 								}));
 								setLoading(false);

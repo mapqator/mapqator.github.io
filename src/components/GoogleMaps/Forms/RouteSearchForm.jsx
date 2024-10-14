@@ -107,6 +107,7 @@ export default function RouteSearchForm({
 					...place,
 					uuid,
 					mapService: tools.searchAlongRoute.family,
+					hidden: true,
 				},
 			}));
 		}

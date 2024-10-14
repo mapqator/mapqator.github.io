@@ -12,7 +12,12 @@ import PlaceDeleteButton from "../Buttons/PlaceDeleteButton";
 import ShareLocationIcon from "@mui/icons-material/ShareLocation";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import { Directions } from "@mui/icons-material";
+import {
+	Directions,
+	RemoveRedEye,
+	Visibility,
+	VisibilityOff,
+} from "@mui/icons-material";
 import { AppContext } from "@/contexts/AppContext";
 import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "@/contexts/GlobalContext";
@@ -34,6 +39,7 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 		setApiCallLogs,
 		tools,
 		setNewPlaceId,
+		setSavedPlacesMap,
 	} = useContext(GlobalContext);
 
 	const [addingPlace, setAddingPlace] = useState(false);
@@ -184,15 +190,37 @@ export default function SavedPlaceCard({ placeId, savedPlacesMap }) {
 				</div>
 				<Divider />
 				<Box className="flex flex-row justify-between items-center">
-					<img
-						src={
-							mapServices[savedPlacesMap[placeId].mapService]
-								.image
-						}
-						alt=""
-						className="h-6"
-					/>
-					<PlaceDeleteButton placeId={placeId} />
+					<div className="flex flex-row gap-2 items-center">
+						<IconButton
+							onClick={() =>
+								setSavedPlacesMap((prev) => ({
+									...prev,
+									[placeId]: {
+										...prev[placeId],
+										hidden: !prev[placeId].hidden,
+									},
+								}))
+							}
+						>
+							{savedPlacesMap[placeId].hidden ? (
+								<VisibilityOff />
+							) : (
+								<Visibility />
+							)}
+						</IconButton>
+					</div>
+
+					<div className="flex flex-row gap-2 items-center">
+						<img
+							src={
+								mapServices[savedPlacesMap[placeId].mapService]
+									.image
+							}
+							alt=""
+							className="h-6"
+						/>
+						<PlaceDeleteButton placeId={placeId} />
+					</div>
 				</Box>
 			</CardContent>
 		</Card>

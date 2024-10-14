@@ -387,7 +387,7 @@ export default function ContextEditor({
 		const list = [];
 		Object.keys(savedPlacesMap).map((place_id) => {
 			const place = savedPlacesMap[place_id];
-			if (!place.location) return;
+			if (!place.location || place.hidden) return;
 			const lat = place.location.latitude;
 			const lng = place.location.longitude;
 			list.push({ lat, lng });
