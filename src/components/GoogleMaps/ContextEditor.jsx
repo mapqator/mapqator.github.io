@@ -13,6 +13,7 @@ import {
 	CardContent,
 	Select,
 	MenuItem,
+	Grid,
 } from "@mui/material";
 import MapIcon from "@mui/icons-material/Map";
 import SearchIcon from "@mui/icons-material/Search";
@@ -33,6 +34,7 @@ import {
 	Send,
 	Settings,
 	ShareLocation,
+	TravelExplore,
 } from "@mui/icons-material";
 
 import DirectionForm from "./Forms/DirectionForm";
@@ -55,6 +57,8 @@ import { list as searchAlongRouteList } from "@/tools/SearchAlongRoute";
 import Image from "next/image";
 import MapServiceSelector from "../MapServiceSelector";
 import { getToolOptions } from "@/services/utils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlassLocation } from "@fortawesome/free-solid-svg-icons";
 
 function ContextStep({
 	step,
@@ -396,25 +400,113 @@ export default function ContextEditor({
 		setLocations(list);
 	}, [savedPlacesMap]);
 
+	const StepIcon = ({ icon }) => (
+		<div className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
+			<icon className="w-6 h-6 text-blue-600" />
+		</div>
+	);
+
+	const Step2 = ({ icon, label, description }) => (
+		<Grid item xs={2.4}>
+			<div className="flex flex-col items-center text-center justify-start h-full">
+				{icon}
+				<h3 className="mt-4 text-lg font-semibold">{label}</h3>
+				<p className="mt-2 text-sm text-gray-600">{description}</p>
+			</div>
+		</Grid>
+	);
+	const GuidelinesSteps = () => {
+		const steps = [
+			{
+				icon: (
+					<TravelExplore
+						sx={{ fontSize: "4rem" }}
+						className="text-blue-600"
+					/>
+				),
+				label: "Text Search",
+				description:
+					"Search for and add key locations to your context.",
+			},
+			{
+				icon: (
+					<AddLocationAlt
+						sx={{ fontSize: "4rem" }}
+						className="text-blue-500"
+					/>
+				),
+				label: "Place Details",
+				description: "Add detailed information about a place.",
+			},
+			{
+				icon: (
+					<ShareLocation
+						sx={{ fontSize: "4rem" }}
+						className="text-blue-500"
+					/>
+				),
+				label: "Nearby Search",
+				description: "Discover nearby places and points of interest.",
+			},
+			{
+				icon: (
+					<DirectionsIcon
+						sx={{ fontSize: "4rem" }}
+						className="text-blue-500"
+					/>
+				),
+				label: "Compute Routes",
+				description: "Find routes between places or multi-stop routes.",
+			},
+			{
+				icon: (
+					<Route
+						sx={{ fontSize: "4rem" }}
+						className="text-blue-500"
+					/>
+				),
+				label: "Search Along Route",
+				description: "Find places along a route.",
+			},
+		];
+
+		return (
+			<div className="rounded-lg">
+				<h2 className="mb-6">
+					{
+						"Welcome to the Context Generator! This tool helps you create rich, place-related contexts using Maps APIs. Here's how it works:"
+					}
+				</h2>
+				<Grid container spacing={2}>
+					{steps.map((step, index) => (
+						<Step2 key={index} {...step} />
+					))}
+				</Grid>
+				<h2 className="mt-6">{"Let's begin!"}</h2>
+			</div>
+		);
+	};
+
 	const steps = [
 		{
 			label: "Guidelines",
-			description: `Welcome to the Context Generator! This tool helps you create rich, place-related contexts using Maps APIs. Here's how it works:
+			// description: `Welcome to the Context Generator! This tool helps you create rich, place-related contexts using Maps APIs. Here's how it works:
 
-    		1. Text Search: Start by searching for and adding key locations to your context.
-			2. Place Details: Add detailed information about a place.
-			3. Nearby Search: Discover nearby places and points of interest around your selected locations.
-			4. Compute Routes: Find routes between places or multi-stop routes.
-			5. Search Along Route: Find places along a route.
+			// 1. Text Search: Start by searching for and adding key locations to your context.
+			// 2. Place Details: Add detailed information about a place.
+			// 3. Nearby Search: Discover nearby places and points of interest around your selected locations.
+			// 4. Compute Routes: Find routes between places or multi-stop routes.
+			// 5. Search Along Route: Find places along a route.
 
-			Let's begin!`,
+			// Let's begin!`,
+			description: <GuidelinesSteps />,
 			icon: <Flag />,
 		},
 		{
 			key: "textSearch",
 			label: "Text Search",
 			description: `Start by searching for a location. Type in a place name or address in the search bar below.`,
-			icon: <SearchIcon />,
+			icon: <TravelExplore />,
 			additional: "Places you have saved.",
 			form: <AutocompleteSearchBox />,
 			grid: Object.keys(savedPlacesMap).length > 0 && (
