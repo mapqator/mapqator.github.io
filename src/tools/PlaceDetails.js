@@ -35,7 +35,7 @@ class PlaceDetails extends Api {
 							{
 								...adaptedRequest,
 								uuid: epochId,
-								result: response.data,
+								// result: response.data,
 							},
 						],
 						uuid: epochId,

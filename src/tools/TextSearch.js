@@ -63,7 +63,7 @@ class TextSearch extends Api {
 						{
 							...adaptedRequest,
 							uuid: epochId,
-							result: response.data,
+							// result: response.data,
 						},
 					],
 					uuid: epochId,
@@ -436,7 +436,7 @@ class MapBoxApi extends TextSearch {
 						{
 							...apiCall,
 							uuid: epochId,
-							result: response.data,
+							// result: response.data,
 						},
 					],
 					uuid: epochId,

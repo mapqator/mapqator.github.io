@@ -72,7 +72,7 @@ class SearchAlongRoute extends Api {
 						{
 							...adaptedRouteRequest,
 							uuid: epochId,
-							result: routeResponse.data,
+							// result: routeResponse.data,
 						},
 					],
 					uuid: epochId,
@@ -106,12 +106,12 @@ class SearchAlongRoute extends Api {
 					{
 						...adaptedRouteRequest,
 						uuid: epochId,
-						result: routeResponse.data,
+						// result: routeResponse.data,
 					},
 					{
 						...adaptedNearbyRequest,
 						uuid: epochId,
-						result: nearbyResponse.data,
+						// result: nearbyResponse.data,
 					},
 				],
 				uuid: epochId,
