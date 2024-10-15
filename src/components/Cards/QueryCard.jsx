@@ -38,7 +38,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 	const [flag, setFlag] = useState(false);
 	const { setQueries } = useContext(AppContext);
 	const { isAuthenticated } = useAuth();
-	const [expanded, setExpanded] = useState(false);
+	const [expanded, setExpanded] = useState(index === 0);
 	const [context, setContext] = useState();
 	const [contextExpanded, setContextExpanded] = useState(false);
 	// const [category, setCategory] = useState(entry.classification);

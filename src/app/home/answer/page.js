@@ -35,7 +35,7 @@ export default function ProvideAnswerPage() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setAnswerStatus("saved");
-		router.push("/home/summary");
+		router.push("/home/review");
 	};
 
 	const handleEditQuestion = () => {

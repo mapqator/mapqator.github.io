@@ -64,10 +64,11 @@ export default function QuestionCreationPage() {
 
 	const handleNext = () => {
 		const params = searchParams.toString();
+		setQueryStatus("saved");
 		if (params) {
-			router.push(`/home/summary?${params}`);
+			router.push(`/home/review?${params}`);
 		} else {
-			router.push("/home/summary");
+			router.push("/home/review");
 		}
 	};
 
@@ -101,7 +102,7 @@ export default function QuestionCreationPage() {
 			// context_json: prev.context_json,
 		});
 		setQueryStatus("empty");
-		router.push("/home");
+		// router.push("/home");
 	};
 
 	const [contextExpanded, setContextExpanded] = useState(false);
@@ -243,7 +244,6 @@ export default function QuestionCreationPage() {
 						<Button
 							onClick={() => {
 								handleReset();
-								window.scrollTo(0, 0);
 							}}
 							startIcon={<Clear />}
 							color="error"

@@ -190,10 +190,11 @@ export default function Summary() {
 					...prev,
 					id: res.data[0].id,
 				}));
-				params.set("id", res.data[0].id);
-				router.push(`?${params.toString()}`);
+				handleReset();
+				// params.set("id", res.data[0].id);
+				// router.push(`?${params.toString()}`);
 				// handleDiscard();
-				// router.push("/home/my-dataset");
+				router.push("/home/my-dataset");
 			} else {
 				showError("Can't save this query");
 				// window.scrollTo(0, 0);
@@ -204,17 +205,18 @@ export default function Summary() {
 				setQueries((prev) =>
 					prev.map((q) => (q.id === res.data[0].id ? res.data[0] : q))
 				);
+				handleReset();
 				// update the queries
 				showSuccess("Query edited successfully");
 				// handleDiscard();
-				// router.push("/home/my-dataset");
+				router.push("/home/my-dataset");
 			} else {
 				showError("Can't update this query");
 				// window.scrollTo(0, 0);
 			}
 		}
 		// handleSubmit();
-		setQueryStatus("saved");
+		// setQueryStatus("saved");
 		// window.scrollTo(0, document.body.scrollHeight);
 	};
 
@@ -253,6 +255,9 @@ export default function Summary() {
 		setRoutePlacesMap(initRoutePlacesMap);
 		setSelectedPlacesMap(initSelectedPlacesMap);
 		setSavedPlacesMap({});
+		setQuery({
+			questions: [initQuery],
+		});
 		setActiveStep(1);
 		setContext([]);
 	};

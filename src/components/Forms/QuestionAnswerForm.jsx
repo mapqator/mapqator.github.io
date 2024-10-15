@@ -60,7 +60,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 	const [expanded, setExpanded] = useState(true);
 
 	const handleNext = () => {
-		router.push("/home/summary");
+		router.push("/home/review");
 	};
 
 	const handlePrevious = () => {

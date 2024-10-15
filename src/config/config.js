@@ -6,7 +6,7 @@ const config = {
 		: "https://mahirlabibdihan.github.io/mapqator",
 	drawerWidth: 230,
 	topbarHeight: 64,
-	loginRedirect: "/home/context",
+	loginRedirect: "/home",
 	logoutRedirect: "/login",
 };
 

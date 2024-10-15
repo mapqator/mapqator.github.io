@@ -14,6 +14,7 @@ import {
 	Select,
 	MenuItem,
 	Grid,
+	IconButton,
 } from "@mui/material";
 import MapIcon from "@mui/icons-material/Map";
 import SearchIcon from "@mui/icons-material/Search";
@@ -408,10 +409,16 @@ export default function ContextEditor({
 		</div>
 	);
 
-	const Step2 = ({ icon, label, description }) => (
+	const Step2 = ({ icon, label, description, index }) => (
 		<Grid item xs={2.4}>
 			<div className="flex flex-col items-center text-center justify-start h-full">
-				{icon}
+				<IconButton
+					onClick={() => {
+						setActiveStep(index + 1);
+					}}
+				>
+					{icon}
+				</IconButton>
 				<h3 className="mt-4 text-lg font-semibold">{label}</h3>
 				<p className="mt-2 text-sm text-gray-600">{description}</p>
 			</div>
@@ -423,7 +430,7 @@ export default function ContextEditor({
 				icon: (
 					<TravelExplore
 						sx={{ fontSize: "4rem" }}
-						className="text-blue-600"
+						className="text-blue-500"
 					/>
 				),
 				label: "Text Search",
@@ -481,7 +488,7 @@ export default function ContextEditor({
 				</h2>
 				<Grid container spacing={2}>
 					{steps.map((step, index) => (
-						<Step2 key={index} {...step} />
+						<Step2 key={index} {...step} index={index} />
 					))}
 				</Grid>
 				<h2 className="mt-6">{"Let's begin!"}</h2>
