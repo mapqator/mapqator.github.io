@@ -1,11 +1,19 @@
 import React, { useContext, useState } from "react";
-import { Box, Button, Divider, IconButton, Paper } from "@mui/material";
+import {
+	Box,
+	Button,
+	Divider,
+	IconButton,
+	Paper,
+	Typography,
+} from "@mui/material";
 import {
 	Add,
 	ArrowBack,
 	ArrowForward,
 	Clear,
 	Delete,
+	ExpandMore,
 	KeyboardDoubleArrowRight,
 	Save,
 	Send,
@@ -49,6 +57,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 	const { queries, setQueries } = useContext(AppContext);
 	const [loading, setLoading] = useState(false);
 	const { isAuthenticated } = useAuth();
+	const [expanded, setExpanded] = useState(true);
 
 	const handleNext = () => {
 		router.push("/home/summary");
@@ -140,22 +149,44 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 					key={index}
 					className="w-full flex flex-col gap-4"
 				>
-					<QuestionEditor index={index} />
-					<CategorySelectionField index={index} />
-					<Divider />
-					{/* <OptionsEditor index={index} /> */}
-					<CorrectAnswerEditor index={index} />
-					<ReferenceSelectionField
-						{...{
-							index,
-							apiCallLogs,
-							savedPlacesMap,
-							selectedPlacesMap,
-							nearbyPlacesMap,
-							directionInformation,
-							routePlacesMap,
-						}}
-					/>
+					<div className="flex flex-row justify-between items-center">
+						<Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+							Question {index + 1}:
+						</Typography>
+						<IconButton
+							sx={{
+								transform: expanded
+									? "rotate(180deg)"
+									: "rotate(0deg)",
+								transition: "0.3s",
+							}}
+							onClick={() => setExpanded((prev) => !prev)}
+						>
+							<ExpandMore />
+						</IconButton>
+					</div>
+
+					{expanded && (
+						<>
+							<QuestionEditor index={index} />
+							<CategorySelectionField index={index} />
+							<Divider />
+							{/* <OptionsEditor index={index} /> */}
+							<CorrectAnswerEditor index={index} />
+							<ReferenceSelectionField
+								{...{
+									index,
+									apiCallLogs,
+									savedPlacesMap,
+									selectedPlacesMap,
+									nearbyPlacesMap,
+									directionInformation,
+									routePlacesMap,
+								}}
+							/>
+						</>
+					)}
+
 					<Box className="flex flex-row justify-end">
 						<IconButton
 							onClick={() =>

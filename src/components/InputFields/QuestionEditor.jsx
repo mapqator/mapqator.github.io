@@ -181,9 +181,9 @@ export default function QuestionEditor({ index }) {
 
 	return (
 		<FormControl fullWidth>
-			<Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+			{/* <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
 				Question {index + 1}:
-			</Typography>
+			</Typography> */}
 			<div style={{ position: "relative" }}>
 				<TextField
 					fullWidth
