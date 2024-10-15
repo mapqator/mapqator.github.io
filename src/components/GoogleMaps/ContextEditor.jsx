@@ -513,7 +513,7 @@ export default function ContextEditor({
 			form: <AutocompleteSearchBox />,
 			grid: Object.keys(savedPlacesMap).length > 0 && (
 				<>
-					<MapComponent locations={locations} zoom={18} />
+					{/* <MapComponent locations={locations} zoom={18} /> */}
 					<SavedPlacesGrid
 						{...{
 							selectedPlacesMap,

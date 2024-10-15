@@ -8,10 +8,11 @@ import {
 	ListItemText,
 	ListItem,
 	Box,
+	IconButton,
 } from "@mui/material";
 import _ from "lodash";
 
-import { Add, Clear, Search } from "@mui/icons-material";
+import { Add, Clear, MyLocation, Search } from "@mui/icons-material";
 import Fuse from "fuse.js";
 import { useCallback } from "react";
 import { CircularProgress, InputAdornment } from "@mui/material";
@@ -21,8 +22,17 @@ import PlaceAddButton from "../Buttons/PlaceAddButton";
 import { useAuth } from "@/contexts/AuthContext";
 import { LoadingButton } from "@mui/lab";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import SearchComponent from "../Embed/SearchComponent";
 
-function SearchPlaceCard({ place, index, length, uuid, onAdd }) {
+function SearchPlaceCard({
+	place,
+	index,
+	length,
+	uuid,
+	onAdd,
+	hoveredPlace,
+	setHoveredPlace,
+}) {
 	// Issue: Name overlaps with Add button
 	const {
 		savedPlacesMap,
@@ -32,15 +42,54 @@ function SearchPlaceCard({ place, index, length, uuid, onAdd }) {
 		setApiCallLogs,
 	} = useContext(GlobalContext);
 	const [loading, setLoading] = useState(false);
+	const [isHovered, setIsHovered] = useState(false);
+
+	const handleMouseEnter = () => {
+		setIsHovered(true);
+		setHoveredPlace(place);
+		console.log("Hovered into:", place.displayName?.text, place.id);
+	};
+
+	const handleMouseLeave = () => {
+		setIsHovered(false);
+		setHoveredPlace((prev) => (prev?.id === place.id ? null : prev));
+		console.log("Hovered out of:", place.displayName?.text);
+	};
 	return (
 		<React.Fragment key={index}>
-			<Box className="flex gap-1 justify-between w-full items-center px-2">
-				<ListItemText
-					primary={place.displayName?.text}
-					secondary={place.shortFormattedAddress}
-				/>
-				<Box className="ml-auto">
+			<Box
+				// handleMouseEnter={handleMouseEnter}
+				// handleMouseLeave={handleMouseLeave}
+				className="flex gap-1 justify-between w-full items-center px-2"
+			>
+				<Box className="w-[70%]">
+					<ListItemText
+						primary={place.displayName?.text}
+						secondary={place.shortFormattedAddress}
+					/>
+				</Box>
+
+				<Box className="ml-auto w-[30%] flex flex-row items-center">
 					{/* <PlaceAddButton place_id={place.id} /> */}
+					<div>
+						<IconButton
+							size="small"
+							onClick={() =>
+								setHoveredPlace((prev) =>
+									prev?.id === place.id ? null : place
+								)
+							}
+						>
+							<MyLocation
+								className={
+									hoveredPlace?.id === place.id
+										? "text-blue-500"
+										: ""
+								}
+							/>
+						</IconButton>
+					</div>
+
 					<LoadingButton
 						startIcon={<Add />}
 						onClick={async () => {
@@ -74,9 +123,13 @@ function SearchPlaceCard({ place, index, length, uuid, onAdd }) {
 								setLoading(false);
 								return;
 							}
+							setHoveredPlace((prev) =>
+								prev?.id === place.id ? null : prev
+							);
 						}}
 						disabled={savedPlacesMap[place.id]}
 						loading={loading}
+						// variant="outlined"
 					>
 						Add
 					</LoadingButton>
@@ -93,6 +146,7 @@ export default function AutocompleteSearchBox() {
 	const [loading, setLoading] = useState(false);
 	const [notFound, setNotFound] = useState(false);
 	const [apiCalls, setApiCalls] = useState([]);
+	const [hoveredPlaceId, setHoveredPlaceId] = useState(null);
 	const { isAuthenticated } = useAuth();
 	const { apiCallLogs, setApiCallLogs, savedPlacesMap, tools } =
 		useContext(GlobalContext);
@@ -186,39 +240,40 @@ export default function AutocompleteSearchBox() {
 	};
 
 	return tools.textSearch ? (
-		<div className="flex flex-col gap-4 mx-auto w-full md:w-[30rem]">
-			<TextField
-				autoComplete="off"
-				fullWidth
-				onKeyPress={handleKeyPress}
-				variant="outlined"
-				placeholder="Search for a place"
-				value={search}
-				onChange={(e) => setSearch(e.target.value)}
-				InputProps={{
-					startAdornment: (
-						<InputAdornment position="start">
-							<Search />
-						</InputAdornment>
-					),
-					endAdornment: (
-						<InputAdornment position="end">
-							{loading ? (
-								<CircularProgress size={20} />
-							) : (
-								search && (
-									<Clear
-										className="cursor-pointer"
-										onClick={() => setSearch("")}
-									/>
-								)
-							)}
-						</InputAdornment>
-					),
-				}}
-			/>
+		<div className="flex flex-col md:flex-row gap-4">
+			<div className="flex flex-col gap-4 mx-auto w-full md:w-1/2">
+				<TextField
+					autoComplete="off"
+					fullWidth
+					onKeyPress={handleKeyPress}
+					variant="outlined"
+					placeholder="Search for a place"
+					value={search}
+					onChange={(e) => setSearch(e.target.value)}
+					InputProps={{
+						startAdornment: (
+							<InputAdornment position="start">
+								<Search />
+							</InputAdornment>
+						),
+						endAdornment: (
+							<InputAdornment position="end">
+								{loading ? (
+									<CircularProgress size={20} />
+								) : (
+									search && (
+										<Clear
+											className="cursor-pointer"
+											onClick={() => setSearch("")}
+										/>
+									)
+								)}
+							</InputAdornment>
+						),
+					}}
+				/>
 
-			{/* {recentSearches.length > 0 && (
+				{/* {recentSearches.length > 0 && (
 				<div className="flex flex-wrap gap-2">
 					{recentSearches.map((recentSearch, index) => (
 						<Chip
@@ -235,46 +290,50 @@ export default function AutocompleteSearchBox() {
 				</div>
 			)} */}
 
-			<div
-				className={`border rounded-md overflow-hidden ${
-					mapResults.length > 0 || search
-						? ""
-						: search
-						? "invisible"
-						: "hidden"
-				}`}
-			>
-				{mapResults.length > 0 ? (
-					<ul className="max-h-72 overflow-y-auto">
-						{mapResults.map((place, index) => (
-							<SearchPlaceCard
-								uuid={uuid}
-								place={place}
-								index={index}
-								length={results.length}
-								key={index}
-								onAdd={(retreiveApis) => {
-									setApiCallLogs((prev) => [
-										...prev,
-										...apiCalls,
-										...retreiveApis,
-									]);
-								}}
-							/>
-						))}
-					</ul>
-				) : (
-					<div className="h-60 flex items-center justify-center">
-						<p className="text-lg md:text-xl text-gray-400">
-							{notFound
-								? "No places found"
-								: "Press enter to search"}
-						</p>
-					</div>
-				)}
-			</div>
+				<div
+					className={`border rounded-md overflow-hidden ${
+						mapResults.length > 0 || search
+							? ""
+							: search
+							? "invisible"
+							: "hidden"
+					}`}
+				>
+					{mapResults.length > 0 ? (
+						<ul className="max-h-72 overflow-y-auto">
+							{mapResults.map((place, index) => (
+								<SearchPlaceCard
+									uuid={uuid}
+									place={place}
+									index={index}
+									length={results.length}
+									key={index}
+									onAdd={(retreiveApis) => {
+										setApiCallLogs((prev) => [
+											...prev,
+											...apiCalls,
+											...retreiveApis,
+										]);
+									}}
+									setHoveredPlace={(placeId) =>
+										setHoveredPlaceId(placeId)
+									}
+									hoveredPlace={hoveredPlaceId}
+								/>
+							))}
+						</ul>
+					) : (
+						<div className="h-72 flex items-center justify-center">
+							<p className="text-lg md:text-xl text-gray-400">
+								{notFound
+									? "No places found"
+									: "Press enter to search"}
+							</p>
+						</div>
+					)}
+				</div>
 
-			{/* <div className="grid grid-cols-1 gap-4">
+				{/* <div className="grid grid-cols-1 gap-4">
 				<div
 					className={`border rounded-lg overflow-hidden ${
 						search ? "" : "hidden"
@@ -335,6 +394,15 @@ export default function AutocompleteSearchBox() {
 					)}
 				</div>
 			</div> */}
+			</div>
+			<div className="w-full md:w-1/2">
+				<SearchComponent
+					savedPlacesMap={savedPlacesMap}
+					height={"360px"}
+					zoom={18}
+					place={hoveredPlaceId ? hoveredPlaceId : null}
+				/>
+			</div>
 		</div>
 	) : (
 		<p className="text-center">No API Available</p>
