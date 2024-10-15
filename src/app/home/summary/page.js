@@ -39,7 +39,7 @@ import geminiApi from "@/api/geminiApi";
 import LockIcon from "@mui/icons-material/Lock";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { ArrowBack, ExpandMore } from "@mui/icons-material";
+import { ArrowBack, ArrowForward, ExpandMore } from "@mui/icons-material";
 import OptionsPreview from "@/components/Lists/OptionsPreview";
 import SaveQuery from "@/components/SaveQuery";
 import LoginPrompt from "@/components/LoginPrompts";
@@ -138,15 +138,6 @@ export default function Summary() {
 	};
 	const searchParams = useSearchParams();
 
-	const handleReset = () => {
-		setQuery((prev) => ({
-			...initQuery,
-			context: prev.context,
-			context_json: prev.context_json,
-		}));
-		setLlmResults({});
-	};
-
 	const handleContextEdit = () => {
 		const params = searchParams.toString();
 		if (params) {
@@ -183,6 +174,8 @@ export default function Summary() {
 			api_call_logs: apiCallLogs,
 		};
 
+		const params = new URLSearchParams(searchParams.toString());
+
 		if (query.id === undefined) {
 			const res = await queryApi.createNewQuery(newQuery);
 			if (res.success) {
@@ -196,6 +189,8 @@ export default function Summary() {
 					...prev,
 					id: res.data[0].id,
 				}));
+				params.set("id", res.data[0].id);
+				router.push(`?${params.toString()}`);
 				// handleDiscard();
 				// router.push("/home/my-dataset");
 			} else {
@@ -219,7 +214,7 @@ export default function Summary() {
 		}
 		// handleSubmit();
 		setQueryStatus("saved");
-		window.scrollTo(0, document.body.scrollHeight);
+		// window.scrollTo(0, document.body.scrollHeight);
 	};
 
 	const handleDiscard = () => {
@@ -231,6 +226,39 @@ export default function Summary() {
 	const [open, setOpen] = useState(false);
 	const handleEditQuestion = () => {
 		router.push("/home/question");
+	};
+
+	const {
+		initRoutePlacesMap,
+		initSelectedPlacesMap,
+		initNearbyPlacesMap,
+		initPoisMap,
+		initDistanceMatrix,
+		initDirectionInformation,
+		initCurrentInformation,
+
+		setRoutePlacesMap,
+		setSelectedPlacesMap,
+		setNearbyPlacesMap,
+		setDirectionInformation,
+		setSavedPlacesMap,
+		setActiveStep,
+		setContext,
+	} = useContext(GlobalContext);
+
+	const handleReset = () => {
+		setNearbyPlacesMap(initNearbyPlacesMap);
+		setDirectionInformation(initDirectionInformation);
+		setRoutePlacesMap(initRoutePlacesMap);
+		setSelectedPlacesMap(initSelectedPlacesMap);
+		setSavedPlacesMap({});
+		setActiveStep(1);
+		setContext([]);
+	};
+
+	const handleNext = () => {
+		handleReset();
+		router.push("/home/context");
 	};
 
 	return (
@@ -418,7 +446,16 @@ export default function Summary() {
 							Prev
 						</Button>
 					</div>
-					<div></div>
+					<div>
+						<Button
+							onClick={handleNext}
+							endIcon={<ArrowForward />}
+							color="primary"
+							variant="contained"
+						>
+							Start New
+						</Button>
+					</div>
 				</Box>
 			</Box>
 		</Container>
