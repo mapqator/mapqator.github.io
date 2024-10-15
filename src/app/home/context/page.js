@@ -8,7 +8,7 @@ import example from "@/database/newexample.json";
 import mapApi from "@/api/mapApi";
 import dayjs from "dayjs";
 import KeyStoreButton from "@/components/Buttons/KeyStoreButton";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import ContextEditor from "@/components/GoogleMaps/ContextEditor";
 export default function ContextGenerator() {
 	const {
@@ -38,6 +38,8 @@ export default function ContextGenerator() {
 		const page = window.location.hash.substring(1);
 		setActiveStep(page === "edit" ? 1 : 0);
 	}, []);
+
+	const searchParams = useSearchParams();
 	// useEffect(() => {
 	// 	if (queryStatus === "empty") {
 	// 		router.push("/home");
@@ -78,7 +80,14 @@ export default function ContextGenerator() {
 	// };
 	const onFinish = () => {
 		setContextStatus("saved");
-		router.push("/home/question");
+
+		const params = searchParams.toString();
+
+		if (params) {
+			router.push(`/home/question?${params}`);
+		} else {
+			router.push("/home/question");
+		}
 	};
 
 	const handleSave = async (place_id) => {
@@ -173,8 +182,8 @@ export default function ContextGenerator() {
 
 	return (
 		<Container maxWidth="md">
-			<Box sx={{ mt: 4, mb: 4 }}>
-				<h1 className="text-3xl md:text-4xl font-normal pb-5">
+			<Box sx={{ mt: 4, mb: 4 }} className="flex flex-col gap-6">
+				<h1 className="text-3xl md:text-4xl font-normal pb-2">
 					Create Geo-Spatial Context Using Map Services
 				</h1>
 				<ContextEditor

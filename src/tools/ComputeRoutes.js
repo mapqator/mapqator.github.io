@@ -20,6 +20,7 @@ import OSMTravelSelectionField, {
 } from "@/mapServices/OpenStreetMap/TravelSelectionField";
 import OSMAvoidSelectionField from "@/mapServices/OpenStreetMap/AvoidSelectionField";
 
+// ComputeRoutes(origin, destination, travelMode, routeModifiers, computeAlternativeRoutes, intermediates, optimizeWaypointOrder)
 class ComputeRoutes extends Api {
 	constructor() {
 		if (new.target === ComputeRoutes) {

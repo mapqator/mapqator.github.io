@@ -2,11 +2,18 @@ import Pluralize from "pluralize";
 import { convertFromSnake } from "./utils";
 import textualFields from "@/database/textualFields.json";
 import { template } from "@/database/templates.js";
+
 const priceMap = {
 	PRICE_LEVEL_INEXPENSIVE: "Inexpensive",
 	PRICE_LEVEL_MODERATE: "Moderate",
 	PRICE_LEVEL_EXPENSIVE: "Expensive",
 	PRICE_LEVEL_VERY_EXPENSIVE: "Very Expensive",
+};
+const travelMap = {
+	DRIVE: "Driving",
+	WALK: "Walking",
+	BICYCLE: "Bicycling",
+	TWO_WHEELER: "Two Wheeler",
 };
 
 const placeToContext = (place_id, selectedPlacesMap, savedPlacesMap) => {
@@ -546,6 +553,147 @@ const ContextGeneratorService = {
 		// 		? (text !== "" ? "\n" : "") + context.params
 		// 		: "";
 		return text;
+	},
+
+	summarizeContext: (
+		savedPlacesMap,
+		selectedPlacesMap,
+		nearbyPlacesMap,
+		directionInformation,
+		routePlacesMap
+	) => {
+		const references = [];
+
+		// selectedPlacesMap
+		Object.keys(selectedPlacesMap).map((placeId) => {
+			const text = `Detailed information of ${savedPlacesMap[placeId].displayName.text}`;
+			references.push({
+				value: selectedPlacesMap[placeId].uuid,
+				label: text,
+			});
+		});
+
+		// nearbyPlacesMap
+		nearbyPlacesMap.map((e) => {
+			const text = `Nearby ${Pluralize(convertFromSnake(e.type))} of ${
+				savedPlacesMap[e.locationBias].displayName.text
+			}${
+				e.minRating > 0
+					? " with a minimum rating of " + e.minRating
+					: ""
+			}${
+				e.priceLevels.length > 0
+					? (e.minRating > 0 ? " and " : " ") +
+					  "price levels " +
+					  e.priceLevels.map((p) => priceMap[p]).join(" or ")
+					: ""
+			}${e.rankPreference === "DISTANCE" ? " (Rank by Distance)" : ""}`;
+
+			references.push({
+				value: e.uuid,
+				label: text,
+			});
+		});
+
+		// directionInformation
+		directionInformation.map((e) => {
+			let text = "";
+			if (e.optimizeWaypointOrder) {
+				text = `Optimized `;
+			} else {
+				text = ``;
+			}
+
+			text += `${travelMap[e.travelMode]} route from ${
+				savedPlacesMap[e.origin].displayName.text
+			} to ${savedPlacesMap[e.destination].displayName.text}`;
+
+			if (e.intermediates.length > 0) {
+				text += ` via ${e.intermediates
+					.map(
+						(intermediate) =>
+							savedPlacesMap[intermediate].displayName.text
+					)
+					.join(", ")}`;
+			}
+
+			if (
+				e.routeModifiers.avoidTolls ||
+				e.routeModifiers.avoidHighways ||
+				e.routeModifiers.avoidFerries ||
+				e.routeModifiers.avoidIndoor
+			) {
+				text += ` (Avoiding `;
+				if (e.routeModifiers.avoidTolls) {
+					text += `tolls`;
+				}
+				if (e.routeModifiers.avoidHighways) {
+					text += `highways`;
+				}
+				if (e.routeModifiers.avoidFerries) {
+					text += `ferries`;
+				}
+				if (e.routeModifiers.avoidIndoor) {
+					text += `indoor`;
+				}
+				text += `)`;
+			}
+
+			references.push({
+				value: e.uuid,
+				label: text,
+			});
+		});
+
+		// routePlacesMap
+		routePlacesMap.map((e) => {
+			let text = `${Pluralize(convertFromSnake(e.type))} along the ${
+				travelMap[e.travelMode]
+			} route from ${savedPlacesMap[e.origin].displayName.text} to ${
+				savedPlacesMap[e.destination].displayName.text
+			}`;
+
+			if (
+				e.routeModifiers.avoidTolls ||
+				e.routeModifiers.avoidHighways ||
+				e.routeModifiers.avoidFerries ||
+				e.routeModifiers.avoidIndoor
+			) {
+				text += ` (Avoiding `;
+				if (e.routeModifiers.avoidTolls) {
+					text += `tolls`;
+				}
+				if (e.routeModifiers.avoidHighways) {
+					text += `highways`;
+				}
+				if (e.routeModifiers.avoidFerries) {
+					text += `ferries`;
+				}
+				if (e.routeModifiers.avoidIndoor) {
+					text += `indoor`;
+				}
+				text += `)`;
+			}
+
+			text += `${
+				e.minRating > 0
+					? " with a minimum rating of " + e.minRating
+					: ""
+			}${
+				e.priceLevels.length > 0
+					? (e.minRating > 0 ? " and " : " ") +
+					  "price levels " +
+					  e.priceLevels.map((p) => priceMap[p]).join(" or ")
+					: ""
+			}${e.rankPreference === "DISTANCE" ? " (Rank by Distance)" : ""}`;
+
+			references.push({
+				value: e.uuid,
+				label: text,
+			});
+		});
+
+		return references;
 	},
 };
 

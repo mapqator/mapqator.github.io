@@ -22,6 +22,7 @@ import PlaceIcon from "@mui/icons-material/Place";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import {
 	AddLocationAlt,
+	ArrowForward,
 	Clear,
 	Flag,
 	KeyboardArrowRight,
@@ -659,8 +660,16 @@ export default function ContextEditor({
 					</Button>
 				</Paper>
 			)}
-			<Divider sx={{ my: 1 }} />
-			<div className="flex">
+			<Divider />
+			<div className="flex ml-auto w-full justify-end gap-4">
+				<Button
+					onClick={handleReset}
+					// sx={{ mt: 1, mr: 1 }}
+					color="error"
+					startIcon={<Clear />}
+				>
+					Clear
+				</Button>
 				<Button
 					onClick={() => {
 						// if (
@@ -681,18 +690,10 @@ export default function ContextEditor({
 						}
 					}}
 					variant="contained"
-					sx={{ mt: 1, mr: 1 }}
-					endIcon={<Send />}
+					// sx={{ mt: 1, mr: 1 }}
+					endIcon={<ArrowForward />}
 				>
-					Submit {query.id === undefined ? "" : "#" + query.id}
-				</Button>
-				<Button
-					onClick={handleReset}
-					sx={{ mt: 1, mr: 1 }}
-					color="error"
-					startIcon={<Clear />}
-				>
-					Clear
+					Next {query.id === undefined ? "" : "#" + query.id}
 				</Button>
 			</div>
 		</>

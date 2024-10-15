@@ -1,6 +1,8 @@
 import Api from "@/api/base";
 import { head } from "lodash";
 import config from "@/config/config";
+
+// TextSearch(query)
 class TextSearch extends Api {
 	constructor() {
 		if (new.target === TextSearch) {

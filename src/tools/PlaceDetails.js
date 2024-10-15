@@ -1,5 +1,7 @@
 import Api from "@/api/base";
 import config from "@/config/config";
+
+// PlaceDetails(place: Places from TextSearch or NearbySearch or SearchAlongRoute)
 class PlaceDetails extends Api {
 	constructor() {
 		if (new.target === PlaceDetails) {

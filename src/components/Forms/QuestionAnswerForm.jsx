@@ -2,6 +2,8 @@ import React, { useContext, useState } from "react";
 import { Box, Button, Divider, IconButton, Paper } from "@mui/material";
 import {
 	Add,
+	ArrowBack,
+	ArrowForward,
 	Clear,
 	Delete,
 	KeyboardDoubleArrowRight,
@@ -47,6 +49,14 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 	const { queries, setQueries } = useContext(AppContext);
 	const [loading, setLoading] = useState(false);
 	const { isAuthenticated } = useAuth();
+
+	const handleNext = () => {
+		router.push("/home/summary");
+	};
+
+	const handlePrevious = () => {
+		router.push("/home/context");
+	};
 
 	const handleSave = async (queryName) => {
 		const newQuery = {
@@ -119,16 +129,14 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 	return (
 		<Box
 			// onSubmit={async (e) => {
-			// 	setLoading(true);
-			// 	await handleSubmit(e);
-			// 	setLoading(false);
+
 			// }}
-			className="flex flex-col items-center"
+			className="flex flex-col items-center gap-6"
 		>
 			{query.questions.map((question, index) => (
 				<Paper
 					elevation={2}
-					sx={{ p: 3, mb: 4 }}
+					sx={{ p: 3 }}
 					key={index}
 					className="w-full flex flex-col gap-4"
 				>
@@ -173,9 +181,6 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 				variant="contained"
 				color="primary"
 				startIcon={<Add />}
-				sx={{
-					mb: 4,
-				}}
 				onClick={() => {
 					setQuery((prev) => ({
 						...prev,
@@ -187,30 +192,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 				Add question
 			</Button>
 
-			{/* <Box className="flex flex-row gap-4 w-full">
-				<LoadingButton
-					type="submit"
-					variant="contained"
-					color="primary"
-					endIcon={<Send />}
-					loading={loading}
-					loadingPosition="start"
-				>
-					{query.id === undefined ? "Submit" : "Submit #" + query.id}
-				</LoadingButton>
-				<Button
-					onClick={() => {
-						handleReset();
-						window.scrollTo(0, 0);
-					}}
-					startIcon={<Clear />}
-					color="error"
-				>
-					Clear
-				</Button>
-			</Box> */}
-
-			{isAuthenticated ? (
+			{/* {isAuthenticated ? (
 				<SaveQuery
 					query={query}
 					onSave={handleSave}
@@ -218,7 +200,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 				/>
 			) : (
 				<LoginPrompt onLogin={handleLogin} />
-			)}
+			)} */}
 		</Box>
 	);
 }

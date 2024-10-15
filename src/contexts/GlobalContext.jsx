@@ -5,14 +5,21 @@ import { AppContext } from "./AppContext";
 import ContextGeneratorService from "@/services/contextGeneratorService";
 import mapsApi from "@/api/googleMapsApi";
 export const GlobalContext = createContext();
-
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { list as textSearchList } from "@/tools/TextSearch";
 import { list as placeDetailsList } from "@/tools/PlaceDetails";
 import { list as nearbySearchList } from "@/tools/NearbySearch";
 import { list as computeRoutesList } from "@/tools/ComputeRoutes";
 import { list as searchAlongRouteList } from "@/tools/SearchAlongRoute";
+import queryApi from "@/api/queryApi";
+import { useAuth } from "./AuthContext";
 
 export default function GlobalContextProvider({ children }) {
+	const { isAuthenticated } = useAuth();
+	const router = useRouter();
+	const searchParams = useSearchParams(); // Get the search parameters
+	const id = searchParams.get("id");
 	const exampleDistanceMatrix = {
 		1: {
 			2: {
@@ -325,6 +332,7 @@ export default function GlobalContextProvider({ children }) {
 		computeRoutes: null,
 		searchAlongRoute: null,
 	});
+
 	useEffect(() => {
 		console.log("mapService", mapService);
 		if (mapService === "all") {
@@ -432,6 +440,24 @@ export default function GlobalContextProvider({ children }) {
 			setLlmResults({});
 		}
 	}, [query.answer]);
+
+	const fetchQuery = async (id) => {
+		const res = await queryApi.getNewQuery(id);
+		if (res.success) {
+			const query = res.data[0];
+			setSavedPlacesMap(query.context_json.places ?? {});
+			setSelectedPlacesMap(query.context_json.place_details ?? {});
+			setNearbyPlacesMap(query.context_json.nearby_places ?? []);
+			setApiCallLogs(query.api_call_logs ?? []);
+			setRoutePlacesMap(query.context_json.route_places ?? []);
+			setQuery(query);
+		}
+	};
+	useEffect(() => {
+		if (id && query.id !== id && isAuthenticated) {
+			fetchQuery(id);
+		}
+	}, [id]); // 'id' is the dependency
 
 	return (
 		<GlobalContext.Provider

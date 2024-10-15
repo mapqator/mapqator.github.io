@@ -23,6 +23,7 @@ import CategorySelectionField, {
 	formatCategory,
 } from "@/mapServices/TomTom/CategorySelectionField";
 
+// SearchAlongRoute(origin, destination, travelMode, routeModifiers, type, rankPreference, minRating, priceLevels, maxResultCount)
 class SearchAlongRoute extends Api {
 	constructor() {
 		if (new.target === SearchAlongRoute) {

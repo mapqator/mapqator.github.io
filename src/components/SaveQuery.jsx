@@ -19,7 +19,7 @@ const SaveQuery = ({ query, onSave, onDiscard }) => {
 
 	return (
 		<form
-			className="mt-4 p-4 bg-blue-50 rounded-lg w-full"
+			className="p-4 bg-blue-50 rounded-lg w-full"
 			onSubmit={handleSave}
 		>
 			<Typography variant="h6" gutterBottom>

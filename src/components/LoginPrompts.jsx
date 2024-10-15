@@ -45,7 +45,7 @@ const LoginPrompt = ({ onLogin }) => {
 	};
 
 	return (
-		<Box className="mt-4 p-4 bg-gray-100 rounded-lg text-center w-full flex flex-col items-center gap-2">
+		<Box className="p-4 bg-gray-100 rounded-lg text-center w-full flex flex-col items-center gap-2">
 			<LockIcon className="text-gray-500" fontSize="large" />
 			<Box>
 				<Typography variant="h6" gutterBottom>

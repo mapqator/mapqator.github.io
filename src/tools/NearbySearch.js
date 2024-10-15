@@ -8,6 +8,7 @@ import CategorySelectionField, {
 	formatCategory,
 } from "@/mapServices/TomTom/CategorySelectionField";
 
+// NearbySearch(lat, lng, type, minRating, priceLevels, rankPreference, maxResultCount)
 class NearbySearch extends Api {
 	constructor() {
 		if (new.target === NearbySearch) {

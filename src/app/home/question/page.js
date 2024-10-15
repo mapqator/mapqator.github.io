@@ -20,9 +20,15 @@ import QuestionsContainer from "@/components/Containers/QuestionsContainer";
 import ContextGeneratorService from "@/services/contextGeneratorService";
 import { useAuth } from "@/contexts/AuthContext";
 import { AppContext } from "@/contexts/AppContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import QuestionAnswerForm from "@/components/Forms/QuestionAnswerForm";
-import { Assessment, ExpandMore } from "@mui/icons-material";
+import {
+	ArrowBack,
+	ArrowForward,
+	Assessment,
+	Clear,
+	ExpandMore,
+} from "@mui/icons-material";
 import ContextPreview from "@/components/GoogleMaps/ContextPreview";
 
 export default function QuestionCreationPage() {
@@ -47,6 +53,7 @@ export default function QuestionCreationPage() {
 	const router = useRouter();
 	const { queries, setQueries } = useContext(AppContext);
 	const { isAuthenticated } = useAuth();
+	const searchParams = useSearchParams();
 
 	// useEffect(() => {
 	// 	if (contextStatus === "empty") {
@@ -54,8 +61,31 @@ export default function QuestionCreationPage() {
 	// 	}
 	// }, [contextStatus]);
 
+	const handleNext = () => {
+		const params = searchParams.toString();
+		if (params) {
+			router.push(`/home/summary?${params}`);
+		} else {
+			router.push("/home/summary");
+		}
+	};
+
+	const handlePrevious = () => {
+		const params = searchParams.toString();
+		if (params) {
+			router.push(`/home/context?${params}`);
+		} else {
+			router.push("/home/context");
+		}
+	};
+
 	const handleContextEdit = () => {
-		router.push("/home/context");
+		const params = searchParams.toString();
+		if (params) {
+			router.push(`/home/context?${params}`);
+		} else {
+			router.push("/home/context");
+		}
 	};
 
 	const onFinish = () => {
@@ -86,11 +116,11 @@ export default function QuestionCreationPage() {
 			// sx={{ mt: 4, mb: 4 }}
 			className="min-h-screen"
 		>
-			<Box sx={{ mt: 4, mb: 4 }}>
-				<h1 className="text-3xl md:text-4xl font-normal pb-5">
+			<Box sx={{ my: 4 }} className="flex flex-col gap-6">
+				<h1 className="text-3xl md:text-4xl font-normal pb-2">
 					Create QA Pairs based on the Context
 				</h1>
-				<Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+				<Paper elevation={2} sx={{ p: 3 }}>
 					<Box
 						sx={{
 							display: "flex",
@@ -162,13 +192,48 @@ export default function QuestionCreationPage() {
 					</Box>
 				</Paper>
 
-				<Box sx={{ mb: 2 }}></Box>
-
 				<QuestionAnswerForm
 					handleSubmit={handleSubmit}
 					handleReset={handleReset}
 				/>
 
+				<Divider className="w-full mb-4" />
+				<Box className="flex flex-row gap-4 w-full justify-between">
+					<div>
+						<Button
+							onClick={handlePrevious}
+							startIcon={<ArrowBack />}
+							color="primary"
+							variant="contained"
+						>
+							Prev
+						</Button>
+					</div>
+					<div>
+						<Button
+							onClick={() => {
+								handleReset();
+								window.scrollTo(0, 0);
+							}}
+							startIcon={<Clear />}
+							color="error"
+						>
+							Clear
+						</Button>
+						<Button
+							variant="contained"
+							color="primary"
+							endIcon={<ArrowForward />}
+							// loading={loading}
+							loadingPosition="start"
+							onClick={handleNext}
+						>
+							{query.id === undefined
+								? "Next"
+								: "Next #" + query.id}
+						</Button>
+					</div>
+				</Box>
 				{/* {queries.filter((item) => item.username === getUserName()).length >
 				0 && (
 				<>

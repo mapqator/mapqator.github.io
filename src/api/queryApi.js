@@ -11,6 +11,9 @@ class QueryApi extends Api {
 	getQuery = async (id) => {
 		return await this.get(`/queries/${id}`);
 	};
+	getNewQuery = async (id) => {
+		return await this.get(`/queries/new/${id}`);
+	};
 	createQuery = async (body) => {
 		return await this.post("/queries", body);
 	};
