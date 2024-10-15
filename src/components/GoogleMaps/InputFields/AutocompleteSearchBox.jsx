@@ -62,14 +62,14 @@ function SearchPlaceCard({
 				// handleMouseLeave={handleMouseLeave}
 				className="flex gap-1 justify-between w-full items-center px-2"
 			>
-				<Box className="w-[70%]">
+				<Box className="w-full">
 					<ListItemText
 						primary={place.displayName?.text}
 						secondary={place.shortFormattedAddress}
 					/>
 				</Box>
 
-				<Box className="ml-auto w-[30%] flex flex-row items-center">
+				<Box className="ml-auto w-[8rem] flex flex-row items-center ">
 					{/* <PlaceAddButton place_id={place.id} /> */}
 					<div>
 						<IconButton
