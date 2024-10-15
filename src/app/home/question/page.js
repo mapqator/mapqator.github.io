@@ -30,6 +30,7 @@ import {
 	ExpandMore,
 } from "@mui/icons-material";
 import ContextPreview from "@/components/GoogleMaps/ContextPreview";
+import StepIndicator from "@/components/StepIndicator";
 
 export default function QuestionCreationPage() {
 	const {
@@ -219,8 +220,8 @@ export default function QuestionCreationPage() {
 				/>
 
 				<Divider className="w-full mb-4" />
-				<Box className="flex flex-row gap-4 w-full justify-between">
-					<div>
+				<Box className="flex flex-row gap-4 w-full justify-between items-end">
+					<div className="w-1/3">
 						<Button
 							onClick={handlePrevious}
 							startIcon={<ArrowBack />}
@@ -230,7 +231,15 @@ export default function QuestionCreationPage() {
 							Prev
 						</Button>
 					</div>
-					<div>
+
+					<div className="flex flex-col items-center w-1/3">
+						<StepIndicator currentStep={2} totalSteps={3} />
+						<span className="text-sm text-gray-500 mt-1">
+							Step 2 of 3
+						</span>
+					</div>
+
+					<div className="flex flex-row gap-4 w-1/3 justify-end">
 						<Button
 							onClick={() => {
 								handleReset();

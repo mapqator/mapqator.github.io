@@ -43,6 +43,7 @@ import { ArrowBack, ArrowForward, ExpandMore } from "@mui/icons-material";
 import OptionsPreview from "@/components/Lists/OptionsPreview";
 import SaveQuery from "@/components/SaveQuery";
 import LoginPrompt from "@/components/LoginPrompts";
+import StepIndicator from "@/components/StepIndicator";
 
 // const SaveQuery = ({ onSave, onDiscard }) => {
 // 	const [showSnackbar, setShowSnackbar] = useState(false);
@@ -435,8 +436,8 @@ export default function Summary() {
 				)}
 
 				<Divider className="w-full mb-4" />
-				<Box className="flex flex-row gap-4 w-full justify-between">
-					<div>
+				<Box className="flex flex-row gap-4 w-full justify-between items-end">
+					<div className="w-1/3">
 						<Button
 							onClick={handlePrevious}
 							startIcon={<ArrowBack />}
@@ -446,7 +447,14 @@ export default function Summary() {
 							Prev
 						</Button>
 					</div>
-					<div>
+
+					<div className="flex flex-col items-center w-1/3">
+						<StepIndicator currentStep={3} totalSteps={3} />
+						<span className="text-sm text-gray-500 mt-1">
+							Step 3 of 3
+						</span>
+					</div>
+					<div className="w-1/3 flex justify-end">
 						<Button
 							onClick={handleNext}
 							endIcon={<ArrowForward />}

@@ -60,6 +60,7 @@ import MapServiceSelector from "../MapServiceSelector";
 import { getToolOptions } from "@/services/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlassLocation } from "@fortawesome/free-solid-svg-icons";
+import StepIndicator from "../StepIndicator";
 
 function ContextStep({
 	step,
@@ -661,40 +662,48 @@ export default function ContextEditor({
 				</Paper>
 			)}
 			<Divider />
-			<div className="flex ml-auto w-full justify-end gap-4">
-				<Button
-					onClick={handleReset}
-					// sx={{ mt: 1, mr: 1 }}
-					color="error"
-					startIcon={<Clear />}
-				>
-					Clear
-				</Button>
-				<Button
-					onClick={() => {
-						// if (
-						// 	Object.keys(selectedPlacesMap).length +
-						// 		Object.keys(nearbyPlacesMap).length +
-						// 		Object.keys(poisMap).length +
-						// 		Object.keys(directionInformation).length +
-						// 		Object.keys(distanceMatrix).length ===
-						// 	0
-						// ) {
-						// 	setActiveStep(0);
-						// 	showError(
-						// 		"Please add some place information first"
-						// 	);
-						// } else
-						{
-							onFinish();
-						}
-					}}
-					variant="contained"
-					// sx={{ mt: 1, mr: 1 }}
-					endIcon={<ArrowForward />}
-				>
-					Next {query.id === undefined ? "" : "#" + query.id}
-				</Button>
+			<div className="flex ml-auto w-full justify-end gap-4 items-end">
+				<div className="flex flex-col items-center w-1/3">
+					<StepIndicator currentStep={1} totalSteps={3} />
+					<span className="text-sm text-gray-500 mt-1">
+						Step 1 of 3
+					</span>
+				</div>
+				<div className="w-1/3 flex justify-end gap-4">
+					<Button
+						onClick={handleReset}
+						// sx={{ mt: 1, mr: 1 }}
+						color="error"
+						startIcon={<Clear />}
+					>
+						Clear
+					</Button>
+					<Button
+						onClick={() => {
+							// if (
+							// 	Object.keys(selectedPlacesMap).length +
+							// 		Object.keys(nearbyPlacesMap).length +
+							// 		Object.keys(poisMap).length +
+							// 		Object.keys(directionInformation).length +
+							// 		Object.keys(distanceMatrix).length ===
+							// 	0
+							// ) {
+							// 	setActiveStep(0);
+							// 	showError(
+							// 		"Please add some place information first"
+							// 	);
+							// } else
+							{
+								onFinish();
+							}
+						}}
+						variant="contained"
+						// sx={{ mt: 1, mr: 1 }}
+						endIcon={<ArrowForward />}
+					>
+						Next {query.id === undefined ? "" : "#" + query.id}
+					</Button>
+				</div>
 			</div>
 		</>
 	);
