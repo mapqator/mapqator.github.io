@@ -153,7 +153,7 @@ export default function QuestionCreationPage() {
 							>
 								<h1 className="font-bold p-2">
 									{contextExpanded
-										? "Hide Context"
+										? "Summarize Context"
 										: "Visualize Context"}
 								</h1>
 								<IconButton
@@ -170,7 +170,7 @@ export default function QuestionCreationPage() {
 								</IconButton>
 							</div>
 
-							{contextExpanded && (
+							{contextExpanded ? (
 								<>
 									<Divider
 										sx={{
@@ -186,6 +186,27 @@ export default function QuestionCreationPage() {
 										}
 										routePlacesMap={routePlacesMap}
 									/>
+								</>
+							) : (
+								<>
+									<Divider
+										sx={{
+											mt: 2,
+										}}
+									/>
+									<Box className="mt-2">
+										{ContextGeneratorService.summarizeContext(
+											savedPlacesMap,
+											selectedPlacesMap,
+											nearbyPlacesMap,
+											directionInformation,
+											routePlacesMap
+										).map((r, index) => (
+											<Typography key={index}>
+												({index + 1}) {r.label}
+											</Typography>
+										))}
+									</Box>
 								</>
 							)}
 						</Paper>
