@@ -386,7 +386,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 									startIcon={<GetApp />}
 									onClick={handleDownloadQuery}
 								>
-									Download Query
+									Download
 								</Button>
 								{/* <Button
 									color="primary"
