@@ -438,16 +438,16 @@ export default function ReferenceSelectionField({
 					}}
 				>
 					{references.map((r, index) => (
-						<MenuItem
-							key={index}
-							value={r.value}
-							sx={{
-								whiteSpace: "normal", // Allows text to wrap
-								wordWrap: "break-word", // Breaks long words
-							}}
-							className="max-w-[40rem]"
-						>
-							({index + 1}) {r.label}
+						<MenuItem key={index} value={r.value}>
+							<Typography
+								className="max-w-[50rem]"
+								sx={{
+									whiteSpace: "normal", // Allows text to wrap
+									wordWrap: "break-word", // Breaks long words
+								}}
+							>
+								({index + 1}) {r.label}
+							</Typography>
 						</MenuItem>
 					))}
 				</Select>
