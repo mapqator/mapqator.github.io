@@ -62,6 +62,7 @@ import { getToolOptions } from "@/services/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlassLocation } from "@fortawesome/free-solid-svg-icons";
 import StepIndicator from "../StepIndicator";
+import ContextGeneratorService from "@/services/contextGeneratorService";
 
 function ContextStep({
 	step,
@@ -556,9 +557,7 @@ export default function ContextEditor({
 		{
 			key: "nearbySearch",
 			label: "Nearby Search",
-			description: `Use the Nearby Search Tool to discover points of interest around your selected location. You just need to select a location and the type of poi you are looking for. 
-			Additionally you can specify the order in which results are listed. Possible values are Prominence and Distance. When prominence is specified, the radius parameter is required. 
-			You can choose a type from the given list or a custom type. It is recommended to choose from the given list for better result.`,
+			description: `Discover nearby points of interest (POI) around your selected location. Choose a location and POI type from the dropdown menus. You can filter results by minimum rating and price range, and sort by relevance or distance. Set the maximum number of results (1-20) to display.`,
 			additional:
 				"List of places whose nearby pois are added to the context",
 			// icon: <SiGooglenearby />,
@@ -585,7 +584,7 @@ export default function ContextEditor({
 		{
 			key: "computeRoutes",
 			label: "Compute Routes",
-			description: `Utilize the Directions API to find routes between two points. Choose origin, destination and travel mode to find possible routes between them.`,
+			description: `Find routes between two points. Select origin, destination, and travel mode. Optionally, add intermediate stops, avoid specific road features, and compute alternative routes. Toggle 'Optimize intermediates order' to find the most efficient route through all points.`,
 			additional:
 				"List of origin - destination pairs whose alternative routes are added to the context",
 			icon: <DirectionsIcon />,
@@ -609,7 +608,7 @@ export default function ContextEditor({
 		{
 			key: "searchAlongRoute",
 			label: "Search Along Route",
-			description: `Utilize the Places API to find places along a route. Choose a route to find places along the route.`,
+			description: `Find places of interest along a route. Select origin, destination, and travel mode. Specify the type of place, minimum rating, and price range. Choose to rank results by relevance or distance from origin.`,
 			additional:
 				"List of origin - destination pairs whose alternative routes are added to the context",
 			icon: <Route />,
@@ -630,6 +629,30 @@ export default function ContextEditor({
 				/>
 			),
 			// context: context.direction,
+		},
+		{
+			label: "Context Summary",
+			description: `Review the information gathered and then you can proceed to create questions based on the context you have generated.`,
+			icon: <RemoveRedEye />,
+			component: (
+				<>
+					<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
+						<Box className="mt-2">
+							{ContextGeneratorService.summarizeContext(
+								savedPlacesMap,
+								selectedPlacesMap,
+								nearbyPlacesMap,
+								directionInformation,
+								routePlacesMap
+							).map((r, index) => (
+								<Typography key={index}>
+									({index + 1}) {r.label}
+								</Typography>
+							))}
+						</Box>
+					</Paper>
+				</>
+			),
 		},
 	];
 	return (
