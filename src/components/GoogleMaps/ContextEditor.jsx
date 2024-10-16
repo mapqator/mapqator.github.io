@@ -535,7 +535,7 @@ export default function ContextEditor({
 		{
 			key: "placeDetails",
 			label: "Place Details",
-			description: `Add full details of a place.`,
+			description: `Add comprehensive details about a specific location or landmark. This may include its address, opening hours, accessibility features, business status, and other relevant information. Use the dropdown menu below to select an existing place.`,
 			icon: <AddLocationAlt />,
 			additional: "Places you have added to the context.",
 			form: <PlacesForm {...{ handlePlaceAdd }} />,
