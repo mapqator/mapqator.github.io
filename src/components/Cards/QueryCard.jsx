@@ -225,7 +225,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 							>
 								<h1 className="font-bold p-2">
 									{contextExpanded
-										? "Hide Context"
+										? "Summarize Context"
 										: "Visualize Context"}
 								</h1>
 								<IconButton
@@ -242,7 +242,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 								</IconButton>
 							</div>
 
-							{contextExpanded && (
+							{contextExpanded ? (
 								<>
 									<Divider
 										sx={{
@@ -269,6 +269,27 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 											entry.context_json.route_places
 										}
 									/>
+								</>
+							) : (
+								<>
+									<Divider
+										sx={{
+											mt: 2,
+										}}
+									/>
+									<Box className="mt-2">
+										{ContextGeneratorService.summarizeContext(
+											savedPlacesMap,
+											selectedPlacesMap,
+											nearbyPlacesMap,
+											directionInformation,
+											routePlacesMap
+										).map((r, index) => (
+											<Typography key={index}>
+												({index + 1}) {r.label}
+											</Typography>
+										))}
+									</Box>
 								</>
 							)}
 						</Paper>
