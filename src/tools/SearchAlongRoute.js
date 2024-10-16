@@ -54,6 +54,7 @@ class SearchAlongRoute extends Api {
 
 	run = async (params) => {
 		// Find Route
+		const startTime1 = performance.now(); // Record the start time
 		const adaptedRouteRequest = this.convertRouteRequest(params);
 		const routeResponse = await this.post(
 			"/map/cached",
@@ -62,17 +63,20 @@ class SearchAlongRoute extends Api {
 		if (!routeResponse.success) return { success: false };
 
 		const epochId = Date.now();
+		const adaptedRouteResponse = this.convertRouteResponse(
+			routeResponse.data
+		);
+
 		if (params.type === "") {
 			return {
 				success: true,
 				data: {
-					route_response: this.convertRouteResponse(
-						routeResponse.data
-					),
+					route_response: adaptedRouteResponse,
 					apiCallLogs: [
 						{
 							...adaptedRouteRequest,
 							uuid: epochId,
+							responseTime: performance.now() - startTime1,
 							// result: routeResponse.data,
 						},
 					],
@@ -80,10 +84,8 @@ class SearchAlongRoute extends Api {
 				},
 			};
 		}
-		const adaptedRouteResponse = this.convertRouteResponse(
-			routeResponse.data
-		);
-
+		const responseTime1 = performance.now() - startTime1;
+		const startTime2 = performance.now(); // Record the start time
 		// Find Nearby Places along Route
 		const adaptedNearbyRequest = this.convertNearbyRequest(
 			params,
@@ -107,11 +109,13 @@ class SearchAlongRoute extends Api {
 					{
 						...adaptedRouteRequest,
 						uuid: epochId,
+						responseTime: responseTime1,
 						// result: routeResponse.data,
 					},
 					{
 						...adaptedNearbyRequest,
 						uuid: epochId,
+						responseTime: performance.now() - startTime2,
 						// result: nearbyResponse.data,
 					},
 				],

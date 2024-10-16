@@ -28,6 +28,7 @@ class NearbySearch extends Api {
 	};
 
 	fetch = async (params) => {
+		const startTime = performance.now(); // Record the start time
 		const adaptedRequest = this.convertRequest(params);
 
 		const epochId = Date.now(); // Unique ID for this tool call
@@ -43,6 +44,7 @@ class NearbySearch extends Api {
 						{
 							...adaptedRequest,
 							uuid: epochId,
+							responseTime: performance.now() - startTime,
 							// result: response.data,
 						},
 					],

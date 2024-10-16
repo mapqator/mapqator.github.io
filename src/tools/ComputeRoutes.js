@@ -32,6 +32,7 @@ class ComputeRoutes extends Api {
 	}
 
 	run = async (params) => {
+		const startTime = performance.now(); // Record the start time
 		const adaptedRequest = this.convertRequest(params);
 
 		const epochId = Date.now(); // Unique ID for this tool call
@@ -47,6 +48,7 @@ class ComputeRoutes extends Api {
 						{
 							...adaptedRequest,
 							uuid: epochId,
+							responseTime: performance.now() - startTime,
 							// result: response.data,
 						},
 					],

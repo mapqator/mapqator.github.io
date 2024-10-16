@@ -50,8 +50,8 @@ class TextSearch extends Api {
 	};
 
 	suggest = async (query) => {
+		const startTime = performance.now(); // Record the start time
 		const adaptedRequest = this.convertRequest(query);
-
 		const epochId = Date.now();
 		const response = await this.post("/map/cached", adaptedRequest);
 
@@ -65,6 +65,7 @@ class TextSearch extends Api {
 						{
 							...adaptedRequest,
 							uuid: epochId,
+							responseTime: performance.now() - startTime,
 							// result: response.data,
 						},
 					],
@@ -409,6 +410,7 @@ class MapBoxApi extends TextSearch {
 	// };
 
 	retrieve = async (place) => {
+		const startTime = performance.now(); // Record the start time
 		const apiCall = {
 			url:
 				"https://api.mapbox.com/search/searchbox/v1/retrieve/" +
@@ -438,6 +440,7 @@ class MapBoxApi extends TextSearch {
 						{
 							...apiCall,
 							uuid: epochId,
+							responseTime: performance.now() - startTime,
 							// result: response.data,
 						},
 					],

@@ -21,6 +21,7 @@ class PlaceDetails extends Api {
 	};
 
 	fetch = async (place) => {
+		const startTime = performance.now(); // Record the start time
 		const adaptedRequest = this.convertRequest(place);
 		const epochId = Date.now(); // Unique ID for this tool call
 
@@ -28,7 +29,6 @@ class PlaceDetails extends Api {
 			const response = await this.post("/map/cached", adaptedRequest);
 			if (response.success) {
 				const adaptedResponse = this.convertResponse(response.data);
-
 				return {
 					success: true,
 					data: {
@@ -37,6 +37,7 @@ class PlaceDetails extends Api {
 							{
 								...adaptedRequest,
 								uuid: epochId,
+								responseTime: performance.now() - startTime,
 								// result: response.data,
 							},
 						],
