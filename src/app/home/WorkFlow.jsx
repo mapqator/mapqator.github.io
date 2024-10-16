@@ -44,7 +44,7 @@ export default function WorkFlow() {
 					}}
 				/>
 			),
-			label: "Generate Context",
+			label: "Design Context",
 			description: "Design place-related contexts using Map Services.",
 			key: "context",
 			to: "/home/context",
