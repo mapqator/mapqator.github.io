@@ -448,8 +448,9 @@ export default function GlobalContextProvider({ children }) {
 			setSavedPlacesMap(query.context_json.places ?? {});
 			setSelectedPlacesMap(query.context_json.place_details ?? {});
 			setNearbyPlacesMap(query.context_json.nearby_places ?? []);
-			setApiCallLogs(query.api_call_logs ?? []);
+			setDirectionInformation(query.context_json.directions ?? []);
 			setRoutePlacesMap(query.context_json.route_places ?? []);
+			setApiCallLogs(query.api_call_logs ?? []);
 			setQuery(query);
 		}
 	};
