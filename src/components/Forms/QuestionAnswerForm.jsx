@@ -35,6 +35,88 @@ import queryApi from "@/api/queryApi";
 import { showError, showSuccess } from "@/contexts/ToastProvider";
 import ReferenceSelectionField from "../GoogleMaps/InputFields/ReferenceSelectionField";
 
+function QACard({ index }) {
+	const [expanded, setExpanded] = useState(true);
+	const {
+		query,
+		setQuery,
+		initQuery,
+		context,
+		selectedPlacesMap,
+		nearbyPlacesMap,
+		poisMap,
+		directionInformation,
+		distanceMatrix,
+		currentInformation,
+		setQueryStatus,
+		routePlacesMap,
+		apiCallLogs,
+		savedPlacesMap,
+		mapService,
+	} = useContext(GlobalContext);
+	return (
+		<Paper
+			elevation={2}
+			sx={{ p: 3 }}
+			key={index}
+			className="w-full flex flex-col gap-4"
+		>
+			<div className="flex flex-row justify-between items-center">
+				<Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+					Question {index + 1}:
+				</Typography>
+				<IconButton
+					sx={{
+						transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+						transition: "0.3s",
+					}}
+					onClick={() => setExpanded((prev) => !prev)}
+				>
+					<ExpandMore />
+				</IconButton>
+			</div>
+
+			{expanded && (
+				<>
+					<QuestionEditor index={index} />
+					<CategorySelectionField index={index} />
+					<Divider />
+					<CorrectAnswerEditor index={index} />
+					<ReferenceSelectionField
+						{...{
+							index,
+							apiCallLogs,
+							savedPlacesMap,
+							selectedPlacesMap,
+							nearbyPlacesMap,
+							directionInformation,
+							routePlacesMap,
+						}}
+					/>
+				</>
+			)}
+
+			<Box className="flex flex-row justify-end">
+				<IconButton
+					onClick={() =>
+						setQuery((prev) => {
+							const newQuery = { ...prev };
+							newQuery.questions.splice(index, 1);
+							return newQuery;
+						})
+					}
+				>
+					<Delete
+						color="error"
+						sx={{
+							fontSize: 32,
+						}}
+					/>
+				</IconButton>
+			</Box>
+		</Paper>
+	);
+}
 export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 	const {
 		query,
@@ -57,7 +139,6 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 	const { queries, setQueries } = useContext(AppContext);
 	const [loading, setLoading] = useState(false);
 	const { isAuthenticated } = useAuth();
-	const [expanded, setExpanded] = useState(true);
 
 	const handleNext = () => {
 		router.push("/home/review");
@@ -143,69 +224,7 @@ export default function QuestionAnswerForm({ handleSubmit, handleReset }) {
 			className="flex flex-col items-center gap-6"
 		>
 			{query.questions.map((question, index) => (
-				<Paper
-					elevation={2}
-					sx={{ p: 3 }}
-					key={index}
-					className="w-full flex flex-col gap-4"
-				>
-					<div className="flex flex-row justify-between items-center">
-						<Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-							Question {index + 1}:
-						</Typography>
-						<IconButton
-							sx={{
-								transform: expanded
-									? "rotate(180deg)"
-									: "rotate(0deg)",
-								transition: "0.3s",
-							}}
-							onClick={() => setExpanded((prev) => !prev)}
-						>
-							<ExpandMore />
-						</IconButton>
-					</div>
-
-					{expanded && (
-						<>
-							<QuestionEditor index={index} />
-							<CategorySelectionField index={index} />
-							<Divider />
-							{/* <OptionsEditor index={index} /> */}
-							<CorrectAnswerEditor index={index} />
-							<ReferenceSelectionField
-								{...{
-									index,
-									apiCallLogs,
-									savedPlacesMap,
-									selectedPlacesMap,
-									nearbyPlacesMap,
-									directionInformation,
-									routePlacesMap,
-								}}
-							/>
-						</>
-					)}
-
-					<Box className="flex flex-row justify-end">
-						<IconButton
-							onClick={() =>
-								setQuery((prev) => {
-									const newQuery = { ...prev };
-									newQuery.questions.splice(index, 1);
-									return newQuery;
-								})
-							}
-						>
-							<Delete
-								color="error"
-								sx={{
-									fontSize: 32,
-								}}
-							/>
-						</IconButton>
-					</Box>
-				</Paper>
+				<QACard index={index} key={index} />
 			))}
 
 			<Button
