@@ -445,6 +445,7 @@ export default function ReferenceSelectionField({
 								whiteSpace: "normal", // Allows text to wrap
 								wordWrap: "break-word", // Breaks long words
 							}}
+							className="max-w-[40rem]"
 						>
 							({index + 1}) {r.label}
 						</MenuItem>

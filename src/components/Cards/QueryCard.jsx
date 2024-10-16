@@ -279,11 +279,11 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 									/>
 									<Box className="mt-2">
 										{ContextGeneratorService.summarizeContext(
-											savedPlacesMap,
-											selectedPlacesMap,
-											nearbyPlacesMap,
-											directionInformation,
-											routePlacesMap
+											entry.context_json.places,
+											entry.context_json.place_details,
+											entry.context_json.nearby_places,
+											entry.context_json.directions,
+											entry.context_json.route_places
 										).map((r, index) => (
 											<Typography key={index}>
 												({index + 1}) {r.label}
