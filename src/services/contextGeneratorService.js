@@ -624,18 +624,20 @@ const ContextGeneratorService = {
 				e.routeModifiers.avoidIndoor
 			) {
 				text += ` (Avoiding `;
+				const avoid = [];
 				if (e.routeModifiers.avoidTolls) {
-					text += `tolls`;
+					avoid.push(`tolls`);
 				}
 				if (e.routeModifiers.avoidHighways) {
-					text += `highways`;
+					avoid.push(`highways`);
 				}
 				if (e.routeModifiers.avoidFerries) {
-					text += `ferries`;
+					avoid.push(`ferries`);
 				}
 				if (e.routeModifiers.avoidIndoor) {
-					text += `indoor`;
+					avoid.push(`indoor`);
 				}
+				text += avoid.join(", ");
 				text += `)`;
 			}
 
