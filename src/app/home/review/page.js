@@ -269,7 +269,10 @@ export default function Summary() {
 
 	return (
 		<Container maxWidth="md">
-			<Box className="h-full flex flex-col justify-center p-4 w-full pt-10 gap-6">
+			<Box sx={{ my: 4 }} className="flex flex-col gap-6">
+				<h1 className="text-3xl md:text-4xl font-normal pb-2">
+					Review and Save to Dataset
+				</h1>
 				<Confirmation
 					open={open}
 					setOpen={setOpen}
