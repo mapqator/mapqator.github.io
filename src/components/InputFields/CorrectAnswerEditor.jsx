@@ -139,7 +139,7 @@ const getOptions = (type) => {
 		case "single-choice":
 			return ["Option 1", "Option 2", "Option 3", "Option 4"];
 		case "yes-no":
-			return ["Yes", "No"];
+			return ["No", "Yes"];
 		case "multiple-choice":
 			return ["Option 1", "Option 2", "Option 3", "Option 4"];
 		case "open-ended":
