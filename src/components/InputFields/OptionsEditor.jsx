@@ -12,6 +12,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import { set } from "lodash";
+import PlaceSuggestionEditor from "./PlaceSuggestionEditor";
 
 export default function OptionsEditor({ index }) {
 	const { query, setQuery } = useContext(GlobalContext);
@@ -127,7 +128,7 @@ export default function OptionsEditor({ index }) {
 						mb: 2,
 					}}
 				>
-					<TextField
+					{/* <TextField
 						fullWidth
 						multiline
 						autoComplete="off"
@@ -147,6 +148,13 @@ export default function OptionsEditor({ index }) {
 								</InputAdornment>
 							),
 						}}
+					/> */}
+					<PlaceSuggestionEditor
+						value={option}
+						onChange={(value) => handleOptionChange(i, value)}
+						InputProps
+						label={`Option ${i + 1}`}
+						minRows={1}
 					/>
 				</Box>
 			))}

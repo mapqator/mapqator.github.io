@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import OptionsEditor from "./OptionsEditor";
+import PlaceSuggestionEditor from "./PlaceSuggestionEditor";
 
 const SingleAnswer = ({ value, options, onChange, index }) => (
 	<>
@@ -25,12 +26,12 @@ const SingleAnswer = ({ value, options, onChange, index }) => (
 			value={value}
 			onChange={(e) => onChange(parseInt(e.target.value))}
 		>
-			<FormControlLabel
+			{/* <FormControlLabel
 				key={-1}
 				value={-1}
 				control={<Radio />}
 				label="None"
-			/>
+			/> */}
 			{options.map((option, index) => (
 				<FormControlLabel
 					key={index}
@@ -82,10 +83,16 @@ const MultipleAnswer = ({ value, options, onChange, index }) => {
 
 const ShortAnswer = ({ value, onChange }) => (
 	<>
-		<Typography variant="h6" sx={{ mt: 2 }}>
+		<Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
 			Correct Answer:
 		</Typography>
-		<TextField
+		<PlaceSuggestionEditor
+			placeholder="Enter the correct answer"
+			value={value || ""}
+			onChange={(newValue) => onChange(newValue)}
+			minRows={1}
+		/>
+		{/* <TextField
 			fullWidth
 			variant="outlined"
 			value={value || ""}
@@ -93,7 +100,7 @@ const ShortAnswer = ({ value, onChange }) => (
 			placeholder="Enter the correct answer"
 			sx={{ mt: 1 }}
 			multiline
-		/>
+		/> */}
 	</>
 );
 
