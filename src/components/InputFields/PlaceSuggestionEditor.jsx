@@ -7,6 +7,7 @@ import {
 	ListItem,
 	ListItemText,
 	ListItemButton,
+	Tooltip,
 } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 
@@ -106,6 +107,11 @@ export default function PlaceSuggestionEditor({
 
 	return (
 		<div style={{ position: "relative" }} className="w-full">
+			{/* <Tooltip
+				title='Press "@" to get place name suggestions'
+				arrow
+				position={"top"}
+			> */}
 			<TextField
 				fullWidth
 				placeholder={placeholder}
@@ -119,7 +125,10 @@ export default function PlaceSuggestionEditor({
 				inputRef={inputRef}
 				InputProps={InputProps}
 				label={label}
+				helperText='Tip: Press "@" for place suggestions'
 			/>
+			{/* </Tooltip> */}
+
 			{showMentions && (
 				<List
 					sx={{

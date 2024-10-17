@@ -146,72 +146,83 @@ export default function QuestionCreationPage() {
 							)}
 						/> */}
 
-						<Paper elevation={1} sx={{ p: 2, bgcolor: "grey.100" }}>
-							<div
-								className="flex justify-center flex-row items-center cursor-pointer"
-								onClick={() =>
-									setContextExpanded((prev) => !prev)
-								}
+						{Object.keys(savedPlacesMap).length > 0 ? (
+							<Paper
+								elevation={1}
+								sx={{ p: 2, bgcolor: "grey.100" }}
 							>
-								<h1 className="font-bold p-2">
-									{contextExpanded
-										? "Summarize Context"
-										: "Visualize Context"}
-								</h1>
-								<IconButton
-									// sx={{ height: "2rem", width: "2rem" }}
-
-									sx={{
-										transform: contextExpanded
-											? "rotate(180deg)"
-											: "rotate(0deg)",
-										transition: "0.3s",
-									}}
+								<div
+									className="flex justify-center flex-row items-center cursor-pointer"
+									onClick={() =>
+										setContextExpanded((prev) => !prev)
+									}
 								>
-									<ExpandMore />
-								</IconButton>
-							</div>
+									<h1 className="font-bold p-2">
+										{contextExpanded
+											? "Summarize Context"
+											: "Visualize Context"}
+									</h1>
+									<IconButton
+										// sx={{ height: "2rem", width: "2rem" }}
 
-							{contextExpanded ? (
-								<>
-									<Divider
 										sx={{
-											mt: 2,
+											transform: contextExpanded
+												? "rotate(180deg)"
+												: "rotate(0deg)",
+											transition: "0.3s",
 										}}
-									/>
-									<ContextPreview
-										savedPlacesMap={savedPlacesMap}
-										selectedPlacesMap={selectedPlacesMap}
-										nearbyPlacesMap={nearbyPlacesMap}
-										directionInformation={
-											directionInformation
-										}
-										routePlacesMap={routePlacesMap}
-									/>
-								</>
-							) : (
-								<>
-									<Divider
-										sx={{
-											mt: 2,
-										}}
-									/>
-									<Box className="mt-2">
-										{ContextGeneratorService.summarizeContext(
-											savedPlacesMap,
-											selectedPlacesMap,
-											nearbyPlacesMap,
-											directionInformation,
-											routePlacesMap
-										).map((r, index) => (
-											<Typography key={index}>
-												({index + 1}) {r.label}
-											</Typography>
-										))}
-									</Box>
-								</>
-							)}
-						</Paper>
+									>
+										<ExpandMore />
+									</IconButton>
+								</div>
+
+								{contextExpanded ? (
+									<>
+										<Divider
+											sx={{
+												mt: 2,
+											}}
+										/>
+										<ContextPreview
+											savedPlacesMap={savedPlacesMap}
+											selectedPlacesMap={
+												selectedPlacesMap
+											}
+											nearbyPlacesMap={nearbyPlacesMap}
+											directionInformation={
+												directionInformation
+											}
+											routePlacesMap={routePlacesMap}
+										/>
+									</>
+								) : (
+									<>
+										<Divider
+											sx={{
+												mt: 2,
+											}}
+										/>
+										<Box className="mt-2">
+											{ContextGeneratorService.summarizeContext(
+												savedPlacesMap,
+												selectedPlacesMap,
+												nearbyPlacesMap,
+												directionInformation,
+												routePlacesMap
+											).map((r, index) => (
+												<Typography key={index}>
+													({index + 1}) {r.label}
+												</Typography>
+											))}
+										</Box>
+									</>
+								)}
+							</Paper>
+						) : (
+							<p className="text-center py-2 my-auto text-base md:text-lg text-zinc-400">
+								No information added.
+							</p>
+						)}
 					</Box>
 				</Paper>
 
