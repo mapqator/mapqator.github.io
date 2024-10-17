@@ -309,8 +309,8 @@ export default function GlobalContextProvider({ children }) {
 	const initQuery = {
 		title: "",
 		answer: {
-			type: "mcq",
-			options: ["", "", "", ""],
+			type: "single-choice",
+			options: ["Option 1", "Option 2", "Option 3", "Option 4"],
 			correct: -1,
 		},
 		classification: "",

@@ -9,11 +9,13 @@ import {
 	Box,
 	Select,
 	MenuItem,
+	FormGroup,
+	Checkbox,
 } from "@mui/material";
 import { GlobalContext } from "@/contexts/GlobalContext";
 import OptionsEditor from "./OptionsEditor";
 
-const MCQAnswer = ({ value, options, onChange, index }) => (
+const SingleAnswer = ({ value, options, onChange, index }) => (
 	<>
 		<OptionsEditor index={index} />
 		<Typography variant="h6" sx={{ mt: 2 }}>
@@ -22,7 +24,7 @@ const MCQAnswer = ({ value, options, onChange, index }) => (
 		<RadioGroup
 			value={value}
 			onChange={(e) => onChange(parseInt(e.target.value))}
-		>	
+		>
 			<FormControlLabel
 				key={-1}
 				value={-1}
@@ -41,6 +43,42 @@ const MCQAnswer = ({ value, options, onChange, index }) => (
 	</>
 );
 
+const MultipleAnswer = ({ value, options, onChange }) => {
+	const handleCheckboxChange = (index) => {
+		const newValue = [...value];
+		if (newValue.includes(index)) {
+			newValue.splice(newValue.indexOf(index), 1);
+		} else {
+			newValue.push(index);
+		}
+		onChange(newValue);
+	};
+
+	return (
+		<>
+			<OptionsEditor />
+			<Typography variant="h6" sx={{ mt: 2 }}>
+				Correct Answer:
+			</Typography>
+			<FormControl component="fieldset">
+				<FormGroup>
+					{options.map((option, index) => (
+						<FormControlLabel
+							key={index}
+							control={
+								<Checkbox
+									checked={value.includes(index)}
+									onChange={() => handleCheckboxChange(index)}
+								/>
+							}
+							label={`Option ${index + 1}`}
+						/>
+					))}
+				</FormGroup>
+			</FormControl>
+		</>
+	);
+};
 const ShortAnswer = ({ value, onChange }) => (
 	<>
 		<Typography variant="h6" sx={{ mt: 2 }}>
@@ -58,20 +96,56 @@ const ShortAnswer = ({ value, onChange }) => (
 	</>
 );
 
+const YesNoAnswer = ({ value, onChange }) => (
+	<>
+		<Typography variant="h6" sx={{ mt: 2 }}>
+			Correct Answer:
+		</Typography>
+		<RadioGroup
+			value={value}
+			onChange={(e) => onChange(parseInt(e.target.value))}
+		>
+			<FormControlLabel value={0} control={<Radio />} label="No" />
+			<FormControlLabel value={1} control={<Radio />} label="Yes" />
+		</RadioGroup>
+	</>
+);
+
 // Answer type strategy
 const answerTypes = {
-	mcq: MCQAnswer,
-	short: ShortAnswer,
+	"single-choice": SingleAnswer,
+	"open-ended": ShortAnswer,
+	"multiple-choice": MultipleAnswer,
+	"yes-no": YesNoAnswer,
 };
 
 const getDefaultValue = (type) => {
 	switch (type) {
-		case "mcq":
+		case "single-choice":
 			return -1;
-		case "short":
+		case "open-ended":
 			return "";
+		case "multiple-choice":
+			return [];
+		case "yes-no":
+			return -1;
 		default:
 			return null;
+	}
+};
+
+const getOptions = (type) => {
+	switch (type) {
+		case "single-choice":
+			return ["Option 1", "Option 2", "Option 3", "Option 4"];
+		case "yes-no":
+			return ["Yes", "No"];
+		case "multiple-choice":
+			return ["Option 1", "Option 2", "Option 3", "Option 4"];
+		case "open-ended":
+			return [];
+		default:
+			return [];
 	}
 };
 
@@ -95,6 +169,7 @@ export default function CorrectAnswerEditor({ index }) {
 			const newQuery = { ...prev };
 			newQuery.questions[index].answer.type = newType;
 			newQuery.questions[index].answer.correct = getDefaultValue(newType);
+			newQuery.questions[index].answer.options = getOptions(newType);
 			return newQuery;
 		});
 	};
@@ -120,8 +195,10 @@ export default function CorrectAnswerEditor({ index }) {
 					sx={{ width: "20rem" }}
 					// size="small"
 				>
-					<MenuItem value="mcq">Multiple Choice</MenuItem>
-					<MenuItem value="short">Short Answer</MenuItem>
+					<MenuItem value="yes-no">Yes/No</MenuItem>
+					<MenuItem value="single-choice">Single Choice</MenuItem>
+					<MenuItem value="multiple-choice">Multiple Choice</MenuItem>
+					<MenuItem value="open-ended">Open Ended</MenuItem>
 				</Select>
 			</Box>
 

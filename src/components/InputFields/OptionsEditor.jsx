@@ -38,7 +38,10 @@ export default function OptionsEditor({ index }) {
 
 	const addOption = () => {
 		setQuery((prev) => {
-			const options = [...prev.questions[index].answer.options, ""];
+			const options = [
+				...prev.questions[index].answer.options,
+				"Option " + (prev.questions[index].answer.options.length + 1),
+			];
 			return {
 				...prev,
 				questions: [
