@@ -43,7 +43,7 @@ const SingleAnswer = ({ value, options, onChange, index }) => (
 	</>
 );
 
-const MultipleAnswer = ({ value, options, onChange }) => {
+const MultipleAnswer = ({ value, options, onChange, index }) => {
 	const handleCheckboxChange = (index) => {
 		const newValue = [...value];
 		if (newValue.includes(index)) {
@@ -56,7 +56,7 @@ const MultipleAnswer = ({ value, options, onChange }) => {
 
 	return (
 		<>
-			<OptionsEditor />
+			<OptionsEditor index={index} />
 			<Typography variant="h6" sx={{ mt: 2 }}>
 				Correct Answer:
 			</Typography>
@@ -79,6 +79,7 @@ const MultipleAnswer = ({ value, options, onChange }) => {
 		</>
 	);
 };
+
 const ShortAnswer = ({ value, onChange }) => (
 	<>
 		<Typography variant="h6" sx={{ mt: 2 }}>
@@ -165,11 +166,13 @@ export default function CorrectAnswerEditor({ index }) {
 	};
 
 	const handleTypeChange = (newType) => {
+		console.log(newType);
 		setQuery((prev) => {
 			const newQuery = { ...prev };
 			newQuery.questions[index].answer.type = newType;
 			newQuery.questions[index].answer.correct = getDefaultValue(newType);
 			newQuery.questions[index].answer.options = getOptions(newType);
+			console.log(newQuery);
 			return newQuery;
 		});
 	};

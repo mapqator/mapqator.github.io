@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { CheckCircle } from "@mui/icons-material";
 
-const MCQAnswer = ({ answer }) => (
+const SingleAnswer = ({ answer }) => (
 	<Box sx={{ mb: 2 }}>
 		<Typography variant="h6" gutterBottom>
 			Options:
@@ -22,15 +22,42 @@ const MCQAnswer = ({ answer }) => (
 				<Grid item xs={12} sm={6} key={index}>
 					<Card variant="outlined" className="bg-white h-full">
 						<CardContent className="h-full">
-							<Typography variant="body2">
-								Option {index + 1}: {option}
+							<h1>
+								<b>({index + 1})</b> {option}
 								{index === answer.correct && (
 									<CheckCircle
 										className="text-green-500 ml-2"
 										fontSize="small"
 									/>
 								)}
-							</Typography>
+							</h1>
+						</CardContent>
+					</Card>
+				</Grid>
+			))}
+		</Grid>
+	</Box>
+);
+
+const MultipleAnswer = ({ answer }) => (
+	<Box sx={{ mb: 2 }}>
+		<Typography variant="h6" gutterBottom>
+			Options:
+		</Typography>
+		<Grid container spacing={2} className="mt-2">
+			{answer.options.map((option, index) => (
+				<Grid item xs={12} sm={6} key={index}>
+					<Card variant="outlined" className="bg-white h-full">
+						<CardContent className="h-full">
+							<h1>
+								<b>({index + 1})</b> {option}
+								{answer.correct.includes(index) && (
+									<CheckCircle
+										className="text-green-500 ml-2"
+										fontSize="small"
+									/>
+								)}
+							</h1>
 						</CardContent>
 					</Card>
 				</Grid>
@@ -46,17 +73,35 @@ const ShortAnswer = ({ answer }) => (
 		</Typography>
 		<Card variant="outlined" className="bg-white h-full">
 			<CardContent className="h-full">
-				<Typography variant="body2">{answer.correct}</Typography>
+				<h1 className="text-base">{answer.correct}</h1>
 			</CardContent>
 		</Card>
 	</Box>
 );
 
+const YesNoAnswer = ({ answer }) => (
+	<Box sx={{ mb: 2 }}>
+		<Typography variant="h6" gutterBottom>
+			Correct Answer: <b>{answer.correct ? "Yes" : "No"}</b>
+		</Typography>
+		{/* <Card variant="outlined" className="bg-white h-full">
+			<CardContent className="h-full">
+				<Typography variant="body1">
+					{answer.correct ? "Yes" : "No"}
+				</Typography>
+			</CardContent>
+		</Card> */}
+	</Box>
+);
+
 // Answer type strategy
 const answerTypes = {
-	mcq: MCQAnswer,
-	short: ShortAnswer,
+	"single-choice": SingleAnswer,
+	"open-ended": ShortAnswer,
+	"multiple-choice": MultipleAnswer,
+	"yes-no": YesNoAnswer,
 };
+
 export default function OptionsPreview({ answer }) {
 	const AnswerComponent =
 		answerTypes[answer.type] || (() => <div>Unsupported answer type</div>);

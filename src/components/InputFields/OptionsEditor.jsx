@@ -118,7 +118,7 @@ export default function OptionsEditor({ index }) {
 			<Typography variant="h6" gutterBottom>
 				Options:
 			</Typography>
-			{query.questions[index].answer.options.map((option, i) => (
+			{query.questions[index]?.answer.options.map((option, i) => (
 				<Box
 					key={i}
 					sx={{
