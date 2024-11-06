@@ -158,7 +158,7 @@ export default function OptionsEditor({ index }) {
 					/>
 				</Box>
 			))}
-			<Box>
+			{/* <Box>
 				<Button
 					startIcon={<AddIcon />}
 					onClick={addOption}
@@ -166,7 +166,7 @@ export default function OptionsEditor({ index }) {
 				>
 					Add Option
 				</Button>
-			</Box>
+			</Box> */}
 		</FormControl>
 	);
 }
