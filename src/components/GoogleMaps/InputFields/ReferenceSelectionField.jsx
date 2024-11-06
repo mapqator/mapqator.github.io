@@ -198,18 +198,20 @@ export default function ReferenceSelectionField({
 					route.body.routeModifiers.avoidIndoor
 				) {
 					text += ` (Avoiding `;
-					if (route.body.routeModifiers.avoidTolls) {
-						text += `tolls`;
+					const avoid = [];
+					if (e.routeModifiers.avoidTolls) {
+						avoid.push(`tolls`);
 					}
-					if (route.body.routeModifiers.avoidHighways) {
-						text += `highways`;
+					if (e.routeModifiers.avoidHighways) {
+						avoid.push(`highways`);
 					}
-					if (route.body.routeModifiers.avoidFerries) {
-						text += `ferries`;
+					if (e.routeModifiers.avoidFerries) {
+						avoid.push(`ferries`);
 					}
-					if (route.body.routeModifiers.avoidIndoor) {
-						text += `indoor`;
+					if (e.routeModifiers.avoidIndoor) {
+						avoid.push(`indoor`);
 					}
+					text += avoid.join(", ");
 					text += `)`;
 				}
 
@@ -309,18 +311,20 @@ export default function ReferenceSelectionField({
 				e.routeModifiers.avoidIndoor
 			) {
 				text += ` (Avoiding `;
+				const avoid = [];
 				if (e.routeModifiers.avoidTolls) {
-					text += `tolls`;
+					avoid.push(`tolls`);
 				}
 				if (e.routeModifiers.avoidHighways) {
-					text += `highways`;
+					avoid.push(`highways`);
 				}
 				if (e.routeModifiers.avoidFerries) {
-					text += `ferries`;
+					avoid.push(`ferries`);
 				}
 				if (e.routeModifiers.avoidIndoor) {
-					text += `indoor`;
+					avoid.push(`indoor`);
 				}
+				text += avoid.join(", ");
 				text += `)`;
 			}
 
@@ -346,18 +350,20 @@ export default function ReferenceSelectionField({
 				e.routeModifiers.avoidIndoor
 			) {
 				text += ` (Avoiding `;
+				const avoid = [];
 				if (e.routeModifiers.avoidTolls) {
-					text += `tolls`;
+					avoid.push(`tolls`);
 				}
 				if (e.routeModifiers.avoidHighways) {
-					text += `highways`;
+					avoid.push(`highways`);
 				}
 				if (e.routeModifiers.avoidFerries) {
-					text += `ferries`;
+					avoid.push(`ferries`);
 				}
 				if (e.routeModifiers.avoidIndoor) {
-					text += `indoor`;
+					avoid.push(`indoor`);
 				}
+				text += avoid.join(", ");
 				text += `)`;
 			}
 
