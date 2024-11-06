@@ -151,18 +151,20 @@ export default function ReferenceSelectionField({
 					direction.routeModifiers.avoidIndoor
 				) {
 					text += ` (Avoiding `;
-					if (direction.routeModifiers.avoidTolls) {
-						text += `tolls`;
+					const avoid = [];
+					if (e.routeModifiers.avoidTolls) {
+						avoid.push(`tolls`);
 					}
-					if (direction.routeModifiers.avoidHighways) {
-						text += `highways`;
+					if (e.routeModifiers.avoidHighways) {
+						avoid.push(`highways`);
 					}
-					if (direction.routeModifiers.avoidFerries) {
-						text += `ferries`;
+					if (e.routeModifiers.avoidFerries) {
+						avoid.push(`ferries`);
 					}
-					if (direction.routeModifiers.avoidIndoor) {
-						text += `indoor`;
+					if (e.routeModifiers.avoidIndoor) {
+						avoid.push(`indoor`);
 					}
+					text += avoid.join(", ");
 					text += `)`;
 				}
 
