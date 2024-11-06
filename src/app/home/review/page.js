@@ -228,7 +228,12 @@ export default function Summary() {
 
 	const [open, setOpen] = useState(false);
 	const handleEditQuestion = () => {
-		router.push("/home/question");
+		const params = searchParams.toString();
+		if (params) {
+			router.push(`/home/question?${params}`);
+		} else {
+			router.push("/home/question");
+		}
 	};
 
 	const {
