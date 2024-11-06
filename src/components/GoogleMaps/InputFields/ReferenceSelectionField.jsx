@@ -403,11 +403,15 @@ export default function ReferenceSelectionField({
 					placeholder="Choose references of the ground truth"
 					id="outlined-adornment"
 					className="outlined-input"
-					value={query.questions[index].references ?? []}
+					value={
+						(query.questions[index].relevant_api_calls ||
+							query.questions[index].references) ??
+						[]
+					}
 					onChange={(e) => {
 						setQuery((prev) => {
 							const newQuery = { ...prev };
-							newQuery.questions[index].references =
+							newQuery.questions[index].relevant_api_calls =
 								e.target.value;
 							return newQuery;
 						});
