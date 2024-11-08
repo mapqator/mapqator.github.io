@@ -261,7 +261,8 @@ class NominatimApi extends TextSearch {
 			url: "https://nominatim.openstreetmap.org/search",
 			method: "GET",
 			headers: {
-				"Accept-Language": "en", // Add this header to request response in English
+				"Accept-Language": "en",
+				"User-Agent": "MapQaTor/1.0 (mahirlabibdihan@gmail.com)",
 			},
 			params: {
 				q: query,
@@ -285,56 +286,55 @@ class NominatimApi extends TextSearch {
 		}));
 		return { places };
 	};
-
-	// run = async (query) => {
-	// 	const apiCall = {
-	// 		url: "https://nominatim.openstreetmap.org/search",
-	// 		method: "GET",
-	// 		headers: {
-	// 			"Accept-Language": "en", // Add this header to request response in English
-	// 		},
-	// 		params: {
-	// 			q: query,
-	// 			format: "jsonv2",
-	// 			limit: 5,
-	// 		},
-	// 	};
-
-	// 	const epochId = Date.now(); // Unique ID for this tool call
-	// 	const response = await this.post("/map/cached", apiCall);
-
-	// 	if (response.success) {
-	// 		const places = response.data.map((place) => ({
-	// 			id: place.place_id,
-	// 			displayName: {
-	// 				text: place.name,
-	// 			},
-	// 			shortFormattedAddress: place.display_name,
-	// 			location: {
-	// 				latitude: parseFloat(place.lat),
-	// 				longitude: parseFloat(place.lon),
-	// 			},
-	// 		}));
-	// 		return {
-	// 			success: true,
-	// 			data: {
-	// 				result: { places },
-	// 				apiCallLogs: [
-	// 					{
-	// 						...apiCall,
-	// 						uuid: epochId,
-	// 						result: response.data,
-	// 					},
-	// 				],
-	// 				uuid: epochId,
-	// 			},
-	// 		};
-	// 	}
-	// 	return {
-	// 		success: false,
-	// 	};
-	// };
 }
+// run = async (query) => {
+// 	const apiCall = {
+// 		url: "https://nominatim.openstreetmap.org/search",
+// 		method: "GET",
+// 		headers: {
+// 			"Accept-Language": "en", // Add this header to request response in English
+// 		},
+// 		params: {
+// 			q: query,
+// 			format: "jsonv2",
+// 			limit: 5,
+// 		},
+// 	};
+
+// 	const epochId = Date.now(); // Unique ID for this tool call
+// 	const response = await this.post("/map/cached", apiCall);
+
+// 	if (response.success) {
+// 		const places = response.data.map((place) => ({
+// 			id: place.place_id,
+// 			displayName: {
+// 				text: place.name,
+// 			},
+// 			shortFormattedAddress: place.display_name,
+// 			location: {
+// 				latitude: parseFloat(place.lat),
+// 				longitude: parseFloat(place.lon),
+// 			},
+// 		}));
+// 		return {
+// 			success: true,
+// 			data: {
+// 				result: { places },
+// 				apiCallLogs: [
+// 					{
+// 						...apiCall,
+// 						uuid: epochId,
+// 						result: response.data,
+// 					},
+// 				],
+// 				uuid: epochId,
+// 			},
+// 		};
+// 	}
+// 	return {
+// 		success: false,
+// 	};
+// };
 
 class MapBoxApi extends TextSearch {
 	constructor() {

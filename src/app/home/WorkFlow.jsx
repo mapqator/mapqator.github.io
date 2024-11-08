@@ -25,7 +25,7 @@ export default function WorkFlow() {
 
 	useEffect(() => {
 		// Show the tooltip after a short delay
-		const timer = setTimeout(() => setShowTooltip(true), 1000);
+		const timer = setTimeout(() => setShowTooltip(true), 500);
 		return () => clearTimeout(timer);
 	}, []);
 

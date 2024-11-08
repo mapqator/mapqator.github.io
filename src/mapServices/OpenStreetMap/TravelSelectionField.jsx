@@ -20,20 +20,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { convertFromSnake } from "@/services/utils";
 import { DeliveryDining, TwoWheeler } from "@mui/icons-material";
 
-// [car, car_delivery, car_avoid_ferry, car_avoid_motorway, car_avoid_toll, truck, small_truck, small_truck_delivery, scooter, scooter_delivery, bike, mtb, racingbike, foot, hike, as_the_crow_flies]
+// Limitation on free account
 export const travelModes = [
 	"car",
-	// "car_avoid_motorway",
-	// "car_avoid_ferry",
-	// "car_avoid_toll",
-	"small_truck",
-	"truck",
-	"scooter",
+	// "small_truck",
+	// "truck",
+	// "scooter",
 	"foot",
-	"hike",
+	// "hike",
 	"bike",
-	"mtb",
-	"racingbike",
+	// "mtb",
+	// "racingbike",
 ];
 
 export function convertTravelModeToLabel(mode) {

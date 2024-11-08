@@ -74,11 +74,19 @@ function SearchPlaceCard({
 					<div>
 						<IconButton
 							size="small"
-							onClick={() =>
-								setHoveredPlace((prev) =>
-									prev?.id === place.id ? null : place
-								)
-							}
+							onClick={async () => {
+								let details = { ...place, uuid };
+								const res = await tools.textSearch.retrieve(
+									details
+								);
+								if (res.success) {
+									setHoveredPlace((prev) =>
+										prev?.id === place.id
+											? null
+											: res.data.result
+									);
+								}
+							}}
 						>
 							<MyLocation
 								className={
