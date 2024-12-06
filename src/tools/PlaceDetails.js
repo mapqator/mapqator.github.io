@@ -38,7 +38,7 @@ class PlaceDetails extends Api {
 								...adaptedRequest,
 								uuid: epochId,
 								responseTime: performance.now() - startTime,
-								// result: response.data,
+								result: response.data,
 							},
 						],
 						uuid: epochId,

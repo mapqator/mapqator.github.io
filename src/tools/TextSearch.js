@@ -66,7 +66,7 @@ class TextSearch extends Api {
 							...adaptedRequest,
 							uuid: epochId,
 							responseTime: performance.now() - startTime,
-							// result: response.data,
+							result: response.data,
 						},
 					],
 					uuid: epochId,
@@ -441,7 +441,7 @@ class MapBoxApi extends TextSearch {
 							...apiCall,
 							uuid: epochId,
 							responseTime: performance.now() - startTime,
-							// result: response.data,
+							result: response.data,
 						},
 					],
 					uuid: epochId,
@@ -466,8 +466,6 @@ class TomTomApi extends TextSearch {
 			method: "GET",
 			params: {
 				key: "key:TOMTOM_API_KEY",
-
-				// Optional parameters
 				limit: 5,
 				language: "en-US",
 			},
@@ -488,54 +486,6 @@ class TomTomApi extends TextSearch {
 		}));
 		return { places };
 	};
-
-	// run = async (query) => {
-	// 	const apiCall = {
-	// 		url: "https://api.tomtom.com/search/2/poiSearch/" + query + ".json",
-	// 		method: "GET",
-	// 		params: {
-	// 			key: "key:TOMTOM_API_KEY",
-
-	// 			// Optional parameters
-	// 			limit: 5,
-	// 			language: "en-US",
-	// 		},
-	// 	};
-
-	// 	const epochId = Date.now(); // Unique ID for this tool call
-	// 	const response = await this.post("/map/cached", apiCall);
-
-	// 	if (response.success) {
-	// 		const places = response.data.results.map((place) => ({
-	// 			id: place.id,
-	// 			displayName: {
-	// 				text: place.poi.name,
-	// 			},
-	// 			shortFormattedAddress: place.address.freeformAddress,
-	// 			location: {
-	// 				latitude: place.position.lat,
-	// 				longitude: place.position.lon,
-	// 			},
-	// 		}));
-	// 		return {
-	// 			success: true,
-	// 			data: {
-	// 				result: { places },
-	// 				apiCallLogs: [
-	// 					{
-	// 						...apiCall,
-	// 						uuid: epochId,
-	// 						result: response.data,
-	// 					},
-	// 				],
-	// 				uuid: epochId,
-	// 			},
-	// 		};
-	// 	}
-	// 	return {
-	// 		success: false,
-	// 	};
-	// };
 }
 
 class HereApi extends TextSearch {

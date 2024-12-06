@@ -38,7 +38,7 @@ const SingleAnswer = ({ value, options, onChange, index }) => (
 					value={index}
 					control={<Radio />}
 					label={`Option ${index + 1}`}
-				/>
+			/>
 			))}
 		</RadioGroup>
 	</>
