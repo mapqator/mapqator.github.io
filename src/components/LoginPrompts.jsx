@@ -54,10 +54,10 @@ const LoginPrompt = ({ onLogin }) => {
 			<LockIcon className="text-gray-500" fontSize="large" />
 			<Box>
 				<Typography variant="h6" gutterBottom>
-					Want to save this evaluation?
+					Want to save this to dataset?
 				</Typography>
 				<Typography variant="body2" gutterBottom>
-					Log in to save your query and results for future reference.
+					Log in to save your QA pairs for future reference.
 				</Typography>
 			</Box>
 
