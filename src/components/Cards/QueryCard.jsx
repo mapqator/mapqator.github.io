@@ -39,13 +39,7 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 	const { setQueries } = useContext(AppContext);
 	const { isAuthenticated } = useAuth();
 	const [expanded, setExpanded] = useState(index === 0);
-	const [context, setContext] = useState();
 	const [contextExpanded, setContextExpanded] = useState(false);
-	// const [category, setCategory] = useState(entry.classification);
-
-	// useEffect(() => {
-	// 	setExpanded(index === 0);
-	// }, [index]);
 
 	const handleDelete = async () => {
 		if (isAuthenticated) {
@@ -62,19 +56,6 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 		}
 	};
 
-	// useEffect(() => {
-	// 	const invalid = entry.evaluation?.find(
-	// 		(e) =>
-	// 			e.model !== "mistralai/Mixtral-8x7B-Instruct-v0.1" &&
-	// 			e.verdict === "invalid"
-	// 	);
-	// 	if (invalid) {
-	// 		setFlag(true);
-	// 	} else {
-	// 		setFlag(entry.human.answer === 0);
-	// 	}
-	// }, [entry]);
-
 	const toggleAccordion = () => setExpanded(!expanded);
 
 	const handleDownloadQuery = () => {
@@ -89,28 +70,6 @@ export default function QueryCard({ entry, onEdit, isPersonal, mode, index }) {
 		document.body.removeChild(link);
 		URL.revokeObjectURL(href);
 	};
-
-	useEffect(() => {
-		const raw = {
-			places: ContextGeneratorService.getPlacesContext(
-				entry.context_json.place_details,
-				entry.context_json.places
-			),
-			nearby: ContextGeneratorService.getNearbyContext(
-				entry.context_json.nearby_places,
-				entry.context_json.places
-			),
-			// distance: ContextGeneratorService.getDistanceContext(
-			// 	entry.context_json.distance_matrix,
-			// 	entry.context_json.places
-			// ),
-			direction: ContextGeneratorService.getDirectionContext(
-				entry.context_json.directions,
-				entry.context_json.places
-			),
-		};
-		setContext(ContextGeneratorService.convertContextToText(raw));
-	}, []);
 
 	return (
 		<Card elevation={2}>

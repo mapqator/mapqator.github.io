@@ -15,7 +15,7 @@ export default function Home() {
 				}}
 			>
 				<WorkFlow />
-				{/* <Button
+				<Button
 					onClick={() => router.push("/home/explore")}
 					variant="outlined"
 					className="absolute bottom-0"
@@ -25,7 +25,7 @@ export default function Home() {
 					}}
 				>
 					See Examples
-				</Button> */}
+				</Button>
 			</Box>
 		</Container>
 	);
