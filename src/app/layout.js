@@ -11,13 +11,13 @@ import { GitHub, LinkedIn, Mail } from "@mui/icons-material";
 import Footer from "./footer";
 import GlobalContextProvider from "@/contexts/GlobalContext";
 export const metadata = {
-	metadataBase: new URL("https://mahirlabibdihan.github.io/mapquest"),
+	metadataBase: new URL("https://mapqator.github.io/"),
 	title: {
 		template: "%s | MapQaTor",
 		default: "MapQaTor",
 	},
 
-	description: "Map dataset creator",
+	description: "A System for Efficient Annotation of Map Query Datasets",
 	// openGraph: {
 	// 	title: "Title webtsite",
 	// 	description: "this is the desciption",
