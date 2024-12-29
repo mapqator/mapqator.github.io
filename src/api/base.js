@@ -5,7 +5,8 @@ import axios from "axios";
 // const cookies = new Cookies();
 console.log(process.env.NODE_ENV);
 export const API_BASE_URL =
-	(process.env.NEXT_PUBLIC_API_BASE_URL || "") + "/api";
+	(process.env.NEXT_PUBLIC_API_BASE_URL ||
+		"https://mapquest-app.onrender.com") + "/api";
 
 console.log("NEXT APP: ", API_BASE_URL);
 import { jwtDecode } from "jwt-decode";
