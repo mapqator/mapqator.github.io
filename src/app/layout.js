@@ -16,7 +16,9 @@ export const metadata = {
 		template: "%s | MapQaTor",
 		default: "MapQaTor",
 	},
-
+	verification: {
+		google: "9pM5JfTm1_c-Tmup10c-YeYhrLtBVv_tnZJ_mbvxGWQ",
+	},
 	description: "A System for Efficient Annotation of Map Query Datasets",
 	// openGraph: {
 	// 	title: "Title webtsite",
