@@ -25,6 +25,14 @@ export const metadata = {
 	// 	description: "this is the desciption",
 	// 	image: "url/image.png",
 	// },
+	keywords: [
+		"mapqator",
+		"mapeval",
+		"mahir labib dihan",
+		"mapqa",
+		"mapqa dataset",
+		"google maps dataset",
+	],
 };
 
 export default function RootLayout({ children }) {
