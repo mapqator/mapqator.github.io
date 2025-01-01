@@ -21,6 +21,7 @@ export default function ExplorePage() {
 							entry={query}
 							onEdit={() => router.push("/home/context#edit")}
 							mode="explore"
+							index={index}
 						/>
 					))}
 				</div>
