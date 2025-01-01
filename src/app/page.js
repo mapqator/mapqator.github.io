@@ -196,6 +196,33 @@ export default function PageComponent() {
 								Start Your Adventure
 							</Button>
 						</motion.div>
+						<Typography
+							variant="body1"
+							sx={{
+								// position: "absolute",
+								color: "#666",
+								mt: 1,
+								fontWeight: "400",
+								"& a": {
+									color: "#1a73e8",
+									textDecoration: "none",
+									"&:hover": {
+										textDecoration: "underline",
+									},
+								},
+								// maxWidth: "90%",
+								textAlign: "center",
+							}}
+						>
+							Or, read our{" "}
+							<a
+								href="https://mapqator.github.io/paper/"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								research paper
+							</a>{" "}
+						</Typography>
 					</Box>
 				</Fade>
 				{/* <div style={{ position: "absolute", bottom: 10 }}>
@@ -215,37 +242,6 @@ export default function PageComponent() {
 					</Typography>
 				</motion.div>
 			</div> */}
-				<Typography
-					variant="body1"
-					sx={{
-						position: "absolute",
-						color: "#666",
-						bottom: {
-							xs: "8%",
-							md: "2%",
-						},
-						fontWeight: "400",
-						"& a": {
-							color: "#1a73e8",
-							textDecoration: "none",
-							"&:hover": {
-								textDecoration: "underline",
-							},
-						},
-						maxWidth: "90%",
-						textAlign: "center",
-					}}
-				>
-					Read our{" "}
-					<a
-						href="https://mapqator.github.io/paper/"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						research paper
-					</a>{" "}
-					to learn more about the methodology and findings
-				</Typography>
 			</Box>
 			<Footer />
 		</>
