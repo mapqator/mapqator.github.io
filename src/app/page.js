@@ -220,7 +220,10 @@ export default function PageComponent() {
 					sx={{
 						position: "absolute",
 						color: "#666",
-						bottom: 8,
+						bottom: {
+							xs: "8%",
+							md: "2%",
+						},
 						fontWeight: "400",
 						"& a": {
 							color: "#1a73e8",
@@ -229,6 +232,8 @@ export default function PageComponent() {
 								textDecoration: "underline",
 							},
 						},
+						maxWidth: "90%",
+						textAlign: "center",
 					}}
 				>
 					Read our{" "}
