@@ -196,6 +196,32 @@ export default function PageComponent() {
 								Start Your Adventure
 							</Button>
 						</motion.div>
+
+						<Typography
+							variant="body1"
+							sx={{
+								color: "#666",
+								mt: 2,
+								fontWeight: "400",
+								"& a": {
+									color: "#1a73e8",
+									textDecoration: "none",
+									"&:hover": {
+										textDecoration: "underline",
+									},
+								},
+							}}
+						>
+							Read our{" "}
+							<a
+								href="https://mapqator.github.io/paper/"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								research paper
+							</a>{" "}
+							to learn more about the methodology and findings
+						</Typography>
 					</Box>
 				</Fade>
 				{/* <div style={{ position: "absolute", bottom: 10 }}>
